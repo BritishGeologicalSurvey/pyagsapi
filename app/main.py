@@ -6,8 +6,15 @@ from fastapi.responses import HTMLResponse
 app = FastAPI()
 
 
-@app.post("/files/")
-async def create_files(files: List[bytes] = File(...)):
+@app.post("/check/")
+async def check(files: List[bytes] = File(...)):
+    # Create temp dir
+    # Loop over files
+    #   - save to temp dir
+    #   - call validate (and save log)
+    # Zip up log files
+    # Return zip
+    # Errors should be 4xx if invalid file is uploaded
     return {"file_sizes": [len(file) for file in files]}
 
 
