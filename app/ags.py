@@ -4,13 +4,16 @@ import subprocess
 
 
 def validate(filename, results_dir):
-    logfile = Path(results_dir) / Path(filename).stem + '.log'
+    if not results_dir.exists():
+        results_dir.mkdir()
+    logfile = results_dir / (filename.stem + '.log')
+
     args = [
         'ags4_cli', 'check', filename, '-o', logfile
     ]
-    result = subprocess.run(args, check=True, capture_output=True)
-    print(result)
-    print(result.stdout.decode())
+    subprocess.run(args, check=True, capture_output=True)
+
+    return logfile
 
 
 def convert(filename, results_dir):
