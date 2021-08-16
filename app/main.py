@@ -6,6 +6,8 @@ import shortuuid
 
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 
 from app import routes
 
@@ -54,10 +56,9 @@ def setup_logging(logging_level=logging.INFO):
 
 app = FastAPI()
 
-setup_logging()
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
-# Add routes
-app.include_router(routes.router)
+templates = Jinja2Templates(directory="templates")
 
 
 @app.middleware("http")
@@ -78,31 +79,6 @@ async def log_requests(request: Request, call_next):
         logger.debug(f"Request: id: {req_id} response headers: {response.headers}")
 
     return response
-
-
-@app.get("/")
-async def main():
-    content = """
-<!DOCTYPE html>
-<html>
-<head>
-<title>AGS File Validator</title>
-</head>
-<body>
-<h1>AGS File Validator</h1>
-<br>
-<h2>Validate single file</h2>
-<form action="/validate/" enctype="multipart/form-data" method="post">
-<input name="file" type="file">
-<input type="submit">
-</form>
-<br>
-<h2>Validate multiple files</h2>
-<form action="/validatemany/" enctype="multipart/form-data" method="post">
-<input name="files" type="file" multiple>
-<input type="submit">
-</form>
-</body>
-</html>
-    """
-    return HTMLResponse(content=content)
+@app.get("/", response_class=HTMLResponse)
+async def homepage(request):
+    return templates.TemplateResponse('index.html', {'request': request})   
