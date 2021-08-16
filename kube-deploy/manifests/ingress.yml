@@ -1,0 +1,23 @@
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ${KUBE_NAMESPACE}
+  labels:
+    app: ${KUBE_NAMESPACE}
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  rules:
+    - host: ${APP_HOSTNAME}
+      http:
+        paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: ${KUBE_NAMESPACE}
+              port:
+                number: ${CONTAINER_PORT}

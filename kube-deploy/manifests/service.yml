@@ -1,0 +1,14 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: ${KUBE_NAMESPACE}
+  labels:
+    app: ${KUBE_NAMESPACE}
+spec:
+  selector:
+    app: ${KUBE_NAMESPACE}
+  type: ClusterIP
+  ports:
+  - protocol: TCP
+    port: ${CONTAINER_PORT}
