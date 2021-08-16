@@ -25,6 +25,8 @@ def test_validate(tmp_path):
     assert 'All checks passed!' in output
 
 
+# TODO: capture the error messages, then write parametrized
+#       test to make sure that the messages are helpful.
 def test_validate_non_ags_suffix(tmp_path):
     # Arrange
     filename = TEST_FILE_DIR / 'example1.xlsx'
