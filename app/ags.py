@@ -1,9 +1,13 @@
 """Functions to handle the AGS parser."""
+import logging
 from pathlib import Path
 import subprocess
 
+logger = logging.getLogger(__name__)
 
-def validate(filename, results_dir):
+
+def validate(filename: Path, results_dir: Path) -> Path:
+    """Validate filename and write output to file in results_dir."""
     if not results_dir.exists():
         results_dir.mkdir()
     logfile = results_dir / (filename.stem + '.log')
@@ -11,7 +15,15 @@ def validate(filename, results_dir):
     args = [
         'ags4_cli', 'check', filename, '-o', logfile
     ]
-    subprocess.run(args, check=True, capture_output=True)
+    try:
+        result = subprocess.run(args, check=True, capture_output=True)
+        logger.debug(result)
+    except subprocess.CalledProcessError as exc:
+        logger.exception(exc)
+        raise Ags4CliError(exc)
+
+    if error_message := result.stdout.decode().startswith('ERROR'):
+        raise Ags4CliError(error_message)
 
     return logfile
 
@@ -21,5 +33,6 @@ def convert(filename, results_dir):
     pass
 
 
-if __name__ == '__main__':
-    validate('/home/jostev/gitlab/ags-python-library/tests/test_files/example1.ags')
+class Ags4CliError(Exception):
+    """Class for exceptions resulting from ags4_cli call."""
+    pass
