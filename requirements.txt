@@ -1,4 +1,5 @@
 fastapi
+aiofiles
 uvicorn
 numpy
 python-ags4
