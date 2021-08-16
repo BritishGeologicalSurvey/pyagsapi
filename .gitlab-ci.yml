@@ -1,0 +1,241 @@
+# GitLab CI Settings Varaibles - these are required for staging/prod environments:
+# DMZ_DOCKER_SECRET
+# DMZ_REGISTRY_USER
+# DMZ_REGISTRY_PASSWORD
+# DMZ_REGISTRY
+
+# Main Application Variables
+variables:
+  INTERNAL_DOCKER_IMAGE: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG}
+  DMZ_DOCKER_IMAGE: ${DMZ_REGISTRY}/${CI_PROJECT_NAME}:${CI_COMMIT_REF_SLUG}
+  CONTAINER_PORT: 80
+  STAGING_DMZ_APP_HOSTNAME: agsvalidator-staging.bgs.ac.uk
+  PRODUCTION_DMZ_APP_HOSTNAME: agsvalidator.bgs.ac.uk
+
+# CI Stages
+stages:
+  - build
+  - deploy
+  - test
+  - dast
+  - performance
+
+# Avoid duplicate pipelines running for merge requests
+# https://docs.gitlab.com/ee/ci/yaml/#differences-between-rules-and-onlyexcept
+workflow:
+  rules:
+    - if: $CI_COMMIT_TAG
+    - if: $CI_COMMIT_BRANCH
+
+# Build and Push Docker Image
+build docker image:
+  services:
+    - name: docker:19.03.8-dind
+      command: ["/bin/sh", "-c", "wget http://hwdocker.bgs.ac.uk/hw-dmz-registry-server.crt -O /usr/local/share/ca-certificates/cert.crt && update-ca-certificates && dockerd-entrypoint.sh || exit"]
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ""
+  image: docker:19.03.8
+  tags:
+    - k8s
+  stage: build
+  script:
+    # Login to internal docker registry
+    - docker login -u "${CI_REGISTRY_USER}" -p "${CI_REGISTRY_PASSWORD}" "${CI_REGISTRY}"
+    # Build image from previous cached version
+    - docker pull "${INTERNAL_DOCKER_IMAGE}" || true
+    - docker build --file="Dockerfile" --cache-from "${INTERNAL_DOCKER_IMAGE}" -t "${INTERNAL_DOCKER_IMAGE}" .
+    # Push to internal docker registry
+    - docker push "${INTERNAL_DOCKER_IMAGE}"
+    # If production-dmz or staging-dmz branch, login and push to DMZ docker registry
+    - |
+        if [ "${CI_COMMIT_REF_SLUG}" == "production-dmz" ] || [ "${CI_COMMIT_REF_SLUG}" == "staging-dmz" ]; then
+          docker login -u "${DMZ_REGISTRY_USER}" -p "${DMZ_REGISTRY_PASSWORD}" "${DMZ_REGISTRY}"
+          docker tag "${INTERNAL_DOCKER_IMAGE}" "${DMZ_DOCKER_IMAGE}"
+          docker push "${DMZ_DOCKER_IMAGE}"
+        fi
+
+# Deploy to Internal Kube Cluster Automatically on all branches/tags
+# automatically removed after a week or when branch deleted
+deploy to kube dev:
+  stage: deploy
+  image: ${CI_REGISTRY}/devops/k8s-kubectl:internal-dev
+  variables:
+    APP_HOSTNAME: ${KUBE_NAMESPACE}.kube-idev.bgslcdevops.test
+  tags:
+    - k8s
+  script:
+  - echo "Checking cluster connection...." && kubectl get nodes --show-labels | grep environment=dev-internal
+  - export DEPLOY_IMAGE=${INTERNAL_DOCKER_IMAGE}
+  - /bin/bash kube-deploy/deploy.sh
+  - echo "Deployment Available Here - http://${APP_HOSTNAME}"
+  - echo http://${APP_HOSTNAME} > environment_url.txt
+  # Save URL in environment_url.txt for DAST/Peformance tests
+  artifacts:
+    paths:
+      - environment_url.txt
+  rules:
+    # Don't deploy to Dev if its a deploying to another cluster
+    - if: '$CI_COMMIT_BRANCH == "staging-dmz"'
+      when: never
+    - if: '$CI_COMMIT_BRANCH == "production-dmz"'
+      when: never
+    - if: '$CI_COMMIT_BRANCH == "production-internal"'
+      when: never
+    - when: always
+  environment:
+    name: $CI_COMMIT_REF_SLUG
+    auto_stop_in: 1 month
+    url: http://$KUBE_NAMESPACE.kube-idev.bgslcdevops.test
+    on_stop: remove from kube dev
+
+# Remove from Internal Kube Cluster - Auto/Manual Job
+remove from kube dev:
+  stage: deploy
+  image: ${CI_REGISTRY}/devops/k8s-kubectl:internal-dev
+  variables:
+    GIT_STRATEGY: none
+  tags:
+    - k8s
+  script:
+  - kubectl delete ns ${KUBE_NAMESPACE}
+  rules:
+    # Don't stop dev if its a deploying to another cluster
+    - if: '$CI_COMMIT_BRANCH == "staging-dmz"'
+      when: never
+    - if: '$CI_COMMIT_BRANCH == "production-dmz"'
+      when: never
+    - if: '$CI_COMMIT_BRANCH == "production-internal"'
+      when: never
+    - when: manual
+      allow_failure: true
+  environment:
+    name: $CI_COMMIT_REF_SLUG
+    action: stop
+
+# Deploy to Internal Kube Production Cluster Automatically when production-internal
+# This requires access to the internal production kube cluster credentials in GitLab
+deploy to kube prod internal:
+  stage: deploy
+  image: ${CI_REGISTRY}/devops/k8s-kubectl:internal-dev
+  variables:
+    APP_HOSTNAME: ${PRODUCTION_INTERNAL_APP_HOSTNAME}
+  tags:
+    - k8s
+  script:
+  - echo "Checking cluster connection...." && kubectl get nodes --show-labels | grep environment=production-internal
+  - export DEPLOY_IMAGE=${INTERNAL_DOCKER_IMAGE}
+  - /bin/bash kube-deploy/deploy.sh
+  - echo "Deployment Available Here - http://${APP_HOSTNAME}"
+  - echo http://${APP_HOSTNAME} > environment_url.txt
+  # Save URL in environment_url.txt for DAST/Peformance tests
+  artifacts:
+    paths:
+      - environment_url.txt
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "production-internal"'
+  environment:
+    name: $CI_COMMIT_REF_SLUG
+    url: $APP_HOSTNAME
+
+# Deploy to Staging DMZ Kube Cluster Automatically when staging-dmz branch
+# This requires access to the staging kube cluster credentials in GitLab
+deploy to kube staging dmz:
+  stage: deploy
+  image: ${CI_REGISTRY}/devops/k8s-kubectl:internal-dev
+  variables:
+    APP_HOSTNAME: ${STAGING_DMZ_APP_HOSTNAME}
+  tags:
+    - k8s
+  script:
+  - echo "Checking cluster connection...." && kubectl get nodes --show-labels | grep environment=staging-dmz
+  - export DOCKER_SECRET=${DMZ_DOCKER_SECRET}
+  - export DEPLOY_IMAGE=${DMZ_DOCKER_IMAGE}
+  - /bin/bash kube-deploy/deploy.sh
+  - echo "Deployment Available Here - https://${APP_HOSTNAME}"
+  - "echo For testing - curl --header \"Host: ${APP_HOSTNAME}\" https://192.171.157.24 -vvv -k"
+  - echo https://${APP_HOSTNAME} > environment_url.txt
+  # Save URL in environment_url.txt for DAST/Peformance tests
+  artifacts:
+    paths:
+      - environment_url.txt
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "staging-dmz"'
+  environment:
+    name: staging-dmz
+    url: https://$APP_HOSTNAME
+    
+# Deploy to Production DMZ Kube Cluster Automatically when production-dmz branch
+deploy to kube prod dmz:
+  stage: deploy
+  image: ${CI_REGISTRY}/devops/k8s-kubectl:internal-dev
+  variables:
+    APP_HOSTNAME: ${PRODUCTION_DMZ_APP_HOSTNAME}
+  tags:
+    - k8s
+  script:
+  - echo "Checking cluster connection...." && kubectl get nodes --show-labels | grep environment=production-dmz
+  - export DOCKER_SECRET=${DMZ_DOCKER_SECRET}
+  - export DEPLOY_IMAGE=${DMZ_DOCKER_IMAGE}
+  - /bin/bash kube-deploy/deploy.sh
+  - echo "Deployment Available Here - https://${APP_HOSTNAME}"
+  - "echo For testing - curl --header \"Host: ${APP_HOSTNAME}\" https://192.171.157.15 -vvv -k"
+  - echo https://${APP_HOSTNAME} > environment_url.txt
+  # Save URL in environment_url.txt for DAST/Peformance tests
+  artifacts:
+    paths:
+      - environment_url.txt
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "production-dmz"'
+  environment:
+    name: production-dmz
+    url: https://$APP_HOSTNAME
+
+# GitLab Templates:
+include:
+  - template: Container-Scanning.gitlab-ci.yml
+  - template: Secret-Detection.gitlab-ci.yml
+  - template: DAST.gitlab-ci.yml
+  - template: Jobs/Browser-Performance-Testing.gitlab-ci.yml
+# - template: License-Scanning.gitlab-ci.yml
+# - template: Dependency-Scanning.gitlab-ci.yml
+# - template: SAST.gitlab-ci.yml
+# - template: Code-Quality.gitlab-ci.yml
+
+dast:
+  tags:
+    - k8s
+  artifacts:
+    paths: [gl-dast-report.json]
+container_scanning:
+  tags:
+    - k8s
+  variables:
+    CI_APPLICATION_REPOSITORY: "${CI_REGISTRY_IMAGE}"
+    CI_APPLICATION_TAG: "${CI_COMMIT_REF_SLUG}"
+    CLAIR_TIMEOUT: "10"
+    GIT_STRATEGY: fetch
+    DOCKERFILE_PATH: "./Dockerfile" 
+  artifacts:
+    paths: [gl-container-scanning-report.json]
+secret_detection:
+  variables:
+    SECRET_DETECTION_HISTORIC_SCAN: "true"
+performance:
+  tags:
+    - k8s
+
+#code_quality:
+#  tags:
+#    - k8s
+#  artifacts:
+#    paths: [gl-code-quality-report.json]
+#license_scanning:
+#  tags:
+#    - k8s
+#dependency_scanning:
+#  tags:
+#    - k8s
+#sast:
+#  tags:
+#    - k8s
