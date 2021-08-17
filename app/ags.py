@@ -1,9 +1,16 @@
 """Functions to handle the AGS parser."""
 import logging
 from pathlib import Path
+from textwrap import dedent
 import subprocess
 
 logger = logging.getLogger(__name__)
+
+LOGFILE_TEMPLATE = dedent("""
+    File Name: \t {filename}
+
+    {error_message}
+    """.strip())
 
 
 def validate(filename: Path, results_dir: Path) -> Path:
@@ -15,15 +22,24 @@ def validate(filename: Path, results_dir: Path) -> Path:
     args = [
         'ags4_cli', 'check', filename, '-o', logfile
     ]
-    try:
-        result = subprocess.run(args, check=True, capture_output=True)
-        logger.debug(result)
-    except subprocess.CalledProcessError as exc:
-        logger.exception(exc)
-        raise Ags4CliError(exc)
+    # Use subprocess to run the file.  It will swallow errors.
+    # If files have repeated headers the CLI will ask if they should be
+    # renamed.  Passing input='n' answers 'n' to this question.
+    # A timeout prevents the whole process hanging indefinitely.
+    result = subprocess.run(args, capture_output=True,
+                            input='n', text=True, timeout=30)
+    logger.debug(result)
 
-    if error_message := result.stdout.decode().startswith('ERROR'):
-        raise Ags4CliError(error_message)
+    # Look for errors in the results
+    error = None
+    if result.returncode != 0:
+        error = result.stderr
+    if result.stdout.startswith('ERROR'):
+        error = result.stdout
+
+    if error:
+        contents = LOGFILE_TEMPLATE.format(filename=filename.name, error_message=error)
+        logfile.write_text(contents)
 
     return logfile
 
