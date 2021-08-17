@@ -1,9 +1,16 @@
 """Functions to handle the AGS parser."""
 import logging
 from pathlib import Path
+from textwrap import dedent
 import subprocess
 
 logger = logging.getLogger(__name__)
+
+LOGFILE_TEMPLATE = dedent("""
+    File Name: \t {filename}
+
+    {error_message}
+    """.strip())
 
 
 def validate(filename: Path, results_dir: Path) -> Path:
@@ -31,7 +38,8 @@ def validate(filename: Path, results_dir: Path) -> Path:
         error = result.stdout
 
     if error:
-        raise Ags4CliError(error)
+        contents = LOGFILE_TEMPLATE.format(filename=filename.name, error_message=error)
+        logfile.write_text(contents)
 
     return logfile
 
