@@ -25,6 +25,24 @@ def test_validate(tmp_path):
     assert 'All checks passed!' in output
 
 
+@pytest.mark.parametrize('filename, expected', [
+    ('example1.xlsx', 'ERROR: Only .ags files are accepted as input'),
+    ('random_binary.ags', 'UnicodeDecodeError: .* in position 0'),
+])
+def test_validate_unreadable_files(tmp_path, filename, expected):
+    # Arrange
+    filename = TEST_FILE_DIR / filename
+    results_dir = tmp_path / 'results'
+    if not results_dir.exists:
+        results_dir.mkdir()
+
+    # Act
+    with pytest.raises(ags.Ags4CliError) as excinfo:
+        ags.validate(filename, results_dir)
+
+    # Assert
+    excinfo.match(expected)
+
 # TODO: capture the error messages, then write parametrized
 #       test to make sure that the messages are helpful.
 def test_validate_non_ags_suffix(tmp_path):
@@ -35,8 +53,11 @@ def test_validate_non_ags_suffix(tmp_path):
         results_dir.mkdir()
 
     # Act
-    with pytest.raises(ags.Ags4CliError):
+    with pytest.raises(ags.Ags4CliError) as excinfo:
         ags.validate(filename, results_dir)
+
+    # Assert
+    excinfo.match(r'ERROR: Only \.ags files are accepted as input')
 
 
 def test_validate_binary_file(tmp_path):
