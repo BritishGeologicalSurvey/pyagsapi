@@ -13,6 +13,7 @@ TEST_FILE_DIR = Path(__file__).parent.parent / 'files'
     ('example1.ags', 'All checks passed!'),
     ('nonsense.ags', r'7 error\(s\) found in file!'),
     ('empty.ags', r'4 error\(s\) found in file!'),
+    ('real/A3040_03.ags', r'5733 error\(s\) found in file!'),
 ])
 def test_validate(tmp_path, filename, expected):
     # Arrange
@@ -75,6 +76,7 @@ def test_convert(tmp_path, filename, expected):
     ('empty.ags', 'IndexError: At least one sheet must be visible'),
     ('dummy.xlsx', "AttributeError: 'DataFrame' object has no attribute 'HEADING'"),
     ('random_binary.ags', 'IndexError: At least one sheet must be visible'),
+    ('real/A3040_03.ags', "UnboundLocalError: local variable 'group' referenced before assignment"),
 ])
 def test_convert_bad_files(tmp_path, filename, expected):
     # Arrange

@@ -1,8 +1,9 @@
 """Functions to handle the AGS parser."""
 import logging
 from pathlib import Path
-from textwrap import dedent
+import re
 import subprocess
+from textwrap import dedent
 
 logger = logging.getLogger(__name__)
 
@@ -32,14 +33,19 @@ def validate(filename: Path, results_dir: Path) -> Path:
     logger.debug(result)
 
     # Look for errors in the results
-    error = None
+    message = None
     if result.returncode != 0:
-        error = 'ERROR: ' + result.stderr
-    if result.stdout.startswith('ERROR'):
-        error = result.stdout
+        message = 'ERROR: ' + result.stderr
+    elif result.stdout.startswith('ERROR'):
+        message = result.stdout
+    elif re.match(r'\d+ error\(s\) found in file', logfile.read_text()):
+        # Files with lots of errors don't record metadata in their logs and
+        # just list errors.  We need can filename back in via the template
+        message = logfile.read_text()
 
-    if error:
-        contents = LOGFILE_TEMPLATE.format(filename=filename.name, message=error)
+    # Write custom log file if required
+    if message:
+        contents = LOGFILE_TEMPLATE.format(filename=filename.name, message=message)
         logfile.write_text(contents)
 
     return logfile
