@@ -1,5 +1,8 @@
 fastapi
+aiofiles
 uvicorn
 numpy
 python-ags4
 python-multipart
+colorlog
+shortuuid
