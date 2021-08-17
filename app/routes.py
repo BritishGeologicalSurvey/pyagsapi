@@ -22,6 +22,16 @@ async def validate(file: UploadFile = File(...)):
     return logfile
 
 
-@router.post("/uploadfiles/")
-async def create_upload_files(files: List[UploadFile] = File(...)):
-    return {"filenames": [file.filename for file in files]}
+@router.post("/validatemany/", response_class=FileResponse)
+async def validate_many(files: List[UploadFile] = File(...)):
+    tmp_dir = Path(tempfile.mkdtemp())
+    full_logfile = tmp_dir / 'logfile.log'
+    for file in files:
+        contents = await file.read()
+        local_ags_file = tmp_dir / file.filename
+        local_ags_file.write_bytes(contents)
+        logfile = ags.validate(local_ags_file, tmp_dir)
+        with full_logfile.open('at') as f:
+            f.write(logfile.read_text())
+            f.write('=' * 80 + '\n')
+    return full_logfile
