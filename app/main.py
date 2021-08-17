@@ -56,9 +56,12 @@ def setup_logging(logging_level=logging.INFO):
 
 app = FastAPI()
 
+templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-templates = Jinja2Templates(directory="templates")
+@app.get("/", response_class=HTMLResponse)
+async def homepage(request: Request):
+    return templates.TemplateResponse('index.html', {'request': request}) 
 
 
 @app.middleware("http")
@@ -79,6 +82,3 @@ async def log_requests(request: Request, call_next):
         logger.debug(f"Request: id: {req_id} response headers: {response.headers}")
 
     return response
-@app.get("/", response_class=HTMLResponse)
-async def homepage(request):
-    return templates.TemplateResponse('index.html', {'request': request})   
