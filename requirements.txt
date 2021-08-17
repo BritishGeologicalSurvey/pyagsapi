@@ -1,4 +1,4 @@
-fastapi
+fastapi>=0.66
 aiofiles
 uvicorn
 numpy
