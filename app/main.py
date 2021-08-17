@@ -7,9 +7,12 @@ from fastapi.templating import Jinja2Templates
 
 app = FastAPI()
 
+templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-templates = Jinja2Templates(directory="templates")
+@app.get("/", response_class=HTMLResponse)
+async def homepage(request):
+    return templates.TemplateResponse('index.html', {'request': request}) 
 
 @app.post("/check/")
 async def check(files: List[bytes] = File(...)):
@@ -28,9 +31,5 @@ async def create_upload_files(files: List[UploadFile] = File(...)):
     return {"filenames": [file.filename for file in files]}
 
 
-@app.get("/", response_class=HTMLResponse)
-async def homepage(request):
-    return templates.TemplateResponse('index.html', {'request': request})   
-
-
-]                                                                                                           
+  
+                                                                                                         
