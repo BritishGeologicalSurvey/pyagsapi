@@ -48,7 +48,6 @@ async def convert_many(background_tasks: BackgroundTasks,
     tmp_dir = Path(tempfile.mkdtemp())
     results_dir = tmp_dir / 'results'
     results_dir.mkdir()
-    background_tasks.add_task(shutil.rmtree, tmp_dir)
     full_logfile = results_dir / 'conversion.log'
     with full_logfile.open('wt') as f:
         for file in files:
@@ -63,9 +62,10 @@ async def convert_many(background_tasks: BackgroundTasks,
             f.write('=' * 80 + '\n')
     zipped_file = tmp_dir / 'results'
     shutil.make_archive(zipped_file, 'zip', results_dir)
-
     zipped_stream = open(tmp_dir / 'results.zip', 'rb')
+
     background_tasks.add_task(zipped_stream.close)
+    background_tasks.add_task(shutil.rmtree, tmp_dir)
 
     response = StreamingResponse(zipped_stream, media_type="application/x-zip-compressed")
     response.headers["Content-Disposition"] = "attachment; filename=results.zip"
