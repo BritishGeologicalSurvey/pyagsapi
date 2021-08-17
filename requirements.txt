@@ -6,3 +6,4 @@ python-ags4
 python-multipart
 colorlog
 shortuuid
+jinja2
