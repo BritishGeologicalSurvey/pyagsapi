@@ -56,6 +56,11 @@ def setup_logging(logging_level=logging.INFO):
 
 app = FastAPI()
 
+setup_logging()
+
+# Add routes
+app.include_router(routes.router)
+
 templates = Jinja2Templates(directory="app/templates")
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
