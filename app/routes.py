@@ -57,7 +57,7 @@ async def convert_many(background_tasks: BackgroundTasks,
             local_file.write_bytes(contents)
             converted, logfile = ags.convert(local_file, tmp_dir)
             if converted:
-                converted_file = results_dir / file.filename
+                converted_file = results_dir / converted.name
                 converted_file.write_bytes(converted.read_bytes())
             f.write(logfile.read_text())
             f.write('=' * 80 + '\n')
