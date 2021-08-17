@@ -1,30 +1,12 @@
-import tempfile
+from fastapi import FastAPI
+from fastapi.responses import HTMLResponse
 
-from pathlib import Path
-from typing import List
-
-from fastapi import FastAPI, File, UploadFile
-from fastapi.responses import HTMLResponse, FileResponse
-
-import ags
-
+from app import routes
 
 app = FastAPI()
 
-
-@app.post("/validate/", response_class=FileResponse)
-async def validate(file: UploadFile = File(...)):
-    tmp_dir = Path(tempfile.mkdtemp())
-    contents = await file.read()
-    local_ags_file = tmp_dir / file.filename
-    local_ags_file.write_bytes(contents)
-    logfile = ags.validate(local_ags_file, tmp_dir)
-    return logfile
-
-
-@app.post("/uploadfiles/")
-async def create_upload_files(files: List[UploadFile] = File(...)):
-    return {"filenames": [file.filename for file in files]}
+# Add routes
+app.include_router(routes.router)
 
 
 @app.get("/")
