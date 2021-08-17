@@ -26,12 +26,12 @@ async def validate(file: UploadFile = File(...)):
 async def validate_many(files: List[UploadFile] = File(...)):
     tmp_dir = Path(tempfile.mkdtemp())
     full_logfile = tmp_dir / 'logfile.log'
-    for file in files:
-        contents = await file.read()
-        local_ags_file = tmp_dir / file.filename
-        local_ags_file.write_bytes(contents)
-        logfile = ags.validate(local_ags_file, tmp_dir)
-        with full_logfile.open('at') as f:
+    with full_logfile.open('wt') as f:
+        for file in files:
+            contents = await file.read()
+            local_ags_file = tmp_dir / file.filename
+            local_ags_file.write_bytes(contents)
+            logfile = ags.validate(local_ags_file, tmp_dir)
             f.write(logfile.read_text())
             f.write('=' * 80 + '\n')
     return full_logfile
