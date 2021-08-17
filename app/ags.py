@@ -15,6 +15,7 @@ LOGFILE_TEMPLATE = dedent("""
 
 def validate(filename: Path, results_dir: Path) -> Path:
     """Validate filename and write output to file in results_dir."""
+    logger.info("Validate called for %", filename.name)
     if not results_dir.exists():
         results_dir.mkdir()
     logfile = results_dir / (filename.stem + '.log')
