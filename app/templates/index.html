@@ -7,15 +7,23 @@
     <img src="{{ url_for('static', path='/img/BGS-Logo-Pos-RGB-01.png') }}" alt="BGS Logo">
     <h1>AGS File Validator</h1>
     <br>
-    <h2>AGS Validator</h2>
+    <h2>AGS Validator - Single File</h2>
     <p>Select .ags file for validation (v4.x only)</p>
     <form action="/validate/" enctype="multipart/form-data" method="post">
     <input name="files" type="file" multiple>
     <input type="submit">
     </form>
     <br>
-    <h2>AGS Converter</h2>
+    <h2>AGS Validator - Multiple Files</h2>
+    <p>Select .ags files for validation (v4.x only)</p>
     <form action="/validatemany/" enctype="multipart/form-data" method="post">
+    <input name="files" type="file" multiple>
+    <input type="submit">
+    </form>
+    <br>
+    <h2>AGS Converter</h2>
+    <p>Convert .ags file to .xlsx</p>
+    <form action="/convertxlsx/" enctype="multipart/form-data" method="post">
     <input name="files" type="file" multiple>
     <input type="submit">
     </form>

@@ -68,7 +68,6 @@ app.mount("/static", StaticFiles(directory="app/static"), name="static")
 async def homepage(request: Request):
     return templates.TemplateResponse('index.html', {'request': request}) 
 
-
 @app.middleware("http")
 async def log_requests(request: Request, call_next):
     if not request.client.host.startswith('10.'):
