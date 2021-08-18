@@ -1,11 +1,20 @@
 <html>
 <head>
-    <title>AGS File Validator</title>
+    <title>AGS File Utilities</title>
     <link href="{{ url_for('static', path='/css/styles.css') }}" rel="stylesheet">
 </head>
 <body>
     <img src="{{ url_for('static', path='/img/BGS-Logo-Pos-RGB-01.png') }}" alt="BGS Logo">
-    <h1>AGS File Validator</h1>
+    <h1>AGS File Utilities</h1>
+    <br>
+    <p>Validate or convert your AGS files here. Validation is against the official AGS standard only.</p>
+    <p>
+      <ul>
+        <li>Accepts multiple AGS files. (Hold down <b>Ctrl</b> key to select more than one file)</li>
+        <li>There is a total file size limit of 50MB</li>
+        <li>Tests AGS versions 4.x </li>
+      </ul>
+  </p>
     <br>
     <h2>AGS Validator - Single File</h2>
     <p>Select .ags file for validation (v4.x only)</p>
@@ -27,6 +36,15 @@
     <input name="files" type="file" multiple>
     <input type="submit">
     </form>
+    <section id="openapi">
+      <h2>API Definition</h2>
+      <p>
+        Documentation: <a href="/docs/">Swagger UI</a> <a href="/redoc/">ReDoc</a>
+      </p>
+      <p>
+        <a href="/openapi.json/">OpenAPI Document</a>
+      </p>
+    </section>
     <img src="{{ url_for('static', path='/img/UKRI_NER_Council-Logo_Horiz-RGB.png') }}" alt="UKRI Logo">
 </body>
 </html>
