@@ -74,8 +74,9 @@ async def convert_many(background_tasks: BackgroundTasks,
                        request: Request = None):
     if not files[0].filename:
         raise InvalidPayloadError(request)
+    RESULTS = 'results'
     tmp_dir = Path(tempfile.mkdtemp())
-    results_dir = tmp_dir / 'results'
+    results_dir = tmp_dir / RESULTS
     results_dir.mkdir()
     full_logfile = results_dir / 'conversion.log'
     with full_logfile.open('wt') as f:
@@ -83,19 +84,17 @@ async def convert_many(background_tasks: BackgroundTasks,
             contents = await file.read()
             local_file = tmp_dir / file.filename
             local_file.write_bytes(contents)
-            converted, logfile = ags.convert(local_file, tmp_dir)
-            if converted:
-                converted_file = results_dir / converted.name
-                converted_file.write_bytes(converted.read_bytes())
-            f.write(logfile.read_text())
-            f.write('=' * 80 + '\n')
-    zipped_file = tmp_dir / 'results'
+            converted, log = ags.convert(local_file, results_dir)
+            print(converted)
+            f.write(log)
+            f.write('\n' + '=' * 80 + '\n')
+    zipped_file = tmp_dir / RESULTS
     shutil.make_archive(zipped_file, 'zip', results_dir)
-    zipped_stream = open(tmp_dir / 'results.zip', 'rb')
+    zipped_stream = open(tmp_dir / (RESULTS + '.zip'), 'rb')
 
     background_tasks.add_task(zipped_stream.close)
     background_tasks.add_task(shutil.rmtree, tmp_dir)
 
     response = StreamingResponse(zipped_stream, media_type="application/x-zip-compressed")
-    response.headers["Content-Disposition"] = "attachment; filename=results.zip"
+    response.headers["Content-Disposition"] = f"attachment; filename={RESULTS}.zip"
     return response
