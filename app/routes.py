@@ -172,6 +172,12 @@ def prepare_validation_item(log):
         value = ':'.join(line_parts[1:]).strip()
         validation[key] = value
         line_count += 1
-
-    validation['result'] = '\n'.join(lines[line_count:]).strip()
+    # Remove blank lines
+    lines = [line for line in lines[line_count:] if line != '']
+    if 'error(s) found in file!' in lines[0]:
+        message = lines[0].strip()
+        validation['results'] = '\n'.join(lines[1:]).strip()
+    else:
+        message = '\n'.join(lines).strip()
+    validation['message'] = message
     return Validation(**validation)

@@ -18,7 +18,8 @@ class Validation(BaseModel):
     checker: str = Field(None, example="python_ags4 v0.3.6")
     dictionary: str = Field(None, example="Standard_dictionary_v4_1.ags")
     time: str = Field(None, example="2021-08-18 09:23:29")
-    result: str = Field(None, example="All checks passed!")
+    message: str = Field(None, example="7 error(s) found in file!")
+    results: str = Field(None, example="Rule 2a: Line 1 Is not terminated by <CR> and <LF> characters.\n...")
 
 
 class Error(BaseModel):
