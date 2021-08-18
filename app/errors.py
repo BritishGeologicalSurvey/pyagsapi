@@ -1,21 +1,7 @@
-from typing import List
-
 from fastapi import status
 from starlette.requests import Request
-from pydantic import BaseModel, Field
 
-
-class Error(BaseModel):
-    error: str = Field(..., example="error")
-    propName:  str = Field(None, example="error")
-    desc: str = Field(..., example="Error message")
-
-
-class ErrorResponse(BaseModel):
-    msg: str = Field(..., example="Example response")
-    type: str = Field(..., example="error")
-    self: str = Field(..., example="http://example.com/apis/query")
-    errors: List[Error]
+from app.schemas import Error, ErrorResponse
 
 
 # Define error responses
