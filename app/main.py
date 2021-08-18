@@ -12,10 +12,10 @@ from fastapi.templating import Jinja2Templates
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.requests import Request
 from starlette.responses import JSONResponse
+from fastapi.openapi.utils import get_openapi
 
 from app import routes
 from app.errors import HTTPExceptionResponse, InvalidPayloadError
-
 
 def setup_logging(logging_level=logging.INFO):
     """Explicitly configure all loggers"""
@@ -73,6 +73,25 @@ app.mount("/static", StaticFiles(directory="app/static"), name="static")
 @app.get("/", response_class=HTMLResponse, include_in_schema=False)
 async def homepage(request: Request):
     return templates.TemplateResponse('index.html', {'request': request})
+
+
+def custom_openapi():
+    if app.openapi_schema:
+        return app.openapi_schema
+    openapi_schema = get_openapi(
+        title="AGS Python Libary API",
+        version="0.1.0",
+        description="This OpenAPI schema, Validate or convert your AGS files here. Validation is against the official AGS standard only.",
+        routes=app.routes,
+    )
+    openapi_schema["info"]["x-logo"] = {
+        "url": "https://raw.githubusercontent.com/BritishGeologicalSurvey/AGS-Validator/main/app/static/img/BGS-Logo-Pos-RGB-01.png"
+    }
+    app.openapi_schema = openapi_schema
+    return app.openapi_schema
+
+
+app.openapi = custom_openapi
 
 
 @app.middleware("http")

@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 RESPONSE_TEMPLATE = dedent("""
     File Name: \t {filename}
     File Size: \t {filesize:0.0f} kB
-    Time (UTC): \t{time_utc}
+    Time (UTC): \t {time_utc}
 
     {message}
     """).strip()
