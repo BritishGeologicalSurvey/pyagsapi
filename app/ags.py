@@ -6,7 +6,7 @@ import re
 import subprocess
 from tempfile import TemporaryDirectory
 from textwrap import dedent
-from typing import Tuple
+from typing import Tuple, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -65,7 +65,7 @@ def validate(filename: Path) -> str:
     return response
 
 
-def convert(filename: Path, results_dir: Path) -> Tuple[Path, str]:
+def convert(filename: Path, results_dir: Path) -> Tuple[Optional[Path], str]:
     """
     Convert filename between .ags and .xlsx.  Write output to file in
     results_dir and return path alongside processing log."""
