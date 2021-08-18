@@ -12,10 +12,20 @@ from app.errors import error_responses, InvalidPayloadError
 
 router = APIRouter()
 
+log_responses = dict(error_responses)
+log_responses['200'] = {
+    "content": {"text/plain": {}},
+    "description": "Return a log file"}
+
+zip_responses = dict(error_responses)
+zip_responses['200'] = {
+    "content": {"application/x-zip-compressed": {}},
+    "description": "Return a zip containing successfully converted files and log file"}
+
 
 @router.post("/validate/",
              response_class=FileResponse,
-             responses=error_responses)
+             responses=log_responses)
 async def validate(background_tasks: BackgroundTasks,
                    file: UploadFile = File(...),
                    request: Request = None):
@@ -27,12 +37,13 @@ async def validate(background_tasks: BackgroundTasks,
     local_ags_file = tmp_dir / file.filename
     local_ags_file.write_bytes(contents)
     logfile = ags.validate(local_ags_file, tmp_dir)
-    return logfile
+    response = FileResponse(logfile, media_type="text/plain")
+    return response
 
 
 @router.post("/validatemany/",
              response_class=FileResponse,
-             responses=error_responses)
+             responses=log_responses)
 async def validate_many(background_tasks: BackgroundTasks,
                         files: List[UploadFile] = File(...),
                         request: Request = None):
@@ -40,7 +51,7 @@ async def validate_many(background_tasks: BackgroundTasks,
         raise InvalidPayloadError(request)
     tmp_dir = Path(tempfile.mkdtemp())
     background_tasks.add_task(shutil.rmtree, tmp_dir)
-    full_logfile = tmp_dir / 'logfile.log'
+    full_logfile = tmp_dir / 'results.log'
     with full_logfile.open('wt') as f:
         for file in files:
             contents = await file.read()
@@ -49,12 +60,13 @@ async def validate_many(background_tasks: BackgroundTasks,
             logfile = ags.validate(local_ags_file, tmp_dir)
             f.write(logfile.read_text())
             f.write('=' * 80 + '\n')
-    return full_logfile
+    response = FileResponse(full_logfile, media_type="text/plain")
+    return response
 
 
 @router.post("/convert/",
              response_class=StreamingResponse,
-             responses=error_responses)
+             responses=zip_responses)
 async def convert_many(background_tasks: BackgroundTasks,
                        files: List[UploadFile] = File(...),
                        request: Request = None):
