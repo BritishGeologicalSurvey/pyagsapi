@@ -4,18 +4,23 @@ import shutil
 from pathlib import Path
 from typing import List
 
-from fastapi import APIRouter, BackgroundTasks, File, UploadFile
+from fastapi import APIRouter, BackgroundTasks, File, Request, UploadFile
 from fastapi.responses import FileResponse, StreamingResponse
 
 from app import ags
-
+from app.errors import error_responses, InvalidPayloadError
 
 router = APIRouter()
 
 
-@router.post("/validate/", response_class=FileResponse)
+@router.post("/validate/",
+             response_class=FileResponse,
+             responses=error_responses)
 async def validate(background_tasks: BackgroundTasks,
-                   file: UploadFile = File(...)):
+                   file: UploadFile = File(...),
+                   request: Request = None):
+    if not file.filename:
+        raise InvalidPayloadError(request)
     tmp_dir = Path(tempfile.mkdtemp())
     background_tasks.add_task(shutil.rmtree, tmp_dir)
     contents = await file.read()
@@ -25,9 +30,14 @@ async def validate(background_tasks: BackgroundTasks,
     return logfile
 
 
-@router.post("/validatemany/", response_class=FileResponse)
+@router.post("/validatemany/",
+             response_class=FileResponse,
+             responses=error_responses)
 async def validate_many(background_tasks: BackgroundTasks,
-                        files: List[UploadFile] = File(...)):
+                        files: List[UploadFile] = File(...),
+                        request: Request = None):
+    if not files[0].filename:
+        raise InvalidPayloadError(request)
     tmp_dir = Path(tempfile.mkdtemp())
     background_tasks.add_task(shutil.rmtree, tmp_dir)
     full_logfile = tmp_dir / 'logfile.log'
@@ -42,9 +52,14 @@ async def validate_many(background_tasks: BackgroundTasks,
     return full_logfile
 
 
-@router.post("/convert/", response_class=StreamingResponse)
+@router.post("/convert/",
+             response_class=StreamingResponse,
+             responses=error_responses)
 async def convert_many(background_tasks: BackgroundTasks,
-                       files: List[UploadFile] = File(...)):
+                       files: List[UploadFile] = File(...),
+                       request: Request = None):
+    if not files[0].filename:
+        raise InvalidPayloadError(request)
     tmp_dir = Path(tempfile.mkdtemp())
     results_dir = tmp_dir / 'results'
     results_dir.mkdir()
