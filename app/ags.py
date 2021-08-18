@@ -104,6 +104,20 @@ def convert(filename: Path, results_dir: Path) -> Tuple[Optional[Path], str]:
     return (converted_file, log)
 
 
+def is_valid(filename: Path) -> bool:
+    """
+    Validate filename and parse returned log to determine if file is valid.
+    """
+    return log_is_valid(validate(filename))
+
+
+def log_is_valid(log: str) -> bool:
+    """
+    Parse validation log to determine if file is valid.
+    """
+    return 'All checks passed!' in log
+
+
 class Ags4CliError(Exception):
     """Class for exceptions resulting from ags4_cli call."""
     pass

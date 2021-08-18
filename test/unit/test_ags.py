@@ -74,3 +74,22 @@ def test_convert_bad_files(tmp_path, filename, expected):
     assert f"File Size: \t {expected_size:n} kB" in log
     assert 'ERROR:' in log
     assert re.search(expected_message, log)
+
+
+@pytest.mark.parametrize('filename, expected', [
+    ('example1.ags', True),
+    ('nonsense.ags', False),
+    ('empty.ags', False),
+    ('dummy.xlsx', False),
+    ('random_binary.ags', False),
+    ('real/A3040_03.ags', False),
+])
+def test_is_valid(filename, expected):
+    # Arrange
+    filename = TEST_FILE_DIR / filename
+
+    # Act
+    result = ags.is_valid(filename)
+
+    # Assert
+    assert result == expected
