@@ -18,17 +18,13 @@ TEST_FILE_DIR = Path(__file__).parent.parent / 'files'
 def test_validate(tmp_path, filename, expected):
     # Arrange
     filename = TEST_FILE_DIR / filename
-    results_dir = tmp_path / 'results'
-    if not results_dir.exists:
-        results_dir.mkdir()
 
     # Act
-    logfile = ags.validate(filename, results_dir)
+    response = ags.validate(filename)
 
     # Assert
-    output = logfile.read_text()
-    assert f"File Name: \t {filename.name}" in output
-    assert re.search(expected, output)
+    assert f"File Name: \t {filename.name}" in response
+    assert re.search(expected, response)
 
 
 @pytest.mark.parametrize('filename, expected', [
@@ -38,17 +34,13 @@ def test_validate(tmp_path, filename, expected):
 def test_validate_unreadable_files(tmp_path, filename, expected):
     # Arrange
     filename = TEST_FILE_DIR / filename
-    results_dir = tmp_path / 'results'
-    if not results_dir.exists:
-        results_dir.mkdir()
 
     # Act
-    logfile = ags.validate(filename, results_dir)
+    response = ags.validate(filename)
 
     # Assert
-    output = logfile.read_text()
-    assert f"File Name: \t {filename.name}" in output
-    assert re.search(expected, output)
+    assert f"File Name: \t {filename.name}" in response
+    assert re.search(expected, response)
 
 
 @pytest.mark.parametrize('filename, expected', [

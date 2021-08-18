@@ -3,52 +3,51 @@ import logging
 from pathlib import Path
 import re
 import subprocess
+from tempfile import TemporaryDirectory
 from textwrap import dedent
 
 logger = logging.getLogger(__name__)
 
-LOGFILE_TEMPLATE = dedent("""
+RESPONSE_TEMPLATE = dedent("""
     File Name: \t {filename}
 
     {message}
     """).strip()
 
 
-def validate(filename: Path, results_dir: Path) -> Path:
+def validate(filename: Path) -> str:
     """Validate filename and write output to file in results_dir."""
     logger.info("Validate called for %", filename.name)
-    if not results_dir.exists():
-        results_dir.mkdir()
-    logfile = results_dir / (filename.stem + '.log')
 
-    args = [
-        'ags4_cli', 'check', filename, '-o', logfile
-    ]
-    # Use subprocess to run the file.  It will swallow errors.
-    # If files have repeated headers the CLI will ask if they should be
-    # renamed.  Passing input='n' answers 'n' to this question.
-    # A timeout prevents the whole process hanging indefinitely.
-    result = subprocess.run(args, capture_output=True,
-                            input='n', text=True, timeout=30)
-    logger.debug(result)
+    with TemporaryDirectory() as tmpdirname:
+        logfile = Path(tmpdirname) / 'output.log'
+        args = [
+            'ags4_cli', 'check', filename, '-o', logfile
+        ]
+        # Use subprocess to run the file.  It will swallow errors.
+        # If files have repeated headers the CLI will ask if they should be
+        # renamed.  Passing input='n' answers 'n' to this question.
+        # A timeout prevents the whole process hanging indefinitely.
+        result = subprocess.run(args, capture_output=True,
+                                input='n', text=True, timeout=30)
+        logger.debug(result)
+        log = logfile.read_text() if logfile.exists() else None
 
-    # Look for errors in the results
+    # Generate response based on result of subprocess
     message = None
     if result.returncode != 0:
         message = 'ERROR: ' + result.stderr
+        response = RESPONSE_TEMPLATE.format(filename=filename.name, message=message)
     elif result.stdout.startswith('ERROR'):
-        message = result.stdout
-    elif re.match(r'\d+ error\(s\) found in file', logfile.read_text()):
+        response = RESPONSE_TEMPLATE.format(filename=filename.name, message=result.stdout)
+    elif re.match(r'\d+ error\(s\) found in file', log):
         # Files with lots of errors don't record metadata in their logs and
-        # just list errors.  We need can filename back in via the template
-        message = logfile.read_text()
+        # just list errors.  We can add filename back in via the template.
+        response = RESPONSE_TEMPLATE.format(filename=filename.name, message=log)
+    else:
+        response = log
 
-    # Write custom log file if required
-    if message:
-        contents = LOGFILE_TEMPLATE.format(filename=filename.name, message=message)
-        logfile.write_text(contents)
-
-    return logfile
+    return response
 
 
 def convert(filename, results_dir):
@@ -82,7 +81,7 @@ def convert(filename, results_dir):
     else:
         message = f"SUCCESS: {filename.name} converted to {converted_file.name}"
 
-    contents = LOGFILE_TEMPLATE.format(filename=filename.name, message=message)
+    contents = RESPONSE_TEMPLATE.format(filename=filename.name, message=message)
     logfile.write_text(contents)
 
     return (converted_file, logfile)
