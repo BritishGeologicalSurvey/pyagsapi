@@ -43,20 +43,19 @@ def test_convert(tmp_path, filename, expected):
         results_dir.mkdir()
 
     # Act
-    converted_file, logfile = ags.convert(filename, results_dir)
+    converted_file, log = ags.convert(filename, results_dir)
 
     # Assert
-    output = logfile.read_text()
     assert converted_file is not None and converted_file.exists()
-    assert expected in output
+    assert re.search(expected, log)
 
 
 @pytest.mark.parametrize('filename, expected', [
-    ('nonsense.ags', 'IndexError: At least one sheet must be visible'),
-    ('empty.ags', 'IndexError: At least one sheet must be visible'),
-    ('dummy.xlsx', "AttributeError: 'DataFrame' object has no attribute 'HEADING'"),
-    ('random_binary.ags', 'IndexError: At least one sheet must be visible'),
-    ('real/A3040_03.ags', "UnboundLocalError: local variable 'group' referenced before assignment"),
+    ('nonsense.ags', ('IndexError: At least one sheet must be visible', 0)),
+    ('empty.ags', ('IndexError: At least one sheet must be visible', 0)),
+    ('dummy.xlsx', ("AttributeError: 'DataFrame' object has no attribute 'HEADING'", 5)),
+    ('random_binary.ags', ('IndexError: At least one sheet must be visible', 1)),
+    ('real/A3040_03.ags', ("UnboundLocalError: local variable 'group' referenced before assignment", 258)),
 ])
 def test_convert_bad_files(tmp_path, filename, expected):
     # Arrange
@@ -64,12 +63,14 @@ def test_convert_bad_files(tmp_path, filename, expected):
     results_dir = tmp_path / 'results'
     if not results_dir.exists:
         results_dir.mkdir()
+    expected_message, expected_size = expected
 
     # Act
-    converted_file, logfile = ags.convert(filename, results_dir)
+    converted_file, log = ags.convert(filename, results_dir)
 
     # Assert
-    output = logfile.read_text()
     assert converted_file is None
-    assert 'ERROR:' in output
-    assert re.search(expected, output)
+    assert f"File Name: \t {filename.name}" in log
+    assert f"File Size: \t {expected_size:n} kB" in log
+    assert 'ERROR:' in log
+    assert re.search(expected_message, log)

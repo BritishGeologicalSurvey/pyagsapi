@@ -6,13 +6,14 @@ import re
 import subprocess
 from tempfile import TemporaryDirectory
 from textwrap import dedent
+from typing import Tuple
 
 logger = logging.getLogger(__name__)
 
 RESPONSE_TEMPLATE = dedent("""
     File Name: \t {filename}
     File Size: \t {filesize:0.0f} kB
-    Time (UTC): \t {time_utc}
+    Time (UTC): \t{time_utc}
 
     {message}
     """).strip()
@@ -42,7 +43,7 @@ def validate(filename: Path) -> str:
     if result.returncode != 0:
         use_template = True
         message = 'ERROR: ' + result.stderr
-    elif result.stdout.startswith('ERROR'):
+    elif result.stdout.startswith('ERROR: '):
         use_template = True
         message = result.stdout
     elif re.match(r'\d+ error\(s\) found in file', log):
@@ -64,41 +65,43 @@ def validate(filename: Path) -> str:
     return response
 
 
-def convert(filename, results_dir):
-    """Validate filename and write output to file in results_dir."""
-    # Call ags4_cli to convert file
-    if not results_dir.exists():
-        results_dir.mkdir()
-
+def convert(filename: Path, results_dir: Path) -> Tuple[Path, str]:
+    """
+    Convert filename between .ags and .xlsx.  Write output to file in
+    results_dir and return path alongside processing log."""
     new_extension = '.ags' if filename.suffix == '.xlsx' else '.xlsx'
     converted_file = results_dir / (filename.stem + new_extension)
-    logfile = results_dir / (filename.name + '.log')
+    logger.info("Converting %s to %s", filename.name, converted_file.name)
+    if not results_dir.exists():
+        results_dir.mkdir()
 
     args = [
         'ags4_cli', 'convert', filename, converted_file
     ]
     # Use subprocess to run the file.  It will swallow errors.
-    # If files have repeated headers the CLI will ask if they should be
-    # renamed.  Passing input='n' answers 'n' to this question.
     # A timeout prevents the whole process hanging indefinitely.
     result = subprocess.run(args, capture_output=True,
-                            input='n', text=True, timeout=30)
+                            text=True, timeout=30)
     logger.debug(result)
 
-    # Prepare log file content
+    # Generate response based on result of subprocess
+    filesize = filename.stat().st_size / 1024
+    time_utc = dt.datetime.now(tz=dt.timezone.utc).strftime('%Y-%m-%d %H:%M:%S')
     if result.returncode != 0:
         message = 'ERROR: ' + result.stderr
         converted_file = None
-    elif result.stdout.startswith('ERROR'):
+    elif result.stdout.startswith('ERROR: '):
         message = result.stdout
         converted_file = None
     else:
         message = f"SUCCESS: {filename.name} converted to {converted_file.name}"
 
-    contents = RESPONSE_TEMPLATE.format(filename=filename.name, message=message)
-    logfile.write_text(contents)
+    log = RESPONSE_TEMPLATE.format(filename=filename.name,
+                                   filesize=filesize,
+                                   time_utc=time_utc,
+                                   message=message)
 
-    return (converted_file, logfile)
+    return (converted_file, log)
 
 
 class Ags4CliError(Exception):
