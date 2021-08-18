@@ -38,6 +38,25 @@ format_query = Query(
 )
 
 
+@router.post("/isvalid/",
+             response_model=ValidationResponse,
+             responses=log_responses)
+async def is_valid(background_tasks: BackgroundTasks,
+                   file: UploadFile = File(...),
+                   request: Request = None):
+    if not file.filename:
+        raise InvalidPayloadError(request)
+    tmp_dir = Path(tempfile.mkdtemp())
+    background_tasks.add_task(shutil.rmtree, tmp_dir)
+    contents = await file.read()
+    local_ags_file = tmp_dir / file.filename
+    local_ags_file.write_bytes(contents)
+    valid = ags.is_valid(local_ags_file)
+    data = [valid]
+    response = prepare_validation_response(request, data)
+    return response
+
+
 @router.post("/validate/",
              response_model=ValidationResponse,
              responses=log_responses)

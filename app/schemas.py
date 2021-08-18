@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import List
+from typing import List, Union
 
 
 class Validation(BaseModel):
@@ -28,4 +28,4 @@ class ErrorResponse(MinimalResponse):
 
 
 class ValidationResponse(MinimalResponse):
-    data: List[Validation] = None
+    data: List[Union[Validation, bool]] = None
