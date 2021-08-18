@@ -4,12 +4,17 @@ import time
 import colorlog
 import shortuuid
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, status
+from fastapi.encoders import jsonable_encoder
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from starlette.exceptions import HTTPException as StarletteHTTPException
+from starlette.requests import Request
+from starlette.responses import JSONResponse
 
 from app import routes
+from app.errors import HTTPExceptionResponse, InvalidPayloadError
 
 
 def setup_logging(logging_level=logging.INFO):
@@ -64,9 +69,11 @@ app.include_router(routes.router)
 templates = Jinja2Templates(directory="app/templates")
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
-@app.get("/", response_class=HTMLResponse)
+
+@app.get("/", response_class=HTMLResponse, include_in_schema=False)
 async def homepage(request: Request):
-    return templates.TemplateResponse('index.html', {'request': request}) 
+    return templates.TemplateResponse('index.html', {'request': request})
+
 
 @app.middleware("http")
 async def log_requests(request: Request, call_next):
@@ -86,3 +93,21 @@ async def log_requests(request: Request, call_next):
         logger.debug(f"Request: id: {req_id} response headers: {response.headers}")
 
     return response
+
+
+# Override HTTPException
+@app.exception_handler(StarletteHTTPException)
+async def http_exception(request: Request, exc: StarletteHTTPException):
+    error = HTTPExceptionResponse(request, exc)
+    return JSONResponse(
+        status_code=exc.status_code,
+        content=jsonable_encoder(error.response())
+    )
+
+
+@app.exception_handler(InvalidPayloadError)
+async def invalid_payload_exception(request: Request, exc: InvalidPayloadError):
+    return JSONResponse(
+        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+        content=jsonable_encoder(exc.response())
+    )
