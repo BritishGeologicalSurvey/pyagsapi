@@ -3,7 +3,17 @@ from typing import List, Union
 
 
 class Validation(BaseModel):
-    filename: str = Field(None, example="example.ags")
+    class Config:
+        """
+        Alias field names
+        """
+        fields = {'filename': {'alias': 'File Name'},
+                  'filesize': {'alias': 'File Size'},
+                  'checker': {'alias': 'Checker'},
+                  'dictionary': {'alias': 'Dictionary'},
+                  'time': {'alias': 'Time (UTC)'}}
+
+    filename: str = Field(..., example="example.ags")
     filesize: str = Field(None, example="1 kB")
     checker: str = Field(None, example="python_ags4 v0.3.6")
     dictionary: str = Field(None, example="Standard_dictionary_v4_1.ags")
