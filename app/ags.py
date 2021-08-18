@@ -1,4 +1,5 @@
 """Functions to handle the AGS parser."""
+import datetime as dt
 import logging
 from pathlib import Path
 import re
@@ -10,6 +11,8 @@ logger = logging.getLogger(__name__)
 
 RESPONSE_TEMPLATE = dedent("""
     File Name: \t {filename}
+    File Size: \t {filesize:0.0f} kB
+    Time (UTC): \t {time_utc}
 
     {message}
     """).strip()
@@ -34,16 +37,27 @@ def validate(filename: Path) -> str:
         log = logfile.read_text() if logfile.exists() else None
 
     # Generate response based on result of subprocess
-    message = None
+    filesize = filename.stat().st_size / 1024
+    time_utc = dt.datetime.now(tz=dt.timezone.utc).strftime('%Y-%m-%d %H:%M:%S')
     if result.returncode != 0:
+        use_template = True
         message = 'ERROR: ' + result.stderr
-        response = RESPONSE_TEMPLATE.format(filename=filename.name, message=message)
     elif result.stdout.startswith('ERROR'):
-        response = RESPONSE_TEMPLATE.format(filename=filename.name, message=result.stdout)
+        use_template = True
+        message = result.stdout
     elif re.match(r'\d+ error\(s\) found in file', log):
+        use_template = True
         # Files with lots of errors don't record metadata in their logs and
         # just list errors.  We can add filename back in via the template.
-        response = RESPONSE_TEMPLATE.format(filename=filename.name, message=log)
+        message = log
+    else:
+        use_template = False
+
+    if use_template:
+        response = RESPONSE_TEMPLATE.format(filename=filename.name,
+                                            filesize=filesize,
+                                            time_utc=time_utc,
+                                            message=message)
     else:
         response = log
 
