@@ -1,0 +1,322 @@
+"GROUP","PROJ"
+"HEADING","PROJ_ID","PROJ_AGS","PROJ_CLNT","PROJ_LOC","PROJ_CONT","PROJ_ENG","PROJ_NAME"
+"UNIT","","","","","","",""
+"TYPE","X","X","X","X","X","X","X"
+"DATA","127175","4.0","ENVIRONMENTAL AGENCY","TODMORDEN ROAD","EXPLORATION ASSOCIATES","DKS","River Roch Flood Alleviation Scheme"
+
+"GROUP","LOCA"
+"HEADING","LOCA_FDEP","LOCA_GL","LOCA_ID","LOCA_NATE","LOCA_NATN","LOCA_REM"
+"UNIT","","","","","",""
+"TYPE","X","X","X","X","X","X"
+"DATA","1.2","145.42","RIVER ROCH FLOOD ALLEVIATION SCHEME TP48","394110.00","416700.00","34914"
+"DATA","0.25","143.02","RIVER ROCH FLOOD ALLEVIATION SCHEME TP41","394030.00","416590.00","34907"
+"DATA","0.4","144.9","RIVER ROCH FLOOD ALLEVIATION SCHEME TP46","394080.00","416670.00","34912"
+"DATA","0.4","144.75","RIVER ROCH FLOOD ALLEVIATION SCHEME TP43","394040.00","416620.00","34909"
+"DATA","8","144.9","RIVER ROCH FLOOD ALLEVIATION BH12","394040.00","416610.00","34930"
+"DATA","0.5","144.4","RIVER ROCH FLOOD ALLEVIATION SCHEME TP42","394050.00","416600.00","34908"
+"DATA","1.3","143.69","RIVER ROCH FLOOD ALLEVIATION SCHEME TP59","393900.00","416350.00","34921"
+"DATA","8","139.1","RIVER ROCH FLOOD ALLEVIATION BH10","393310.00","416070.00","34929"
+"DATA","3.1","142.1","RIVER ROCH FLOOD ALLEVIATION TP11","393680.00","416240.00","34933"
+"DATA","0.4","144.29","RIVER ROCH FLOOD ALLEVIATION SCHEME TP39","394020.00","416570.00","34906"
+"DATA","2.2","143.76","RIVER ROCH FLOOD ALLEVIATION SCHEME TP61","393910.00","416350.00","34923"
+"DATA","2","144.09","RIVER ROCH FLOOD ALLEVIATION SCHEME TP60","393910.00","416340.00","34922"
+"DATA","2.1","143.8","RIVER ROCH FLOOD ALLEVIATION SCHEME TP58","393900.00","416340.00","34920"
+"DATA","0.5","143.38","RIVER ROCH FLOOD ALLEVIATION SCHEME TP47","394100.00","416690.00","34913"
+"DATA","1.8","138.2","RIVER ROCH FLOOD ALLEVIATION TP9","393250.00","416010.00","34932"
+"DATA","0.6","144.45","RIVER ROCH FLOOD ALLEVIATION SCHEME TP45","394090.00","416650.00","34911"
+"DATA","0.3","143.2","RIVER ROCH FLOOD ALLEVIATION SCHEME TP44","394060.00","416630.00","34910"
+"DATA","9","144.19","RIVER ROCH FLOOD ALLEVIATION SCHEME BH40","394030.00","416560.00","34924"
+"DATA","8","145.88","RIVER ROCH FLOOD ALLEVIATION SCHEME BH49","394110.00","416720.00","34925"
+
+"GROUP","GEOL"
+"HEADING","LOCA_ID","GEOL_BASE","GEOL_DESC","GEOL_GEO2","GEOL_LEG","GEOL_TOP"
+"UNIT","","","","","",""
+"TYPE","X","X","X","X","X","X"
+"DATA","RIVER ROCH FLOOD ALLEVIATION SCHEME BH49","1.20","MADE GROUND: Loose dark grey slightly silty clayey sandy ash fill with much angular to subrounded fine, medium to coarse gravel including brick and ash. ","MADE GROUND","102","0.00"
+"DATA","RIVER ROCH FLOOD ALLEVIATION SCHEME BH49","1.80","MADE GROUND: Loose brown slightly micaceous slightly clayey very silty fine to coarse sand with a little angular to subangular fine to medium gravel including coal fragments. 
+	From 1.30m becoming very loose.","MADE GROUND","102","1.20"
+"DATA","RIVER ROCH FLOOD ALLEVIATION SCHEME BH49","2.40","Soft slightly micaceous grey, grey-brown and mottled orange very silty slightly sandy CLAY with a little gravel.
+","CLAY","207","1.80"
+"DATA","RIVER ROCH FLOOD ALLEVIATION SCHEME BH49","3.80","Firm black and dark brown slightly clayey silty PEAT with a little fine gravel.","PEAT","607","2.40"
+"DATA","RIVER ROCH FLOOD ALLEVIATION SCHEME BH49","5.30","Medium dense grey occasionally brown silty sandy subangular to rounded fine, medium to coarse GRAVEL.
+Between 4.10m and 4.60m: becoming very sandy.
+From 5.10m: becoming clayey.","GRAVEL","520","3.80"
+"DATA","RIVER ROCH FLOOD ALLEVIATION SCHEME BH49","8.00","Soft to firm grey-brown slightly sandy bery silty CLAY with a little fine gravel. 
+Between 5.60m and 6.10m: becoming less sandy. ","CLAY","211","5.30"
+"DATA","RIVER ROCH FLOOD ALLEVIATION SCHEME TP48","0.95","MADE GROUND: Long grass onto dark grey clayey sandy subangular medium to coarse gravel and cobbles of red brick, furnace brick up to 400mm, occasioanl ceramic. Occasional tree roots up to 50mm. Rare concrete","MADE GROUND","102","0.00"
+"DATA","RIVER ROCH FLOOD ALLEVIATION SCHEME TP48","1.20","Grey brown slightly clayey very sandy SILT with a little fine to medium gravel.
+","SILT","303","0.95"
+"DATA","RIVER ROCH FLOOD ALLEVIATION SCHEME TP47","0.15","Grey brown, brown, red brown COBBLES and BOULDERS including sandstone, paving slabs and red brick up to 750mmΦ","MADE GROUND","102","0.00"
+"DATA","RIVER ROCH FLOOD ALLEVIATION SCHEME TP47","0.30","Grey brown, grey locally dark grey very sandy subangular to subrounded fine to coarse GRAVEL, locally oily?","GRAVEL","504","0.15"
+"DATA","RIVER ROCH FLOOD ALLEVIATION SCHEME TP46","0.15","MADE GROUND: Concrete floor slab (FACE A).","MADE GROUND","906","0.00"
+"DATA","RIVER ROCH FLOOD ALLEVIATION SCHEME TP46","0.50","MADE GROUND: Undergrowth and willow herb onto dark grey slightly clayey silty sandy angular fine to coarse gravel and cobbles including concrete, fence posts, brick and slate up to 450mmΦ. Occasional pockets of brown  sandy clay.","MADE GROUND","102","0.15"
+"DATA","RIVER ROCH FLOOD ALLEVIATION SCHEME TP45","0.40","MADE GROUND: Strata 3 - Concrete footing (Face A). Strata 4 - Brown, grey slightly clayey sandy subangular fine to coarse gravel and cobbles including concrete and red brick up to 400mmΦ. 
+Between 0.00m - 0.05m Rough grass and grey hardcore.","MADE GROUND","102","0.00"
+"DATA","RIVER ROCH FLOOD ALLEVIATION SCHEME TP45","0.65","MADE GROUND: Grey brown silty clay/clayey sandy silty with a little fine to coarse gravel.","MADE GROUND","102","0.40"
+"DATA","RIVER ROCH FLOOD ALLEVIATION SCHEME TP44","0.15","Brown, grey brown subrounded COBBLES and BOULDERS, including concrete and red brick. ","MADE GROUND","102","0.00"
+"DATA","RIVER ROCH FLOOD ALLEVIATION SCHEME TP44","0.35","Grey, dark grey slightly silty sandy subrounded medium to coarse GRAVEL and COBBLES including brick, slate and occasional metal","MADE GROUND","102","0.15"
+"DATA","RIVER ROCH FLOOD ALLEVIATION SCHEME TP43","0.50","MADE GROUND?: Rough grass and undergrowth onto dark grey brown slightly clayey sandy angular fine to coarse gravel and cobbles including concrete, ceramic, slate up to 400mmΦ and occasional fibre glass and asbestos roofing fragments.
+Between 0.00-0.40m Made ground: Concrete footing in Face C.
+","MADE GROUND","","0.00"
+"DATA","RIVER ROCH FLOOD ALLEVIATION BH12","2.10","MADE GROUND: Medium dense angular gravel and cobble fragments of stone, brick, shale and concrete with some to much grey-brown slightly sand and ash and cinder gravel.","MADE GROUND","102","0.00"
+"DATA","RIVER ROCH FLOOD ALLEVIATION BH12","3.30","MADE GROUND: Loose angular gravel fragments of stone, and dark grey slightly clayey silty sand. Occasional fragments of metal and wire.","MADE GROUND","102","2.10"
+"DATA","RIVER ROCH FLOOD ALLEVIATION BH12","5.70","Loose dark brown-grey clayey very silty very sandy angular to subrounded fine, medium and coarse GRAVEL.","GRAVEL","513","3.30"
+"DATA","RIVER ROCH FLOOD ALLEVIATION BH12","8.00","Soft and soft to firm laminated grey-brown slightly clayey and clayey SILT interbedded with very silty fien sand and very silty clay. Grading in places to slightly clayey very silty fine and medium sand.
+","SILT","301","5.70"
+"DATA","RIVER ROCH FLOOD ALLEVIATION SCHEME TP42","0.05","MADE GROUND: Undergrowth onto grey hardcore with occasional concrete fragments.","MADE GROUND","102","0.00"
+"DATA","RIVER ROCH FLOOD ALLEVIATION SCHEME TP42","0.45","MADE GROUND: Brown, dark brown clayey fine to coarse sand with much angular fien to coarse gravel and cobbles of red brick and occasional concrete up to 400mmΦ. Occasional rootlets.
+(Face A): Concrete footings.","MADE GROUND","102","0.05"
+"DATA","RIVER ROCH FLOOD ALLEVIATION SCHEME TP42","0.60","MADE GROUND: Brown slightly clayey silt with some fine to coarse sand and occasional red brick fragments.","MADE GROUND","102","0.45"
+"DATA","RIVER ROCH FLOOD ALLEVIATION SCHEME TP41","0.10","Undergrowth onto grey brown clayey TOPSOIL with rootlets and a little fine to coarse gravel.","TOP SOIL","101","0.00"
+"DATA","RIVER ROCH FLOOD ALLEVIATION SCHEME TP41","0.25","Brown, grey brown sandy subangular to subrounded medium to coarse GRAVEL, COBBLES and occasional boulders up to 350mmΦ. including sandstone, red brick and concrete.
+MADE GROUND: @0.00-0.15m Sandstone wall (Face A). 
+","MADE GROUND","102","0.10"
+"DATA","RIVER ROCH FLOOD ALLEVIATION SCHEME TP39","0.35","MADE GROUND: Willow herb onto grey slightly clayey sandy subangular fine to coarse gravel and cobbles of concrete, red brick and sandstone up to 400mΦ. 
+At 0.10m: orange plastic pipe 150mmΦ (Faces A, B and D).
+Between 0.00-0.45m: Concrete Footing (Face A).","MADE GROUND","102","0.00"
+"DATA","RIVER ROCH FLOOD ALLEVIATION SCHEME TP39","0.70","MADE GROUND: Firm brown, mottled dark brown silty slightly sandy clay with some red brick fragments.","MADE GROUND","102","0.35"
+"DATA","RIVER ROCH FLOOD ALLEVIATION SCHEME BH40","0.20","MADE GROUND: Concrete.
+","MADE GROUND","906","0.00"
+"DATA","RIVER ROCH FLOOD ALLEVIATION SCHEME BH40","0.45","Compact Stone**","MADE GROUND","102","0.20"
+"DATA","RIVER ROCH FLOOD ALLEVIATION SCHEME BH40","0.90","Reinforced Concrete","MADE GROUND","906","0.45"
+"DATA","RIVER ROCH FLOOD ALLEVIATION SCHEME BH40","1.00","Compact Rubble fill**","MADE GROUND","102","0.90"
+"DATA","RIVER ROCH FLOOD ALLEVIATION SCHEME BH40","2.70","Very soft grey occasionally mottled brown very silty CLAY with little fine gravel. 
+Trace organics noted predominantly rootlets.
+Below 2.20m: soft with some very silty fine to coarse sand.","CLAY","202","1.00"
+"DATA","RIVER ROCH FLOOD ALLEVIATION SCHEME BH40","3.20","Soft grey occasionally grey-brown slightly micaceous silty very sandy CLAY with trace organics predominantly rootlets.","CLAY","207","2.70"
+"DATA","RIVER ROCH FLOOD ALLEVIATION SCHEME BH40","3.80","Medium dense grey slightly silty fine, medium to coarse SAND with some subangular to rounded fine to medium gravel. ","SAND","412","3.20"
+"DATA","RIVER ROCH FLOOD ALLEVIATION SCHEME BH40","4.50","Firm laminated grey brown micaceous very silty CLAY. Thin fine to medium sand laminae noted.","CLAY","202","3.80"
+"DATA","RIVER ROCH FLOOD ALLEVIATION SCHEME BH40","5.30","Firm grey slightly micaceous silty CLAY with a little fine gravel.","CLAY","208","4.50"
+"DATA","RIVER ROCH FLOOD ALLEVIATION SCHEME BH40","5.50","Medium dense grey-brown occasionally light brown slightly silty slightly clayey very sandy subangular to rounded fine, medium to coarse GRAVEL.","GRAVEL","513","5.30"
+"DATA","RIVER ROCH FLOOD ALLEVIATION SCHEME BH40","6.00","Grading to grey slightly clayey silty fine to coarse SAND with some fine to medium gravel. ","SAND","407","5.50"
+"DATA","RIVER ROCH FLOOD ALLEVIATION SCHEME BH40","7.00","Medium dense grey-brown occasionally light brown slightly silty slightly clayey very sandy subangular to rounded fine, medium to coarse GRAVEL.","GRAVEL","513","6.00"
+"DATA","RIVER ROCH FLOOD ALLEVIATION SCHEME BH40","7.50","Grading to brown slightly silty fine to medium SAND with some subangular fine to medium gravel.","SAND","412","7.00"
+"DATA","RIVER ROCH FLOOD ALLEVIATION SCHEME BH40","8.50","Medium dense grey-brown occasionally light brown slightly silty slightly clayey very sandy subangular to rounded fine, medium to coarse GRAVEL.","GRAVEL","513","7.50"
+"DATA","RIVER ROCH FLOOD ALLEVIATION SCHEME BH40","9.00","Very dense grading to gravelly fine to coarse sand.","SAND","404","8.50"
+"DATA","RIVER ROCH FLOOD ALLEVIATION SCHEME TP61","0.35","Brown, dark grey slightly clayey sandy angular fine to coarse gravel including red brick and slag with abundant metal fragments (scrapped car parts)
+Below 0.25m: brown, sandy.","MADE GROUND","102","0.00"
+"DATA","RIVER ROCH FLOOD ALLEVIATION SCHEME TP61","1.60","At 0.35-0.45m MADE GROUND: Sandstone flagstone floor (Faces A, C and D).
+At 0.35-1.60m MADE GROUND: Sandstone Wall (Faces A, C and D).
+At 0.35-1.00 MADE GROUND: Grey brown sandy subangular fine to coarse gravel including slag and sandstone. Occasional cobbles.
+At 0.45-1.60 Brown very sandy subangular to subrounded fine to coarse GRAVEL with occasional cobbles.
+","MADE GROUND","102","0.35"
+"DATA","RIVER ROCH FLOOD ALLEVIATION SCHEME TP61","2.20","Soft grey, mottled orange brown, brown silty sandy CLAY.","CLAY","207","1.60"
+"DATA","RIVER ROCH FLOOD ALLEVIATION SCHEME TP60","0.08","Tarmac","MADE GROUND","102","0.00"
+"DATA","RIVER ROCH FLOOD ALLEVIATION SCHEME TP60","0.70","MADE GROUND: Dark grey brown, black sandy angular to subangular fine to coarse gravel and cobbles of slag, ash, brick and sandstone. Occasional car parts; fan belts, wiring and rubber fragments. Occasional setts. Oily odour.","MADE GROUND","102","0.08"
+"DATA","RIVER ROCH FLOOD ALLEVIATION SCHEME TP60","1.30","MADE GROUND: Brown slightly clayey silty fine to coarse sand with some subangular fine to coarse gravel including red brick and sandstone. ","MADE GROUND","102","0.70"
+"DATA","RIVER ROCH FLOOD ALLEVIATION SCHEME TP60","1.50","Grey, grey brown silty fine to coarse SAND with some subangular fine to coarse gravel. Rare brown vegetable matter at top of stratum. Locally grey, mottled light grey.","SAND","412","1.30"
+"DATA","RIVER ROCH FLOOD ALLEVIATION SCHEME TP60","2.00","Predominately grey locally grading to fine sandy SILT with a little fine to medium gravel.","SILT","308","1.50"
+"DATA","RIVER ROCH FLOOD ALLEVIATION SCHEME TP59","0.15","MADE GROUND: Brown clayey angular hardcore with occasional tree roots up to 15mmΦ. Occasional glass and metal fragments. Occasional wheel hub.","MADE GROUND","102","0.00"
+"DATA","RIVER ROCH FLOOD ALLEVIATION SCHEME TP59","0.85","MADE GROUND: Dark grey brown, dark brown sandy angular to subangular fine to coarse gravel and cobbles including slag, red brick, sandstone (up to 350mmΦ). Occasional paving slab, occasional fused slag and brick (up to 350mmΦ).
+At 0.75m: dressed sandstone (culvert? faces A and B)) Sandstone face proved to 1.25m by hand excavation.","MADE GROUND","102","0.15"
+"DATA","RIVER ROCH FLOOD ALLEVIATION SCHEME TP59","1.30","Brown sandy subangular to subrounded medium to coarse GRAVEL and COBBLES. ","COBBLES","719","0.85"
+"DATA","RIVER ROCH FLOOD ALLEVIATION SCHEME TP58","0.50","MADE GROUND: Dark grey very sandy angular to subangular fine to coarse gravel and cobbles of ash, slag, red brick and sandstone.","MADE GROUND","102","0.00"
+"DATA","RIVER ROCH FLOOD ALLEVIATION SCHEME TP58","1.10","MADE GROUND: Brown, light brown sandy angular fine to coarse gravel and cobbles of brick and sandstone (up to 400mmΦ)
+From 1.10m to 1.40m: some sandy fine to coarse gravel of slag (Faces A, B and C).","MADE GROUND","102","0.50"
+"DATA","RIVER ROCH FLOOD ALLEVIATION SCHEME TP58","1.50","Brown slightly clayey fine to coarse SAND with a little to some subrounded fine to coarse gravel and cobbles.","SAND","411","1.10"
+"DATA","RIVER ROCH FLOOD ALLEVIATION SCHEME TP58","2.10","Brown, grey brown slightly clayey very sandy SILT with a little fine gravel.","SILT","310","1.50"
+"DATA","RIVER ROCH FLOOD ALLEVIATION TP11","0.05","Dark grey sandy cindery TOP SOIL. Some roots.","TOP SOIL","101","0.00"
+"DATA","RIVER ROCH FLOOD ALLEVIATION TP11","0.60","MADE GROUND: Loose bricks and blocks of cemented bricks (up to 0.50m), concrete blocks and sandstone flags. Much dark grey and grey-brown silty angular gravel fragments of ash and cinders. Occasional subrounded coarse gravel and cobbles,, pottery and glass fragments.","MADE GROUND","102","0.05"
+"DATA","RIVER ROCH FLOOD ALLEVIATION TP11","0.70","MADE GROUND: Loose dark brown-grey clayey silty sand with occasional bricks (relict topsoil?). Decayed roots and grass at top of stratum.","MADE GROUND","102","0.60"
+"DATA","RIVER ROCH FLOOD ALLEVIATION TP11","1.30","MADE GROUND: Moderately compact brown, light brown, grey-brown and brown-grey slightly clayey silty fine, medium and coarse sand.","MADE GROUND","102","0.70"
+"DATA","RIVER ROCH FLOOD ALLEVIATION TP11","1.60","MADE GROUND: Moderately compact brown, orange-brown and grey slightly silty sandy angular to subrounded fine, medium and coarse gravel including fragments of ash, cinders, occasionally glass, timber, bricks and sandstone flags.","MADE GROUND","102","1.30"
+"DATA","RIVER ROCH FLOOD ALLEVIATION TP11","2.20","MADE GROUND: Angular gravel, cobbles and boulder-sized fragments of sandstone bricks with a matrix of very soft dark grey/black sandy silt. Occasional glass and pottery fragments.","MADE GROUND","102","1.60"
+"DATA","RIVER ROCH FLOOD ALLEVIATION TP11","2.60","Loose light grey mottled brown clayey very silty fine, medium and coarse SAND/very soft slightly clayey very sandy SILT. Occasional subrounded fine and medium gravel.","SAND","407","2.20"
+"DATA","RIVER ROCH FLOOD ALLEVIATION TP11","3.10","Loose brown-grey slightly clayey silty fine, medium and coarse SAND with some subrounded fine, medium and coarse gravel. Some to many subrounded cobbles and occasional decayed wood fragments.","SAND","409","2.60"
+"DATA","RIVER ROCH FLOOD ALLEVIATION BH10","0.10","TOP SOIL","TOP SOIL","101","0.00"
+"DATA","RIVER ROCH FLOOD ALLEVIATION BH10","1.20","Firm friable grey-brown mottled orange-brown and brown slightly clayey sandy SILT. 
+At top of stratum: Very sandy","SILT","303","0.10"
+"DATA","RIVER ROCH FLOOD ALLEVIATION BH10","2.60","Firm brown-grey mottled dark grey slightly clayey sandy SILT. Occasional decayed plant remains. 
+Below 1.75m: soft","SILT","303","1.20"
+"DATA","RIVER ROCH FLOOD ALLEVIATION BH10","3.30","Medium dense grey-brown silty very sandy angular to subrounded fine, medium and coarse GRAVEL.","GRAVEL","520","2.60"
+"DATA","RIVER ROCH FLOOD ALLEVIATION BH10","4.00","Soft to firm red-brown slightly sandy clayey SILT.","SILT","302","3.30"
+"DATA","RIVER ROCH FLOOD ALLEVIATION BH10","8.00","Very loose brown and grey-brown slightly clayey and clayey silty and very silty fine, medium and occasionally coarse SAND interbedded with soft grey-brown clayey silt and sandy silt.","SAND","407","4.00"
+"DATA","RIVER ROCH FLOOD ALLEVIATION TP9","0.40","Grey-brown sandy TOP SOIL. Many roots.","TOP SOIL","101","0.00"
+"DATA","RIVER ROCH FLOOD ALLEVIATION TP9","0.90","Soft fissured grey-brown mottled brown and orange-brown slightly sandy clayey SILT. Occasional decayed roots at top of stratum.","SILT","301","0.40"
+"DATA","RIVER ROCH FLOOD ALLEVIATION TP9","1.10","Very soft orange-brown mottled grey-brown and grey slightly sandy clayey SILT.","SILT","301","0.90"
+"DATA","RIVER ROCH FLOOD ALLEVIATION TP9","1.50","Very soft grey mottled orange-brown slightly sandy clayey SILT. Occasional vertical orange-brown discoloured fissures.	","SILT","301","1.10"
+"DATA","RIVER ROCH FLOOD ALLEVIATION TP9","1.80","Loose grey and grey-brown clayey silty fine, medium and coarse SAND. Occasional subrounded fine and medium gravel.","SAND","408","1.50"
+
+
+"GROUP","TRAN"
+"HEADING","TRAN_ISNO","TRAN_DATE","TRAN_PROD","TRAN_STAT","TRAN_DESC","TRAN_AGS","TRAN_RECV","TRAN_DLIM","TRAN_RCON","TRAN_REM"
+"UNIT","","","","","","","","","",""
+"TYPE","X","X","X","X","X","X","X","X","X","X"
+"DATA","1","2020-10-27","UNSPECIFIED","Preliminary","Groundhog Desktop Borehole Dataset","4.0","UNSPECIFIED","|","+","Export from BGS Groundhog Desktop software"
+
+"GROUP","TYPE"
+"HEADING","TYPE_TYPE","TYPE_DESC"
+"UNIT","",""
+"TYPE","X","X"
+"DATA","X","X"
+
+"GROUP","UNIT"
+"HEADING","UNIT_UNIT","UNIT_DESC"
+"UNIT","",""
+"TYPE","X","X"
+"DATA","",""
+
+"GROUP","ABBR"
+"HEADING","ABBR_HDNG","ABBR_CODE","ABBR_DESC"
+"UNIT","","",""
+"TYPE","X","X","X"
+"DATA","GEOL_GEO2","CLAY","CLAY"
+"DATA","GEOL_GEO2","COBBLES","COBBLES"
+"DATA","GEOL_GEO2","GRAVEL","GRAVEL"
+"DATA","GEOL_GEO2","MADE GROUND","MADE GROUND"
+"DATA","GEOL_GEO2","PEAT","PEAT"
+"DATA","GEOL_GEO2","SAND","SAND"
+"DATA","GEOL_GEO2","SILT","SILT"
+"DATA","GEOL_GEO2","TOP SOIL","TOP SOIL"
+"DATA","GEOL_LEG","101","101"
+"DATA","GEOL_LEG","102","102"
+"DATA","GEOL_LEG","202","202"
+"DATA","GEOL_LEG","207","207"
+"DATA","GEOL_LEG","208","208"
+"DATA","GEOL_LEG","211","211"
+"DATA","GEOL_LEG","301","301"
+"DATA","GEOL_LEG","302","302"
+"DATA","GEOL_LEG","303","303"
+"DATA","GEOL_LEG","308","308"
+"DATA","GEOL_LEG","310","310"
+"DATA","GEOL_LEG","404","404"
+"DATA","GEOL_LEG","407","407"
+"DATA","GEOL_LEG","408","408"
+"DATA","GEOL_LEG","409","409"
+"DATA","GEOL_LEG","411","411"
+"DATA","GEOL_LEG","412","412"
+"DATA","GEOL_LEG","504","504"
+"DATA","GEOL_LEG","513","513"
+"DATA","GEOL_LEG","520","520"
+"DATA","GEOL_LEG","607","607"
+"DATA","GEOL_LEG","719","719"
+"DATA","GEOL_LEG","906","906"
+"DATA","GEOL_DESC","At 0.35-0.45m MADE GROUND: Sandstone flagstone floor (Faces A, C and D).
+At 0.35-1.60m MADE GROUND: Sandstone Wall (Faces A, C and D).
+At 0.35-1.00 MADE GROUND: Grey brown sandy subangular fine to coarse gravel including slag and sandstone. Occasional cobbles.
+At 0.45-1.60 Brown very sandy subangular to subrounded fine to coarse GRAVEL with occasional cobbles.
+","At 0.35-0.45m MADE GROUND: Sandstone flagstone floor (Faces A, C and D).
+At 0.35-1.60m MADE GROUND: Sandstone Wall (Faces A, C and D).
+At 0.35-1.00 MADE GROUND: Grey brown sandy subangular fine to coarse gravel including slag and sandstone. Occasional cobbles.
+At 0.45-1.60 Brown very sandy subangular to subrounded fine to coarse GRAVEL with occasional cobbles.
+"
+"DATA","GEOL_DESC","Brown sandy subangular to subrounded medium to coarse GRAVEL and COBBLES. ","Brown sandy subangular to subrounded medium to coarse GRAVEL and COBBLES. "
+"DATA","GEOL_DESC","Brown slightly clayey fine to coarse SAND with a little to some subrounded fine to coarse gravel and cobbles.","Brown slightly clayey fine to coarse SAND with a little to some subrounded fine to coarse gravel and cobbles."
+"DATA","GEOL_DESC","Brown, dark grey slightly clayey sandy angular fine to coarse gravel including red brick and slag with abundant metal fragments (scrapped car parts)
+Below 0.25m: brown, sandy.","Brown, dark grey slightly clayey sandy angular fine to coarse gravel including red brick and slag with abundant metal fragments (scrapped car parts)
+Below 0.25m: brown, sandy."
+"DATA","GEOL_DESC","Brown, grey brown sandy subangular to subrounded medium to coarse GRAVEL, COBBLES and occasional boulders up to 350mmΦ. including sandstone, red brick and concrete.
+MADE GROUND: @0.00-0.15m Sandstone wall (Face A). 
+","Brown, grey brown sandy subangular to subrounded medium to coarse GRAVEL, COBBLES and occasional boulders up to 350mmΦ. including sandstone, red brick and concrete.
+MADE GROUND: @0.00-0.15m Sandstone wall (Face A). 
+"
+"DATA","GEOL_DESC","Brown, grey brown slightly clayey very sandy SILT with a little fine gravel.","Brown, grey brown slightly clayey very sandy SILT with a little fine gravel."
+"DATA","GEOL_DESC","Brown, grey brown subrounded COBBLES and BOULDERS, including concrete and red brick. ","Brown, grey brown subrounded COBBLES and BOULDERS, including concrete and red brick. "
+"DATA","GEOL_DESC","Compact Rubble fill**","Compact Rubble fill**"
+"DATA","GEOL_DESC","Compact Stone**","Compact Stone**"
+"DATA","GEOL_DESC","Dark grey sandy cindery TOP SOIL. Some roots.","Dark grey sandy cindery TOP SOIL. Some roots."
+"DATA","GEOL_DESC","Firm black and dark brown slightly clayey silty PEAT with a little fine gravel.","Firm black and dark brown slightly clayey silty PEAT with a little fine gravel."
+"DATA","GEOL_DESC","Firm brown-grey mottled dark grey slightly clayey sandy SILT. Occasional decayed plant remains. 
+Below 1.75m: soft","Firm brown-grey mottled dark grey slightly clayey sandy SILT. Occasional decayed plant remains. 
+Below 1.75m: soft"
+"DATA","GEOL_DESC","Firm friable grey-brown mottled orange-brown and brown slightly clayey sandy SILT. 
+At top of stratum: Very sandy","Firm friable grey-brown mottled orange-brown and brown slightly clayey sandy SILT. 
+At top of stratum: Very sandy"
+"DATA","GEOL_DESC","Firm grey slightly micaceous silty CLAY with a little fine gravel.","Firm grey slightly micaceous silty CLAY with a little fine gravel."
+"DATA","GEOL_DESC","Firm laminated grey brown micaceous very silty CLAY. Thin fine to medium sand laminae noted.","Firm laminated grey brown micaceous very silty CLAY. Thin fine to medium sand laminae noted."
+"DATA","GEOL_DESC","Grading to brown slightly silty fine to medium SAND with some subangular fine to medium gravel.","Grading to brown slightly silty fine to medium SAND with some subangular fine to medium gravel."
+"DATA","GEOL_DESC","Grading to grey slightly clayey silty fine to coarse SAND with some fine to medium gravel. ","Grading to grey slightly clayey silty fine to coarse SAND with some fine to medium gravel. "
+"DATA","GEOL_DESC","Grey brown slightly clayey very sandy SILT with a little fine to medium gravel.
+","Grey brown slightly clayey very sandy SILT with a little fine to medium gravel.
+"
+"DATA","GEOL_DESC","Grey brown, brown, red brown COBBLES and BOULDERS including sandstone, paving slabs and red brick up to 750mmΦ","Grey brown, brown, red brown COBBLES and BOULDERS including sandstone, paving slabs and red brick up to 750mmΦ"
+"DATA","GEOL_DESC","Grey brown, grey locally dark grey very sandy subangular to subrounded fine to coarse GRAVEL, locally oily?","Grey brown, grey locally dark grey very sandy subangular to subrounded fine to coarse GRAVEL, locally oily?"
+"DATA","GEOL_DESC","Grey, dark grey slightly silty sandy subrounded medium to coarse GRAVEL and COBBLES including brick, slate and occasional metal","Grey, dark grey slightly silty sandy subrounded medium to coarse GRAVEL and COBBLES including brick, slate and occasional metal"
+"DATA","GEOL_DESC","Grey, grey brown silty fine to coarse SAND with some subangular fine to coarse gravel. Rare brown vegetable matter at top of stratum. Locally grey, mottled light grey.","Grey, grey brown silty fine to coarse SAND with some subangular fine to coarse gravel. Rare brown vegetable matter at top of stratum. Locally grey, mottled light grey."
+"DATA","GEOL_DESC","Grey-brown sandy TOP SOIL. Many roots.","Grey-brown sandy TOP SOIL. Many roots."
+"DATA","GEOL_DESC","Loose brown-grey slightly clayey silty fine, medium and coarse SAND with some subrounded fine, medium and coarse gravel. Some to many subrounded cobbles and occasional decayed wood fragments.","Loose brown-grey slightly clayey silty fine, medium and coarse SAND with some subrounded fine, medium and coarse gravel. Some to many subrounded cobbles and occasional decayed wood fragments."
+"DATA","GEOL_DESC","Loose dark brown-grey clayey very silty very sandy angular to subrounded fine, medium and coarse GRAVEL.","Loose dark brown-grey clayey very silty very sandy angular to subrounded fine, medium and coarse GRAVEL."
+"DATA","GEOL_DESC","Loose grey and grey-brown clayey silty fine, medium and coarse SAND. Occasional subrounded fine and medium gravel.","Loose grey and grey-brown clayey silty fine, medium and coarse SAND. Occasional subrounded fine and medium gravel."
+"DATA","GEOL_DESC","Loose light grey mottled brown clayey very silty fine, medium and coarse SAND/very soft slightly clayey very sandy SILT. Occasional subrounded fine and medium gravel.","Loose light grey mottled brown clayey very silty fine, medium and coarse SAND/very soft slightly clayey very sandy SILT. Occasional subrounded fine and medium gravel."
+"DATA","GEOL_DESC","MADE GROUND: Angular gravel, cobbles and boulder-sized fragments of sandstone bricks with a matrix of very soft dark grey/black sandy silt. Occasional glass and pottery fragments.","MADE GROUND: Angular gravel, cobbles and boulder-sized fragments of sandstone bricks with a matrix of very soft dark grey/black sandy silt. Occasional glass and pottery fragments."
+"DATA","GEOL_DESC","MADE GROUND: Brown clayey angular hardcore with occasional tree roots up to 15mmΦ. Occasional glass and metal fragments. Occasional wheel hub.","MADE GROUND: Brown clayey angular hardcore with occasional tree roots up to 15mmΦ. Occasional glass and metal fragments. Occasional wheel hub."
+"DATA","GEOL_DESC","MADE GROUND: Brown slightly clayey silt with some fine to coarse sand and occasional red brick fragments.","MADE GROUND: Brown slightly clayey silt with some fine to coarse sand and occasional red brick fragments."
+"DATA","GEOL_DESC","MADE GROUND: Brown slightly clayey silty fine to coarse sand with some subangular fine to coarse gravel including red brick and sandstone. ","MADE GROUND: Brown slightly clayey silty fine to coarse sand with some subangular fine to coarse gravel including red brick and sandstone. "
+"DATA","GEOL_DESC","MADE GROUND: Brown, dark brown clayey fine to coarse sand with much angular fien to coarse gravel and cobbles of red brick and occasional concrete up to 400mmΦ. Occasional rootlets.
+(Face A): Concrete footings.","MADE GROUND: Brown, dark brown clayey fine to coarse sand with much angular fien to coarse gravel and cobbles of red brick and occasional concrete up to 400mmΦ. Occasional rootlets.
+(Face A): Concrete footings."
+"DATA","GEOL_DESC","MADE GROUND: Brown, light brown sandy angular fine to coarse gravel and cobbles of brick and sandstone (up to 400mmΦ)
+From 1.10m to 1.40m: some sandy fine to coarse gravel of slag (Faces A, B and C).","MADE GROUND: Brown, light brown sandy angular fine to coarse gravel and cobbles of brick and sandstone (up to 400mmΦ)
+From 1.10m to 1.40m: some sandy fine to coarse gravel of slag (Faces A, B and C)."
+"DATA","GEOL_DESC","MADE GROUND: Concrete floor slab (FACE A).","MADE GROUND: Concrete floor slab (FACE A)."
+"DATA","GEOL_DESC","MADE GROUND: Concrete.
+","MADE GROUND: Concrete.
+"
+"DATA","GEOL_DESC","MADE GROUND: Dark grey brown, black sandy angular to subangular fine to coarse gravel and cobbles of slag, ash, brick and sandstone. Occasional car parts; fan belts, wiring and rubber fragments. Occasional setts. Oily odour.","MADE GROUND: Dark grey brown, black sandy angular to subangular fine to coarse gravel and cobbles of slag, ash, brick and sandstone. Occasional car parts; fan belts, wiring and rubber fragments. Occasional setts. Oily odour."
+"DATA","GEOL_DESC","MADE GROUND: Dark grey brown, dark brown sandy angular to subangular fine to coarse gravel and cobbles including slag, red brick, sandstone (up to 350mmΦ). Occasional paving slab, occasional fused slag and brick (up to 350mmΦ).
+At 0.75m: dressed sandstone (culvert? faces A and B)) Sandstone face proved to 1.25m by hand excavation.","MADE GROUND: Dark grey brown, dark brown sandy angular to subangular fine to coarse gravel and cobbles including slag, red brick, sandstone (up to 350mmΦ). Occasional paving slab, occasional fused slag and brick (up to 350mmΦ).
+At 0.75m: dressed sandstone (culvert? faces A and B)) Sandstone face proved to 1.25m by hand excavation."
+"DATA","GEOL_DESC","MADE GROUND: Dark grey very sandy angular to subangular fine to coarse gravel and cobbles of ash, slag, red brick and sandstone.","MADE GROUND: Dark grey very sandy angular to subangular fine to coarse gravel and cobbles of ash, slag, red brick and sandstone."
+"DATA","GEOL_DESC","MADE GROUND: Firm brown, mottled dark brown silty slightly sandy clay with some red brick fragments.","MADE GROUND: Firm brown, mottled dark brown silty slightly sandy clay with some red brick fragments."
+"DATA","GEOL_DESC","MADE GROUND: Grey brown silty clay/clayey sandy silty with a little fine to coarse gravel.","MADE GROUND: Grey brown silty clay/clayey sandy silty with a little fine to coarse gravel."
+"DATA","GEOL_DESC","MADE GROUND: Long grass onto dark grey clayey sandy subangular medium to coarse gravel and cobbles of red brick, furnace brick up to 400mm, occasioanl ceramic. Occasional tree roots up to 50mm. Rare concrete","MADE GROUND: Long grass onto dark grey clayey sandy subangular medium to coarse gravel and cobbles of red brick, furnace brick up to 400mm, occasioanl ceramic. Occasional tree roots up to 50mm. Rare concrete"
+"DATA","GEOL_DESC","MADE GROUND: Loose angular gravel fragments of stone, and dark grey slightly clayey silty sand. Occasional fragments of metal and wire.","MADE GROUND: Loose angular gravel fragments of stone, and dark grey slightly clayey silty sand. Occasional fragments of metal and wire."
+"DATA","GEOL_DESC","MADE GROUND: Loose bricks and blocks of cemented bricks (up to 0.50m), concrete blocks and sandstone flags. Much dark grey and grey-brown silty angular gravel fragments of ash and cinders. Occasional subrounded coarse gravel and cobbles,, pottery and glass fragments.","MADE GROUND: Loose bricks and blocks of cemented bricks (up to 0.50m), concrete blocks and sandstone flags. Much dark grey and grey-brown silty angular gravel fragments of ash and cinders. Occasional subrounded coarse gravel and cobbles,, pottery and glass fragments."
+"DATA","GEOL_DESC","MADE GROUND: Loose brown slightly micaceous slightly clayey very silty fine to coarse sand with a little angular to subangular fine to medium gravel including coal fragments. 
+	From 1.30m becoming very loose.","MADE GROUND: Loose brown slightly micaceous slightly clayey very silty fine to coarse sand with a little angular to subangular fine to medium gravel including coal fragments. 
+	From 1.30m becoming very loose."
+"DATA","GEOL_DESC","MADE GROUND: Loose dark brown-grey clayey silty sand with occasional bricks (relict topsoil?). Decayed roots and grass at top of stratum.","MADE GROUND: Loose dark brown-grey clayey silty sand with occasional bricks (relict topsoil?). Decayed roots and grass at top of stratum."
+"DATA","GEOL_DESC","MADE GROUND: Loose dark grey slightly silty clayey sandy ash fill with much angular to subrounded fine, medium to coarse gravel including brick and ash. ","MADE GROUND: Loose dark grey slightly silty clayey sandy ash fill with much angular to subrounded fine, medium to coarse gravel including brick and ash. "
+"DATA","GEOL_DESC","MADE GROUND: Medium dense angular gravel and cobble fragments of stone, brick, shale and concrete with some to much grey-brown slightly sand and ash and cinder gravel.","MADE GROUND: Medium dense angular gravel and cobble fragments of stone, brick, shale and concrete with some to much grey-brown slightly sand and ash and cinder gravel."
+"DATA","GEOL_DESC","MADE GROUND: Moderately compact brown, light brown, grey-brown and brown-grey slightly clayey silty fine, medium and coarse sand.","MADE GROUND: Moderately compact brown, light brown, grey-brown and brown-grey slightly clayey silty fine, medium and coarse sand."
+"DATA","GEOL_DESC","MADE GROUND: Moderately compact brown, orange-brown and grey slightly silty sandy angular to subrounded fine, medium and coarse gravel including fragments of ash, cinders, occasionally glass, timber, bricks and sandstone flags.","MADE GROUND: Moderately compact brown, orange-brown and grey slightly silty sandy angular to subrounded fine, medium and coarse gravel including fragments of ash, cinders, occasionally glass, timber, bricks and sandstone flags."
+"DATA","GEOL_DESC","MADE GROUND: Strata 3 - Concrete footing (Face A). Strata 4 - Brown, grey slightly clayey sandy subangular fine to coarse gravel and cobbles including concrete and red brick up to 400mmΦ. 
+Between 0.00m - 0.05m Rough grass and grey hardcore.","MADE GROUND: Strata 3 - Concrete footing (Face A). Strata 4 - Brown, grey slightly clayey sandy subangular fine to coarse gravel and cobbles including concrete and red brick up to 400mmΦ. 
+Between 0.00m - 0.05m Rough grass and grey hardcore."
+"DATA","GEOL_DESC","MADE GROUND: Undergrowth and willow herb onto dark grey slightly clayey silty sandy angular fine to coarse gravel and cobbles including concrete, fence posts, brick and slate up to 450mmΦ. Occasional pockets of brown  sandy clay.","MADE GROUND: Undergrowth and willow herb onto dark grey slightly clayey silty sandy angular fine to coarse gravel and cobbles including concrete, fence posts, brick and slate up to 450mmΦ. Occasional pockets of brown  sandy clay."
+"DATA","GEOL_DESC","MADE GROUND: Undergrowth onto grey hardcore with occasional concrete fragments.","MADE GROUND: Undergrowth onto grey hardcore with occasional concrete fragments."
+"DATA","GEOL_DESC","MADE GROUND: Willow herb onto grey slightly clayey sandy subangular fine to coarse gravel and cobbles of concrete, red brick and sandstone up to 400mΦ. 
+At 0.10m: orange plastic pipe 150mmΦ (Faces A, B and D).
+Between 0.00-0.45m: Concrete Footing (Face A).","MADE GROUND: Willow herb onto grey slightly clayey sandy subangular fine to coarse gravel and cobbles of concrete, red brick and sandstone up to 400mΦ. 
+At 0.10m: orange plastic pipe 150mmΦ (Faces A, B and D).
+Between 0.00-0.45m: Concrete Footing (Face A)."
+"DATA","GEOL_DESC","MADE GROUND?: Rough grass and undergrowth onto dark grey brown slightly clayey sandy angular fine to coarse gravel and cobbles including concrete, ceramic, slate up to 400mmΦ and occasional fibre glass and asbestos roofing fragments.
+Between 0.00-0.40m Made ground: Concrete footing in Face C.
+","MADE GROUND?: Rough grass and undergrowth onto dark grey brown slightly clayey sandy angular fine to coarse gravel and cobbles including concrete, ceramic, slate up to 400mmΦ and occasional fibre glass and asbestos roofing fragments.
+Between 0.00-0.40m Made ground: Concrete footing in Face C.
+"
+"DATA","GEOL_DESC","Medium dense grey occasionally brown silty sandy subangular to rounded fine, medium to coarse GRAVEL.
+Between 4.10m and 4.60m: becoming very sandy.
+From 5.10m: becoming clayey.","Medium dense grey occasionally brown silty sandy subangular to rounded fine, medium to coarse GRAVEL.
+Between 4.10m and 4.60m: becoming very sandy.
+From 5.10m: becoming clayey."
+"DATA","GEOL_DESC","Medium dense grey slightly silty fine, medium to coarse SAND with some subangular to rounded fine to medium gravel. ","Medium dense grey slightly silty fine, medium to coarse SAND with some subangular to rounded fine to medium gravel. "
+"DATA","GEOL_DESC","Medium dense grey-brown occasionally light brown slightly silty slightly clayey very sandy subangular to rounded fine, medium to coarse GRAVEL.","Medium dense grey-brown occasionally light brown slightly silty slightly clayey very sandy subangular to rounded fine, medium to coarse GRAVEL."
+"DATA","GEOL_DESC","Medium dense grey-brown silty very sandy angular to subrounded fine, medium and coarse GRAVEL.","Medium dense grey-brown silty very sandy angular to subrounded fine, medium and coarse GRAVEL."
+"DATA","GEOL_DESC","Predominately grey locally grading to fine sandy SILT with a little fine to medium gravel.","Predominately grey locally grading to fine sandy SILT with a little fine to medium gravel."
+"DATA","GEOL_DESC","Reinforced Concrete","Reinforced Concrete"
+"DATA","GEOL_DESC","Soft and soft to firm laminated grey-brown slightly clayey and clayey SILT interbedded with very silty fien sand and very silty clay. Grading in places to slightly clayey very silty fine and medium sand.
+","Soft and soft to firm laminated grey-brown slightly clayey and clayey SILT interbedded with very silty fien sand and very silty clay. Grading in places to slightly clayey very silty fine and medium sand.
+"
+"DATA","GEOL_DESC","Soft fissured grey-brown mottled brown and orange-brown slightly sandy clayey SILT. Occasional decayed roots at top of stratum.","Soft fissured grey-brown mottled brown and orange-brown slightly sandy clayey SILT. Occasional decayed roots at top of stratum."
+"DATA","GEOL_DESC","Soft grey occasionally grey-brown slightly micaceous silty very sandy CLAY with trace organics predominantly rootlets.","Soft grey occasionally grey-brown slightly micaceous silty very sandy CLAY with trace organics predominantly rootlets."
+"DATA","GEOL_DESC","Soft grey, mottled orange brown, brown silty sandy CLAY.","Soft grey, mottled orange brown, brown silty sandy CLAY."
+"DATA","GEOL_DESC","Soft slightly micaceous grey, grey-brown and mottled orange very silty slightly sandy CLAY with a little gravel.
+","Soft slightly micaceous grey, grey-brown and mottled orange very silty slightly sandy CLAY with a little gravel.
+"
+"DATA","GEOL_DESC","Soft to firm grey-brown slightly sandy bery silty CLAY with a little fine gravel. 
+Between 5.60m and 6.10m: becoming less sandy. ","Soft to firm grey-brown slightly sandy bery silty CLAY with a little fine gravel. 
+Between 5.60m and 6.10m: becoming less sandy. "
+"DATA","GEOL_DESC","Soft to firm red-brown slightly sandy clayey SILT.","Soft to firm red-brown slightly sandy clayey SILT."
+"DATA","GEOL_DESC","TOP SOIL","TOP SOIL"
+"DATA","GEOL_DESC","Tarmac","Tarmac"
+"DATA","GEOL_DESC","Undergrowth onto grey brown clayey TOPSOIL with rootlets and a little fine to coarse gravel.","Undergrowth onto grey brown clayey TOPSOIL with rootlets and a little fine to coarse gravel."
+"DATA","GEOL_DESC","Very dense grading to gravelly fine to coarse sand.","Very dense grading to gravelly fine to coarse sand."
+"DATA","GEOL_DESC","Very loose brown and grey-brown slightly clayey and clayey silty and very silty fine, medium and occasionally coarse SAND interbedded with soft grey-brown clayey silt and sandy silt.","Very loose brown and grey-brown slightly clayey and clayey silty and very silty fine, medium and occasionally coarse SAND interbedded with soft grey-brown clayey silt and sandy silt."
+"DATA","GEOL_DESC","Very soft grey mottled orange-brown slightly sandy clayey SILT. Occasional vertical orange-brown discoloured fissures.	","Very soft grey mottled orange-brown slightly sandy clayey SILT. Occasional vertical orange-brown discoloured fissures.	"
+"DATA","GEOL_DESC","Very soft grey occasionally mottled brown very silty CLAY with little fine gravel. 
+Trace organics noted predominantly rootlets.
+Below 2.20m: soft with some very silty fine to coarse sand.","Very soft grey occasionally mottled brown very silty CLAY with little fine gravel. 
+Trace organics noted predominantly rootlets.
+Below 2.20m: soft with some very silty fine to coarse sand."
+"DATA","GEOL_DESC","Very soft orange-brown mottled grey-brown and grey slightly sandy clayey SILT.","Very soft orange-brown mottled grey-brown and grey slightly sandy clayey SILT."
