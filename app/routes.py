@@ -166,7 +166,8 @@ def prepare_validation_item(log):
     validation = {}
     line_count = 0
     for line in lines:
-        if line == '': break
+        if line == '':
+            break
         line_parts = line.split(':')
         key = line_parts[0]
         value = ':'.join(line_parts[1:]).strip()

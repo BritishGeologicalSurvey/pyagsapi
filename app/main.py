@@ -17,6 +17,7 @@ from fastapi.openapi.utils import get_openapi
 from app import routes
 from app.errors import HTTPExceptionResponse, InvalidPayloadError
 
+
 def setup_logging(logging_level=logging.INFO):
     """Explicitly configure all loggers"""
 
@@ -81,11 +82,13 @@ def custom_openapi():
     openapi_schema = get_openapi(
         title="AGS Python Libary API",
         version="0.1.0",
-        description="This OpenAPI schema, Validate or convert your AGS files here. Validation is against the official AGS standard only.",
+        description=("This OpenAPI schema, Validate or convert your AGS files here. "
+                     "Validation is against the official AGS standard only."),
         routes=app.routes,
     )
     openapi_schema["info"]["x-logo"] = {
-        "url": "https://raw.githubusercontent.com/BritishGeologicalSurvey/AGS-Validator/main/app/static/img/BGS-Logo-Pos-RGB-01.png"
+        "url": ("https://raw.githubusercontent.com/BritishGeologicalSurvey/AGS-Validator"
+                "/main/app/static/img/BGS-Logo-Pos-RGB-01.png")
     }
     app.openapi_schema = openapi_schema
     return app.openapi_schema
