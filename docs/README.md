@@ -95,6 +95,20 @@ To run :
 ```
 docker run -d --name mycontainer -p 80:80 ghcr.io/britishgeologicalsurvey/ags_utilities:latest
 ```
+## Development
+
+The main repo for this project is https://github.com/BritishGeologicalSurvey/AGS-Validator/. 
+
+Please raise any feature requests, issues or pull requests against this repository.
+
+### Container Registry
+
+Containers for the application are hosted in the GitHub Container Registry  
+
+Every push to `Main` branch commits builds `ags_utilities:latest`
+Pushed Tagged Releases with v* (v* == v0.1.0-alpha) builds `ags_utilities:0.1.0-alpha` (the "v" gets dropped for the tag)
+
+> Making tagged release via the GitHub.com gui does not build a container, developers need to create a tag locally then `git push origin v0.1.0-test`
 
 ## Have a specific question?
 
