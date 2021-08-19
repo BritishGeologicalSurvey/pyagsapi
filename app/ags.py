@@ -127,21 +127,23 @@ def get_unicode_message(stderr: str, filename: str) -> str:
     Generate useful message from Unicode error
     """
     m = re.search(r'.*in position (\d+):.*', stderr)
-    char, line_no, line = line_of_error(filename, int(m.group(1)))
-    message = f'ERROR: Unreadable character at position {char} on line: {line_no}\nStarting: {line}\n\n'
+    char_no, line_no, line, char = line_of_error(filename, int(m.group(1)))
+    message = f'ERROR: Unreadable character "{char}" at position {char_no} on line: {line_no}\nStarting: {line}\n\n'
     return message
 
 
-def line_of_error(filename: Path, char_no: int) -> Tuple[int, int, str]:
+def line_of_error(filename: Path, char_no: int) -> Tuple[int, int, str, str]:
     """
-    Return character, line number and start of line containing character at char_no
+    Return character, line number and start of line containing character at char_no.
+    Also return problem character
     """
-    with open(filename) as f:
+    with open(filename, encoding='ISO-8859-1') as f:
         upto = f.read(char_no)
         line_no = upto.count('\n') + 1
         line = upto.split('\n')[-1]
-        char = len(line) + 1
-    return char, line_no, line
+        char_no = len(line) + 1
+        char = f.read(1)
+    return char_no, line_no, line, char
 
 
 class Ags4CliError(Exception):
