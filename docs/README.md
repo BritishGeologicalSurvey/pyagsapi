@@ -2,12 +2,14 @@
 
 ## Introduction
 
-BGS AGS Utilities App offers a FastAPI implementation of the [AGS Python library](https://gitlab.com/ags-data-format-wg/ags-python-library) to:
+BGS AGS Utilities App offers a FastAPI implementation of the [AGS Python library](https://gitlab.com/ags-data-format-wg/ags-python-library). 
+
+## Features
 
 - Validate AGS files to v4.x of the AGS data format standard. 
 - Convert AGS files .ags<>.xlsx
 
-## Future Features 
+### Future Features 
 
 Additionally .ags files can be validated for submission to the [National Geoscience Data Center (NGDC)](http://transfer.bgs.ac.uk/ingestion)
 
@@ -24,23 +26,73 @@ This will check:
 - LAT/LON coordinates should be in the LOCA_LAT and LOCA_LON columns(or HOLE equivalent)
 - Local coordinates should not be duplicated in the BNG columns as this would indicate they have not been converted
 
+## How AGS Utilities Works
 
-## Deployment
+AGS Utilities is a python-based http server implementation of the [AGS Python library](https://gitlab.com/ags-data-format-wg/ags-python-library). 
 
-### Locally
+It is built on the FastAPI framework, using the official FastAPI docker image as it's base.
 
-Setup your python virtutal environment then 
+The core Python API provides the functionality to validate and convert AGS geotechnical data. From here, standard Python web frameworks like Uvicorn and Starlette provide the web API/wrapper atop the core Python API.
 
-```bash
-uvicorn app.main:app --reload
+## Install
+
+AGS Utilities is easy to install on numerous evironments.
+
+### Requirements & Dependancies
+
+AGS Utilities runs on Python 3 . 
+
+### From Source
+
+```python
+python -m venv agsutilities
+cd agsutilities
+. bin/activate
+git clone https://github.com/BritishGeologicalSurvey/AGS-Validator.git
+cd AGS-Validator
+pip install -r requirements.txt
+uvicorn app.main:app 
 ```
 
 ### Docker 
 
 Container packages are published to GitHub, main branch is tagged `latest`, tagged releases use their version number `1,0-alpha` 
 
+[Container Registry](https://github.com/BritishGeologicalSurvey/AGS-Validator/pkgs/container/ags_utilities)
+
 
 ```bash
+docker run -d --name mycontainer -p 80:80 ghcr.io/britishgeologicalsurvey/ags_utilities:latest
+```
+
+## Configuration
+
+### GUI
+
+To ammend the GUI HTML we recommend running via `Docker` using your own `Dockerfile` like the below. 
+
+```
+FROM ghcr.io/britishgeologicalsurvey/ags_utilities:latest
+
+# Add images to static
+COPY cusomisation/logo.png app/app/static/logo.png
+
+# Add index.html
+COPY cusomisation/index.html app/app/templates/index.html
+```
+## Deployment
+
+### Docker
+
+AGS Utilities provides an official Docker image which is made available on the GitHub Container Registry. 
+
+#### The Basics
+
+The official AGS Utilities Docker image will start a pygeoapi Docker container using FastAPI on internal port 80.
+
+To run :
+
+```
 docker run -d --name mycontainer -p 80:80 ghcr.io/britishgeologicalsurvey/ags_utilities:latest
 ```
 
