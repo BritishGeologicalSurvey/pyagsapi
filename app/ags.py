@@ -83,15 +83,16 @@ def convert(filename: Path, results_dir: Path) -> Tuple[Optional[Path], str]:
     result = subprocess.run(args, capture_output=True,
                             text=True, timeout=30)
     logger.debug(result)
-
     # Generate response based on result of subprocess
     filesize = filename.stat().st_size / 1024
     time_utc = dt.datetime.now(tz=dt.timezone.utc).strftime('%Y-%m-%d %H:%M:%S')
     if result.returncode != 0:
         message = 'ERROR: ' + result.stderr
+        converted_file.unlink(missing_ok=True)
         converted_file = None
     elif result.stdout.startswith('ERROR: '):
         message = result.stdout
+        converted_file.unlink(missing_ok=True)
         converted_file = None
     else:
         message = f"SUCCESS: {filename.name} converted to {converted_file.name}"
