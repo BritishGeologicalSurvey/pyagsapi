@@ -1,0 +1,15 @@
+h1 {
+    line-height: 1.2 !important;
+}
+
+:root {
+    --base-font-size: 14px;
+    --theme-color   : purple;
+    --zoomimage-overlay-background: rgba(0, 0, 0, 0.875);
+    --main-bg-color: brown;
+}
+
+.sidebar li>p {
+    font-weight: 700;
+    margin: 0;
+}
