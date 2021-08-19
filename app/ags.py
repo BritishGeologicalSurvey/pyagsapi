@@ -42,7 +42,10 @@ def validate(filename: Path) -> str:
     time_utc = dt.datetime.now(tz=dt.timezone.utc).strftime('%Y-%m-%d %H:%M:%S')
     if result.returncode != 0:
         use_template = True
-        message = 'ERROR: ' + result.stderr
+        if 'UnicodeDecodeError:' in result.stderr:
+            message = get_unicode_message(result.stderr, filename)
+        else:
+            message = 'ERROR: ' + result.stderr
     elif result.stdout.startswith('ERROR: '):
         use_template = True
         message = result.stdout
@@ -117,6 +120,27 @@ def log_is_valid(log: str) -> bool:
     Parse validation log to determine if file is valid.
     """
     return 'All checks passed!' in log
+
+
+def get_unicode_message(stderr: str, filename: str) -> str:
+    """
+    Generate useful message from Unicode error
+    """
+    m = re.search(r'.*in position (\d+):.*', stderr)
+    line_no, line = line_of_error(filename, int(m.group(1)))
+    message = f'ERROR: Unreadable character on line: {line_no}\nStarting: {line}\n\n'
+    return message
+
+
+def line_of_error(filename: Path, char_no: int) -> Tuple[int, str]:
+    """
+    Return line number and start of line containing character at char_no
+    """
+    with open(filename) as f:
+        upto = f.read(char_no)
+        line_no = upto.count('\n') + 1
+        line = upto.split('\n')[-1]
+    return line_no, line
 
 
 class Ags4CliError(Exception):
