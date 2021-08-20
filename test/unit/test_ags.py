@@ -17,6 +17,7 @@ TEST_FILE_DIR = Path(__file__).parent.parent / 'files'
     ('example1.xlsx', ('ERROR: Only .ags files are accepted as input.', 11)),
     ('random_binary.ags', ('ERROR: Unreadable character "á" at position 1 on line: 1\nStarting:', 1)),
     ('real/CG014058_F.ags', (r'ERROR: Unreadable character "æ" at position 80 on line: 263\nStarting: "WS2"', 49)),
+    ('real/Blackburn Southern Bypass.ags', (r'93 error\(s\) found in file!', 6)),  # this file contains BOM character
 ])
 def test_validate(tmp_path, filename, expected):
     # Arrange
