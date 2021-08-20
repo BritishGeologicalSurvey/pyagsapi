@@ -136,7 +136,6 @@ async def convert_many(background_tasks: BackgroundTasks,
             local_file = tmp_dir / file.filename
             local_file.write_bytes(contents)
             converted, log = ags.convert(local_file, results_dir)
-            print(converted)
             f.write(log)
             f.write('\n' + '=' * 80 + '\n')
     zipped_file = tmp_dir / RESULTS
@@ -164,7 +163,22 @@ def prepare_validation_response(request, data):
 
 def prepare_validation_item(log):
     lines = log.split('\n')
-    validation = Validation()
-    validation.filename = lines[0].split(':')[1].strip()
-    validation.result = log
-    return validation
+    validation = {}
+    line_count = 0
+    for line in lines:
+        if line == '':
+            break
+        line_parts = line.split(':')
+        key = line_parts[0]
+        value = ':'.join(line_parts[1:]).strip()
+        validation[key] = value
+        line_count += 1
+    # Remove blank lines
+    lines = [line for line in lines[line_count:] if line != '']
+    if 'error(s) found in file!' in lines[0]:
+        message = lines[0].strip()
+        validation['results'] = '\n'.join(lines[1:]).strip()
+    else:
+        message = '\n'.join(lines).strip()
+    validation['message'] = message
+    return Validation(**validation)
