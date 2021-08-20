@@ -10,7 +10,7 @@ It can:
 Additionally .ags files can be validated for submission to the [National Geoscience Data Center (NGDC)](http://transfer.bgs.ac.uk/ingestion)
 
 
-## Documentation 
+## Documentation
 
 Read the docs at https://britishgeologicalsurvey.github.io/AGS-Validator/ for full documentation.
 
@@ -20,12 +20,19 @@ Read the docs at https://britishgeologicalsurvey.github.io/AGS-Validator/ for fu
 The simplest way to run the validation service is via Docker:
 
 ```
-docker run -p 80:80 --name ags-validator ghcr.io/britishgeologicalsurvey/ags_utilities
+docker run -p 80:80 --name ags-validator ghcr.io/britishgeologicalsurvey/python-ags-api
 ```
 
 Navigate to [http://localhost](http://localhost) to see the landing page or
 [http://localhost/docs](http://localhost/docs) to see the API documentation via
 the Swagger interface.
+
+The `latest` tag reflects the current state of the `main` branch of the
+repository.
+It may have breaking changes.
+Use versions from tagged [Releases](https://github.com/BritishGeologicalSurvey/AGS-Validator/releases) to fix the version in deployment pipelines.
+Available tags are listed in the [Package Registry](https://github.com/BritishGeologicalSurvey/AGS-Validator/pkgs/container/python-ags-api).
+
 
 
 ## Development
