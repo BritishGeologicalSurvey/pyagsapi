@@ -27,6 +27,12 @@ Navigate to [http://localhost](http://localhost) to see the landing page or
 [http://localhost/docs](http://localhost/docs) to see the API documentation via
 the Swagger interface.
 
+The `latest` tag reflects the current state of the `main` branch of the
+repository.
+See
+[Releases](https://github.com/BritishGeologicalSurvey/AGS-Validator/releases)
+for details of other versions.
+
 
 ## Development
 
