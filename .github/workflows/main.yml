@@ -6,14 +6,8 @@
 name: Create and publish a Docker image
 
 on:
-  push:
-  # Publish `main` as Docker `latest` image.
-    branches: 
-      - main
-    
-    # Publish `v1.2.3` tags as releases.
-    tags: 
-      - v*
+  release:
+    types: [released]
 
 env:
   REGISTRY: ghcr.io
