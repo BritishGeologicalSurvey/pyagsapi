@@ -1,13 +1,13 @@
-# AGS Utilities
+# pyagsapi - AGS File Validation and Conversion
 
 ## Introduction
 
-BGS AGS Utilities App offers a FastAPI implementation of the [AGS Python library](https://gitlab.com/ags-data-format-wg/ags-python-library). 
+BGS pyagsapi offers a FastAPI implementation of the [AGS Python library](https://gitlab.com/ags-data-format-wg/ags-python-library). 
 
 ## Features
 
 - Validate AGS files to v4.x of the AGS data format standard. 
-- Convert AGS files .ags<>.xlsx
+- Convert AGS files .ags<-->.xlsx
 
 ### Future Features 
 
@@ -26,9 +26,9 @@ This will check:
 - LAT/LON coordinates should be in the LOCA_LAT and LOCA_LON columns(or HOLE equivalent)
 - Local coordinates should not be duplicated in the BNG columns as this would indicate they have not been converted
 
-## How AGS Utilities Works
+## How pyagsapi Works
 
-AGS Utilities is a python-based http server implementation of the [AGS Python library](https://gitlab.com/ags-data-format-wg/ags-python-library). 
+pyagsapi is a python-based http server implementation of the [AGS Python library](https://gitlab.com/ags-data-format-wg/ags-python-library). 
 
 It is built on the FastAPI framework, using the official FastAPI docker image as it's base.
 
@@ -36,20 +36,20 @@ The core Python API provides the functionality to validate and convert AGS geote
 
 ## Install
 
-AGS Utilities is easy to install on numerous evironments.
+pyagsapi is easy to install on numerous environments.
 
-### Requirements & Dependancies
+### Requirements & Dependencies
 
-AGS Utilities runs on Python 3 . 
+pyagsapi runs on Python 3. 
 
 ### From Source
 
 ```python
-python -m venv agsutilities
-cd agsutilities
+python -m venv pyagsapi
+cd pyagsapi
 . bin/activate
-git clone https://github.com/BritishGeologicalSurvey/AGS-Validator.git
-cd AGS-Validator
+git clone https://github.com/BritishGeologicalSurvey/pyagsapi.git
+cd pyagsapi
 pip install -r requirements.txt
 uvicorn app.main:app 
 ```
@@ -58,11 +58,11 @@ uvicorn app.main:app
 
 Container packages are published to GitHub, main branch is tagged `latest`, tagged releases use their version number `1,0-alpha` 
 
-[Container Registry](https://github.com/BritishGeologicalSurvey/AGS-Validator/pkgs/container/ags_utilities)
+[Container Registry](https://github.com/BritishGeologicalSurvey/AGS-Validator/pkgs/container/pyagsapi)
 
 
 ```bash
-docker run -d --name mycontainer -p 80:80 ghcr.io/britishgeologicalsurvey/ags_utilities:latest
+docker run -d --name mycontainer -p 80:80 ghcr.io/britishgeologicalsurvey/pyagsapi:latest
 ```
 
 ## Configuration
@@ -72,32 +72,32 @@ docker run -d --name mycontainer -p 80:80 ghcr.io/britishgeologicalsurvey/ags_ut
 To ammend the GUI HTML we recommend running via `Docker` using your own `Dockerfile` like the below. 
 
 ```
-FROM ghcr.io/britishgeologicalsurvey/ags_utilities:latest
+FROM ghcr.io/britishgeologicalsurvey/pyagsapi:latest
 
 # Add images to static
-COPY cusomisation/logo.png app/app/static/logo.png
+COPY customisation/logo.png app/app/static/logo.png
 
 # Add index.html
-COPY cusomisation/index.html app/app/templates/index.html
+COPY customisation/index.html app/app/templates/index.html
 ```
 ## Deployment
 
 ### Docker
 
-AGS Utilities provides an official Docker image which is made available on the GitHub Container Registry. 
+pyagsapi provides an official Docker image which is made available on the GitHub Container Registry. 
 
 #### The Basics
 
-The official AGS Utilities Docker image will start a pygeoapi Docker container using FastAPI on internal port 80.
+The official pyagsapi Docker image will start a pyagsapi Docker container using FastAPI on internal port 80.
 
 To run :
 
 ```
-docker run -d --name mycontainer -p 80:80 ghcr.io/britishgeologicalsurvey/ags_utilities:latest
+docker run -d --name mycontainer -p 80:80 ghcr.io/britishgeologicalsurvey/pyagsapi:latest
 ```
 ## Development
 
-The main repo for this project is https://github.com/BritishGeologicalSurvey/AGS-Validator/. 
+The main repo for this project is https://github.com/BritishGeologicalSurvey/pyagsapi/. 
 
 Please raise any feature requests, issues or pull requests against this repository.
 
@@ -105,25 +105,21 @@ Please raise any feature requests, issues or pull requests against this reposito
 
 Containers for the application are hosted in the GitHub Container Registry  
 
-Every push to `Main` branch commits builds `ags_utilities:latest`
-Pushed Tagged Releases with v* (v* == v0.1.0-alpha) builds `ags_utilities:0.1.0-alpha` (the "v" gets dropped for the tag)
+Every push to `Main` branch commits builds `pyagsapi:latest`
+Pushed Tagged Releases with v* (v* == v0.1.0-alpha) builds `pyagsapi:0.1.0-alpha` (the "v" gets dropped for the tag)
 
 > Making tagged release via the GitHub.com gui does not build a container, developers need to create a tag locally then `git push origin v0.1.0-test`
 
 ## Have a specific question?
 
 * Use the search bar in the top left to search this documentation
-* Check the [FAQ section](other/faq)
 
 ## Have an issue?
 
-Raise an issue on GitHub [Issue Tracker](https://github.com/BritishGeologicalSurvey/AGS-Validator/issues) 
+Raise an issue on GitHub [Issue Tracker](https://github.com/BritishGeologicalSurvey/pyagsapi/issues) 
 
 
 ## Documenting the Documentation
 
 This documentation is written in Markdown built & hosted on GitHub
 pages, built using [Docsify](https://docsify.js.org).
-
-
-
