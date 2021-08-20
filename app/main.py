@@ -80,7 +80,7 @@ def custom_openapi():
     if app.openapi_schema:
         return app.openapi_schema
     openapi_schema = get_openapi(
-        title="pyagsapi and AGS Python Library API",
+        title="pyagsapi an AGS Python Library API",
         version="0.1.0",
         description=("This OpenAPI schema, Validate or convert your AGS files here. "
                      "Validation is against the official AGS standard only."),
