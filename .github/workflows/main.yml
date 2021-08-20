@@ -6,12 +6,18 @@
 name: Create and publish a Docker image
 
 on:
+  push:
+    branches:
+      - main
   release:
-    types: [released]
+    types:
+      - released
+    tags:
+      - v*
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ags_utilities
+  IMAGE_NAME: python-ags-api
 
 jobs:
   # Push image to GitHub Packages.
