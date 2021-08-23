@@ -1,9 +1,11 @@
-fastapi==0.68.0
 aiofiles==0.7.0
-uvicorn==0.15.0
 numpy==1.21.2
 python-ags4==0.3.6
 python-multipart==0.0.5
 colorlog==5.0.1
 shortuuid==1.0.1
 Jinja2==3.0.1
+# These libraries are already in FastAPI container but need updated
+fastapi==0.68.0
+uvicorn==0.15.0
+h11==0.12.0
