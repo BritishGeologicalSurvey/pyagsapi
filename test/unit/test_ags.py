@@ -16,7 +16,7 @@ JSON_RESPONSES = {
         'dictionary': 'Standard_dictionary_v4_1.ags',
         'time': '2021-08-23 14:25:43',
         'message': 'All checks passed!',
-        'results': []
+        'errors': []
     },
     'nonsense.ags': {
         'filename': 'nonsense.ags',
@@ -25,7 +25,7 @@ JSON_RESPONSES = {
         'dictionary': 'Standard_dictionary_v4_1.ags',
         'time': '2021-08-23 14:25:43',
         'message': '7 error(s) found in file!',
-        'results': [
+        'errors': [
             {'rule': 'Rule 2a',
              'errors': [
                  {'line_no': 1, 'group': '', 'description': 'Is not terminated by <CR> and <LF> characters.'}
@@ -70,7 +70,7 @@ JSON_RESPONSES = {
         'dictionary': 'Standard_dictionary_v4_1.ags',
         'time': '2021-08-23 14:25:43',
         'message': 'File could not be opened for checking.',
-        'results': [
+        'errors': [
             {'rule': 'File read error',
              'errors': [
                  {'line_no': 1, 'group': '', 'description': 'ERROR: Unreadable character "á" at position 1'}
