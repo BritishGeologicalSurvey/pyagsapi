@@ -8,6 +8,78 @@ from app import ags
 
 TEST_FILE_DIR = Path(__file__).parent.parent / 'files'
 
+JSON_RESPONSES = {
+    'example1.ags': {
+        'filename': 'example1.ags',
+        'filesize': '3 kB',
+        'checker': 'python_ags4 v0.3.6',
+        'dictionary': 'Standard_dictionary_v4_1.ags',
+        'time': '2021-08-23 14:25:43',
+        'message': 'All checks passed!',
+        'results': []
+    },
+    'nonsense.ags': {
+        'filename': 'nonsense.ags',
+        'filesize': '0 kB',
+        'checker': 'python_ags4 v0.3.6',
+        'dictionary': 'Standard_dictionary_v4_1.ags',
+        'time': '2021-08-23 14:25:43',
+        'message': '7 error(s) found in file!',
+        'results': [
+            {'rule': 'Rule 2a',
+             'errors': [
+                 {'line_no': 1, 'group': '', 'description': 'Is not terminated by <CR> and <LF> characters.'}
+             ]
+             },
+            {'rule': 'Rule 3',
+             'errors': [
+                 {'line_no': 1, 'group': '', 'description': 'Does not start with a valid data descriptor.'}
+             ]
+             },
+            {'rule': 'Rule 5',
+             'errors': [
+                 {'line_no': 1, 'group': '', 'description': 'Contains fields that are not enclosed in double quotes.'}
+             ]
+             },
+            {'rule': 'Rule 13',
+             'errors': [
+                 {'line_no': 1, 'group': 'PROJ', 'description': 'PROJ table not found.'}
+             ]
+             },
+            {'rule': 'Rule 14',
+             'errors': [
+                 {'line_no': 1, 'group': 'TRAN', 'description': 'TRAN table not found.'}
+             ]
+             },
+            {'rule': 'Rule 15',
+             'errors': [
+                 {'line_no': 1, 'group': 'UNIT', 'description': 'UNIT table not found.'}
+             ]
+             },
+            {'rule': 'Rule 17',
+             'errors': [
+                 {'line_no': 1, 'group': 'TYPE', 'description': 'TYPE table not found.'}
+             ]
+             },
+        ]
+    },
+    'random_binary.ags': {
+        'filename': 'random_binary.ags',
+        'filesize': '1 kB',
+        'checker': 'python_ags4 v0.3.6',
+        'dictionary': 'Standard_dictionary_v4_1.ags',
+        'time': '2021-08-23 14:25:43',
+        'message': 'File could not be opened for checking.',
+        'results': [
+            {'rule': 'File read error',
+             'errors': [
+                 {'line_no': 1, 'group': '', 'description': 'ERROR: Unreadable character "á" at position 1'}
+             ]
+             },
+        ]
+    }
+}
+
 
 @pytest.mark.parametrize('filename, expected', [
     ('example1.ags', ('All checks passed!', 3)),
