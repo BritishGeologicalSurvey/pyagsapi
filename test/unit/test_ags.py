@@ -1,5 +1,4 @@
 """Tests for calls to AGS functions."""
-import datetime as dt
 from pathlib import Path
 import re
 
@@ -8,6 +7,7 @@ import pytest
 
 from app import ags
 from test.fixtures_json import JSON_RESPONSES
+from test.fixtures import ISVALID_RSP_DATA
 
 TEST_FILE_DIR = Path(__file__).parent.parent / 'files'
 
@@ -75,14 +75,7 @@ def test_convert_bad_files(tmp_path, filename, expected):
     assert re.search(expected_message, log)
 
 
-@pytest.mark.parametrize('filename, expected', [
-    ('example1.ags', True),
-    ('nonsense.ags', False),
-    ('empty.ags', False),
-    ('dummy.xlsx', False),
-    ('random_binary.ags', False),
-    ('real/A3040_03.ags', False),
-])
+@pytest.mark.parametrize('filename, expected', ISVALID_RSP_DATA)
 def test_is_valid(filename, expected):
     # Arrange
     filename = TEST_FILE_DIR / filename

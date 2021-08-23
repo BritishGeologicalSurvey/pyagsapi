@@ -21104,3 +21104,35 @@ JSON_RESPONSES = {
                          'line': 2081}]},
         'valid': False}
 }
+
+# These response values break the schema
+BROKEN_JSON_RESPONSES = [
+    {
+        'filename': 'nonsense.ags',
+        'filesize': 9,
+        'checker': 'python_ags4 v0.3.6',
+        'dictionary': 'Standard_dictionary_v4_1.ags',
+        'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
+        'message': '7 error(s) found in file!',
+        'errors': {
+            'Rule 2a': [{'line': '*',
+                         'group': '',
+                         'desc': ''}],
+        },
+        'valid': False
+    },
+    {
+        'filename': 'nonsense.ags',
+        'filesize': 9,
+        'checker': 'python_ags4 v0.3.6',
+        'dictionary': 'Standard_dictionary_v4_1.ags',
+        'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
+        'message': '7 error(s) found in file!',
+        'errors': {
+            'Rule 0': [{'line': 1,
+                        'group': '',
+                        'desc': ''}],
+        },
+        'valid': False
+    },
+]

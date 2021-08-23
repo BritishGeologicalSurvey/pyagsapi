@@ -1,43 +1,9 @@
 """Tests for schemas."""
-import datetime as dt
-
 import pytest
 from pydantic.error_wrappers import ValidationError
 
 from app.schemas import Validation
-from .test_ags import JSON_RESPONSES
-
-
-BROKEN_JSON_RESPONSES = [
-    {
-        'filename': 'nonsense.ags',
-        'filesize': 9,
-        'checker': 'python_ags4 v0.3.6',
-        'dictionary': 'Standard_dictionary_v4_1.ags',
-        'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
-        'message': '7 error(s) found in file!',
-        'errors': {
-            'Rule 2a': [{'line': '*',
-                         'group': '',
-                         'desc': ''}],
-        },
-        'valid': False
-    },
-    {
-        'filename': 'nonsense.ags',
-        'filesize': 9,
-        'checker': 'python_ags4 v0.3.6',
-        'dictionary': 'Standard_dictionary_v4_1.ags',
-        'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
-        'message': '7 error(s) found in file!',
-        'errors': {
-            'Rule 0': [{'line': 1,
-                        'group': '',
-                        'desc': ''}],
-        },
-        'valid': False
-    },
-]
+from test.fixtures_json import JSON_RESPONSES, BROKEN_JSON_RESPONSES
 
 
 @pytest.mark.parametrize('filename, data',
