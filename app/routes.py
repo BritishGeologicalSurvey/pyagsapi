@@ -10,7 +10,7 @@ from fastapi.responses import FileResponse, StreamingResponse
 
 from app import ags
 from app.errors import error_responses, InvalidPayloadError
-from app.schemas import Validation, ValidationResponse
+from app.schemas import ValidationResponse
 
 router = APIRouter()
 
@@ -32,7 +32,7 @@ class Format(str, Enum):
 
 
 format_query = Query(
-    default=Format.TEXT,
+    default=Format.JSON,
     title='Format',
     description='Response format, text or json',
 )
@@ -77,8 +77,7 @@ async def validate(background_tasks: BackgroundTasks,
         logfile.write_text(log)
         response = FileResponse(logfile, media_type="text/plain")
     else:
-        data = []
-        data.append(prepare_validation_item(log))
+        data = [log]
         response = prepare_validation_response(request, data)
     return response
 
@@ -112,7 +111,7 @@ async def validate_many(background_tasks: BackgroundTasks,
             local_ags_file = tmp_dir / file.filename
             local_ags_file.write_bytes(contents)
             log = ags.validate(local_ags_file)
-            data.append(prepare_validation_item(log))
+            data.append(log)
         response = prepare_validation_response(request, data)
     return response
 
@@ -122,6 +121,7 @@ async def validate_many(background_tasks: BackgroundTasks,
              responses=zip_responses)
 async def convert_many(background_tasks: BackgroundTasks,
                        files: List[UploadFile] = File(...),
+                       fmt: Format = format_query,
                        request: Request = None):
     if not files[0].filename:
         raise InvalidPayloadError(request)
@@ -159,26 +159,3 @@ def prepare_validation_response(request, data):
         'data': data,
     }
     return ValidationResponse(**response_data)
-
-
-def prepare_validation_item(log):
-    lines = log.split('\n')
-    validation = {}
-    line_count = 0
-    for line in lines:
-        if line == '':
-            break
-        line_parts = line.split(':')
-        key = line_parts[0]
-        value = ':'.join(line_parts[1:]).strip()
-        validation[key] = value
-        line_count += 1
-    # Remove blank lines
-    lines = [line for line in lines[line_count:] if line != '']
-    if 'error(s) found in file!' in lines[0]:
-        message = lines[0].strip()
-        validation['results'] = '\n'.join(lines[1:]).strip()
-    else:
-        message = '\n'.join(lines).strip()
-    validation['message'] = message
-    return Validation(**validation)
