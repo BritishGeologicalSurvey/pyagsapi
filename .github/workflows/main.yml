@@ -15,7 +15,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: python-ags-api
+  IMAGE_NAME: pyagsapi
 
 jobs:
   # Push image to GitHub Packages.

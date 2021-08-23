@@ -80,14 +80,14 @@ def custom_openapi():
     if app.openapi_schema:
         return app.openapi_schema
     openapi_schema = get_openapi(
-        title="AGS Python Libary API",
+        title="pyagsapi an AGS Python Library API",
         version="0.1.0",
         description=("This OpenAPI schema, Validate or convert your AGS files here. "
                      "Validation is against the official AGS standard only."),
         routes=app.routes,
     )
     openapi_schema["info"]["x-logo"] = {
-        "url": ("https://raw.githubusercontent.com/BritishGeologicalSurvey/AGS-Validator"
+        "url": ("https://raw.githubusercontent.com/BritishGeologicalSurvey/pyagsapi"
                 "/main/app/static/img/BGS-Logo-Pos-RGB-01.png")
     }
     app.openapi_schema = openapi_schema
