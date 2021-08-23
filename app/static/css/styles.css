@@ -1,9 +1,20 @@
+main {
+    min-height: 100%;
+    margin-bottom: -100px;
+}
+
+main:after {
+    content: "";
+    display: block;
+    height: 100px;
+}
+
 body {
+    height: 100%;
     color: #002E40;
     text-align: left;
     font-family: Arial, Helvetica, sans-serif;
 }
-
 
 h1 {
     color: #002E40;
@@ -22,4 +33,63 @@ img {
     margin-left: auto;
     margin-right: auto;
     width: 20%;
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black;
+  }
+  
+  .tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    top: -5px;
+    left: 110%;
+  }
+  
+  .tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 100%;
+    margin-top: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent black transparent transparent;
+  }
+  .tooltip:hover .tooltiptext {
+    visibility: visible;
+
+footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    margin:0em;
+	padding:0em;
+	min-height:60px;
+    background-color: #002E40;
+    background-image:linear-gradient(0deg, #002E40, #002E40);
+    width: 100%;
+    color:  #002E40;
+    text-align: center;
+}
+
+.left{
+    text-align:left;
+    float:left;
+}
+.right{
+    float:right;
+    text-align:right;
+}
+.centered{
+    text-align:center;
 }

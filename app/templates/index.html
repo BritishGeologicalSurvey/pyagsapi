@@ -4,8 +4,9 @@
     <link href="{{ url_for('static', path='/css/styles.css') }}" rel="stylesheet">
 </head>
 <body>
+  <main>
     <img src="{{ url_for('static', path='/img/BGS-Logo-Pos-RGB-01.png') }}" alt="BGS Logo">
-    <h1>pyagsapi - AGS File Utilities API</h1>
+    <h1>AGS File Utilities API</h1>
     <br>
     <p>Validate or convert your AGS files here.</p>
     <p>
@@ -16,22 +17,17 @@
       </ul>
   </p>
     <br>
-    <h2>AGS Validator - Single File</h2>
-    <p>Select .ags file for validation (v4.x only). Validation is against the official AGS standard only.</p>
-    <form action="/validate/" enctype="multipart/form-data" method="post">
-    <input name="file" type="file">
-    <input type="submit">
-    </form>
-    <br>
-    <h2>AGS Validator - Multiple Files</h2>
-    <p>Select .ags files for validation (v4.x only). Validation is against the official AGS standard only.</p>
+    <h2>AGS Validator</h2>
+    <p>Select .ags file(s) for validation (v4.x only). Validation is against the official AGS standard only.</p>
     <form action="/validatemany/" enctype="multipart/form-data" method="post">
     <input name="files" type="file" multiple>
     <input type="submit">
     </form>
     <br>
     <h2>AGS Converter</h2>
-    <p>Convert .ags file(s) to/from .xlsx. Which ever format file is submitted, the opposite will be returned e.g. if 5 .ags files and 3 .xlsx files were submitted the result would be 5 .xlsx files and 3 .ags files</p>
+      <div class="tooltip">Convert .ags file(s) to/from .xlsx.
+        <span class="tooltiptext">Which ever format file is submitted, the opposite will be returned e.g. if 5 .ags files and 3 .xlsx files were submitted the result would be 5 .xlsx files and 3 .ags files</span>
+      </div>
     <form action="/convert/" enctype="multipart/form-data" method="post">
     <input name="files" type="file" multiple>
     <input type="submit">
@@ -45,12 +41,21 @@
         <a href="/openapi.json/">OpenAPI Document</a>
       </p>
     </section>
-    <section id="notice">
-      <p>
-       pyagsapi was created by and is maintained by the British Geological Survey. It is distributed under the LGPL v3.0 licence. Copyright: © BGS / UKRI 2021 
-      </p>
-    </section>
-    
-    <img src="{{ url_for('static', path='/img/UKRI_NER_Council-Logo_Horiz-RGB.png') }}" alt="UKRI Logo">
-</body>
+  </main>
+    <footer class="sticky">
+      <div id="footer"></div>
+          <p class="left">
+            <a href="https://www.bgs.ac.uk" title="British Geological Survey" >
+            <img src="{{ url_for('static', path='/img/BGS-Logo-Pos-RGB-01.png') }}" title="British Geological Survey" alt="BGS Logo" />
+            </a>
+          </p>
+          <p class="right">
+            <a href="https://nerc.ukri.org/" title="The BGS is a research centre of the Natural Environment Research Council" target="_blank">
+            <img src="{{ url_for('static', path='/img/UKRI_NER_Council-Logo_Horiz-RGB.png') }}" title="The BGS is a research centre of the Natural Environment Research Council" alt="NERC UKRI Logo" />
+            </a>
+          </p>
+          <p class="centered">Powered by <a title="pyagsapi" href="https://github.com/BritishGeologicalSurvey/pyagsapi">pyagsapi</a>. pyagsapi was created by and is maintained by the <a href="https://www.bgs.ac.uk/">British Geological Survey</a>. It is distributed under the LGPL v3.0 licence. &copy; Copyright <script>document.write(new Date().getFullYear())</script>, BGS / UKRI.</p>
+      </div>
+    </footer>
+  </body>
 </html>
