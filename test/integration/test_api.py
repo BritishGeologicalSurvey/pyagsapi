@@ -4,6 +4,8 @@ import re
 
 from fastapi.testclient import TestClient
 import pytest
+from httpx import AsyncClient
+from requests_toolbelt.multipart.encoder import MultipartEncoder
 
 from app.main import app
 
@@ -27,13 +29,19 @@ def test_openapi_json(client):
     ('real/CG014058_F.ags', r'ERROR: Unreadable character "æ" at position 80 on line: 263'),
     ('real/Blackburn Southern Bypass.ags', r'93 error\(s\) found in file!'),  # this file contains BOM character
 ])
-def test_validate(client, filename, expected):
+@pytest.mark.asyncio
+async def test_validate(async_client, filename, expected):
     # Arrange
     filename = TEST_FILE_DIR / filename
+    mp_encoder = MultipartEncoder(
+        fields={'file': (filename.name, open(filename, 'rb'), 'text/plain')})
 
     # Act
-    response = client.post('/validate/?fmt=text',
-                           files={'file': (filename.name, str(filename))})
+    async with async_client as ac:
+        response = await ac.post(
+            '/validate/?fmt=text',
+            headers={'Content-Type': mp_encoder.content_type},
+            data=mp_encoder.to_string())
 
     # Assert
     assert response.status_code == 200
@@ -43,3 +51,8 @@ def test_validate(client, filename, expected):
 @pytest.fixture(scope="function")
 def client():
     return TestClient(app)
+
+
+@pytest.fixture(scope="function")
+def async_client():
+    return AsyncClient(app=app, base_url="http://test")
