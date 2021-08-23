@@ -6,7 +6,7 @@ import re
 import subprocess
 from tempfile import TemporaryDirectory
 from textwrap import dedent
-from typing import Tuple, Optional
+from typing import Tuple, Optional, List
 
 import python_ags4
 from python_ags4 import AGS4
@@ -35,8 +35,11 @@ def validate(filename: Path) -> dict:
     # Get error information from file
     try:
         errors = AGS4.check_file(filename)
-        dictionary = [d['desc'] for d in errors['Metadata']
+        metadata = errors.pop('Metadata')  # This also removes it from returned errors
+        dictionary = [d['desc'] for d in metadata
                       if d['line'] == 'Dictionary'][0]
+        # Restructure errors
+        errors = _parse_errors(errors)
         message = ''
     except UnicodeDecodeError as exc:
         line_no = 999
@@ -45,6 +48,7 @@ def validate(filename: Path) -> dict:
                    'errors': [
                        {'line_no': line_no, 'group': None, 'desc': description}
                    ]}]
+        errors = exc
         dictionary = ''
         message = 'File could not be opened for checking.'
 
@@ -54,6 +58,13 @@ def validate(filename: Path) -> dict:
     response['message'] = message
 
     return response
+
+
+def _parse_errors(errors: dict) -> List[dict]:
+    new_errors = []
+    for key, value in errors.items():
+        new_errors.append({'rule': key, 'errors': value})
+    return new_errors
 
 
 def convert(filename: Path, results_dir: Path) -> Tuple[Optional[Path], str]:

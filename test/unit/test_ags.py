@@ -95,7 +95,7 @@ def test_validate(filename, expected):
 
     # Assert
     # Check that metadata fields are correct
-    for key in ['filename', 'filesize', 'checker', 'time', 'dictionary']:
+    for key in ['filename', 'filesize', 'checker', 'time', 'dictionary', 'errors']:
         print(key)
         assert response[key] == expected[key]
 
