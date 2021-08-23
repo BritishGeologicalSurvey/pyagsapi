@@ -1,4 +1,5 @@
 """Tests for calls to AGS functions."""
+import datetime as dt
 from pathlib import Path
 import re
 
@@ -11,19 +12,19 @@ TEST_FILE_DIR = Path(__file__).parent.parent / 'files'
 JSON_RESPONSES = {
     'example1.ags': {
         'filename': 'example1.ags',
-        'filesize': '3 kB',
+        'filesize': 4039,
         'checker': 'python_ags4 v0.3.6',
         'dictionary': 'Standard_dictionary_v4_1.ags',
-        'time': '2021-08-23 14:25:43',
+        'time': dt.datetime(2021, 8, 23, 14, 25, 43),
         'message': 'All checks passed!',
         'errors': []
     },
     'nonsense.ags': {
         'filename': 'nonsense.ags',
-        'filesize': '0 kB',
+        'filesize': 0,
         'checker': 'python_ags4 v0.3.6',
         'dictionary': 'Standard_dictionary_v4_1.ags',
-        'time': '2021-08-23 14:25:43',
+        'time': dt.datetime(2021, 8, 23, 14, 25, 43),
         'message': '7 error(s) found in file!',
         'errors': [
             {'rule': 'Rule 2a',
@@ -65,10 +66,10 @@ JSON_RESPONSES = {
     },
     'random_binary.ags': {
         'filename': 'random_binary.ags',
-        'filesize': '1 kB',
+        'filesize': 1024,
         'checker': 'python_ags4 v0.3.6',
         'dictionary': 'Standard_dictionary_v4_1.ags',
-        'time': '2021-08-23 14:25:43',
+        'time': dt.datetime(2021, 8, 23, 14, 25, 43),
         'message': 'File could not be opened for checking.',
         'errors': [
             {'rule': 'File read error',
