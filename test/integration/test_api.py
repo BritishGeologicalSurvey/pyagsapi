@@ -30,7 +30,7 @@ def test_openapi_json(client):
     ('real/Blackburn Southern Bypass.ags', r'93 error\(s\) found in file!'),  # this file contains BOM character
 ])
 @pytest.mark.asyncio
-async def test_validate(async_client, filename, expected):
+async def test_validate_text(async_client, filename, expected):
     # Arrange
     filename = TEST_FILE_DIR / filename
     mp_encoder = MultipartEncoder(
