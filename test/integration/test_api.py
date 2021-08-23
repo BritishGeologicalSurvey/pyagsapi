@@ -20,6 +20,41 @@ def test_openapi_json(client):
 
 
 @pytest.mark.parametrize('filename, expected', [
+    ('example1.ags', True),
+    ('nonsense.ags', False),
+    ('empty.ags', False),
+    ('real/A3040_03.ags', False),
+    ('example1.xlsx', False),
+    ('random_binary.ags', False),
+    ('real/CG014058_F.ags', False),
+    ('real/Blackburn Southern Bypass.ags', False),  # this file contains BOM character
+])
+@pytest.mark.asyncio
+async def test_isvalid(async_client, filename, expected):
+    # Arrange
+    filename = TEST_FILE_DIR / filename
+    mp_encoder = MultipartEncoder(
+        fields={'file': (filename.name, open(filename, 'rb'), 'text/plain')})
+
+    # Act
+    async with async_client as ac:
+        response = await ac.post(
+            '/isvalid/',
+            headers={'Content-Type': mp_encoder.content_type},
+            data=mp_encoder.to_string())
+
+    # Assert
+    assert response.status_code == 200
+    body = response.json()
+    assert set(body.keys()) == {'msg', 'type', 'self', 'data'}
+    assert body['msg'] is not None
+    assert body['type'] == 'success'
+    assert body['self'] is not None
+    assert len(body['data']) == 1
+    assert body['data'][0] == expected
+
+
+@pytest.mark.parametrize('filename, expected', [
     ('example1.ags', 'All checks passed!'),
     ('nonsense.ags', r'7 error\(s\) found in file!'),
     ('empty.ags', r'4 error\(s\) found in file!'),
