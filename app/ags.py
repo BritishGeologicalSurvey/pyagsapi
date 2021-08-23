@@ -32,6 +32,27 @@ def validate(filename: Path) -> dict:
                 'checker': f'python_ags4 v{python_ags4.__version__}',
                 'time': dt.datetime.now(tz=dt.timezone.utc)}
 
+    # Get error information from file
+    try:
+        errors = AGS4.check_file(filename)
+        dictionary = [d['desc'] for d in errors['Metadata']
+                      if d['line'] == 'Dictionary'][0]
+        message = ''
+    except UnicodeDecodeError as exc:
+        line_no = 999
+        description = 'tbc'
+        errors = [{'rule': 'File read error',
+                   'errors': [
+                       {'line_no': line_no, 'group': None, 'desc': description}
+                   ]}]
+        dictionary = ''
+        message = 'File could not be opened for checking.'
+
+    # Add error info to response
+    response['dictionary'] = dictionary
+    response['errors'] = errors
+    response['message'] = message
+
     return response
 
 

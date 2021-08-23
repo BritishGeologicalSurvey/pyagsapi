@@ -30,37 +30,37 @@ JSON_RESPONSES = {
         'errors': [
             {'rule': 'Rule 2a',
              'errors': [
-                 {'line_no': 1, 'group': '', 'description': 'Is not terminated by <CR> and <LF> characters.'}
+                 {'line_no': 1, 'group': '', 'desc': 'Is not terminated by <CR> and <LF> characters.'}
              ]
              },
             {'rule': 'Rule 3',
              'errors': [
-                 {'line_no': 1, 'group': '', 'description': 'Does not start with a valid data descriptor.'}
+                 {'line_no': 1, 'group': '', 'desc': 'Does not start with a valid data descriptor.'}
              ]
              },
             {'rule': 'Rule 5',
              'errors': [
-                 {'line_no': 1, 'group': '', 'description': 'Contains fields that are not enclosed in double quotes.'}
+                 {'line_no': 1, 'group': '', 'desc': 'Contains fields that are not enclosed in double quotes.'}
              ]
              },
             {'rule': 'Rule 13',
              'errors': [
-                 {'line_no': 1, 'group': 'PROJ', 'description': 'PROJ table not found.'}
+                 {'line_no': 1, 'group': 'PROJ', 'desc': 'PROJ table not found.'}
              ]
              },
             {'rule': 'Rule 14',
              'errors': [
-                 {'line_no': 1, 'group': 'TRAN', 'description': 'TRAN table not found.'}
+                 {'line_no': 1, 'group': 'TRAN', 'desc': 'TRAN table not found.'}
              ]
              },
             {'rule': 'Rule 15',
              'errors': [
-                 {'line_no': 1, 'group': 'UNIT', 'description': 'UNIT table not found.'}
+                 {'line_no': 1, 'group': 'UNIT', 'desc': 'UNIT table not found.'}
              ]
              },
             {'rule': 'Rule 17',
              'errors': [
-                 {'line_no': 1, 'group': 'TYPE', 'description': 'TYPE table not found.'}
+                 {'line_no': 1, 'group': 'TYPE', 'desc': 'TYPE table not found.'}
              ]
              },
         ]
@@ -69,13 +69,13 @@ JSON_RESPONSES = {
         'filename': 'random_binary.ags',
         'filesize': 1024,
         'checker': 'python_ags4 v0.3.6',
-        'dictionary': 'Standard_dictionary_v4_1.ags',
+        'dictionary': '',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
         'message': 'File could not be opened for checking.',
         'errors': [
             {'rule': 'File read error',
              'errors': [
-                 {'line_no': 1, 'group': '', 'description': 'ERROR: Unreadable character "á" at position 1'}
+                 {'line_no': 1, 'group': '', 'desc': 'ERROR: Unreadable character "á" at position 1'}
              ]
              },
         ]
@@ -86,7 +86,7 @@ JSON_RESPONSES = {
 @freeze_time("2021-08-23 14:25:43")
 @pytest.mark.parametrize('filename, expected',
                          [item for item in JSON_RESPONSES.items()])
-def test_validate(tmp_path, filename, expected):
+def test_validate(filename, expected):
     # Arrange
     filename = TEST_FILE_DIR / filename
 
@@ -95,7 +95,7 @@ def test_validate(tmp_path, filename, expected):
 
     # Assert
     # Check that metadata fields are correct
-    for key in ['filename', 'filesize', 'checker', 'time']:
+    for key in ['filename', 'filesize', 'checker', 'time', 'dictionary']:
         print(key)
         assert response[key] == expected[key]
 
