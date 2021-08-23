@@ -3,6 +3,7 @@ import datetime as dt
 from pathlib import Path
 import re
 
+from freezegun import freeze_time
 import pytest
 
 from app import ags
@@ -15,16 +16,16 @@ JSON_RESPONSES = {
         'filesize': 4039,
         'checker': 'python_ags4 v0.3.6',
         'dictionary': 'Standard_dictionary_v4_1.ags',
-        'time': dt.datetime(2021, 8, 23, 14, 25, 43),
+        'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
         'message': 'All checks passed!',
         'errors': []
     },
     'nonsense.ags': {
         'filename': 'nonsense.ags',
-        'filesize': 0,
+        'filesize': 9,
         'checker': 'python_ags4 v0.3.6',
         'dictionary': 'Standard_dictionary_v4_1.ags',
-        'time': dt.datetime(2021, 8, 23, 14, 25, 43),
+        'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
         'message': '7 error(s) found in file!',
         'errors': [
             {'rule': 'Rule 2a',
@@ -69,7 +70,7 @@ JSON_RESPONSES = {
         'filesize': 1024,
         'checker': 'python_ags4 v0.3.6',
         'dictionary': 'Standard_dictionary_v4_1.ags',
-        'time': dt.datetime(2021, 8, 23, 14, 25, 43),
+        'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
         'message': 'File could not be opened for checking.',
         'errors': [
             {'rule': 'File read error',
@@ -82,28 +83,21 @@ JSON_RESPONSES = {
 }
 
 
-@pytest.mark.parametrize('filename, expected', [
-    ('example1.ags', ('All checks passed!', 3)),
-    ('nonsense.ags', (r'7 error\(s\) found in file!', 0)),
-    ('empty.ags', (r'4 error\(s\) found in file!', 0)),
-    ('real/A3040_03.ags', (r'5733 error\(s\) found in file!', 258)),
-    ('example1.xlsx', ('ERROR: Only .ags files are accepted as input.', 11)),
-    ('random_binary.ags', ('ERROR: Unreadable character "á" at position 1 on line: 1\nStarting:', 1)),
-    ('real/CG014058_F.ags', (r'ERROR: Unreadable character "æ" at position 80 on line: 263\nStarting: "WS2"', 49)),
-    ('real/Blackburn Southern Bypass.ags', (r'93 error\(s\) found in file!', 6)),  # this file contains BOM character
-])
+@freeze_time("2021-08-23 14:25:43")
+@pytest.mark.parametrize('filename, expected',
+                         [item for item in JSON_RESPONSES.items()])
 def test_validate(tmp_path, filename, expected):
     # Arrange
     filename = TEST_FILE_DIR / filename
-    expected_message, expected_size = expected
 
     # Act
     response = ags.validate(filename)
 
     # Assert
-    assert f"File Name: \t {filename.name}" in response
-    assert f"File Size: \t {expected_size:n} kB" in response
-    assert re.search(expected_message, response)
+    # Check that metadata fields are correct
+    for key in ['filename', 'filesize', 'checker', 'time']:
+        print(key)
+        assert response[key] == expected[key]
 
 
 @pytest.mark.parametrize('filename, expected', [
