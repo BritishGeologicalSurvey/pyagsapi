@@ -112,14 +112,7 @@ def is_valid(filename: Path) -> bool:
     """
     Validate filename and parse returned log to determine if file is valid.
     """
-    return log_is_valid(validate(filename))
-
-
-def log_is_valid(log: str) -> bool:
-    """
-    Parse validation log to determine if file is valid.
-    """
-    return 'All checks passed!' in log
+    return validate(filename)['valid']
 
 
 def get_unicode_message(stderr: str, filename: str) -> str:
