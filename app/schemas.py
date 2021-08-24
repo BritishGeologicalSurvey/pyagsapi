@@ -13,18 +13,9 @@ VALID_KEYS = (
 )
 
 
-class GroupEnum(str, Enum):
-    proj = 'PROJ'
-    tran = 'TRAN'
-    unit = 'UNIT'
-    type_ = 'TYPE'
-    bkfl = 'BKFL'
-    none = ''
-
-
 class LineError(BaseModel):
     line: Union[int, str] = Field(..., example="5")
-    group: GroupEnum = Field(..., example="TRAN")
+    group: str = Field(..., example="TRAN")
     desc: str = Field(..., example="Blah blah")
 
     @validator('line')
