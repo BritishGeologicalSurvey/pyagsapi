@@ -1,25 +1,32 @@
+from datetime import datetime
+from enum import Enum
+from typing import Dict, List, Union
+
 from pydantic import BaseModel, Field
-from typing import List, Union
+
+
+class GroupEnum(str, Enum):
+    proj = 'PROJ'
+    tran = 'TRAN'
+    unit = 'UNIT'
+    type_ = 'TYPE'
+    none = ''
+
+
+class LineError(BaseModel):
+    line: str = Field(..., example="5")
+    group: GroupEnum = Field(..., example="TRAN")
+    desc: str = Field(..., example="Blah blah")
 
 
 class Validation(BaseModel):
-    class Config:
-        """
-        Alias field names
-        """
-        fields = {'filename': {'alias': 'File Name'},
-                  'filesize': {'alias': 'File Size'},
-                  'checker': {'alias': 'Checker'},
-                  'dictionary': {'alias': 'Dictionary'},
-                  'time': {'alias': 'Time (UTC)'}}
-
     filename: str = Field(..., example="example.ags")
-    filesize: str = Field(None, example="1 kB")
+    filesize: int = Field(None, example="1024")
     checker: str = Field(None, example="python_ags4 v0.3.6")
     dictionary: str = Field(None, example="Standard_dictionary_v4_1.ags")
-    time: str = Field(None, example="2021-08-18 09:23:29")
+    time: datetime = Field(None, example="2021-08-18 09:23:29")
     message: str = Field(None, example="7 error(s) found in file!")
-    results: str = Field(None, example="Rule 2a: Line 1 Is not terminated by <CR> and <LF> characters.\n...")
+    errors: Dict[str, List[LineError]]  = Field(..., example="Rule 1a")
 
 
 class Error(BaseModel):
