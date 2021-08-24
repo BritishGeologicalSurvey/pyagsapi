@@ -30,6 +30,39 @@ def test_validate(filename, expected):
         assert response[key] == expected[key]
 
 
+@pytest.mark.parametrize('dictionary', [
+     "Standard_dictionary_v4_0_3.ags",
+     "Standard_dictionary_v4_0_4.ags",
+     "Standard_dictionary_v4_1.ags"])
+def test_validate_custom_dictionary(dictionary):
+    # Arrange
+    filename = TEST_FILE_DIR / 'example1.ags'
+
+    # Act
+    response = ags.validate(filename,
+                            standard_AGS4_dictionary=dictionary)
+
+    # Assert
+    assert response['filename'] == 'example1.ags'
+    assert response['dictionary'] == dictionary
+
+
+def test_validate_custom_dictionary_bad_file():
+    # Arrange
+    filename = TEST_FILE_DIR / 'example1.ags'
+    dictionary = 'bad_file.ags'
+
+    # Act
+    with pytest.raises(ValueError) as err:
+        ags.validate(filename, standard_AGS4_dictionary=dictionary)
+
+    # Assert
+    message = str(err.value)
+    assert 'dictionary' in message
+    for key in ags.STANDARD_DICTIONARIES:
+        assert key in message
+
+
 @pytest.mark.parametrize('filename, expected', GOOD_FILE_DATA)
 def test_convert(tmp_path, filename, expected):
     # Arrange
