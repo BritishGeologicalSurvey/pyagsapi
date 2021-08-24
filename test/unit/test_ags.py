@@ -8,6 +8,7 @@ import pytest
 from app import ags
 from test.fixtures_json import JSON_RESPONSES
 from test.fixtures import ISVALID_RSP_DATA
+from test.fixtures_plain_text import PLAIN_TEXT_RESPONSES
 
 TEST_FILE_DIR = Path(__file__).parent.parent / 'files'
 
@@ -79,9 +80,25 @@ def test_convert_bad_files(tmp_path, filename, expected):
 def test_is_valid(filename, expected):
     # Arrange
     filename = TEST_FILE_DIR / filename
+    expected = expected.strip()
 
     # Act
     result = ags.is_valid(filename)
 
     # Assert
     assert result == expected
+
+
+@pytest.mark.parametrize('response, expected', [
+    (JSON_RESPONSES['example1.ags'], PLAIN_TEXT_RESPONSES['example1.ags']),
+    (JSON_RESPONSES['nonsense.ags'], PLAIN_TEXT_RESPONSES['nonsense.ags']),
+    (JSON_RESPONSES['random_binary.ags'], PLAIN_TEXT_RESPONSES['random_binary.ags']),
+    (JSON_RESPONSES['real/Blackburn Southern Bypass.ags'], PLAIN_TEXT_RESPONSES['real/Blackburn Southern Bypass.ags']),
+])
+def test_to_plain_text(response, expected):
+    # Act
+    text = ags.to_plain_text(response)
+    print(text)
+
+    # Assert
+    assert text.strip() == expected.strip()

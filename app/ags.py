@@ -8,6 +8,7 @@ import subprocess
 from textwrap import dedent
 from typing import Tuple, Optional
 
+from jinja2 import Template
 import python_ags4
 from python_ags4 import AGS4
 
@@ -20,6 +21,35 @@ RESPONSE_TEMPLATE = dedent("""
 
     {message}
     """).strip()
+
+PLAIN_TEXT_TEMPLATE = Template("""
+{{ filename }}: {{ message }}
+
+# Metadata
+
+File size: {{ filesize }} bytes
+Checker: {{ checker }}
+{%- if dictionary != '' %}
+Dictionary: {{ dictionary }}
+{%- endif %}
+Time: {{ time }}
+
+{% if not valid -%}
+# Errors
+
+{% for key in errors -%}
+## {{ key }}
+
+{% for item in errors[key] -%}
+{%- if item.line == '-' -%}
+Group: {{ item.group }} - {{ item.desc }}
+{% else -%}
+Line: {{ item.line }} - {{ item.desc }}
+{% endif %}
+{%- endfor %}
+{% endfor %}
+{%- endif -%}
+""".strip())
 
 
 def validate(filename: Path) -> dict:
@@ -66,6 +96,11 @@ def validate(filename: Path) -> dict:
     response['valid'] = valid
 
     return response
+
+
+def to_plain_text(response: dict) -> str:
+    """Take JSON response from convert and render as plain text."""
+    return PLAIN_TEXT_TEMPLATE.render(response)
 
 
 def convert(filename: Path, results_dir: Path) -> Tuple[Optional[Path], str]:
