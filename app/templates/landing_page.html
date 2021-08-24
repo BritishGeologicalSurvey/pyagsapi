@@ -1,0 +1,50 @@
+{% extends "_base.html" %}
+{% block title %}Home{% endblock %}
+{% block body %}
+
+<br/>
+<section id="identification">
+    <h1>AGS File Utilities API</h1>
+    <br>
+    <p>Validate or convert your AGS files here.</p>
+    <p>
+      <ul>
+        <li>Accepts multiple AGS files. (Hold down <b>Ctrl</b> key to select more than one file)</li>
+        <li>There is a total file size limit of 50MB</li>
+        <li>Tests AGS versions 4.x </li>
+      </ul>
+  </p>
+</section>
+<section id="validator">
+    <br>
+    <h2>AGS Validator</h2>
+    <p>Select .ags file(s) for validation (v4.x only). Validation is against the official AGS standard only.</p>
+    <form action="/validatemany/" enctype="multipart/form-data" method="post">
+    <input name="files" type="file" multiple>
+    <input type="submit">
+    </form>
+</section>
+<section id="converter">
+    <br>
+    <h2>AGS Converter</h2>
+      <div class="tooltip">Convert .ags file(s) to/from .xlsx.
+        <span class="tooltiptext">Which ever format file is submitted, the opposite will be returned e.g. if 5 .ags files and 3 .xlsx files were submitted the result would be 5 .xlsx files and 3 .ags files</span>
+      </div>
+    <form action="/convert/" enctype="multipart/form-data" method="post">
+    <input name="files" type="file" multiple>
+    <input type="submit">
+    </form>
+<section id="openapi">
+      <h2>API Definition</h2>
+      <p>
+        <a href="/docs/">Documentation</a> 
+      </p>
+      <p>
+        <a href="/openapi.json/">OpenAPI Document</a>
+      </p>
+      <p>
+        <a href="/redoc/">ReDoc</a>
+      </p>
+</section>
+
+{% endblock %}

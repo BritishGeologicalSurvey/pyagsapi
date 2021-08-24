@@ -28,13 +28,6 @@ h2 {
     font-family: Arial, Helvetica, sans-serif;
 }
 
-img {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    width: 20%;
-}
-
 .tooltip {
     position: relative;
     display: inline-block;
@@ -68,7 +61,13 @@ img {
   .tooltip:hover .tooltiptext {
     visibility: visible;
 
-footer {
+    img {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 20%;
+    }
+.footer {
     position: fixed;
     left: 0;
     bottom: 0;
@@ -83,13 +82,17 @@ footer {
 }
 
 .left{
+    
     text-align:left;
     float:left;
+    width: 33.33%;
 }
 .right{
     float:right;
+    width: 33.33%;
     text-align:right;
 }
 .centered{
+    width: 33.33%;
     text-align:center;
 }
