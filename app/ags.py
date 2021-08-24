@@ -35,9 +35,14 @@ def validate(filename: Path) -> dict:
     # Get error information from file
     try:
         errors = AGS4.check_file(filename)
-        metadata = errors.pop('Metadata')  # This also removes it from returned errors
-        dictionary = [d['desc'] for d in metadata
-                      if d['line'] == 'Dictionary'][0]
+        try:
+            metadata = errors.pop('Metadata')  # This also removes it from returned errors
+            dictionary = [d['desc'] for d in metadata
+                          if d['line'] == 'Dictionary'][0]
+        except KeyError:
+            # 'Metadata' is not created for some files with errors
+            dictionary = ''
+
         error_count = len(reduce(lambda acc, current: acc + current, errors.values(), []))
         if error_count > 0:
             message = f'{error_count} error(s) found in file!'

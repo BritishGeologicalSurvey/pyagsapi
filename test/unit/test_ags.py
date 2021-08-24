@@ -7,70 +7,9 @@ from freezegun import freeze_time
 import pytest
 
 from app import ags
+from test.fixtures_json import JSON_RESPONSES
 
 TEST_FILE_DIR = Path(__file__).parent.parent / 'files'
-
-JSON_RESPONSES = {
-    'example1.ags': {
-        'filename': 'example1.ags',
-        'filesize': 4039,
-        'checker': 'python_ags4 v0.3.6',
-        'dictionary': 'Standard_dictionary_v4_1.ags',
-        'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
-        'message': 'All checks passed!',
-        'errors': {},
-        'valid': True
-    },
-    'nonsense.ags': {
-        'filename': 'nonsense.ags',
-        'filesize': 9,
-        'checker': 'python_ags4 v0.3.6',
-        'dictionary': 'Standard_dictionary_v4_1.ags',
-        'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
-        'message': '7 error(s) found in file!',
-        'errors': {
-            'Rule 2a': [{'line': 1,
-                         'group': '',
-                         'desc': 'Is not terminated by <CR> and <LF> characters.'}],
-            'Rule 3': [{'line': 1,
-                        'group': '',
-                        'desc': 'Does not start with a valid data descriptor.'}],
-            'Rule 5': [{'line': 1,
-                        'group': '',
-                        'desc': 'Contains fields that are not enclosed in double quotes.'}],
-            'Rule 13': [{'line': '-', 'group': 'PROJ', 'desc': 'PROJ table not found.'}],
-            'Rule 14': [{'line': '-', 'group': 'TRAN', 'desc': 'TRAN table not found.'}],
-            'Rule 15': [{'line': '-', 'group': 'UNIT', 'desc': 'UNIT table not found.'}],
-            'Rule 17': [{'line': '-', 'group': 'TYPE', 'desc': 'TYPE table not found.'}]},
-        'valid': False
-    },
-    'random_binary.ags': {
-        'filename': 'random_binary.ags',
-        'filesize': 1024,
-        'checker': 'python_ags4 v0.3.6',
-        'dictionary': '',
-        'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
-        'message': 'Unable to open file.',
-        'errors': {
-            'UnicodeDecodeError': [{'line': 1,
-                                    'group': '',
-                                    'desc': 'invalid continuation byte'}]},
-        'valid': False
-    },
-    'real/CG014058_F.ags': {
-        'filename': 'CG014058_F.ags',
-        'filesize': 50574,
-        'checker': 'python_ags4 v0.3.6',
-        'dictionary': '',
-        'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
-        'message': 'Unable to open file.',
-        'errors': {
-            'UnicodeDecodeError': [{'line': 263,
-                                    'group': '',
-                                    'desc': 'invalid continuation byte'}]},
-        'valid': False
-    }
-}
 
 
 @freeze_time("2021-08-23 14:25:43")
