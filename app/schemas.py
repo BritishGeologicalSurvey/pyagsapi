@@ -9,7 +9,8 @@ VALID_KEYS = (
     'Rule 5', 'Rule 7', 'Rule 9', 'Rule 10a', 'Rule 10b', 'Rule 10c', 'Rule 11a',
     'Rule 11b', 'Rule 11c', 'Rule 13', 'Rule 14', 'Rule 15', 'Rule 16', 'Rule 17',
     'Rule 18', 'Rule 19', 'Rule 19a', 'Rule 19b', 'Rule 19c', 'Rule 20',
-    'File read error')
+    'File read error', 'UnicodeDecodeError',
+)
 
 
 class GroupEnum(str, Enum):
@@ -17,6 +18,7 @@ class GroupEnum(str, Enum):
     tran = 'TRAN'
     unit = 'UNIT'
     type_ = 'TYPE'
+    bkfl = 'BKFL'
     none = ''
 
 
@@ -39,7 +41,7 @@ class Validation(BaseModel):
     dictionary: str = Field(None, example="Standard_dictionary_v4_1.ags")
     time: datetime = Field(None, example="2021-08-18 09:23:29")
     message: str = Field(None, example="7 error(s) found in file!")
-    errors: Dict[str, List[LineError]]  = Field(..., example="Rule 1a")
+    errors: Dict[str, List[LineError]] = Field(..., example="Rule 1a")
     valid: bool = Field(..., example='false')
 
     @validator('errors')

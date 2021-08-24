@@ -18,8 +18,8 @@ BROKEN_JSON_RESPONSES = [
         'message': '7 error(s) found in file!',
         'errors': {
             'Rule 2a': [{'line': 1,
-                        'group': 'NONE',
-                        'desc': ''}],
+                         'group': 'NONE',
+                         'desc': ''}],
         }
     },
     {
@@ -31,8 +31,8 @@ BROKEN_JSON_RESPONSES = [
         'message': '7 error(s) found in file!',
         'errors': {
             'Rule 2a': [{'line': '*',
-                        'group': '',
-                        'desc': ''}],
+                         'group': '',
+                         'desc': ''}],
         }
     },
     {
@@ -55,11 +55,11 @@ BROKEN_JSON_RESPONSES = [
                          [item for item in JSON_RESPONSES.items()])
 def test_validation(filename, data):
     v = Validation(**data)
-    assert v.filename == filename
+    assert filename.endswith(v.filename)
 
 
 @pytest.mark.parametrize('data',
                          [item for item in BROKEN_JSON_RESPONSES])
 def test_failed_validation(data):
     with pytest.raises(ValidationError):
-        v = Validation(**data)
+        Validation(**data)
