@@ -31,6 +31,7 @@ class LineError(BaseModel):
             assert line == '-', f"Unknown non-integer line number: '{line}'"
         return line
 
+
 class Validation(BaseModel):
     filename: str = Field(..., example="example.ags")
     filesize: int = Field(None, example="1024")
@@ -39,6 +40,7 @@ class Validation(BaseModel):
     time: datetime = Field(None, example="2021-08-18 09:23:29")
     message: str = Field(None, example="7 error(s) found in file!")
     errors: Dict[str, List[LineError]]  = Field(..., example="Rule 1a")
+    valid: bool = Field(..., example='false')
 
     @validator('errors')
     def errors_keys_must_be_known_rules(cls, errors):
