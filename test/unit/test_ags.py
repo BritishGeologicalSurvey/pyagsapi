@@ -52,9 +52,22 @@ JSON_RESPONSES = {
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
         'message': 'Unable to open file.',
         'errors': {
-            'File read error': [{'line': 1,
-                                 'group': '',
-                                 'desc': 'invalid continuation byte'}]},
+            'UnicodeDecodeError': [{'line': 1,
+                                    'group': '',
+                                    'desc': 'invalid continuation byte'}]},
+        'valid': False
+    },
+    'real/CG014058_F.ags': {
+        'filename': 'CG014058_F.ags',
+        'filesize': 50574,
+        'checker': 'python_ags4 v0.3.6',
+        'dictionary': '',
+        'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
+        'message': 'Unable to open file.',
+        'errors': {
+            'UnicodeDecodeError': [{'line': 263,
+                                    'group': '',
+                                    'desc': 'invalid continuation byte'}]},
         'valid': False
     }
 }

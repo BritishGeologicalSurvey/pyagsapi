@@ -5,9 +5,8 @@ import logging
 from pathlib import Path
 import re
 import subprocess
-from tempfile import TemporaryDirectory
 from textwrap import dedent
-from typing import Tuple, Optional, List
+from typing import Tuple, Optional
 
 import python_ags4
 from python_ags4 import AGS4
@@ -49,7 +48,7 @@ def validate(filename: Path) -> dict:
     except UnicodeDecodeError as err:
         line_no = len(err.object[:err.end].split(b'\n'))
         description = err.reason
-        errors = {'File read error': [
+        errors = {'UnicodeDecodeError': [
                        {'line': line_no, 'group': '', 'desc': description}]}
         dictionary = ''
         message = 'Unable to open file.'
