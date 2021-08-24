@@ -38,19 +38,14 @@ def validate(filename: Path) -> dict:
         metadata = errors.pop('Metadata')  # This also removes it from returned errors
         dictionary = [d['desc'] for d in metadata
                       if d['line'] == 'Dictionary'][0]
-        # Restructure errors
-        errors = _parse_errors(errors)
         message = ''
-    except UnicodeDecodeError as exc:
-        line_no = 999
-        description = 'tbc'
-        errors = [{'rule': 'File read error',
-                   'errors': [
-                       {'line_no': line_no, 'group': None, 'desc': description}
-                   ]}]
-        errors = exc
+    except UnicodeDecodeError as err:
+        line_no = len(err.object[:err.end].split(b'\n'))
+        description = err.reason
+        errors = {'File read error': [
+                       {'line': line_no, 'group': '', 'desc': description}]}
         dictionary = ''
-        message = 'File could not be opened for checking.'
+        message = 'Unable to open file.'
 
     # Add error info to response
     response['dictionary'] = dictionary
@@ -58,13 +53,6 @@ def validate(filename: Path) -> dict:
     response['message'] = message
 
     return response
-
-
-def _parse_errors(errors: dict) -> List[dict]:
-    new_errors = []
-    for key, value in errors.items():
-        new_errors.append({'rule': key, 'errors': value})
-    return new_errors
 
 
 def convert(filename: Path, results_dir: Path) -> Tuple[Optional[Path], str]:

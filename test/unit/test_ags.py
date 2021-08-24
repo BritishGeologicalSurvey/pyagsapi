@@ -48,7 +48,7 @@ JSON_RESPONSES = {
         'checker': 'python_ags4 v0.3.6',
         'dictionary': '',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
-        'message': 'File could not be opened for checking.',
+        'message': 'Unable to open file',
         'errors': {
             'File read error': [{'line': 1,
                                  'group': '',
