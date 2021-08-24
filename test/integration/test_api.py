@@ -9,6 +9,7 @@ from requests_toolbelt.multipart.encoder import MultipartEncoder
 
 from app.main import app
 from test.fixtures import ISVALID_RSP_DATA, VALIDATION_TEXT_RSP_DATA
+from test.fixtures_json import JSON_RESPONSES
 
 TEST_FILE_DIR = Path(__file__).parent.parent / 'files'
 
@@ -44,6 +45,33 @@ async def test_isvalid(async_client, filename, expected):
     assert body['self'] is not None
     assert len(body['data']) == 1
     assert body['data'][0] == expected
+
+
+@pytest.mark.parametrize('filename, expected',
+                         [item for item in JSON_RESPONSES.items()])
+@pytest.mark.asyncio
+async def test_validate_json(async_client, filename, expected):
+    # Arrange
+    filename = TEST_FILE_DIR / filename
+    mp_encoder = MultipartEncoder(
+        fields={'file': (filename.name, open(filename, 'rb'), 'text/plain')})
+
+    # Act
+    async with async_client as ac:
+        response = await ac.post(
+            '/validate/',
+            headers={'Content-Type': mp_encoder.content_type},
+            data=mp_encoder.to_string())
+
+    # Assert
+    assert response.status_code == 200
+    body = response.json()
+    assert set(body.keys()) == {'msg', 'type', 'self', 'data'}
+    assert body['msg'] is not None
+    assert body['type'] == 'success'
+    assert body['self'] is not None
+    assert len(body['data']) == 1
+    assert body['data'][0]['filename'] == expected['filename']
 
 
 @pytest.mark.xfail(reason="Will fail until text reponse is provided")
