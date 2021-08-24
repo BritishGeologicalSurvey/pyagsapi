@@ -18,7 +18,7 @@ JSON_RESPONSES = {
         'dictionary': 'Standard_dictionary_v4_1.ags',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
         'message': 'All checks passed!',
-        'errors': []
+        'errors': {}
     },
     'nonsense.ags': {
         'filename': 'nonsense.ags',
@@ -27,43 +27,20 @@ JSON_RESPONSES = {
         'dictionary': 'Standard_dictionary_v4_1.ags',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
         'message': '7 error(s) found in file!',
-        'errors': [
-            {'rule': 'Rule 2a',
-             'errors': [
-                 {'line_no': 1, 'group': '', 'desc': 'Is not terminated by <CR> and <LF> characters.'}
-             ]
-             },
-            {'rule': 'Rule 3',
-             'errors': [
-                 {'line_no': 1, 'group': '', 'desc': 'Does not start with a valid data descriptor.'}
-             ]
-             },
-            {'rule': 'Rule 5',
-             'errors': [
-                 {'line_no': 1, 'group': '', 'desc': 'Contains fields that are not enclosed in double quotes.'}
-             ]
-             },
-            {'rule': 'Rule 13',
-             'errors': [
-                 {'line_no': 1, 'group': 'PROJ', 'desc': 'PROJ table not found.'}
-             ]
-             },
-            {'rule': 'Rule 14',
-             'errors': [
-                 {'line_no': 1, 'group': 'TRAN', 'desc': 'TRAN table not found.'}
-             ]
-             },
-            {'rule': 'Rule 15',
-             'errors': [
-                 {'line_no': 1, 'group': 'UNIT', 'desc': 'UNIT table not found.'}
-             ]
-             },
-            {'rule': 'Rule 17',
-             'errors': [
-                 {'line_no': 1, 'group': 'TYPE', 'desc': 'TYPE table not found.'}
-             ]
-             },
-        ]
+        'errors': {
+            'Rule 2a': [{'line': 1,
+                         'group': '',
+                         'desc': 'Is not terminated by <CR> and <LF> characters.'}],
+            'Rule 3': [{'line': 1,
+                        'group': '',
+                        'desc': 'Does not start with a valid data descriptor.'}],
+            'Rule 5': [{'line': 1,
+                        'group': '',
+                        'desc': 'Contains fields that are not enclosed in double quotes.'}],
+            'Rule 13': [{'line': '-', 'group': 'PROJ', 'desc': 'PROJ table not found.'}],
+            'Rule 14': [{'line': '-', 'group': 'TRAN', 'desc': 'TRAN table not found.'}],
+            'Rule 15': [{'line': '-', 'group': 'UNIT', 'desc': 'UNIT table not found.'}],
+            'Rule 17': [{'line': '-', 'group': 'TYPE', 'desc': 'TYPE table not found.'}]}
     },
     'random_binary.ags': {
         'filename': 'random_binary.ags',
@@ -72,13 +49,10 @@ JSON_RESPONSES = {
         'dictionary': '',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
         'message': 'File could not be opened for checking.',
-        'errors': [
-            {'rule': 'File read error',
-             'errors': [
-                 {'line_no': 1, 'group': '', 'desc': 'ERROR: Unreadable character "á" at position 1'}
-             ]
-             },
-        ]
+        'errors': {
+            'File read error': [{'line': 1,
+                                 'group': '',
+                                 'desc': 'invalid continuation byte'}]}
     }
 }
 
