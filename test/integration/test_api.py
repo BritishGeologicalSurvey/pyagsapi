@@ -54,6 +54,7 @@ async def test_isvalid(async_client, filename, expected):
     assert body['data'][0] == expected
 
 
+@pytest.mark.xfail(reason="Will fail until text reponse is provided")
 @pytest.mark.parametrize('filename, expected', [
     ('example1.ags', 'All checks passed!'),
     ('nonsense.ags', r'7 error\(s\) found in file!'),
