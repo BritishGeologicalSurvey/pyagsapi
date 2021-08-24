@@ -2,7 +2,7 @@ from datetime import datetime
 from enum import Enum
 from typing import Dict, List, Union
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, validator
 
 
 class GroupEnum(str, Enum):
@@ -14,9 +14,14 @@ class GroupEnum(str, Enum):
 
 
 class LineError(BaseModel):
-    line: str = Field(..., example="5")
+    line: Union[int, str] = Field(..., example="5")
     group: GroupEnum = Field(..., example="TRAN")
     desc: str = Field(..., example="Blah blah")
+
+    @validator('line')
+    def line_if_string_must_be_hyphen(cls, line):
+        if type(line) is str:
+            assert line == '-'
 
 
 class Validation(BaseModel):
