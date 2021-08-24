@@ -71,7 +71,35 @@ async def test_validate_json(async_client, filename, expected):
     assert body['type'] == 'success'
     assert body['self'] is not None
     assert len(body['data']) == 1
+    assert set(body['data'][0]) == set(expected.keys())
     assert body['data'][0]['filename'] == expected['filename']
+
+
+@pytest.mark.asyncio
+async def test_validatemany_json(async_client):
+    # Arrange
+    files = []
+    for name in JSON_RESPONSES.keys():
+        filename = TEST_FILE_DIR / name
+        file = ('files', (filename.name, open(filename, 'rb'), 'text/plain'))
+        files.append(file)
+    mp_encoder = MultipartEncoder(fields=files)
+
+    # Act
+    async with async_client as ac:
+        response = await ac.post(
+            '/validatemany/',
+            headers={'Content-Type': mp_encoder.content_type},
+            data=mp_encoder.to_string())
+
+    # Assert
+    assert response.status_code == 200
+    body = response.json()
+    assert set(body.keys()) == {'msg', 'type', 'self', 'data'}
+    assert body['msg'] is not None
+    assert body['type'] == 'success'
+    assert body['self'] is not None
+    assert len(body['data']) == len(JSON_RESPONSES)
 
 
 @pytest.mark.xfail(reason="Will fail until text reponse is provided")
