@@ -1,5 +1,6 @@
 """Functions to handle the AGS parser."""
 import datetime as dt
+from functools import reduce
 import logging
 from pathlib import Path
 import re
@@ -38,7 +39,13 @@ def validate(filename: Path) -> dict:
         metadata = errors.pop('Metadata')  # This also removes it from returned errors
         dictionary = [d['desc'] for d in metadata
                       if d['line'] == 'Dictionary'][0]
-        message = ''
+        error_count = len(reduce(lambda acc, current: acc + current, errors.values(), []))
+        if error_count > 0:
+            message = f'{error_count} error(s) found in file!'
+            valid = False
+        else:
+            message = 'All checks passed!'
+            valid = True
     except UnicodeDecodeError as err:
         line_no = len(err.object[:err.end].split(b'\n'))
         description = err.reason
@@ -46,11 +53,13 @@ def validate(filename: Path) -> dict:
                        {'line': line_no, 'group': '', 'desc': description}]}
         dictionary = ''
         message = 'Unable to open file.'
+        valid = False
 
     # Add error info to response
     response['dictionary'] = dictionary
     response['errors'] = errors
     response['message'] = message
+    response['valid'] = valid
 
     return response
 

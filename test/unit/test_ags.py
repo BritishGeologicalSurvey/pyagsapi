@@ -18,7 +18,8 @@ JSON_RESPONSES = {
         'dictionary': 'Standard_dictionary_v4_1.ags',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
         'message': 'All checks passed!',
-        'errors': {}
+        'errors': {},
+        'valid': True
     },
     'nonsense.ags': {
         'filename': 'nonsense.ags',
@@ -40,7 +41,8 @@ JSON_RESPONSES = {
             'Rule 13': [{'line': '-', 'group': 'PROJ', 'desc': 'PROJ table not found.'}],
             'Rule 14': [{'line': '-', 'group': 'TRAN', 'desc': 'TRAN table not found.'}],
             'Rule 15': [{'line': '-', 'group': 'UNIT', 'desc': 'UNIT table not found.'}],
-            'Rule 17': [{'line': '-', 'group': 'TYPE', 'desc': 'TYPE table not found.'}]}
+            'Rule 17': [{'line': '-', 'group': 'TYPE', 'desc': 'TYPE table not found.'}]},
+        'valid': False
     },
     'random_binary.ags': {
         'filename': 'random_binary.ags',
@@ -48,11 +50,12 @@ JSON_RESPONSES = {
         'checker': 'python_ags4 v0.3.6',
         'dictionary': '',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
-        'message': 'Unable to open file',
+        'message': 'Unable to open file.',
         'errors': {
             'File read error': [{'line': 1,
                                  'group': '',
-                                 'desc': 'invalid continuation byte'}]}
+                                 'desc': 'invalid continuation byte'}]},
+        'valid': False
     }
 }
 
@@ -69,7 +72,8 @@ def test_validate(filename, expected):
 
     # Assert
     # Check that metadata fields are correct
-    for key in ['filename', 'filesize', 'checker', 'time', 'dictionary', 'errors']:
+    for key in ['filename', 'filesize', 'checker', 'time', 'dictionary',
+                'errors', 'message', 'valid']:
         print(key)
         assert response[key] == expected[key]
 
