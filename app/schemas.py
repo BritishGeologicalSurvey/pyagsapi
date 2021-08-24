@@ -4,6 +4,10 @@ from typing import Dict, List, Union
 
 from pydantic import BaseModel, Field, validator
 
+VALID_KEYS = (
+    'Rule 2a', 'Rule 3', 'Rule 5', 'Rule 13', 'Rule 14', 'Rule 15', 'Rule 17',
+    'File read error')
+
 
 class GroupEnum(str, Enum):
     proj = 'PROJ'
@@ -21,8 +25,8 @@ class LineError(BaseModel):
     @validator('line')
     def line_if_string_must_be_hyphen(cls, line):
         if type(line) is str:
-            assert line == '-'
-
+            assert line == '-', f"Unknown non-integer line number: '{line}'"
+        return line
 
 class Validation(BaseModel):
     filename: str = Field(..., example="example.ags")
@@ -32,6 +36,12 @@ class Validation(BaseModel):
     time: datetime = Field(None, example="2021-08-18 09:23:29")
     message: str = Field(None, example="7 error(s) found in file!")
     errors: Dict[str, List[LineError]]  = Field(..., example="Rule 1a")
+
+    @validator('errors')
+    def errors_keys_must_be_known_rules(cls, errors):
+        for key in errors.keys():
+            assert key in VALID_KEYS, f"Unknown rule: '{key}'"
+        return errors
 
 
 class Error(BaseModel):
