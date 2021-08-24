@@ -9,24 +9,22 @@
     <![endif]-->
   </head>
   <body>
-    <header class="sticky row">
+    <header class="header-wrapper">
       <div>
         <a href="https://www.bgs.ac.uk" class="logo" role="button">
-          <img src="{{ url_for('static', path='/img/BGS-Logo-Pos-RGB-01.png') }}" title="BGS Logo" style="height:40px;vertical-align: middle;"/></a>
+          <img src="{{ url_for('static', path='/img/BGS-Logo-White-RGB.svg') }}" title="BGS Logo" style="height:40px;vertical-align: middle;"/></a>
+      </div>
+      <div>
+        <a href="https://pyagsapi.bgs.ac.uk">AGS File Utilities Tool and API</a>
+      </div>    
         <!--
           Add additional menu items here
           <a href="https://github.com/BritishGeologicalSurvey/pyagsapi" role="button" class="button">Code</a>
         -->
+      <div>  
         <a href="mailto:enquiries@bgs.ac.uk" role="button" class="button" style="float:right">Contact</a>
       </div>
     </header>
-    <div class="sticky row crumbs">
-      <div>
-        {% block crumbs %}
-        <a href="https://pyagsapi.bgs.ac.uk">Home</a>
-        {% endblock %}
-      </div>
-    </div>
     <main>
     <div class="container">
       <div class="row">

@@ -28,6 +28,8 @@ h2 {
     font-family: Arial, Helvetica, sans-serif;
 }
 
+/* Popup text style start */
+
 .tooltip {
     position: relative;
     display: inline-block;
@@ -61,6 +63,44 @@ h2 {
   .tooltip:hover .tooltiptext {
     visibility: visible;
     }
+    
+/* Popup text style start */    
+
+/* Header style start */
+
+.header-wrapper 
+{
+    background-color: #002E40;
+    color: white;
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 32px;
+}
+
+.header-wrapper img {
+    height:48px;
+    vertical-align: middle;
+}
+
+@media only screen and (max-width: 600px) {
+    .header-wrapper {
+        flex-direction: column;
+        text-align: center;
+        padding: 24px 16px;
+    }
+}
+
+.header-wrapper a {
+    color: white;
+}
+
+.header-wrapper a:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* Header style end */
 
 /* Footer style start */
 

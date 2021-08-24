@@ -4,7 +4,7 @@
 
 <br/>
 <section id="identification">
-    <h1>AGS File Utilities API</h1>
+    <h1>AGS File Utilities Tool and API</h1>
     <br>
     <p>Validate or convert your AGS files here.</p>
     <p>
@@ -17,12 +17,21 @@
 </section>
 <section id="validator">
     <br>
-    <h2>AGS Validator</h2>
+    <h2>AGS Schema Validator</h2>
     <p>Select .ags file(s) for validation (v4.x only). Validation is against the official AGS standard only.</p>
     <form action="/validatemany/" enctype="multipart/form-data" method="post">
     <input name="files" type="file" multiple>
     <input type="submit">
     </form>
+</section>
+<section id="datavalidator">
+  <br>
+  <h2>AGS Data Validator</h2>
+  <p>Select .ags file(s) for data validation against the National Geoscience Data Repository requiremets</p>
+  <form action="/datavalidatemany/" enctype="multipart/form-data" method="post">
+  <input name="files" type="file" multiple>
+  <input type="submit">
+  </form>
 </section>
 <section id="converter">
     <br>
@@ -30,6 +39,7 @@
       <div class="tooltip">Convert .ags file(s) to/from .xlsx.
         <span class="tooltiptext">Which ever format file is submitted, the opposite will be returned e.g. if 5 .ags files and 3 .xlsx files were submitted the result would be 5 .xlsx files and 3 .ags files</span>
       </div>
+      <br>
     <form action="/convert/" enctype="multipart/form-data" method="post">
     <input name="files" type="file" multiple>
     <input type="submit">
