@@ -2,35 +2,32 @@
 from pathlib import Path
 import re
 
+from freezegun import freeze_time
 import pytest
 
 from app import ags
+from test.fixtures_json import JSON_RESPONSES
+from test.fixtures import ISVALID_RSP_DATA
 
 TEST_FILE_DIR = Path(__file__).parent.parent / 'files'
 
 
-@pytest.mark.parametrize('filename, expected', [
-    ('example1.ags', ('All checks passed!', 3)),
-    ('nonsense.ags', (r'7 error\(s\) found in file!', 0)),
-    ('empty.ags', (r'4 error\(s\) found in file!', 0)),
-    ('real/A3040_03.ags', (r'5733 error\(s\) found in file!', 258)),
-    ('example1.xlsx', ('ERROR: Only .ags files are accepted as input.', 11)),
-    ('random_binary.ags', ('ERROR: Unreadable character "á" at position 1 on line: 1\nStarting:', 1)),
-    ('real/CG014058_F.ags', (r'ERROR: Unreadable character "æ" at position 80 on line: 263\nStarting: "WS2"', 49)),
-    ('real/Blackburn Southern Bypass.ags', (r'93 error\(s\) found in file!', 6)),  # this file contains BOM character
-])
-def test_validate(tmp_path, filename, expected):
+@freeze_time("2021-08-23 14:25:43")
+@pytest.mark.parametrize('filename, expected',
+                         [item for item in JSON_RESPONSES.items()])
+def test_validate(filename, expected):
     # Arrange
     filename = TEST_FILE_DIR / filename
-    expected_message, expected_size = expected
 
     # Act
     response = ags.validate(filename)
 
     # Assert
-    assert f"File Name: \t {filename.name}" in response
-    assert f"File Size: \t {expected_size:n} kB" in response
-    assert re.search(expected_message, response)
+    # Check that metadata fields are correct
+    for key in ['filename', 'filesize', 'checker', 'time', 'dictionary',
+                'errors', 'message', 'valid']:
+        print(key)
+        assert response[key] == expected[key]
 
 
 @pytest.mark.parametrize('filename, expected', [
@@ -78,14 +75,7 @@ def test_convert_bad_files(tmp_path, filename, expected):
     assert re.search(expected_message, log)
 
 
-@pytest.mark.parametrize('filename, expected', [
-    ('example1.ags', True),
-    ('nonsense.ags', False),
-    ('empty.ags', False),
-    ('dummy.xlsx', False),
-    ('random_binary.ags', False),
-    ('real/A3040_03.ags', False),
-])
+@pytest.mark.parametrize('filename, expected', ISVALID_RSP_DATA)
 def test_is_valid(filename, expected):
     # Arrange
     filename = TEST_FILE_DIR / filename

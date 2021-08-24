@@ -8,6 +8,8 @@ from httpx import AsyncClient
 from requests_toolbelt.multipart.encoder import MultipartEncoder
 
 from app.main import app
+from test.fixtures import ISVALID_RSP_DATA, VALIDATION_TEXT_RSP_DATA
+from test.fixtures_json import JSON_RESPONSES
 
 TEST_FILE_DIR = Path(__file__).parent.parent / 'files'
 
@@ -19,22 +21,68 @@ def test_openapi_json(client):
     assert '/validate' in response.text
 
 
-@pytest.mark.parametrize('filename, expected', [
-    ('example1.ags', 'All checks passed!'),
-    ('nonsense.ags', r'7 error\(s\) found in file!'),
-    ('empty.ags', r'4 error\(s\) found in file!'),
-    ('real/A3040_03.ags', r'5733 error\(s\) found in file!'),
-    ('example1.xlsx', 'ERROR: Only .ags files are accepted as input.'),
-    ('random_binary.ags', 'ERROR: Unreadable character "á" at position 1 on line: 1\nStarting:'),
-    ('real/CG014058_F.ags', r'ERROR: Unreadable character "æ" at position 80 on line: 263'),
-    ('real/Blackburn Southern Bypass.ags', r'93 error\(s\) found in file!'),  # this file contains BOM character
-])
+@pytest.mark.parametrize('filename, expected', ISVALID_RSP_DATA)
 @pytest.mark.asyncio
-async def test_validate(async_client, filename, expected):
+async def test_isvalid(async_client, filename, expected):
     # Arrange
     filename = TEST_FILE_DIR / filename
     mp_encoder = MultipartEncoder(
         fields={'file': (filename.name, open(filename, 'rb'), 'text/plain')})
+
+    # Act
+    async with async_client as ac:
+        response = await ac.post(
+            '/isvalid/',
+            headers={'Content-Type': mp_encoder.content_type},
+            data=mp_encoder.to_string())
+
+    # Assert
+    assert response.status_code == 200
+    body = response.json()
+    assert set(body.keys()) == {'msg', 'type', 'self', 'data'}
+    assert body['msg'] is not None
+    assert body['type'] == 'success'
+    assert body['self'] is not None
+    assert len(body['data']) == 1
+    assert body['data'][0] == expected
+
+
+@pytest.mark.parametrize('filename, expected',
+                         [item for item in JSON_RESPONSES.items()])
+@pytest.mark.asyncio
+async def test_validate_json(async_client, filename, expected):
+    # Arrange
+    filename = TEST_FILE_DIR / filename
+    mp_encoder = MultipartEncoder(
+        fields={'file': (filename.name, open(filename, 'rb'), 'text/plain')})
+
+    # Act
+    async with async_client as ac:
+        response = await ac.post(
+            '/validate/',
+            headers={'Content-Type': mp_encoder.content_type},
+            data=mp_encoder.to_string())
+
+    # Assert
+    assert response.status_code == 200
+    body = response.json()
+    assert set(body.keys()) == {'msg', 'type', 'self', 'data'}
+    assert body['msg'] is not None
+    assert body['type'] == 'success'
+    assert body['self'] is not None
+    assert len(body['data']) == 1
+    assert body['data'][0]['filename'] == expected['filename']
+
+
+@pytest.mark.xfail(reason="Will fail until text reponse is provided")
+@pytest.mark.parametrize('filename, expected', VALIDATION_TEXT_RSP_DATA)
+@pytest.mark.asyncio
+async def test_validate_text(async_client, filename, expected):
+    # Arrange
+    filename = TEST_FILE_DIR / filename
+    mp_encoder = MultipartEncoder(
+        fields={'file': (filename.name, open(filename, 'rb'), 'text/plain')})
+    expected_message, expected_size = expected
 
     # Act
     async with async_client as ac:
@@ -45,7 +93,9 @@ async def test_validate(async_client, filename, expected):
 
     # Assert
     assert response.status_code == 200
-    assert re.search(expected, response.text)
+    assert f"File Name: \t {filename.name}" in response.text
+    assert f"File Size: \t {expected_size:n} kB" in response.text
+    assert re.search(expected_message, response.text)
 
 
 @pytest.fixture(scope="function")

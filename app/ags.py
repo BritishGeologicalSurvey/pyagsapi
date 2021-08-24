@@ -1,12 +1,15 @@
 """Functions to handle the AGS parser."""
 import datetime as dt
+from functools import reduce
 import logging
 from pathlib import Path
 import re
 import subprocess
-from tempfile import TemporaryDirectory
 from textwrap import dedent
 from typing import Tuple, Optional
+
+import python_ags4
+from python_ags4 import AGS4
 
 logger = logging.getLogger(__name__)
 
@@ -19,51 +22,48 @@ RESPONSE_TEMPLATE = dedent("""
     """).strip()
 
 
-def validate(filename: Path) -> str:
-    """Validate filename and write output to file in results_dir."""
+def validate(filename: Path) -> dict:
+    """Validate filename and respond in dictionary."""
     logger.info("Validate called for %", filename.name)
 
-    with TemporaryDirectory() as tmpdirname:
-        logfile = Path(tmpdirname) / 'output.log'
-        args = [
-            'ags4_cli', 'check', filename, '-o', logfile
-        ]
-        # Use subprocess to run the file.  It will swallow errors.
-        # If files have repeated headers the CLI will ask if they should be
-        # renamed.  Passing input='n' answers 'n' to this question.
-        # A timeout prevents the whole process hanging indefinitely.
-        result = subprocess.run(args, capture_output=True,
-                                input='n', text=True, timeout=30)
-        logger.debug(result)
-        log = logfile.read_text() if logfile.exists() else None
+    # Prepare response with metadata
+    response = {'filename': filename.name,
+                'filesize': filename.stat().st_size,
+                'checker': f'python_ags4 v{python_ags4.__version__}',
+                'time': dt.datetime.now(tz=dt.timezone.utc)}
 
-    # Generate response based on result of subprocess
-    filesize = filename.stat().st_size / 1024
-    time_utc = dt.datetime.now(tz=dt.timezone.utc).strftime('%Y-%m-%d %H:%M:%S')
-    if result.returncode != 0:
-        use_template = True
-        if 'UnicodeDecodeError:' in result.stderr:
-            message = get_unicode_message(result.stderr, filename)
+    # Get error information from file
+    try:
+        errors = AGS4.check_file(filename)
+        try:
+            metadata = errors.pop('Metadata')  # This also removes it from returned errors
+            dictionary = [d['desc'] for d in metadata
+                          if d['line'] == 'Dictionary'][0]
+        except KeyError:
+            # 'Metadata' is not created for some files with errors
+            dictionary = ''
+
+        error_count = len(reduce(lambda acc, current: acc + current, errors.values(), []))
+        if error_count > 0:
+            message = f'{error_count} error(s) found in file!'
+            valid = False
         else:
-            message = 'ERROR: ' + result.stderr
-    elif result.stdout.startswith('ERROR: '):
-        use_template = True
-        message = result.stdout
-    elif re.match(r'\d+ error\(s\) found in file', log):
-        use_template = True
-        # Files with lots of errors don't record metadata in their logs and
-        # just list errors.  We can add filename back in via the template.
-        message = log
-    else:
-        use_template = False
+            message = 'All checks passed!'
+            valid = True
+    except UnicodeDecodeError as err:
+        line_no = len(err.object[:err.end].split(b'\n'))
+        description = err.reason
+        errors = {'UnicodeDecodeError': [
+                       {'line': line_no, 'group': '', 'desc': description}]}
+        dictionary = ''
+        message = 'Unable to open file.'
+        valid = False
 
-    if use_template:
-        response = RESPONSE_TEMPLATE.format(filename=filename.name,
-                                            filesize=filesize,
-                                            time_utc=time_utc,
-                                            message=message)
-    else:
-        response = log
+    # Add error info to response
+    response['dictionary'] = dictionary
+    response['errors'] = errors
+    response['message'] = message
+    response['valid'] = valid
 
     return response
 
@@ -112,14 +112,7 @@ def is_valid(filename: Path) -> bool:
     """
     Validate filename and parse returned log to determine if file is valid.
     """
-    return log_is_valid(validate(filename))
-
-
-def log_is_valid(log: str) -> bool:
-    """
-    Parse validation log to determine if file is valid.
-    """
-    return 'All checks passed!' in log
+    return validate(filename)['valid']
 
 
 def get_unicode_message(stderr: str, filename: str) -> str:

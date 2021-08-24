@@ -1,25 +1,44 @@
-from pydantic import BaseModel, Field
-from typing import List, Union
+from datetime import datetime
+from typing import Dict, List, Union
+
+from pydantic import BaseModel, Field, validator
+
+VALID_KEYS = (
+    'Rule 1', 'Rule 2', 'Rule 2a', 'Rule 2b', 'Rule 2c', 'Rule 3', 'Rule 4a', 'Rule 4b',
+    'Rule 5', 'Rule 7', 'Rule 9', 'Rule 10a', 'Rule 10b', 'Rule 10c', 'Rule 11a',
+    'Rule 11b', 'Rule 11c', 'Rule 13', 'Rule 14', 'Rule 15', 'Rule 16', 'Rule 17',
+    'Rule 18', 'Rule 19', 'Rule 19a', 'Rule 19b', 'Rule 19c', 'Rule 20',
+    'File read error', 'UnicodeDecodeError',
+)
+
+
+class LineError(BaseModel):
+    line: Union[int, str] = Field(..., example="5")
+    group: str = Field(..., example="TRAN")
+    desc: str = Field(..., example="Blah blah")
+
+    @validator('line')
+    def line_if_string_must_be_hyphen(cls, line):
+        if type(line) is str:
+            assert line == '-', f"Unknown non-integer line number: '{line}'"
+        return line
 
 
 class Validation(BaseModel):
-    class Config:
-        """
-        Alias field names
-        """
-        fields = {'filename': {'alias': 'File Name'},
-                  'filesize': {'alias': 'File Size'},
-                  'checker': {'alias': 'Checker'},
-                  'dictionary': {'alias': 'Dictionary'},
-                  'time': {'alias': 'Time (UTC)'}}
-
     filename: str = Field(..., example="example.ags")
-    filesize: str = Field(None, example="1 kB")
+    filesize: int = Field(None, example="1024")
     checker: str = Field(None, example="python_ags4 v0.3.6")
     dictionary: str = Field(None, example="Standard_dictionary_v4_1.ags")
-    time: str = Field(None, example="2021-08-18 09:23:29")
+    time: datetime = Field(None, example="2021-08-18 09:23:29")
     message: str = Field(None, example="7 error(s) found in file!")
-    results: str = Field(None, example="Rule 2a: Line 1 Is not terminated by <CR> and <LF> characters.\n...")
+    errors: Dict[str, List[LineError]] = Field(..., example="Rule 1a")
+    valid: bool = Field(..., example='false')
+
+    @validator('errors')
+    def errors_keys_must_be_known_rules(cls, errors):
+        for key in errors.keys():
+            assert key in VALID_KEYS, f"Unknown rule: '{key}'"
+        return errors
 
 
 class Error(BaseModel):
