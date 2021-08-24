@@ -6,39 +6,60 @@
 <section id="identification">
     <h1>AGS File Utilities Tool and API</h1>
     <br>
-    <p>Validate or convert your AGS files here.</p>
-    <p>
+    <p>This tool and asscoated API allow schema validation, data validation and conversion of your <a href="https://www.ags.org.uk/data-format/">AGS files</a>".</p>
       <ul>
         <li>Accepts multiple AGS files. (Hold down <b>Ctrl</b> key to select more than one file)</li>
         <li>There is a total file size limit of 50MB</li>
         <li>Tests AGS versions 4.x </li>
+        <li>This is not a submission of your files to BGS</li>
       </ul>
-  </p>
 </section>
 <section id="validator">
     <br>
     <h2>AGS Schema Validator</h2>
-    <p>Select .ags file(s) for validation (v4.x only). Validation is against the official AGS standard only.</p>
+    <h3>Validation is against the official AGS schema standard only. This is not a data validator</h3>
     <form action="/validatemany/" enctype="multipart/form-data" method="post">
-    <input name="files" type="file" multiple>
-    <input type="submit">
+      <p>Select AGS file version (default 4.0.4)</p>
+      <input type="radio" id="4.0.3" name="std_dictionary" value="4.0.3">
+      <label for="4.0.3">4.0.3</label>
+      <input type="radio" id="4.0.4" name="std_dictionary" value="4.0.4" checked>
+      <label for="4.0.4">4.0.4</label>
+      <input type="radio" id="4.1.0" name="std_dictionary" value="4.1.0">
+      <label for="4.1.0">4.1.0</label><br>
+      <p>Select .ags file(s) for validation (v4.x only).</p>
+      <input name="files" type="file" multiple>
+      <input type="submit">
     </form>
 </section>
 <section id="datavalidator">
   <br>
   <h2>AGS Data Validator</h2>
-  <p>Select .ags file(s) for data validation against the National Geoscience Data Repository requiremets</p>
-  <form action="/datavalidatemany/" enctype="multipart/form-data" method="post">
+  <p>Select .ags file(s) for data validation against the National Geoscience Data Repository requirements</p>
+  <form action="/validatedatamany/" enctype="multipart/form-data" method="post">
   <input name="files" type="file" multiple>
   <input type="submit">
   </form>
+  <h3>Validation rules</h3>
+            <p>Your files will be validated against the following rules as defined by BGS/NGDC:</p>
+            <ul>
+            	<li>Basic formatting: number of columns must match number of column headers</li>
+                <li>Groups must include PROJ, LOCA or HOLE, ABBR, TYPE, UNITS (and GEOL for BGS)</li>
+    			      <li>FILE is required if the AGS file is submitted with other supporting non-AGS files</li>
+    			      <li>DICT is required if any user defined groups or headings are present, otherwise only standard/default settings are used</li>
+                <li>LOCA/HOLE file must contain a minimum of 75 per cent valid coordinates</li>
+                <li>The spatial referencing sytem or projection format should be specified in LOCA_GREF, LOCA_LREF or LOCA_LLZ columns (or HOLE equivalent)</li>
+                <li>OSGB coordinates should be in the LOCA_NATE and LOCA_NATN columns(or HOLE equivalent)</li>
+                <li>local grid reference coordinates should be in the LOCA_LOCX and LOCA_LOCY columns(or HOLE equivalent)</li>
+                <li>LAT/LON coordinates should be in the LOCA_LAT and LOCA_LON columns(or HOLE equivalent)</li>
+                <li>local coordinates should not be duplicated in the OSGB columns as this would indicate they have not been converted</li>
+            </ul>
 </section>
 <section id="converter">
-    <br>
     <h2>AGS Converter</h2>
       <div class="tooltip">Convert .ags file(s) to/from .xlsx.
         <span class="tooltiptext">Which ever format file is submitted, the opposite will be returned e.g. if 5 .ags files and 3 .xlsx files were submitted the result would be 5 .xlsx files and 3 .ags files</span>
       </div>
+      <br>
       <br>
     <form action="/convert/" enctype="multipart/form-data" method="post">
     <input name="files" type="file" multiple>
