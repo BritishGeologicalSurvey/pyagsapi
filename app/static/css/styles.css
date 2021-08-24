@@ -60,39 +60,40 @@ h2 {
   }
   .tooltip:hover .tooltiptext {
     visibility: visible;
-
-    img {
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-        width: 20%;
     }
-.footer {
-    position: fixed;
-    left: 0;
-    bottom: 0;
-    margin:0em;
-	padding:0em;
-	min-height:60px;
+
+/* Footer style start */
+
+.footer-wrapper 
+{
     background-color: #002E40;
-    background-image:linear-gradient(0deg, #002E40, #002E40);
-    width: 100%;
-    color:  #002E40;
-    text-align: center;
+    color: white;
+    display: flex;
+    gap: 32px;
+    align-items: center;
+    justify-content: space-evenly;
+    padding: 48px 32px;
 }
 
-.left{
-    
-    text-align:left;
-    float:left;
-    width: 33.33%;
+.footer-wrapper img {
+    height:48px;
+    vertical-align: middle;
 }
-.right{
-    float:right;
-    width: 33.33%;
-    text-align:right;
+
+@media only screen and (max-width: 600px) {
+    .footer-wrapper {
+        flex-direction: column;
+        text-align: center;
+        padding: 24px 16px;
+    }
 }
-.centered{
-    width: 33.33%;
-    text-align:center;
+
+.footer-wrapper a {
+    color: white;
 }
+
+.footer-wrapper a:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* Footer style end */
