@@ -129,11 +129,11 @@ def convert(filename: Path, results_dir: Path) -> Tuple[Optional[Path], str]:
     return (converted_file, log)
 
 
-def is_valid(filename: Path) -> bool:
+def is_valid(filename: Path, standard_AGS4_dictionary: Optional[str] = None) -> bool:
     """
     Validate filename and parse returned log to determine if file is valid.
     """
-    return validate(filename)['valid']
+    return validate(filename, standard_AGS4_dictionary=standard_AGS4_dictionary)['valid']
 
 
 def get_unicode_message(stderr: str, filename: str) -> str:
