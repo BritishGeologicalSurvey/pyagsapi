@@ -105,6 +105,30 @@ async def test_validatemany_json(async_client, fmt):
     assert len(body['data']) == len(JSON_RESPONSES)
 
 
+@pytest.mark.parametrize('dictionary', ['v4_0_3', 'v4_0_4', 'v4_1'])
+@pytest.mark.asyncio
+async def test_validate_custom_dictionary(async_client, dictionary):
+    # Arrange
+    filename = TEST_FILE_DIR / 'example1.ags'
+    mp_encoder = MultipartEncoder(
+        fields={'file': (filename.name, open(filename, 'rb'), 'text/plain')})
+
+    # Act
+    async with async_client as ac:
+        response = await ac.post(
+            '/validate/?std_dictionary=' + dictionary,
+            headers={'Content-Type': mp_encoder.content_type},
+            data=mp_encoder.to_string())
+
+    # Assert
+    assert response.status_code == 200
+    body = response.json()
+    assert len(body['data']) == 1
+    # Assert
+    assert body['data'][0]['filename'] == 'example1.ags'
+    assert body['data'][0]['dictionary'] == f'Standard_dictionary_{dictionary}.ags'
+
+
 @freeze_time(FROZEN_TIME)
 @pytest.mark.parametrize('filename, expected',
                          [item for item in PLAIN_TEXT_RESPONSES.items()])
