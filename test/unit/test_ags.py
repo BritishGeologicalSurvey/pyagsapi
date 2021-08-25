@@ -78,13 +78,14 @@ def test_is_valid(filename, expected):
     assert result == expected
 
 
-@pytest.mark.parametrize('response, expected', [
-    (JSON_RESPONSES['example1.ags'], PLAIN_TEXT_RESPONSES['example1.ags']),
-    (JSON_RESPONSES['nonsense.ags'], PLAIN_TEXT_RESPONSES['nonsense.ags']),
-    (JSON_RESPONSES['random_binary.ags'], PLAIN_TEXT_RESPONSES['random_binary.ags']),
-    (JSON_RESPONSES['real/Blackburn Southern Bypass.ags'], PLAIN_TEXT_RESPONSES['real/Blackburn Southern Bypass.ags']),
-])
-def test_to_plain_text(response, expected):
+@pytest.mark.parametrize('filename', [
+    'example1.ags', 'nonsense.ags', 'random_binary.ags',
+    'real/Blackburn Southern Bypass.ags'])
+def test_to_plain_text(filename):
+    # Arrange
+    response = JSON_RESPONSES[filename]
+    expected = PLAIN_TEXT_RESPONSES[filename]
+
     # Act
     text = ags.to_plain_text(response)
 
