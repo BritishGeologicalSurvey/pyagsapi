@@ -32,10 +32,7 @@ def validate(filename: Path, standard_AGS4_dictionary: Optional[str] = None) -> 
     logger.info("Validate called for %", filename.name)
 
     # Prepare response with metadata
-    response = {'filename': filename.name,
-                'filesize': filename.stat().st_size,
-                'checker': f'python_ags4 v{python_ags4.__version__}',
-                'time': dt.datetime.now(tz=dt.timezone.utc)}
+    response = _prepare_response_metadata(filename)
 
     # Select dictionary file if exists
     if standard_AGS4_dictionary:
@@ -89,44 +86,46 @@ def to_plain_text(response: dict) -> str:
     return PLAIN_TEXT_TEMPLATE.render(response)
 
 
-def convert(filename: Path, results_dir: Path) -> Tuple[Optional[Path], str]:
+def convert(filename: Path, results_dir: Path) -> Tuple[Optional[Path], dict]:
     """
     Convert filename between .ags and .xlsx.  Write output to file in
-    results_dir and return path alongside processing log."""
+    results_dir and return path alongside job status data in dictionary."""
+    # Prepare variables and directory
     new_extension = '.ags' if filename.suffix == '.xlsx' else '.xlsx'
     converted_file = results_dir / (filename.stem + new_extension)
     logger.info("Converting %s to %s", filename.name, converted_file.name)
     if not results_dir.exists():
         results_dir.mkdir()
 
-    args = [
-        'ags4_cli', 'convert', filename, converted_file
-    ]
-    # Use subprocess to run the file.  It will swallow errors.
-    # A timeout prevents the whole process hanging indefinitely.
-    result = subprocess.run(args, capture_output=True,
-                            text=True, timeout=30)
-    logger.debug(result)
-    # Generate response based on result of subprocess
-    filesize = filename.stat().st_size / 1024
-    time_utc = dt.datetime.now(tz=dt.timezone.utc).strftime('%Y-%m-%d %H:%M:%S')
-    if result.returncode != 0:
-        message = 'ERROR: ' + result.stderr
-        converted_file.unlink(missing_ok=True)
-        converted_file = None
-    elif result.stdout.startswith('ERROR: '):
-        message = result.stdout
-        converted_file.unlink(missing_ok=True)
-        converted_file = None
-    else:
+    # Prepare response with metadata
+    response = _prepare_response_metadata(filename)
+
+    # Do the conversion
+    if filename.suffix == '.ags':
+        AGS4.AGS4_to_excel(filename, converted_file)
         message = f"SUCCESS: {filename.name} converted to {converted_file.name}"
+    elif filename.suffix == '.xlsx':
+        AGS4.excel_to_AGS4(filename, converted_file)
+        message = f"SUCCESS: {filename.name} converted to {converted_file.name}"
+    else:
+        message = f"ERROR: {filename.name} is not .ags or .xlsx format"
 
-    log = RESPONSE_TEMPLATE.format(filename=filename.name,
-                                   filesize=filesize,
-                                   time_utc=time_utc,
-                                   message=message)
+    # Generate response based on result of subprocess
+    #filesize = filename.stat().st_size / 1024
+    #if result.returncode != 0:
+    #    message = 'ERROR: ' + result.stderr
+    #    converted_file.unlink(missing_ok=True)
+    #    converted_file = None
+    #elif result.stdout.startswith('ERROR: '):
+    #    message = result.stdout
+    #    converted_file.unlink(missing_ok=True)
+    #    converted_file = None
+    #else:
+    #    message = f"SUCCESS: {filename.name} converted to {converted_file.name}"
 
-    return (converted_file, log)
+    response['message'] = message
+
+    return (converted_file, response)
 
 
 def is_valid(filename: Path, standard_AGS4_dictionary: Optional[str] = None) -> bool:
@@ -158,6 +157,18 @@ def line_of_error(filename: Path, char_no: int) -> Tuple[int, int, str, str]:
         char_no = len(line) + 1
         char = f.read(1)
     return char_no, line_no, line, char
+
+
+def _prepare_response_metadata(filename: Path) -> dict:
+    """
+    Prepare a dictionary containing metadata to include in the response.
+    """
+    response = {'filename': filename.name,
+                'filesize': filename.stat().st_size,
+                'checker': f'python_ags4 v{python_ags4.__version__}',
+                'dictionary': '',  # This is usually overwritten
+                'time': dt.datetime.now(tz=dt.timezone.utc)}
+    return response
 
 
 class Ags4CliError(Exception):

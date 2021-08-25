@@ -71,11 +71,12 @@ def test_convert(tmp_path, filename, expected):
         results_dir.mkdir()
 
     # Act
-    converted_file, log = ags.convert(filename, results_dir)
+    converted_file, response = ags.convert(filename, results_dir)
 
     # Assert
     assert converted_file is not None and converted_file.exists()
-    assert re.search(expected, log)
+    assert filename.name == response['filename']
+    assert re.search(expected, response['message'])
 
 
 @pytest.mark.parametrize('filename, expected', BAD_FILE_DATA)
