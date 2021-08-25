@@ -11,6 +11,7 @@ ISVALID_RSP_DATA = [
     ('random_binary.ags', False),
     ('real/CG014058_F.ags', False),
     ('real/Blackburn Southern Bypass.ags', False),  # this file contains BOM character
+    ('extension_is.bad', False),
 ]
 
 GOOD_FILE_DATA = [
@@ -25,7 +26,8 @@ BAD_FILE_DATA = [
     ('random_binary.ags', ('ERROR: File does not have AGS format layout', 1024)),
     ('real/A3040_03.ags', ("ERROR: File contains duplicate headers", 264526)),
     ('extension_is.bad', ("ERROR: extension_is.bad is not .ags or .xlsx format", 0)),
-    # ('real/E52A4379 (2).ags', ("ERROR: File contains duplicate headers", 0))  # This file crashes because it asks for user input
+    # This file crashes because it asks for user input
+    # ('real/E52A4379 (2).ags', ("ERROR: File contains duplicate headers", 0))
 ]
 
 DICTIONARIES = {
