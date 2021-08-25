@@ -1,15 +1,16 @@
 """Tests for API responses."""
 from pathlib import Path
-import re
 
 from fastapi.testclient import TestClient
+from freezegun import freeze_time
 import pytest
 from httpx import AsyncClient
 from requests_toolbelt.multipart.encoder import MultipartEncoder
 
 from app.main import app
-from test.fixtures import ISVALID_RSP_DATA, VALIDATION_TEXT_RSP_DATA
+from test.fixtures import FROZEN_TIME, ISVALID_RSP_DATA
 from test.fixtures_json import JSON_RESPONSES
+from test.fixtures_plain_text import PLAIN_TEXT_RESPONSES
 
 TEST_FILE_DIR = Path(__file__).parent.parent / 'files'
 
@@ -102,15 +103,15 @@ async def test_validatemany_json(async_client):
     assert len(body['data']) == len(JSON_RESPONSES)
 
 
-@pytest.mark.xfail(reason="Will fail until text reponse is provided")
-@pytest.mark.parametrize('filename, expected', VALIDATION_TEXT_RSP_DATA)
+@freeze_time(FROZEN_TIME)
+@pytest.mark.parametrize('filename, expected',
+                         [item for item in PLAIN_TEXT_RESPONSES.items()])
 @pytest.mark.asyncio
 async def test_validate_text(async_client, filename, expected):
     # Arrange
     filename = TEST_FILE_DIR / filename
     mp_encoder = MultipartEncoder(
         fields={'file': (filename.name, open(filename, 'rb'), 'text/plain')})
-    expected_message, expected_size = expected
 
     # Act
     async with async_client as ac:
@@ -121,9 +122,7 @@ async def test_validate_text(async_client, filename, expected):
 
     # Assert
     assert response.status_code == 200
-    assert f"File Name: \t {filename.name}" in response.text
-    assert f"File Size: \t {expected_size:n} kB" in response.text
-    assert re.search(expected_message, response.text)
+    assert response.text.strip() == expected.strip()
 
 
 @pytest.fixture(scope="function")

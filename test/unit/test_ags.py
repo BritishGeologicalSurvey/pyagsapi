@@ -6,14 +6,14 @@ from freezegun import freeze_time
 import pytest
 
 from app import ags
-from test.fixtures import BAD_FILE_DATA, GOOD_FILE_DATA, ISVALID_RSP_DATA
+from test.fixtures import BAD_FILE_DATA, FROZEN_TIME, GOOD_FILE_DATA, ISVALID_RSP_DATA
 from test.fixtures_json import JSON_RESPONSES
 from test.fixtures_plain_text import PLAIN_TEXT_RESPONSES
 
 TEST_FILE_DIR = Path(__file__).parent.parent / 'files'
 
 
-@freeze_time("2021-08-23 14:25:43")
+@freeze_time(FROZEN_TIME)
 @pytest.mark.parametrize('filename, expected',
                          [item for item in JSON_RESPONSES.items()])
 def test_validate(filename, expected):
