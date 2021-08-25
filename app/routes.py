@@ -50,12 +50,24 @@ dictionary_form = Form(
     description='Version of AGS dictionary to validate against',
 )
 
+validation_file = File(
+    ...,
+    title='File to validate',
+    description='An AGS file ending in .ags',
+)
+
+conversion_file = File(
+    ...,
+    title='File to convert',
+    description='An AGS or XLSX file',
+)
+
 
 @router.post("/isvalid/",
              response_model=ValidationResponse,
              responses=log_responses)
 async def is_valid(background_tasks: BackgroundTasks,
-                   file: UploadFile = File(...),
+                   file: UploadFile = validation_file,
                    std_dictionary: Dictionary = dictionary_form,
                    request: Request = None):
     if not file.filename:
@@ -78,7 +90,7 @@ async def is_valid(background_tasks: BackgroundTasks,
              response_model=ValidationResponse,
              responses=log_responses)
 async def validate(background_tasks: BackgroundTasks,
-                   file: UploadFile = File(...),
+                   file: UploadFile = validation_file,
                    std_dictionary: Dictionary = dictionary_form,
                    fmt: Format = format_form,
                    request: Request = None):
@@ -108,7 +120,7 @@ async def validate(background_tasks: BackgroundTasks,
              response_model=ValidationResponse,
              responses=log_responses)
 async def validate_many(background_tasks: BackgroundTasks,
-                        files: List[UploadFile] = File(...),
+                        files: List[UploadFile] = validation_file,
                         std_dictionary: Dictionary = dictionary_form,
                         fmt: Format = format_form,
                         request: Request = None):
@@ -147,7 +159,7 @@ async def validate_many(background_tasks: BackgroundTasks,
              response_class=StreamingResponse,
              responses=zip_responses)
 async def convert_many(background_tasks: BackgroundTasks,
-                       files: List[UploadFile] = File(...),
+                       files: List[UploadFile] = conversion_file,
                        request: Request = None):
     if not files[0].filename:
         raise InvalidPayloadError(request)
