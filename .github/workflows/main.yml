@@ -53,9 +53,9 @@ jobs:
           echo FULLCONTAINERNAME=$IMAGE_ID:$VERSION >> $GITHUB_ENV
           docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
 
-      - uses: Azure/container-scan@v0
-        with:
-          image-name: ${{ env.FULLCONTAINERNAME }}
+      #- uses: Azure/container-scan@v0
+        #with:
+          #image-name: ${{ env.FULLCONTAINERNAME }}
 
       - name: Push to CR
         run: docker push ${{ env.FULLCONTAINERNAME }}
