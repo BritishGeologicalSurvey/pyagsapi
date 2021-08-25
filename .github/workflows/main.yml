@@ -50,11 +50,12 @@ jobs:
           [ "$VERSION" == "main" ] && VERSION=latest
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
+          export $FULLCONTAINERNAME=$IMAGE_ID:$VERSION
           docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
 
       - uses: Azure/container-scan@v0
         with:
-          image-name: ${{ env.IMAGE_ID }}:${{ env.VERSION }}
+          image-name: ${{ env.FULLCONTAINERNAME }}
 
       - name: Push to CR
         run: docker push $IMAGE_ID:$VERSION
