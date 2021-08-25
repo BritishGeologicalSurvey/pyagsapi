@@ -20,20 +20,20 @@
     <h3>Validation is against the official AGS schema standard only. This is not a data validator</h3>
     <form action="/validatemany/" enctype="multipart/form-data" method="post">
       <p>Select AGS version (default uses dictionary specified in file, if not present, v4.0.4)</p>
-      <input type="radio" id="4.0.3" name="std_dictionary" value="4.0.3">
+      <input type="radio" id="4.0.3" name="std_dictionary" value="v4_0_3">
       <label for="4.0.3">4.0.3</label>
-      <input type="radio" id="4.0.4" name="std_dictionary" value="4.0.4" checked>
+      <input type="radio" id="4.0.4" name="std_dictionary" value="v4_0_4" checked>
       <label for="4.0.4">4.0.4</label>
-      <input type="radio" id="4.1.0" name="std_dictionary" value="4.1.0">
-      <label for="4.1.0">4.1.0</label><br>
+      <input type="radio" id="4.1" name="std_dictionary" value="v4_1">
+      <label for="4.1">4.1</label><br>
       <p>Select .ags file(s) for validation (v4.x only).</p>
       <input name="files" type="file" multiple><br>
       <p>Select reponse format:</p>
-      <input type="radio" id="html" name="reponse_format" value="html">
+      <input type="radio" id="html" name="reponse_fmt" value="html">
       <label for="html">HTML</label>
-      <input type="radio" id="txt" name="reponse_format" value="txt">
-      <label for="txt">Plain Text</label>
-      <input type="radio" id="json" name="reponse_format" value="json">
+      <input type="radio" id="text" name="reponse_fmt" value="text">
+      <label for="text">Plain Text</label>
+      <input type="radio" id="json" name="reponse_fmt" value="json">
       <label for="json">JSON</label><br>
       <br>
       <input type="submit">
