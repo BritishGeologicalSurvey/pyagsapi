@@ -5,21 +5,14 @@ import logging
 from pathlib import Path
 import re
 import subprocess
-from textwrap import dedent
 from typing import Tuple, Optional
 
 import python_ags4
 from python_ags4 import AGS4
 
+from app.response_templates import PLAIN_TEXT_TEMPLATE, RESPONSE_TEMPLATE
+
 logger = logging.getLogger(__name__)
-
-RESPONSE_TEMPLATE = dedent("""
-    File Name: \t {filename}
-    File Size: \t {filesize:0.0f} kB
-    Time (UTC): \t {time_utc}
-
-    {message}
-    """).strip()
 
 
 def validate(filename: Path) -> dict:
@@ -66,6 +59,11 @@ def validate(filename: Path) -> dict:
     response['valid'] = valid
 
     return response
+
+
+def to_plain_text(response: dict) -> str:
+    """Take JSON response from convert and render as plain text."""
+    return PLAIN_TEXT_TEMPLATE.render(response)
 
 
 def convert(filename: Path, results_dir: Path) -> Tuple[Optional[Path], str]:

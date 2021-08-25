@@ -71,13 +71,14 @@ async def validate(background_tasks: BackgroundTasks,
     contents = await file.read()
     local_ags_file = tmp_dir / file.filename
     local_ags_file.write_bytes(contents)
-    log = ags.validate(local_ags_file)
+    result = ags.validate(local_ags_file)
     if fmt == Format.TEXT:
+        log = ags.to_plain_text(result)
         logfile = tmp_dir / 'results.log'
         logfile.write_text(log)
         response = FileResponse(logfile, media_type="text/plain")
     else:
-        data = [log]
+        data = [result]
         response = prepare_validation_response(request, data)
     return response
 
@@ -100,7 +101,7 @@ async def validate_many(background_tasks: BackgroundTasks,
                 contents = await file.read()
                 local_ags_file = tmp_dir / file.filename
                 local_ags_file.write_bytes(contents)
-                log = ags.validate(local_ags_file)
+                log = ags.to_plain_text(ags.validate(local_ags_file))
                 f.write(log)
                 f.write('=' * 80 + '\n')
         response = FileResponse(full_logfile, media_type="text/plain")
