@@ -27,7 +27,6 @@ def test_validate(filename, expected):
     # Check that metadata fields are correct
     for key in ['filename', 'filesize', 'checker', 'time', 'dictionary',
                 'errors', 'message', 'valid']:
-        print(key)
         assert response[key] == expected[key]
 
 
@@ -88,7 +87,6 @@ def test_is_valid(filename, expected):
 def test_to_plain_text(response, expected):
     # Act
     text = ags.to_plain_text(response)
-    print(text)
 
     # Assert
     assert text.strip() == expected.strip()
