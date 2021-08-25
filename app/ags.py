@@ -1,71 +1,92 @@
 """Functions to handle the AGS parser."""
 import datetime as dt
+from functools import reduce
 import logging
 from pathlib import Path
 import re
 import subprocess
-from tempfile import TemporaryDirectory
-from textwrap import dedent
 from typing import Tuple, Optional
+
+import python_ags4
+from python_ags4 import AGS4
+
+
+from app.response_templates import PLAIN_TEXT_TEMPLATE, RESPONSE_TEMPLATE
 
 logger = logging.getLogger(__name__)
 
-RESPONSE_TEMPLATE = dedent("""
-    File Name: \t {filename}
-    File Size: \t {filesize:0.0f} kB
-    Time (UTC): \t {time_utc}
+# Collect full paths of dictionaries installed alongside python_ags4
+_dictionary_files = list(Path(python_ags4.__file__).parent.glob('Standard_dictionary*.ags'))
+STANDARD_DICTIONARIES = {f.name: f.absolute() for f in _dictionary_files}
 
-    {message}
-    """).strip()
+logger = logging.getLogger(__name__)
 
 
-def validate(filename: Path) -> str:
-    """Validate filename and write output to file in results_dir."""
+def validate(filename: Path, standard_AGS4_dictionary: Optional[str] = None) -> dict:
+    """
+    Validate filename (against optional dictionary) and respond in
+    dictionary suitable for converting to JSON.
+
+    :raises ValueError: Raised if dictionary provided is not available.
+    """
     logger.info("Validate called for %", filename.name)
 
-    with TemporaryDirectory() as tmpdirname:
-        logfile = Path(tmpdirname) / 'output.log'
-        args = [
-            'ags4_cli', 'check', filename, '-o', logfile
-        ]
-        # Use subprocess to run the file.  It will swallow errors.
-        # If files have repeated headers the CLI will ask if they should be
-        # renamed.  Passing input='n' answers 'n' to this question.
-        # A timeout prevents the whole process hanging indefinitely.
-        result = subprocess.run(args, capture_output=True,
-                                input='n', text=True, timeout=30)
-        logger.debug(result)
-        log = logfile.read_text() if logfile.exists() else None
+    # Prepare response with metadata
+    response = {'filename': filename.name,
+                'filesize': filename.stat().st_size,
+                'checker': f'python_ags4 v{python_ags4.__version__}',
+                'time': dt.datetime.now(tz=dt.timezone.utc)}
 
-    # Generate response based on result of subprocess
-    filesize = filename.stat().st_size / 1024
-    time_utc = dt.datetime.now(tz=dt.timezone.utc).strftime('%Y-%m-%d %H:%M:%S')
-    if result.returncode != 0:
-        use_template = True
-        if 'UnicodeDecodeError:' in result.stderr:
-            message = get_unicode_message(result.stderr, filename)
+    # Select dictionary file if exists
+    if standard_AGS4_dictionary:
+        try:
+            dictionary_file = STANDARD_DICTIONARIES[standard_AGS4_dictionary]
+        except KeyError:
+            msg = (f"{standard_AGS4_dictionary} not available.  "
+                   f"Installed dictionaries: {STANDARD_DICTIONARIES.keys()}")
+            raise ValueError(msg)
+    else:
+        dictionary_file = None
+
+    # Get error information from file
+    try:
+        errors = AGS4.check_file(filename, standard_AGS4_dictionary=dictionary_file)
+        try:
+            metadata = errors.pop('Metadata')  # This also removes it from returned errors
+            dictionary = [d['desc'] for d in metadata
+                          if d['line'] == 'Dictionary'][0]
+        except KeyError:
+            # 'Metadata' is not created for some files with errors
+            dictionary = ''
+
+        error_count = len(reduce(lambda acc, current: acc + current, errors.values(), []))
+        if error_count > 0:
+            message = f'{error_count} error(s) found in file!'
+            valid = False
         else:
-            message = 'ERROR: ' + result.stderr
-    elif result.stdout.startswith('ERROR: '):
-        use_template = True
-        message = result.stdout
-    elif re.match(r'\d+ error\(s\) found in file', log):
-        use_template = True
-        # Files with lots of errors don't record metadata in their logs and
-        # just list errors.  We can add filename back in via the template.
-        message = log
-    else:
-        use_template = False
+            message = 'All checks passed!'
+            valid = True
+    except UnicodeDecodeError as err:
+        line_no = len(err.object[:err.end].split(b'\n'))
+        description = err.reason
+        errors = {'UnicodeDecodeError': [
+                       {'line': line_no, 'group': '', 'desc': description}]}
+        dictionary = ''
+        message = 'Unable to open file.'
+        valid = False
 
-    if use_template:
-        response = RESPONSE_TEMPLATE.format(filename=filename.name,
-                                            filesize=filesize,
-                                            time_utc=time_utc,
-                                            message=message)
-    else:
-        response = log
+    # Add error info to response
+    response['dictionary'] = dictionary
+    response['errors'] = errors
+    response['message'] = message
+    response['valid'] = valid
 
     return response
+
+
+def to_plain_text(response: dict) -> str:
+    """Take JSON response from convert and render as plain text."""
+    return PLAIN_TEXT_TEMPLATE.render(response)
 
 
 def convert(filename: Path, results_dir: Path) -> Tuple[Optional[Path], str]:
@@ -108,18 +129,11 @@ def convert(filename: Path, results_dir: Path) -> Tuple[Optional[Path], str]:
     return (converted_file, log)
 
 
-def is_valid(filename: Path) -> bool:
+def is_valid(filename: Path, standard_AGS4_dictionary: Optional[str] = None) -> bool:
     """
     Validate filename and parse returned log to determine if file is valid.
     """
-    return log_is_valid(validate(filename))
-
-
-def log_is_valid(log: str) -> bool:
-    """
-    Parse validation log to determine if file is valid.
-    """
-    return 'All checks passed!' in log
+    return validate(filename, standard_AGS4_dictionary=standard_AGS4_dictionary)['valid']
 
 
 def get_unicode_message(stderr: str, filename: str) -> str:

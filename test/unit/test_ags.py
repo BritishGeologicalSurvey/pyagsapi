@@ -2,41 +2,67 @@
 from pathlib import Path
 import re
 
+from freezegun import freeze_time
 import pytest
 
 from app import ags
+from test.fixtures import (BAD_FILE_DATA, DICTIONARIES,
+                           FROZEN_TIME, GOOD_FILE_DATA,
+                           ISVALID_RSP_DATA)
+from test.fixtures_json import JSON_RESPONSES
+from test.fixtures_plain_text import PLAIN_TEXT_RESPONSES
 
 TEST_FILE_DIR = Path(__file__).parent.parent / 'files'
 
 
-@pytest.mark.parametrize('filename, expected', [
-    ('example1.ags', ('All checks passed!', 3)),
-    ('nonsense.ags', (r'7 error\(s\) found in file!', 0)),
-    ('empty.ags', (r'4 error\(s\) found in file!', 0)),
-    ('real/A3040_03.ags', (r'5733 error\(s\) found in file!', 258)),
-    ('example1.xlsx', ('ERROR: Only .ags files are accepted as input.', 11)),
-    ('random_binary.ags', ('ERROR: Unreadable character "á" at position 1 on line: 1\nStarting:', 1)),
-    ('real/CG014058_F.ags', (r'ERROR: Unreadable character "æ" at position 80 on line: 263\nStarting: "WS2"', 49)),
-    ('real/Blackburn Southern Bypass.ags', (r'93 error\(s\) found in file!', 6)),  # this file contains BOM character
-])
-def test_validate(tmp_path, filename, expected):
+@freeze_time(FROZEN_TIME)
+@pytest.mark.parametrize('filename, expected',
+                         [item for item in JSON_RESPONSES.items()])
+def test_validate(filename, expected):
     # Arrange
     filename = TEST_FILE_DIR / filename
-    expected_message, expected_size = expected
 
     # Act
     response = ags.validate(filename)
 
     # Assert
-    assert f"File Name: \t {filename.name}" in response
-    assert f"File Size: \t {expected_size:n} kB" in response
-    assert re.search(expected_message, response)
+    # Check that metadata fields are correct
+    for key in ['filename', 'filesize', 'checker', 'time', 'dictionary',
+                'errors', 'message', 'valid']:
+        assert response[key] == expected[key]
 
 
-@pytest.mark.parametrize('filename, expected', [
-    ('example1.ags', 'SUCCESS: example1.ags converted to example1.xlsx'),
-    ('example1.xlsx', 'SUCCESS: example1.xlsx converted to example1.ags'),
-])
+@pytest.mark.parametrize('dictionary', DICTIONARIES.values())
+def test_validate_custom_dictionary(dictionary):
+    # Arrange
+    filename = TEST_FILE_DIR / 'example1.ags'
+
+    # Act
+    response = ags.validate(filename,
+                            standard_AGS4_dictionary=dictionary)
+
+    # Assert
+    assert response['filename'] == 'example1.ags'
+    assert response['dictionary'] == dictionary
+
+
+def test_validate_custom_dictionary_bad_file():
+    # Arrange
+    filename = TEST_FILE_DIR / 'example1.ags'
+    dictionary = 'bad_file.ags'
+
+    # Act
+    with pytest.raises(ValueError) as err:
+        ags.validate(filename, standard_AGS4_dictionary=dictionary)
+
+    # Assert
+    message = str(err.value)
+    assert 'dictionary' in message
+    for key in ags.STANDARD_DICTIONARIES:
+        assert key in message
+
+
+@pytest.mark.parametrize('filename, expected', GOOD_FILE_DATA)
 def test_convert(tmp_path, filename, expected):
     # Arrange
     filename = TEST_FILE_DIR / filename
@@ -52,13 +78,7 @@ def test_convert(tmp_path, filename, expected):
     assert re.search(expected, log)
 
 
-@pytest.mark.parametrize('filename, expected', [
-    ('nonsense.ags', ('IndexError: At least one sheet must be visible', 0)),
-    ('empty.ags', ('IndexError: At least one sheet must be visible', 0)),
-    ('dummy.xlsx', ("AttributeError: 'DataFrame' object has no attribute 'HEADING'", 5)),
-    ('random_binary.ags', ('IndexError: At least one sheet must be visible', 1)),
-    ('real/A3040_03.ags', ("UnboundLocalError: local variable 'group' referenced before assignment", 258)),
-])
+@pytest.mark.parametrize('filename, expected', BAD_FILE_DATA)
 def test_convert_bad_files(tmp_path, filename, expected):
     # Arrange
     filename = TEST_FILE_DIR / filename
@@ -78,14 +98,7 @@ def test_convert_bad_files(tmp_path, filename, expected):
     assert re.search(expected_message, log)
 
 
-@pytest.mark.parametrize('filename, expected', [
-    ('example1.ags', True),
-    ('nonsense.ags', False),
-    ('empty.ags', False),
-    ('dummy.xlsx', False),
-    ('random_binary.ags', False),
-    ('real/A3040_03.ags', False),
-])
+@pytest.mark.parametrize('filename, expected', ISVALID_RSP_DATA)
 def test_is_valid(filename, expected):
     # Arrange
     filename = TEST_FILE_DIR / filename
@@ -95,3 +108,31 @@ def test_is_valid(filename, expected):
 
     # Assert
     assert result == expected
+
+
+@pytest.mark.parametrize('dictionary', DICTIONARIES.values())
+def test_is_valid_custom_dictionary(dictionary):
+    # Arrange
+    filename = TEST_FILE_DIR / 'example1.ags'
+
+    # Act
+    result = ags.is_valid(filename,
+                          standard_AGS4_dictionary=dictionary)
+
+    # Assert
+    assert result
+
+
+@pytest.mark.parametrize('filename', [
+    'example1.ags', 'nonsense.ags', 'random_binary.ags',
+    'real/Blackburn Southern Bypass.ags'])
+def test_to_plain_text(filename):
+    # Arrange
+    response = JSON_RESPONSES[filename]
+    expected = PLAIN_TEXT_RESPONSES[filename]
+
+    # Act
+    text = ags.to_plain_text(response)
+
+    # Assert
+    assert text.strip() == expected.strip()
