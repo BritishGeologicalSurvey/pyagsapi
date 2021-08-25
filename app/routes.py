@@ -5,7 +5,7 @@ from enum import Enum
 from pathlib import Path
 from typing import List
 
-from fastapi import APIRouter, BackgroundTasks, File, Query, Request, UploadFile
+from fastapi import APIRouter, BackgroundTasks, File, Form, Request, UploadFile
 from fastapi.responses import FileResponse, StreamingResponse
 
 from app import ags
@@ -38,26 +38,12 @@ class Dictionary(str, Enum):
     V4_1 = "v4_1"
 
 
-format_query = Query(
-    default=Format.JSON,
-    title='Format',
-    description='Response format, text or json',
-)
-
-
-dictionary_query = Query(
-    default=None,
-    title='Validation Dictionary',
-    description='Version of AGS dictionary to validate against',
-)
-
-
 @router.post("/isvalid/",
              response_model=ValidationResponse,
              responses=log_responses)
 async def is_valid(background_tasks: BackgroundTasks,
                    file: UploadFile = File(...),
-                   std_dictionary: Dictionary = dictionary_query,
+                   std_dictionary: Dictionary = Form(...),
                    request: Request = None):
     if not file.filename:
         raise InvalidPayloadError(request)
@@ -80,8 +66,8 @@ async def is_valid(background_tasks: BackgroundTasks,
              responses=log_responses)
 async def validate(background_tasks: BackgroundTasks,
                    file: UploadFile = File(...),
-                   std_dictionary: Dictionary = dictionary_query,
-                   fmt: Format = format_query,
+                   std_dictionary: Dictionary = Form(...),
+                   fmt: Format = Form(...),
                    request: Request = None):
     if not file.filename:
         raise InvalidPayloadError(request)
@@ -110,8 +96,8 @@ async def validate(background_tasks: BackgroundTasks,
              responses=log_responses)
 async def validate_many(background_tasks: BackgroundTasks,
                         files: List[UploadFile] = File(...),
-                        std_dictionary: Dictionary = dictionary_query,
-                        fmt: Format = format_query,
+                        std_dictionary: Dictionary = Form(...),
+                        fmt: Format = Form(...),
                         request: Request = None):
     if not files[0].filename:
         raise InvalidPayloadError(request)
