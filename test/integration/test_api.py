@@ -48,6 +48,28 @@ async def test_isvalid(async_client, filename, expected):
     assert body['data'][0] == expected
 
 
+@pytest.mark.parametrize('dictionary', ['v4_0_3', 'v4_0_4', 'v4_1'])
+@pytest.mark.asyncio
+async def test_isvalid_custom_dictionary(async_client, dictionary):
+    # Arrange
+    filename = TEST_FILE_DIR / 'example1.ags'
+    mp_encoder = MultipartEncoder(
+        fields={'file': (filename.name, open(filename, 'rb'), 'text/plain')})
+
+    # Act
+    async with async_client as ac:
+        response = await ac.post(
+            '/isvalid/?std_dictionary=' + dictionary,
+            headers={'Content-Type': mp_encoder.content_type},
+            data=mp_encoder.to_string())
+
+    # Assert
+    assert response.status_code == 200
+    body = response.json()
+    assert len(body['data']) == 1
+    assert body['data'][0]
+
+
 @pytest.mark.parametrize('fmt,', ['', '?fmt=json'])
 @pytest.mark.parametrize('filename, expected',
                          [item for item in JSON_RESPONSES.items()])

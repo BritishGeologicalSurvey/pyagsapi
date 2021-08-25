@@ -111,6 +111,22 @@ def test_is_valid(filename, expected):
     assert result == expected
 
 
+@pytest.mark.parametrize('dictionary', [
+     "Standard_dictionary_v4_0_3.ags",
+     "Standard_dictionary_v4_0_4.ags",
+     "Standard_dictionary_v4_1.ags"])
+def test_is_valid_custom_dictionary(dictionary):
+    # Arrange
+    filename = TEST_FILE_DIR / 'example1.ags'
+
+    # Act
+    result = ags.is_valid(filename,
+                          standard_AGS4_dictionary=dictionary)
+
+    # Assert
+    assert result
+
+
 @pytest.mark.parametrize('filename', [
     'example1.ags', 'nonsense.ags', 'random_binary.ags',
     'real/Blackburn Southern Bypass.ags'])
