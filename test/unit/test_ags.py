@@ -6,7 +6,9 @@ from freezegun import freeze_time
 import pytest
 
 from app import ags
-from test.fixtures import BAD_FILE_DATA, FROZEN_TIME, GOOD_FILE_DATA, ISVALID_RSP_DATA
+from test.fixtures import (BAD_FILE_DATA, DICTIONARIES,
+                           FROZEN_TIME, GOOD_FILE_DATA,
+                           ISVALID_RSP_DATA)
 from test.fixtures_json import JSON_RESPONSES
 from test.fixtures_plain_text import PLAIN_TEXT_RESPONSES
 
@@ -30,10 +32,7 @@ def test_validate(filename, expected):
         assert response[key] == expected[key]
 
 
-@pytest.mark.parametrize('dictionary', [
-     "Standard_dictionary_v4_0_3.ags",
-     "Standard_dictionary_v4_0_4.ags",
-     "Standard_dictionary_v4_1.ags"])
+@pytest.mark.parametrize('dictionary', DICTIONARIES.values())
 def test_validate_custom_dictionary(dictionary):
     # Arrange
     filename = TEST_FILE_DIR / 'example1.ags'
@@ -111,10 +110,7 @@ def test_is_valid(filename, expected):
     assert result == expected
 
 
-@pytest.mark.parametrize('dictionary', [
-     "Standard_dictionary_v4_0_3.ags",
-     "Standard_dictionary_v4_0_4.ags",
-     "Standard_dictionary_v4_1.ags"])
+@pytest.mark.parametrize('dictionary', DICTIONARIES.values())
 def test_is_valid_custom_dictionary(dictionary):
     # Arrange
     filename = TEST_FILE_DIR / 'example1.ags'

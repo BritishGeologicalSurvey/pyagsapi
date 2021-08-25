@@ -8,7 +8,7 @@ from httpx import AsyncClient
 from requests_toolbelt.multipart.encoder import MultipartEncoder
 
 from app.main import app
-from test.fixtures import FROZEN_TIME, ISVALID_RSP_DATA
+from test.fixtures import DICTIONARIES, FROZEN_TIME, ISVALID_RSP_DATA
 from test.fixtures_json import JSON_RESPONSES
 from test.fixtures_plain_text import PLAIN_TEXT_RESPONSES
 
@@ -48,7 +48,7 @@ async def test_isvalid(async_client, filename, expected):
     assert body['data'][0] == expected
 
 
-@pytest.mark.parametrize('dictionary', ['v4_0_3', 'v4_0_4', 'v4_1'])
+@pytest.mark.parametrize('dictionary', DICTIONARIES.keys())
 @pytest.mark.asyncio
 async def test_isvalid_custom_dictionary(async_client, dictionary):
     # Arrange
@@ -127,9 +127,10 @@ async def test_validatemany_json(async_client, fmt):
     assert len(body['data']) == len(JSON_RESPONSES)
 
 
-@pytest.mark.parametrize('dictionary', ['v4_0_3', 'v4_0_4', 'v4_1'])
+@pytest.mark.parametrize('dictionary, expected',
+                         [item for item in DICTIONARIES.items()])
 @pytest.mark.asyncio
-async def test_validate_custom_dictionary(async_client, dictionary):
+async def test_validate_custom_dictionary(async_client, dictionary, expected):
     # Arrange
     filename = TEST_FILE_DIR / 'example1.ags'
     mp_encoder = MultipartEncoder(
@@ -148,7 +149,7 @@ async def test_validate_custom_dictionary(async_client, dictionary):
     assert len(body['data']) == 1
     # Assert
     assert body['data'][0]['filename'] == 'example1.ags'
-    assert body['data'][0]['dictionary'] == f'Standard_dictionary_{dictionary}.ags'
+    assert body['data'][0]['dictionary'] == expected
 
 
 @freeze_time(FROZEN_TIME)
