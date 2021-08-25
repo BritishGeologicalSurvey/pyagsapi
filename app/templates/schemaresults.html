@@ -1,0 +1,21 @@
+{% extends "_base.html" %}
+{% block title %}Schema_Validation_Results{% endblock %}
+{% block body %}
+
+<br/>
+<section id="identification">
+    <h1>AGS Schema Validation Results</h1>
+    <br>
+</section>
+<section id="metadata">
+    <br>
+    <h2>Metadata</h2>
+    <p>Item ID: {{ id }}</p>
+</section>
+<section id=errors>
+  <br>
+  <h2>Errors</h2>
+  <p>Item ID: {{ id }}</p>
+</section>
+
+{% endblock %}
