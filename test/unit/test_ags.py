@@ -75,7 +75,7 @@ def test_convert(tmp_path, filename, expected):
 
     # Assert
     assert converted_file is not None and converted_file.exists()
-    assert filename.name == response['filename']
+    assert response['filename'] == filename.name
     assert re.search(expected, response['message'])
 
 
@@ -89,14 +89,13 @@ def test_convert_bad_files(tmp_path, filename, expected):
     expected_message, expected_size = expected
 
     # Act
-    converted_file, log = ags.convert(filename, results_dir)
+    converted_file, response = ags.convert(filename, results_dir)
 
     # Assert
     assert converted_file is None
-    assert f"File Name: \t {filename.name}" in log
-    assert f"File Size: \t {expected_size:n} kB" in log
-    assert 'ERROR:' in log
-    assert re.search(expected_message, log)
+    assert response['filename'] == filename.name
+    assert response['filesize'] == expected_size
+    assert response['message'] == expected_message
 
 
 @pytest.mark.parametrize('filename, expected', ISVALID_RSP_DATA)

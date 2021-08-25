@@ -19,11 +19,11 @@ GOOD_FILE_DATA = [
 ]
 
 BAD_FILE_DATA = [
-    ('nonsense.ags', ('IndexError: At least one sheet must be visible', 0)),
-    ('empty.ags', ('IndexError: At least one sheet must be visible', 0)),
-    ('dummy.xlsx', ("AttributeError: 'DataFrame' object has no attribute 'HEADING'", 5)),
-    ('random_binary.ags', ('IndexError: At least one sheet must be visible', 1)),
-    ('real/A3040_03.ags', ("UnboundLocalError: local variable 'group' referenced before assignment", 258)),
+    ('nonsense.ags', ('ERROR: File does not have AGS format layout', 9)),
+    ('empty.ags', ('ERROR: File does not have AGS format layout', 0)),
+    ('dummy.xlsx', ("ERROR: Bad spreadsheet layout ('DataFrame' object has no attribute 'HEADING')", 4787)),
+    ('random_binary.ags', ('ERROR: File does not have AGS format layout', 1024)),
+    ('real/A3040_03.ags', ("ERROR: File contains duplicate headers", 264526)),
 ]
 
 DICTIONARIES = {

@@ -4,14 +4,13 @@ from functools import reduce
 import logging
 from pathlib import Path
 import re
-import subprocess
 from typing import Tuple, Optional
 
 import python_ags4
 from python_ags4 import AGS4
 
+from app.response_templates import PLAIN_TEXT_TEMPLATE
 
-from app.response_templates import PLAIN_TEXT_TEMPLATE, RESPONSE_TEMPLATE
 
 logger = logging.getLogger(__name__)
 
@@ -101,29 +100,38 @@ def convert(filename: Path, results_dir: Path) -> Tuple[Optional[Path], dict]:
     response = _prepare_response_metadata(filename)
 
     # Do the conversion
+    success = True
     if filename.suffix == '.ags':
-        AGS4.AGS4_to_excel(filename, converted_file)
-        message = f"SUCCESS: {filename.name} converted to {converted_file.name}"
+        try:
+            AGS4.AGS4_to_excel(filename, converted_file)
+        except IndexError:
+            success = False
+            error_message = "ERROR: File does not have AGS format layout"
+        except UnboundLocalError:
+            # This error is thrown in response to a bug in the upstream code,
+            # which in turn is only triggered if the AGS file has duplicate
+            # headers.
+            success = False
+            error_message = "ERROR: File contains duplicate headers"
     elif filename.suffix == '.xlsx':
-        AGS4.excel_to_AGS4(filename, converted_file)
-        message = f"SUCCESS: {filename.name} converted to {converted_file.name}"
+        try:
+            AGS4.excel_to_AGS4(filename, converted_file)
+        except AttributeError as err:
+            # Include error details here in case they provide a clue e.g. which
+            # attribute is missing
+            success = False
+            error_message = f"ERROR: Bad spreadsheet layout ({err.args[0]})"
     else:
-        message = f"ERROR: {filename.name} is not .ags or .xlsx format"
+        success = False
+        error_message = f"ERROR: {filename.name} is not .ags or .xlsx format"
 
-    # Generate response based on result of subprocess
-    #filesize = filename.stat().st_size / 1024
-    #if result.returncode != 0:
-    #    message = 'ERROR: ' + result.stderr
-    #    converted_file.unlink(missing_ok=True)
-    #    converted_file = None
-    #elif result.stdout.startswith('ERROR: '):
-    #    message = result.stdout
-    #    converted_file.unlink(missing_ok=True)
-    #    converted_file = None
-    #else:
-    #    message = f"SUCCESS: {filename.name} converted to {converted_file.name}"
-
-    response['message'] = message
+    # Update response and clean failed files
+    if success:
+        response['message'] = f"SUCCESS: {filename.name} converted to {converted_file.name}"
+    else:
+        response['message'] = error_message
+        converted_file.unlink(missing_ok=True)
+        converted_file = None
 
     return (converted_file, response)
 
