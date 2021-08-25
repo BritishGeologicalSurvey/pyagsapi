@@ -6,8 +6,8 @@ from freezegun import freeze_time
 import pytest
 
 from app import ags
+from test.fixtures import BAD_FILE_DATA, GOOD_FILE_DATA, ISVALID_RSP_DATA
 from test.fixtures_json import JSON_RESPONSES
-from test.fixtures import ISVALID_RSP_DATA
 from test.fixtures_plain_text import PLAIN_TEXT_RESPONSES
 
 TEST_FILE_DIR = Path(__file__).parent.parent / 'files'
@@ -31,10 +31,7 @@ def test_validate(filename, expected):
         assert response[key] == expected[key]
 
 
-@pytest.mark.parametrize('filename, expected', [
-    ('example1.ags', 'SUCCESS: example1.ags converted to example1.xlsx'),
-    ('example1.xlsx', 'SUCCESS: example1.xlsx converted to example1.ags'),
-])
+@pytest.mark.parametrize('filename, expected', GOOD_FILE_DATA)
 def test_convert(tmp_path, filename, expected):
     # Arrange
     filename = TEST_FILE_DIR / filename
@@ -50,13 +47,7 @@ def test_convert(tmp_path, filename, expected):
     assert re.search(expected, log)
 
 
-@pytest.mark.parametrize('filename, expected', [
-    ('nonsense.ags', ('IndexError: At least one sheet must be visible', 0)),
-    ('empty.ags', ('IndexError: At least one sheet must be visible', 0)),
-    ('dummy.xlsx', ("AttributeError: 'DataFrame' object has no attribute 'HEADING'", 5)),
-    ('random_binary.ags', ('IndexError: At least one sheet must be visible', 1)),
-    ('real/A3040_03.ags', ("UnboundLocalError: local variable 'group' referenced before assignment", 258)),
-])
+@pytest.mark.parametrize('filename, expected', BAD_FILE_DATA)
 def test_convert_bad_files(tmp_path, filename, expected):
     # Arrange
     filename = TEST_FILE_DIR / filename

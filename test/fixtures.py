@@ -21,3 +21,16 @@ VALIDATION_TEXT_RSP_DATA = [
     ('real/CG014058_F.ags', (r'ERROR: Unreadable character "æ" at position 80 on line: 263\nStarting: "WS2"', 49)),
     ('real/Blackburn Southern Bypass.ags', (r'93 error\(s\) found in file!', 6)),  # this file contains BOM character
 ]
+
+GOOD_FILE_DATA = [
+    ('example1.ags', 'SUCCESS: example1.ags converted to example1.xlsx'),
+    ('example1.xlsx', 'SUCCESS: example1.xlsx converted to example1.ags'),
+]
+
+BAD_FILE_DATA = [
+    ('nonsense.ags', ('IndexError: At least one sheet must be visible', 0)),
+    ('empty.ags', ('IndexError: At least one sheet must be visible', 0)),
+    ('dummy.xlsx', ("AttributeError: 'DataFrame' object has no attribute 'HEADING'", 5)),
+    ('random_binary.ags', ('IndexError: At least one sheet must be visible', 1)),
+    ('real/A3040_03.ags', ("UnboundLocalError: local variable 'group' referenced before assignment", 258)),
+]
