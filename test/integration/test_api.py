@@ -125,6 +125,30 @@ async def test_validate_text(async_client, filename, expected):
     assert response.text.strip() == expected.strip()
 
 
+@freeze_time(FROZEN_TIME)
+@pytest.mark.asyncio
+async def test_validatemany_text(async_client):
+    # Arrange
+    files = []
+    for name in PLAIN_TEXT_RESPONSES.keys():
+        filename = TEST_FILE_DIR / name
+        file = ('files', (filename.name, open(filename, 'rb'), 'text/plain'))
+        files.append(file)
+    mp_encoder = MultipartEncoder(fields=files)
+
+    # Act
+    async with async_client as ac:
+        response = await ac.post(
+            '/validatemany/?fmt=text',
+            headers={'Content-Type': mp_encoder.content_type},
+            data=mp_encoder.to_string())
+
+    # Assert
+    assert response.status_code == 200
+    for log in PLAIN_TEXT_RESPONSES.values():
+        assert log.strip() in response.text
+
+
 @pytest.fixture(scope="function")
 def client():
     return TestClient(app)
