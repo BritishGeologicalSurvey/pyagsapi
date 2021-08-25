@@ -203,53 +203,6 @@ async def test_validatemany_text(async_client):
         assert log.strip() in response.text
 
 
-@freeze_time(FROZEN_TIME)
-@pytest.mark.parametrize('filename, expected',
-                         [item for item in PLAIN_TEXT_RESPONSES.items()])
-@pytest.mark.asyncio
-async def test_validate_html(async_client, filename, expected):
-    # Arrange
-    filename = TEST_FILE_DIR / filename
-    mp_encoder = MultipartEncoder(
-        fields={'file': (filename.name, open(filename, 'rb'), 'text/plain'),
-                'fmt': 'html'})
-
-    # Act
-    async with async_client as ac:
-        response = await ac.post(
-            '/validate/',
-            headers={'Content-Type': mp_encoder.content_type},
-            data=mp_encoder.to_string())
-
-    # Assert
-    assert response.status_code == 200
-    assert '<p>' in response.text.strip()
-
-
-@freeze_time(FROZEN_TIME)
-@pytest.mark.asyncio
-async def test_validatemany_html(async_client):
-    # Arrange
-    fields = []
-    for name in PLAIN_TEXT_RESPONSES.keys():
-        filename = TEST_FILE_DIR / name
-        file = ('files', (filename.name, open(filename, 'rb'), 'text/plain'))
-        fields.append(file)
-    fields.append(('fmt', 'html'))
-    mp_encoder = MultipartEncoder(fields=fields)
-
-    # Act
-    async with async_client as ac:
-        response = await ac.post(
-            '/validatemany/',
-            headers={'Content-Type': mp_encoder.content_type},
-            data=mp_encoder.to_string())
-
-    # Assert
-    assert response.status_code == 200
-    assert '<p>' in response.text.strip()
-
-
 @pytest.fixture(scope="function")
 def client():
     return TestClient(app)
