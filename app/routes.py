@@ -38,12 +38,25 @@ class Dictionary(str, Enum):
     V4_1 = "v4_1"
 
 
+format_form = Form(
+    default=Format.JSON,
+    title='Response Format',
+    description='Response format: json or text',
+)
+
+dictionary_form = Form(
+    default=None,
+    title='Validation Dictionary',
+    description='Version of AGS dictionary to validate against',
+)
+
+
 @router.post("/isvalid/",
              response_model=ValidationResponse,
              responses=log_responses)
 async def is_valid(background_tasks: BackgroundTasks,
                    file: UploadFile = File(...),
-                   std_dictionary: Dictionary = Form(None),
+                   std_dictionary: Dictionary = dictionary_form,
                    request: Request = None):
     if not file.filename:
         raise InvalidPayloadError(request)
@@ -66,8 +79,8 @@ async def is_valid(background_tasks: BackgroundTasks,
              responses=log_responses)
 async def validate(background_tasks: BackgroundTasks,
                    file: UploadFile = File(...),
-                   std_dictionary: Dictionary = Form(None),
-                   fmt: Format = Form(None),
+                   std_dictionary: Dictionary = dictionary_form,
+                   fmt: Format = format_form,
                    request: Request = None):
     if not file.filename:
         raise InvalidPayloadError(request)
@@ -96,8 +109,8 @@ async def validate(background_tasks: BackgroundTasks,
              responses=log_responses)
 async def validate_many(background_tasks: BackgroundTasks,
                         files: List[UploadFile] = File(...),
-                        std_dictionary: Dictionary = Form(None),
-                        fmt: Format = Form(None),
+                        std_dictionary: Dictionary = dictionary_form,
+                        fmt: Format = format_form,
                         request: Request = None):
     if not files[0].filename:
         raise InvalidPayloadError(request)
