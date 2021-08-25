@@ -43,9 +43,9 @@
   <p>Select .ags file(s) for data validation against the National Geoscience Data Repository requirements</p>
   <form action="/validatedatamany/" enctype="multipart/form-data" method="post">
   <input name="files" type="file" multiple>
+  <input type="checkbox" id="validate" name="validate" value="validate" checked>
+  <label for="validate"> I would also like to run AGS schema validation</label><br>
   <p>Select reponse format:</p>
-  <input type="radio" id="html" name="reponse_format" value="html">
-  <label for="html">HTML</label>
   <input type="radio" id="txt" name="reponse_format" value="txt">
   <label for="txt">Plain Text</label>
   <input type="radio" id="json" name="reponse_format" value="json">
