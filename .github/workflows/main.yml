@@ -54,7 +54,7 @@ jobs:
 
       - uses: Azure/container-scan@v0
         with:
-          image-name: $IMAGE_ID:$VERSION
+          image-name: ${{ env.IMAGE_ID }}:${{ env.VERSION }}
 
       - name: Push to CR
         run: docker push $IMAGE_ID:$VERSION
