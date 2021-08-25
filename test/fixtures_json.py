@@ -21102,7 +21102,18 @@ JSON_RESPONSES = {
                                  'double quotes.',
                          'group': '',
                          'line': 2081}]},
-        'valid': False}
+        'valid': False},
+    'extension_is.bad': {
+        'filename': 'extension_is.bad',
+        'filesize': 0,
+        'checker': 'python_ags4 v0.3.6',
+        'dictionary': '',
+        'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
+        'message': 'ERROR: extension_is.bad is not .ags format',
+        'errors': {},
+        'valid': False
+    },
+
 }
 
 # These response values break the schema

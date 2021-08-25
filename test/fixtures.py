@@ -24,6 +24,7 @@ BAD_FILE_DATA = [
     ('dummy.xlsx', ("ERROR: Bad spreadsheet layout ('DataFrame' object has no attribute 'HEADING')", 4787)),
     ('random_binary.ags', ('ERROR: File does not have AGS format layout', 1024)),
     ('real/A3040_03.ags', ("ERROR: File contains duplicate headers", 264526)),
+    ('extension_is.bad', ("ERROR: extension_is.bad is not .ags or .xlsx format", 0))
 ]
 
 DICTIONARIES = {

@@ -44,6 +44,11 @@ def validate(filename: Path, standard_AGS4_dictionary: Optional[str] = None) -> 
     else:
         dictionary_file = None
 
+    # Return early if file is not .ags format
+    if filename.suffix != '.ags':
+        response['message'] = f"ERROR: {filename.name} is not .ags format"
+        return response
+
     # Get error information from file
     try:
         errors = AGS4.check_file(filename, standard_AGS4_dictionary=dictionary_file)
@@ -128,8 +133,10 @@ def convert(filename: Path, results_dir: Path) -> Tuple[Optional[Path], dict]:
     # Update response and clean failed files
     if success:
         response['message'] = f"SUCCESS: {filename.name} converted to {converted_file.name}"
+        response['valid'] = True
     else:
         response['message'] = error_message
+        response['valid'] = False
         converted_file.unlink(missing_ok=True)
         converted_file = None
 
@@ -171,11 +178,20 @@ def _prepare_response_metadata(filename: Path) -> dict:
     """
     Prepare a dictionary containing metadata to include in the response.
     """
+    try:
+        filesize = filename.stat().st_size
+    except FileNotFoundError:
+        filesize = 0
+
     response = {'filename': filename.name,
-                'filesize': filename.stat().st_size,
+                'filesize': filesize,
                 'checker': f'python_ags4 v{python_ags4.__version__}',
-                'dictionary': '',  # This is usually overwritten
-                'time': dt.datetime.now(tz=dt.timezone.utc)}
+                'time': dt.datetime.now(tz=dt.timezone.utc),
+                # The following are usually overwritten
+                'message': '',
+                'dictionary': '',
+                'errors': {},
+                'valid': False}
     return response
 
 
