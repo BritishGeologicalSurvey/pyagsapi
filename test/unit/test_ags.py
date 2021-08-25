@@ -80,7 +80,6 @@ def test_convert_bad_files(tmp_path, filename, expected):
 def test_is_valid(filename, expected):
     # Arrange
     filename = TEST_FILE_DIR / filename
-    expected = expected.strip()
 
     # Act
     result = ags.is_valid(filename)
