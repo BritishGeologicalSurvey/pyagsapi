@@ -28,8 +28,7 @@ async def test_isvalid(async_client, filename, expected):
     # Arrange
     filename = TEST_FILE_DIR / filename
     mp_encoder = MultipartEncoder(
-        fields={'file': (filename.name, open(filename, 'rb'), 'text/plain'),
-                'std_dictionary': 'v4_1'})
+        fields={'file': (filename.name, open(filename, 'rb'), 'text/plain')})
 
     # Act
     async with async_client as ac:
@@ -79,9 +78,7 @@ async def test_validate_json(async_client, filename, expected):
     # Arrange
     filename = TEST_FILE_DIR / filename
     mp_encoder = MultipartEncoder(
-        fields={'file': (filename.name, open(filename, 'rb'), 'text/plain'),
-                'std_dictionary': 'v4_1',
-                'fmt': 'json'})
+        fields={'file': (filename.name, open(filename, 'rb'), 'text/plain')})
 
     # Act
     async with async_client as ac:
@@ -139,8 +136,7 @@ async def test_validate_custom_dictionary(async_client, dictionary, expected):
     filename = TEST_FILE_DIR / 'example1.ags'
     mp_encoder = MultipartEncoder(
         fields={'file': (filename.name, open(filename, 'rb'), 'text/plain'),
-                'std_dictionary': dictionary,
-                'fmt': 'json'})
+                'std_dictionary': dictionary})
 
     # Act
     async with async_client as ac:
@@ -167,7 +163,6 @@ async def test_validate_text(async_client, filename, expected):
     filename = TEST_FILE_DIR / filename
     mp_encoder = MultipartEncoder(
         fields={'file': (filename.name, open(filename, 'rb'), 'text/plain'),
-                'std_dictionary': 'v4_1',
                 'fmt': 'text'})
 
     # Act

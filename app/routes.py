@@ -43,7 +43,7 @@ class Dictionary(str, Enum):
              responses=log_responses)
 async def is_valid(background_tasks: BackgroundTasks,
                    file: UploadFile = File(...),
-                   std_dictionary: Dictionary = Form(...),
+                   std_dictionary: Dictionary = Form(None),
                    request: Request = None):
     if not file.filename:
         raise InvalidPayloadError(request)
@@ -66,8 +66,8 @@ async def is_valid(background_tasks: BackgroundTasks,
              responses=log_responses)
 async def validate(background_tasks: BackgroundTasks,
                    file: UploadFile = File(...),
-                   std_dictionary: Dictionary = Form(...),
-                   fmt: Format = Form(...),
+                   std_dictionary: Dictionary = Form(None),
+                   fmt: Format = Form(None),
                    request: Request = None):
     if not file.filename:
         raise InvalidPayloadError(request)
@@ -96,8 +96,8 @@ async def validate(background_tasks: BackgroundTasks,
              responses=log_responses)
 async def validate_many(background_tasks: BackgroundTasks,
                         files: List[UploadFile] = File(...),
-                        std_dictionary: Dictionary = Form(...),
-                        fmt: Format = Form(...),
+                        std_dictionary: Dictionary = Form(None),
+                        fmt: Format = Form(None),
                         request: Request = None):
     if not files[0].filename:
         raise InvalidPayloadError(request)
