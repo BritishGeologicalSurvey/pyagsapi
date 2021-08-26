@@ -16,8 +16,8 @@ router = APIRouter()
 
 log_responses = dict(error_responses)
 log_responses['200'] = {
-    "content": {"text/plain": {}, "text/html": {}},
-    "description": "Return a log in json, text or html"}
+    "content": {"application/json": {}, "text/plain": {}},
+    "description": "Return a log in json or text"}
 
 zip_responses = dict(error_responses)
 zip_responses['200'] = {
@@ -196,4 +196,4 @@ def prepare_validation_response(request, data):
         'self': str(request.url),
         'data': data,
     }
-    return ValidationResponse(**response_data)
+    return ValidationResponse(**response_data, media_type="application/json")
