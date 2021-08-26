@@ -1,4 +1,4 @@
-"""Functions to handle the AGS parser."""
+"""Functions to handle the BGS parser."""
 import datetime as dt
 from functools import reduce
 import logging
