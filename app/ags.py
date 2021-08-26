@@ -10,13 +10,25 @@ from typing import Tuple, Optional
 import python_ags4
 from python_ags4 import AGS4
 
+
 from app.response_templates import PLAIN_TEXT_TEMPLATE, RESPONSE_TEMPLATE
 
 logger = logging.getLogger(__name__)
 
+# Collect full paths of dictionaries installed alongside python_ags4
+_dictionary_files = list(Path(python_ags4.__file__).parent.glob('Standard_dictionary*.ags'))
+STANDARD_DICTIONARIES = {f.name: f.absolute() for f in _dictionary_files}
 
-def validate(filename: Path) -> dict:
-    """Validate filename and respond in dictionary."""
+logger = logging.getLogger(__name__)
+
+
+def validate(filename: Path, standard_AGS4_dictionary: Optional[str] = None) -> dict:
+    """
+    Validate filename (against optional dictionary) and respond in
+    dictionary suitable for converting to JSON.
+
+    :raises ValueError: Raised if dictionary provided is not available.
+    """
     logger.info("Validate called for %", filename.name)
 
     # Prepare response with metadata
@@ -25,9 +37,20 @@ def validate(filename: Path) -> dict:
                 'checker': f'python_ags4 v{python_ags4.__version__}',
                 'time': dt.datetime.now(tz=dt.timezone.utc)}
 
+    # Select dictionary file if exists
+    if standard_AGS4_dictionary:
+        try:
+            dictionary_file = STANDARD_DICTIONARIES[standard_AGS4_dictionary]
+        except KeyError:
+            msg = (f"{standard_AGS4_dictionary} not available.  "
+                   f"Installed dictionaries: {STANDARD_DICTIONARIES.keys()}")
+            raise ValueError(msg)
+    else:
+        dictionary_file = None
+
     # Get error information from file
     try:
-        errors = AGS4.check_file(filename)
+        errors = AGS4.check_file(filename, standard_AGS4_dictionary=dictionary_file)
         try:
             metadata = errors.pop('Metadata')  # This also removes it from returned errors
             dictionary = [d['desc'] for d in metadata
@@ -106,11 +129,11 @@ def convert(filename: Path, results_dir: Path) -> Tuple[Optional[Path], str]:
     return (converted_file, log)
 
 
-def is_valid(filename: Path) -> bool:
+def is_valid(filename: Path, standard_AGS4_dictionary: Optional[str] = None) -> bool:
     """
     Validate filename and parse returned log to determine if file is valid.
     """
-    return validate(filename)['valid']
+    return validate(filename, standard_AGS4_dictionary=standard_AGS4_dictionary)['valid']
 
 
 def get_unicode_message(stderr: str, filename: str) -> str:

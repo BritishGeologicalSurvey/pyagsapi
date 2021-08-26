@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>pyagsapi</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/styles.css') }}">
+    <!--[if lt IE 9]>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <header class="header-wrapper">
+      <div>
+        <a href="https://www.bgs.ac.uk" class="logo" role="button">
+          <img src="{{ url_for('static', path='/img/BGS-Logo-White-RGB.svg') }}" title="BGS Logo" style="height:40px;vertical-align: middle;"/></a>
+      </div>
+      <div>
+        <a href="/">AGS File Utilities Tool</a>
+      </div>
+      <div>
+        <a href="/docs/">API</a>
+      </div>     
+        <!--
+          Add additional menu items here
+          <a href="https://github.com/BritishGeologicalSurvey/pyagsapi" role="button" class="button">Code</a>
+        -->
+      <div>  
+        <a href="mailto:enquiries@bgs.ac.uk" role="button" class="button" style="float:right">Contact</a>
+      </div>
+    </header>
+    <main>
+    <div class="container">
+      <div class="row">
+        <div>
+          <br/>
+          {% block body %}
+          {% endblock %}
+        </div>
+      </div>
+    </div>
+    </main>
+    <footer class="footer-wrapper">
+        <a href="https://www.bgs.ac.uk" title="British Geological Survey" target="_blank">
+          <img src="{{ url_for('static', path='/img/BGS-Logo-White-RGB.svg') }}" title="British Geological Survey" alt="BGS Logo"/>
+        </a>
+        <div>
+            Powered by <a title="pyagsapi" href="https://github.com/BritishGeologicalSurvey/pyagsapi">pyagsapi</a>. pyagsapi was created by and is maintained by the <a href="https://www.bgs.ac.uk/">British Geological Survey</a> and  is distributed under the LGPL v3.0 licence. &copy; Copyright <script>document.write(new Date().getFullYear())</script>, BGS / UKRI.
+        </div>
+        <a href="https://nerc.ukri.org/" title="The BGS is a research centre of the Natural Environment Research Council" target="_blank">
+          <img src="{{ url_for('static', path='/img/ukri-logo-440x124.png') }}" title="The BGS is a research centre of the Natural Environment Research Council" alt="NERC UKRI Logo"/>
+        </a>
+    </footer>
+    {% block extrafoot %}
+    {% endblock %}
+  </body>
+</html>

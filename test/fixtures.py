@@ -25,3 +25,9 @@ BAD_FILE_DATA = [
     ('random_binary.ags', ('IndexError: At least one sheet must be visible', 1)),
     ('real/A3040_03.ags', ("UnboundLocalError: local variable 'group' referenced before assignment", 258)),
 ]
+
+DICTIONARIES = {
+    'v4_0_3': "Standard_dictionary_v4_0_3.ags",
+    'v4_0_4': "Standard_dictionary_v4_0_4.ags",
+    'v4_1': "Standard_dictionary_v4_1.ags"
+}

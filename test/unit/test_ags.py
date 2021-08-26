@@ -6,7 +6,9 @@ from freezegun import freeze_time
 import pytest
 
 from app import ags
-from test.fixtures import BAD_FILE_DATA, FROZEN_TIME, GOOD_FILE_DATA, ISVALID_RSP_DATA
+from test.fixtures import (BAD_FILE_DATA, DICTIONARIES,
+                           FROZEN_TIME, GOOD_FILE_DATA,
+                           ISVALID_RSP_DATA)
 from test.fixtures_json import JSON_RESPONSES
 from test.fixtures_plain_text import PLAIN_TEXT_RESPONSES
 
@@ -28,6 +30,36 @@ def test_validate(filename, expected):
     for key in ['filename', 'filesize', 'checker', 'time', 'dictionary',
                 'errors', 'message', 'valid']:
         assert response[key] == expected[key]
+
+
+@pytest.mark.parametrize('dictionary', DICTIONARIES.values())
+def test_validate_custom_dictionary(dictionary):
+    # Arrange
+    filename = TEST_FILE_DIR / 'example1.ags'
+
+    # Act
+    response = ags.validate(filename,
+                            standard_AGS4_dictionary=dictionary)
+
+    # Assert
+    assert response['filename'] == 'example1.ags'
+    assert response['dictionary'] == dictionary
+
+
+def test_validate_custom_dictionary_bad_file():
+    # Arrange
+    filename = TEST_FILE_DIR / 'example1.ags'
+    dictionary = 'bad_file.ags'
+
+    # Act
+    with pytest.raises(ValueError) as err:
+        ags.validate(filename, standard_AGS4_dictionary=dictionary)
+
+    # Assert
+    message = str(err.value)
+    assert 'dictionary' in message
+    for key in ags.STANDARD_DICTIONARIES:
+        assert key in message
 
 
 @pytest.mark.parametrize('filename, expected', GOOD_FILE_DATA)
@@ -76,6 +108,19 @@ def test_is_valid(filename, expected):
 
     # Assert
     assert result == expected
+
+
+@pytest.mark.parametrize('dictionary', DICTIONARIES.values())
+def test_is_valid_custom_dictionary(dictionary):
+    # Arrange
+    filename = TEST_FILE_DIR / 'example1.ags'
+
+    # Act
+    result = ags.is_valid(filename,
+                          standard_AGS4_dictionary=dictionary)
+
+    # Assert
+    assert result
 
 
 @pytest.mark.parametrize('filename', [
