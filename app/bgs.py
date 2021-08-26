@@ -4,6 +4,8 @@ from functools import reduce
 import logging
 from pathlib import Path
 
+from python_ags4 import AGS4
+
 from app.response_templates import PLAIN_TEXT_TEMPLATE
 
 
@@ -52,7 +54,34 @@ def validate(filename: Path) -> dict:
 
 
 def check_file(filename: Path) -> dict:
-    return {}
+    errors = {}
+    tables, headings = AGS4.AGS4_to_dataframe(filename)
+
+    # Required Groups
+    result = check_groups(headings)
+    if result:
+        errors['Required Groups'] = result
+
+    return errors
+
+
+def check_groups(headings: list) -> list:
+    """ Groups must include PROJ, LOCA or HOLE, ABBR, TYPE, UNITS """
+    errors = []
+    desc = ''
+    required = ['PROJ', 'ABBR', 'TYPE', 'UNIT']
+    for group in required:
+        if group not in headings:
+            desc += group + ', '
+    if 'LOCA' not in headings and 'HOLE' not in headings:
+        desc += '(LOCA or HOLE)' + ', '
+    if desc:
+        desc = 'Required groups not present: ' + desc
+        desc = desc.rstrip(', ')
+    if desc:
+        errors.append({'line': '-', 'group': '', 'desc': desc})
+
+    return errors
 
 
 def to_plain_text(response: dict) -> str:
