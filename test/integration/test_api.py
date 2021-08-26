@@ -54,7 +54,7 @@ async def test_isvalid(async_client, filename, expected):
 @pytest.mark.asyncio
 async def test_isvalid_custom_dictionary(async_client, dictionary):
     # Arrange
-    filename = TEST_FILE_DIR / 'example1.ags'
+    filename = TEST_FILE_DIR / 'example_ags.ags'
     mp_encoder = MultipartEncoder(
         fields={'file': (filename.name, open(filename, 'rb'), 'text/plain'),
                 'std_dictionary': dictionary})
@@ -135,7 +135,7 @@ async def test_validatemany_json(async_client):
 @pytest.mark.asyncio
 async def test_validate_custom_dictionary(async_client, dictionary, expected):
     # Arrange
-    filename = TEST_FILE_DIR / 'example1.ags'
+    filename = TEST_FILE_DIR / 'example_ags.ags'
     mp_encoder = MultipartEncoder(
         fields={'file': (filename.name, open(filename, 'rb'), 'text/plain'),
                 'std_dictionary': dictionary})
@@ -152,7 +152,7 @@ async def test_validate_custom_dictionary(async_client, dictionary, expected):
     body = response.json()
     assert len(body['data']) == 1
     # Assert
-    assert body['data'][0]['filename'] == 'example1.ags'
+    assert body['data'][0]['filename'] == 'example_ags.ags'
     assert body['data'][0]['dictionary'] == expected
 
 
@@ -233,8 +233,12 @@ async def test_convert_good_files(async_client, tmp_path):
         f.write(response.content)
     shutil.unpack_archive(zip_file, unzipped_files, 'zip')
     assert (unzipped_files / 'conversion.log').is_file()
+    with open(unzipped_files / 'conversion.log', 'rt') as f:
+        log = f.read()
     for name, expected in GOOD_FILE_DATA:
-        assert (unzipped_files / name).is_file()
+        expected_message, expected_new_file_name = expected
+        assert (unzipped_files / expected_new_file_name).is_file()
+        assert expected_message in log
 
 
 @pytest.mark.asyncio
@@ -265,8 +269,12 @@ async def test_convert_bad_files(async_client, tmp_path):
         f.write(response.content)
     shutil.unpack_archive(zip_file, unzipped_files, 'zip')
     assert (unzipped_files / 'conversion.log').is_file()
+    with open(unzipped_files / 'conversion.log', 'rt') as f:
+        log = f.read()
     for name, expected in BAD_FILE_DATA:
+        expected_message, expected_file_size = expected
         assert not (unzipped_files / name).is_file()
+        assert expected_message in log
 
 
 @pytest.fixture(scope="function")

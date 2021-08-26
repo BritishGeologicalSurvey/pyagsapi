@@ -3,11 +3,11 @@
 FROZEN_TIME = "2021-08-23 14:25:43"
 
 ISVALID_RSP_DATA = [
-    ('example1.ags', True),
+    ('example_ags.ags', True),
     ('nonsense.ags', False),
     ('empty.ags', False),
     ('real/A3040_03.ags', False),
-    ('example1.xlsx', False),
+    ('example_xlsx.xlsx', False),
     ('random_binary.ags', False),
     ('real/CG014058_F.ags', False),
     ('real/Blackburn Southern Bypass.ags', False),  # this file contains BOM character
@@ -15,8 +15,8 @@ ISVALID_RSP_DATA = [
 ]
 
 GOOD_FILE_DATA = [
-    ('example1.ags', 'SUCCESS: example1.ags converted to example1.xlsx'),
-    ('example1.xlsx', 'SUCCESS: example1.xlsx converted to example1.ags'),
+    ('example_ags.ags', ('SUCCESS: example_ags.ags converted to example_ags.xlsx', 'example_ags.xlsx')),
+    ('example_xlsx.xlsx', ('SUCCESS: example_xlsx.xlsx converted to example_xlsx.ags', 'example_xlsx.ags')),
 ]
 
 BAD_FILE_DATA = [

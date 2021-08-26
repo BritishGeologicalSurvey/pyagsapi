@@ -1,8 +1,8 @@
 import datetime as dt
 
 JSON_RESPONSES = {
-    'example1.ags': {
-        'filename': 'example1.ags',
+    'example_ags.ags': {
+        'filename': 'example_ags.ags',
         'filesize': 4039,
         'checker': 'python_ags4 v0.3.6',
         'dictionary': 'Standard_dictionary_v4_1.ags',

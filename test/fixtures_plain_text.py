@@ -1,6 +1,6 @@
 PLAIN_TEXT_RESPONSES = {
-    'example1.ags': """
-example1.ags: All checks passed!
+    'example_ags.ags': """
+example_ags.ags: All checks passed!
 
 # Metadata
 
