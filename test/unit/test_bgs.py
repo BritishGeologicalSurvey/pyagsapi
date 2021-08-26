@@ -9,6 +9,7 @@ TEST_FILE_DIR = Path(__file__).parent.parent / 'files'
 
 FILE_DATA = {
     'example_ags.ags': ('All checks passed!', True),
+    'empty.ags': ('1 error(s) found in file!', False),
     'extension_is.bad': ('ERROR: extension_is.bad is not .ags format', False),
 }
 
