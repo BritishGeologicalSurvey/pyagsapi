@@ -1,5 +1,6 @@
 """Tests for API responses."""
 from pathlib import Path
+import shutil
 
 from fastapi.testclient import TestClient
 from freezegun import freeze_time
@@ -205,10 +206,10 @@ async def test_validatemany_text(async_client):
 
 
 @pytest.mark.asyncio
-async def test_convert_good_files(async_client):
+async def test_convert_good_files(async_client, tmp_path):
     # Arrange
     fields = []
-    for name, data in GOOD_FILE_DATA:
+    for name, expected in GOOD_FILE_DATA:
         filename = TEST_FILE_DIR / name
         file = ('files', (filename.name, open(filename, 'rb'), 'text/plain'))
         fields.append(file)
@@ -223,13 +224,24 @@ async def test_convert_good_files(async_client):
 
     # Assert
     assert response.status_code == 200
+    assert response.headers['content-type'] == 'application/x-zip-compressed'
+    assert response.headers['content-disposition'] == 'attachment; filename=results.zip'
+
+    zip_file = tmp_path / 'results.zip'
+    unzipped_files = tmp_path / 'results'
+    with open(zip_file, 'wb') as f:
+        f.write(response.content)
+    shutil.unpack_archive(zip_file, unzipped_files, 'zip')
+    assert (unzipped_files / 'conversion.log').is_file()
+    for name, expected in GOOD_FILE_DATA:
+        assert (unzipped_files / name).is_file()
 
 
 @pytest.mark.asyncio
-async def test_convert_bad_files(async_client):
+async def test_convert_bad_files(async_client, tmp_path):
     # Arrange
     fields = []
-    for name, data in BAD_FILE_DATA:
+    for name, expected in BAD_FILE_DATA:
         filename = TEST_FILE_DIR / name
         file = ('files', (filename.name, open(filename, 'rb'), 'text/plain'))
         fields.append(file)
@@ -244,6 +256,17 @@ async def test_convert_bad_files(async_client):
 
     # Assert
     assert response.status_code == 200
+    assert response.headers['content-type'] == 'application/x-zip-compressed'
+    assert response.headers['content-disposition'] == 'attachment; filename=results.zip'
+
+    zip_file = tmp_path / 'results.zip'
+    unzipped_files = tmp_path / 'results'
+    with open(zip_file, 'wb') as f:
+        f.write(response.content)
+    shutil.unpack_archive(zip_file, unzipped_files, 'zip')
+    assert (unzipped_files / 'conversion.log').is_file()
+    for name, expected in BAD_FILE_DATA:
+        assert not (unzipped_files / name).is_file()
 
 
 @pytest.fixture(scope="function")
