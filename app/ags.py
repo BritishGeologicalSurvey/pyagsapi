@@ -3,7 +3,6 @@ import datetime as dt
 from functools import reduce
 import logging
 from pathlib import Path
-import re
 from typing import Tuple, Optional
 
 import python_ags4
