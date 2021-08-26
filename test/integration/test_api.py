@@ -285,6 +285,54 @@ async def test_convert_bad_files(async_client, tmp_path):
         assert expected_message in log
 
 
+@pytest.mark.asyncio
+async def test_validatedatamany_json(async_client):
+    # Arrange
+    filename = TEST_FILE_DIR / 'example_ags.ags'
+    file = ('files', (filename.name, open(filename, 'rb'), 'text/plain'))
+    fields = [file]
+    fields.append(('fmt', 'json'))
+    mp_encoder = MultipartEncoder(fields=fields)
+
+    # Act
+    async with async_client as ac:
+        response = await ac.post(
+            '/validatedatamany/',
+            headers={'Content-Type': mp_encoder.content_type},
+            data=mp_encoder.to_string())
+
+    # Assert
+    assert response.status_code == 200
+    assert response.headers['content-type'] == 'application/json'
+    body = response.json()
+    assert set(body.keys()) == {'msg', 'type', 'self', 'data'}
+    assert body['msg'] is not None
+    assert body['type'] == 'success'
+    assert body['self'] is not None
+    assert len(body['data']) == 1
+
+
+@pytest.mark.asyncio
+async def test_validatedatamany_text(async_client):
+    # Arrange
+    filename = TEST_FILE_DIR / 'example_ags.ags'
+    file = ('files', (filename.name, open(filename, 'rb'), 'text/plain'))
+    fields = [file]
+    fields.append(('fmt', 'text'))
+    mp_encoder = MultipartEncoder(fields=fields)
+
+    # Act
+    async with async_client as ac:
+        response = await ac.post(
+            '/validatedatamany/',
+            headers={'Content-Type': mp_encoder.content_type},
+            data=mp_encoder.to_string())
+
+    # Assert
+    assert response.status_code == 200
+    assert 'text/plain' in response.headers['content-type']
+
+
 @pytest.fixture(scope="function")
 def client():
     return TestClient(app)

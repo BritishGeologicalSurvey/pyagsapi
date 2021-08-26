@@ -8,7 +8,7 @@ from typing import List
 from fastapi import APIRouter, BackgroundTasks, File, Form, Request, UploadFile
 from fastapi.responses import FileResponse, StreamingResponse
 
-from app import ags
+from app import ags, bgs
 from app.errors import error_responses, InvalidPayloadError
 from app.schemas import ValidationResponse
 
@@ -186,6 +186,41 @@ async def convert_many(background_tasks: BackgroundTasks,
 
     response = StreamingResponse(zipped_stream, media_type="application/x-zip-compressed")
     response.headers["Content-Disposition"] = f"attachment; filename={RESULTS}.zip"
+    return response
+
+
+@router.post("/validatedatamany/",
+             response_model=ValidationResponse,
+             responses=log_responses)
+async def validate_data_many(background_tasks: BackgroundTasks,
+                             files: List[UploadFile] = validation_file,
+                             fmt: Format = format_form,
+                             request: Request = None):
+    if not files[0].filename:
+        raise InvalidPayloadError(request)
+    tmp_dir = Path(tempfile.mkdtemp())
+    background_tasks.add_task(shutil.rmtree, tmp_dir)
+    if fmt == Format.TEXT:
+        full_logfile = tmp_dir / 'results.log'
+        with full_logfile.open('wt') as f:
+            for file in files:
+                contents = await file.read()
+                local_ags_file = tmp_dir / file.filename
+                local_ags_file.write_bytes(contents)
+                result = bgs.validate(local_ags_file)
+                log = bgs.to_plain_text(result)
+                f.write(log)
+                f.write('=' * 80 + '\n')
+        response = FileResponse(full_logfile, media_type="text/plain")
+    else:
+        data = []
+        for file in files:
+            contents = await file.read()
+            local_ags_file = tmp_dir / file.filename
+            local_ags_file.write_bytes(contents)
+            result = bgs.validate(local_ags_file)
+            data.append(result)
+        response = prepare_validation_response(request, data)
     return response
 
 
