@@ -50,6 +50,12 @@ dictionary_form = Form(
     description='Version of AGS dictionary to validate against',
 )
 
+validate_form = Form(
+    default=None,
+    title='AGS Validation Option',
+    description='If set validate against AGS dictionary',
+)
+
 validation_file = File(
     ...,
     title='File to validate',
@@ -193,19 +199,27 @@ async def convert_many(background_tasks: BackgroundTasks,
              responses=log_responses)
 async def validate_data_many(background_tasks: BackgroundTasks,
                              files: List[UploadFile] = validation_file,
+                             std_dictionary: Dictionary = dictionary_form,
                              fmt: Format = format_form,
+                             validate: str = validate_form,
                              request: Request = None):
     if not files[0].filename:
         raise InvalidPayloadError(request)
     tmp_dir = Path(tempfile.mkdtemp())
     background_tasks.add_task(shutil.rmtree, tmp_dir)
+    dictionary = None
+    if std_dictionary:
+        dictionary = f'Standard_dictionary_{std_dictionary}.ags'
 
     data = []
     for file in files:
         contents = await file.read()
         local_ags_file = tmp_dir / file.filename
         local_ags_file.write_bytes(contents)
-        result = bgs.validate(local_ags_file)
+        if validate == 'validate':
+            result = bgs.validate(local_ags_file, ags_validation=True, standard_AGS4_dictionary=dictionary)
+        else:
+            result = bgs.validate(local_ags_file)
         data.append(result)
 
     if fmt == Format.TEXT:

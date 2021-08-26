@@ -7,15 +7,21 @@ from app import bgs
 
 TEST_FILE_DIR = Path(__file__).parent.parent / 'files'
 
-FILE_DATA = {
+BGS_FILE_DATA = {
     'example_ags.ags': ('1 error(s) found in file!', False),
     'empty.ags': ('2 error(s) found in file!', False),
     'extension_is.bad': ('ERROR: extension_is.bad is not .ags format', False),
 }
 
+AGS_FILE_DATA = {
+    'example_ags.ags': ('1 error(s) found in file!', False),
+    'empty.ags': ('6 error(s) found in file!', False),
+    'extension_is.bad': ('ERROR: extension_is.bad is not .ags format', False),
+}
+
 
 @pytest.mark.parametrize('filename, expected',
-                         [item for item in FILE_DATA.items()])
+                         [item for item in BGS_FILE_DATA.items()])
 def test_validate(filename, expected):
     # Arrange
     filename = TEST_FILE_DIR / filename
@@ -33,7 +39,25 @@ def test_validate(filename, expected):
 
 
 @pytest.mark.parametrize('filename, expected',
-                         [item for item in FILE_DATA.items()])
+                         [item for item in AGS_FILE_DATA.items()])
+def test_validate_ags(filename, expected):
+    # Arrange
+    filename = TEST_FILE_DIR / filename
+    expected_message, expected_valid = expected
+
+    # Act
+    response = bgs.validate(filename, ags_validation=True)
+
+    # Assert
+    # Check that metadata fields are correct
+    keys = {'filename', 'filesize', 'time', 'checker', 'dictionary', 'errors', 'message', 'valid'}
+    assert set(response.keys()).issubset(keys)
+    assert response['message'] == expected_message
+    assert response['valid'] == expected_valid
+
+
+@pytest.mark.parametrize('filename, expected',
+                         [item for item in BGS_FILE_DATA.items()])
 def test_is_valid(filename, expected):
     # Arrange
     filename = TEST_FILE_DIR / filename
@@ -46,7 +70,7 @@ def test_is_valid(filename, expected):
     assert result == expected_valid
 
 
-@pytest.mark.parametrize('filename', FILE_DATA.keys())
+@pytest.mark.parametrize('filename', BGS_FILE_DATA.keys())
 def test_to_plain_text(filename):
     # Arrange
     filename = TEST_FILE_DIR / filename
