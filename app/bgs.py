@@ -3,16 +3,20 @@ import datetime as dt
 from functools import reduce
 import logging
 from pathlib import Path
+from typing import Optional
 
 from python_ags4 import AGS4
 
+from app import ags
 from app.response_templates import PLAIN_TEXT_TEMPLATE
 
 
 logger = logging.getLogger(__name__)
 
 
-def validate(filename: Path) -> dict:
+def validate(filename: Path,
+             ags_validation: Optional[bool] = False,
+             standard_AGS4_dictionary: Optional[str] = None) -> dict:
     """
     Validate filename against BGS criteria and respond in
     dictionary suitable for converting to JSON.
@@ -29,7 +33,13 @@ def validate(filename: Path) -> dict:
 
     # Get error information from file
     try:
-        errors = check_file(filename)
+        if ags_validation:
+            response = ags.validate(filename, standard_AGS4_dictionary=standard_AGS4_dictionary)
+        bgs_errors = check_file(filename)
+        if response['errors']:
+            errors = dict(response['errors'], **bgs_errors)
+        else:
+            errors = bgs_errors
         error_count = len(reduce(lambda acc, current: acc + current, errors.values(), []))
         if error_count > 0:
             message = f'{error_count} error(s) found in file!'
