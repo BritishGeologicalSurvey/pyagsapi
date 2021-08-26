@@ -8,14 +8,16 @@ from app import bgs
 TEST_FILE_DIR = Path(__file__).parent.parent / 'files'
 
 BGS_FILE_DATA = {
-    'example_ags.ags': ('1 error(s) found in file!', False),
+    'example_ags.ags': ('2 error(s) found in file!', False),
     'empty.ags': ('2 error(s) found in file!', False),
+    'real/43370.ags': ('All checks passed!', True),
     'extension_is.bad': ('ERROR: extension_is.bad is not .ags format', False),
 }
 
 AGS_FILE_DATA = {
-    'example_ags.ags': ('1 error(s) found in file!', False),
+    'example_ags.ags': ('2 error(s) found in file!', False),
     'empty.ags': ('6 error(s) found in file!', False),
+    'real/43370.ags': ('139 error(s) found in file!', False),
     'extension_is.bad': ('ERROR: extension_is.bad is not .ags format', False),
 }
 

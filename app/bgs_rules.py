@@ -1,4 +1,5 @@
 """Functions for each of the BGS data validation rules"""
+from python_ags4 import AGS4
 
 
 def check_required_groups(tables: dict) -> list:
@@ -33,7 +34,30 @@ def check_required_bgs_groups(tables: dict) -> list:
     return errors
 
 
+def check_spatial_referencing_system(tables: dict) -> list:
+    """ Spatial referencing system defined in LOCA_GREF, LOCA_LREF or LOCA_LLZ """
+    errors = []
+    try:
+        ref_found = False
+        loca = AGS4.convert_to_numeric(tables['LOCA'])
+        for col in ['LOCA_GREF', 'LOCA_LREF', 'LOCA_LLZ']:
+            try:
+                if all(loca[col] != ''):
+                    ref_found = True
+            except KeyError:
+                pass
+        if not ref_found:
+            desc = 'Spatial referencing system not in LOCA_GREF, LOCA_LREF or LOCA_LLZ!'
+            errors.append({'line': '-', 'group': 'LOCA', 'desc': desc})
+    except KeyError:
+        # LOCA not present, already checked in earlier rule
+        pass
+
+    return errors
+
+
 BGS_RULES = {
     'Required Groups': check_required_groups,
     'Required BGS Groups': check_required_bgs_groups,
+    'Spatial Referencing': check_spatial_referencing_system,
 }
