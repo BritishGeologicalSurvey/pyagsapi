@@ -100,16 +100,12 @@ def check_groups(headings: list) -> list:
 
 
 def check_bgs_groups(headings: list) -> list:
-    """ Groups must include HOLE and GEOL for BGS """
+    """ Groups must include GEOL for BGS """
     errors = []
     desc = ''
-    required = ['HOLE', 'GEOL']
-    for group in required:
-        if group not in headings:
-            desc += group + ', '
-    if desc:
-        desc = 'Required BGS groups not present: ' + desc
-        desc = desc.rstrip(', ')
+    group = 'GEOL'
+    if group not in headings:
+        desc += f'Required BGS groups not present: {group}'
     if desc:
         errors.append({'line': '-', 'group': '', 'desc': desc})
 
