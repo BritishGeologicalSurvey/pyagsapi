@@ -68,19 +68,19 @@ def check_file(filename: Path) -> dict:
     tables, headings = AGS4.AGS4_to_dataframe(filename)
 
     # Required Groups
-    result = check_groups(headings)
+    result = check_required_groups(headings)
     if result:
         errors['Required Groups'] = result
 
     # Required BGS Groups
-    result = check_bgs_groups(headings)
+    result = check_required_bgs_groups(headings)
     if result:
         errors['Required BGS Groups'] = result
 
     return errors
 
 
-def check_groups(headings: list) -> list:
+def check_required_groups(headings: list) -> list:
     """ Groups must include PROJ, LOCA or HOLE, ABBR, TYPE, UNIT """
     errors = []
     desc = ''
@@ -99,7 +99,7 @@ def check_groups(headings: list) -> list:
     return errors
 
 
-def check_bgs_groups(headings: list) -> list:
+def check_required_bgs_groups(headings: list) -> list:
     """ Groups must include GEOL for BGS """
     errors = []
     desc = ''
