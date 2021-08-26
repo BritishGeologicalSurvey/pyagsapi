@@ -80,10 +80,9 @@ def custom_openapi():
     if app.openapi_schema:
         return app.openapi_schema
     openapi_schema = get_openapi(
-        title="pyagsapi an AGS Python Library API",
-        version="0.1.0",
-        description=("This OpenAPI schema, Validate or convert your AGS files here. "
-                     "Validation is against the official AGS standard only."),
+        title="pyagsapi - AGS File Utilities Tools and API",
+        version="2.0.0",
+        description=("The API performs schema validation, data validation and conversion of your AGS files. Schema validation and conversion uses https://gitlab.com/ags-data-format-wg/ags-python-library"),
         routes=app.routes,
     )
     openapi_schema["info"]["x-logo"] = {

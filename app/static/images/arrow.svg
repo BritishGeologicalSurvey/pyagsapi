@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="23px" height="13px" viewBox="0 0 23 13" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 59.1 (86144) - https://sketch.com -->
+    <title>Icon/Accordions/Plus</title>
+    <desc>Created with Sketch.</desc>
+    <g id="T3:-Climate-change" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Accordions/1200/Standard-Copy" transform="translate(-513.000000, -19.000000)" fill="#000000">
+            <g id="Accordions/1200/Standard">
+                <g id="Icon/Accordions/Arrow/Down" transform="translate(513.000000, 14.000000)">
+                    <g transform="translate(0.000000, 5.000000)" id="Icon/Arrow/Dropdown/down">
+                        <g transform="translate(11.500000, 6.192308) rotate(90.000000) translate(-11.500000, -6.192308) translate(5.307692, -5.307692)">
+                            <path d="M11.9390338,12.6386183 L2.59720655,22.5279459 C2.0029535,23.1573514 1.03947404,23.1573514 0.445509479,22.5279459 C-0.14850316,21.8991002 -0.14850316,20.8791731 0.445509479,20.2503784 L8.71158434,11.4998346 L0.445749892,2.7495961 C-0.148262747,2.12049599 -0.148262747,1.10067069 0.445749892,0.471825087 C1.03976253,-0.157275029 2.00319391,-0.157275029 2.59744696,0.471825087 L11.9392742,10.3613054 C12.2362805,10.6758809 12.3846154,11.0877305 12.3846154,11.4997837 C12.3846154,11.9120405 12.235992,12.3241955 11.9390338,12.6386183 Z" id="Carousel-icon-arrow"></path>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

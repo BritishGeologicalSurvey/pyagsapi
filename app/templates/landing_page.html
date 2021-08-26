@@ -6,14 +6,23 @@
 <section id="identification">
     <h1>AGS File Utilities Tool and API</h1>
     <br>
-    <p>This tool and asscoated API allow schema validation, data validation and conversion of your <a href="https://www.ags.org.uk/data-format/">AGS files</a>.</p>
+    <p>This tool and associated API allow schema validation, data validation and conversion of your <a href="https://www.ags.org.uk/data-format/">AGS files</a>.</p>
       <ul>
         <li>Accepts multiple AGS files. (Hold down <b>Ctrl</b> key to select more than one file)</li>
         <li>There is a total file size limit of 50MB</li>
         <li>Tests AGS versions 4.x </li>
         <li>This is not a submission of your files to BGS</li>
       </ul>
+    <h2>Tools</h2>
+    <ul>
+        <li><a href="#validator">Schema Validator</a></li>
+        <li><a href="#datavalidator">Data Validator</a></li>
+        <li><a href="#converter">File Conversion .ags <--> .xlsx</a></li>
+        <li><a href="#openapi">OpenAPI Documentation</a></li>
+    </ul>
 </section>
+<br>
+<hr>
 <section id="validator">
     <br>
     <h2>AGS Schema Validator</h2>
@@ -37,6 +46,8 @@
       <input type="submit">
     </form>
 </section>
+<br>
+<hr>
 <section id="datavalidator">
   <br>
   <h2>AGS Data Validator</h2>
@@ -68,21 +79,25 @@
                 <li>local coordinates should not be duplicated in the OSGB columns as this would indicate they have not been converted</li>
             </ul>
 </section>
+<br>
+<hr>
 <section id="converter">
     <h2>AGS Converter</h2>
       <div class="tooltip">Convert .ags file(s) to/from .xlsx.
         <span class="tooltiptext">Which ever format file is submitted, the opposite will be returned e.g. if 5 .ags files and 3 .xlsx files were submitted the result would be 5 .xlsx files and 3 .ags files</span>
       </div>
       <br>
-      <br>
     <form action="/convert/" enctype="multipart/form-data" method="post">
     <input name="files" type="file" multiple>
     <input type="submit">
     </form>
+</section>
+<br>
+<hr>
 <section id="openapi">
       <h2>API Definition</h2>
       <p>
-        <a href="/docs/">Documentation</a> 
+        <a href="/docs/">Documentation (Swagger UI)</a>
       </p>
       <p>
         <a href="/openapi.json/">OpenAPI Document</a>
