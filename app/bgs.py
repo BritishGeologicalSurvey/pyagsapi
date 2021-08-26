@@ -62,11 +62,16 @@ def check_file(filename: Path) -> dict:
     if result:
         errors['Required Groups'] = result
 
+    # Required BGS Groups
+    result = check_bgs_groups(headings)
+    if result:
+        errors['Required BGS Groups'] = result
+
     return errors
 
 
 def check_groups(headings: list) -> list:
-    """ Groups must include PROJ, LOCA or HOLE, ABBR, TYPE, UNITS """
+    """ Groups must include PROJ, LOCA or HOLE, ABBR, TYPE, UNIT """
     errors = []
     desc = ''
     required = ['PROJ', 'ABBR', 'TYPE', 'UNIT']
@@ -77,6 +82,23 @@ def check_groups(headings: list) -> list:
         desc += '(LOCA or HOLE)' + ', '
     if desc:
         desc = 'Required groups not present: ' + desc
+        desc = desc.rstrip(', ')
+    if desc:
+        errors.append({'line': '-', 'group': '', 'desc': desc})
+
+    return errors
+
+
+def check_bgs_groups(headings: list) -> list:
+    """ Groups must include HOLE and GEOL for BGS """
+    errors = []
+    desc = ''
+    required = ['HOLE', 'GEOL']
+    for group in required:
+        if group not in headings:
+            desc += group + ', '
+    if desc:
+        desc = 'Required BGS groups not present: ' + desc
         desc = desc.rstrip(', ')
     if desc:
         errors.append({'line': '-', 'group': '', 'desc': desc})
