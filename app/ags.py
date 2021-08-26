@@ -17,8 +17,6 @@ logger = logging.getLogger(__name__)
 _dictionary_files = list(Path(python_ags4.__file__).parent.glob('Standard_dictionary*.ags'))
 STANDARD_DICTIONARIES = {f.name: f.absolute() for f in _dictionary_files}
 
-logger = logging.getLogger(__name__)
-
 
 def validate(filename: Path, standard_AGS4_dictionary: Optional[str] = None) -> dict:
     """
