@@ -21,6 +21,7 @@ def test_openapi_json(client):
     """A hello-world type test to confirm testing framework works."""
     response = client.get('/openapi.json')
     assert response.status_code == 200
+    assert response.headers['content-type'] == 'application/json'
     assert '/validate' in response.text
 
 
@@ -41,6 +42,7 @@ async def test_isvalid(async_client, filename, expected):
 
     # Assert
     assert response.status_code == 200
+    assert response.headers['content-type'] == 'application/json'
     body = response.json()
     assert set(body.keys()) == {'msg', 'type', 'self', 'data'}
     assert body['msg'] is not None
@@ -68,6 +70,7 @@ async def test_isvalid_custom_dictionary(async_client, dictionary):
 
     # Assert
     assert response.status_code == 200
+    assert response.headers['content-type'] == 'application/json'
     body = response.json()
     assert len(body['data']) == 1
     assert body['data'][0]
@@ -91,6 +94,7 @@ async def test_validate_json(async_client, filename, expected):
 
     # Assert
     assert response.status_code == 200
+    assert response.headers['content-type'] == 'application/json'
     body = response.json()
     assert set(body.keys()) == {'msg', 'type', 'self', 'data'}
     assert body['msg'] is not None
@@ -122,6 +126,7 @@ async def test_validatemany_json(async_client):
 
     # Assert
     assert response.status_code == 200
+    assert response.headers['content-type'] == 'application/json'
     body = response.json()
     assert set(body.keys()) == {'msg', 'type', 'self', 'data'}
     assert body['msg'] is not None
@@ -149,6 +154,7 @@ async def test_validate_custom_dictionary(async_client, dictionary, expected):
 
     # Assert
     assert response.status_code == 200
+    assert response.headers['content-type'] == 'application/json'
     body = response.json()
     assert len(body['data']) == 1
     # Assert
@@ -176,6 +182,7 @@ async def test_validate_text(async_client, filename, expected):
 
     # Assert
     assert response.status_code == 200
+    assert 'text/plain' in response.headers['content-type']
     assert response.text.strip() == expected.strip()
 
 
@@ -201,6 +208,7 @@ async def test_validatemany_text(async_client):
 
     # Assert
     assert response.status_code == 200
+    assert 'text/plain' in response.headers['content-type']
     for log in PLAIN_TEXT_RESPONSES.values():
         assert log.strip() in response.text
 
