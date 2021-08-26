@@ -173,7 +173,8 @@ async def convert_many(background_tasks: BackgroundTasks,
             contents = await file.read()
             local_file = tmp_dir / file.filename
             local_file.write_bytes(contents)
-            converted, log = ags.convert(local_file, results_dir)
+            converted, result = ags.convert(local_file, results_dir)
+            log = ags.to_plain_text(result)
             f.write(log)
             f.write('\n' + '=' * 80 + '\n')
     zipped_file = tmp_dir / RESULTS
