@@ -1,4 +1,4 @@
-"""Tests for calls to AGS functions."""
+"""Tests for calls to BGS functions."""
 from pathlib import Path
 
 import pytest
