@@ -131,27 +131,26 @@ async def validate_many(background_tasks: BackgroundTasks,
     dictionary = None
     if std_dictionary:
         dictionary = f'Standard_dictionary_{std_dictionary}.ags'
+
+    data = []
+    for file in files:
+        contents = await file.read()
+        local_ags_file = tmp_dir / file.filename
+        local_ags_file.write_bytes(contents)
+        result = ags.validate(local_ags_file, standard_AGS4_dictionary=dictionary)
+        data.append(result)
+
     if fmt == Format.TEXT:
         full_logfile = tmp_dir / 'results.log'
         with full_logfile.open('wt') as f:
-            for file in files:
-                contents = await file.read()
-                local_ags_file = tmp_dir / file.filename
-                local_ags_file.write_bytes(contents)
-                result = ags.validate(local_ags_file, standard_AGS4_dictionary=dictionary)
+            for result in data:
                 log = ags.to_plain_text(result)
                 f.write(log)
                 f.write('=' * 80 + '\n')
         response = FileResponse(full_logfile, media_type="text/plain")
     else:
-        data = []
-        for file in files:
-            contents = await file.read()
-            local_ags_file = tmp_dir / file.filename
-            local_ags_file.write_bytes(contents)
-            result = ags.validate(local_ags_file, standard_AGS4_dictionary=dictionary)
-            data.append(result)
         response = prepare_validation_response(request, data)
+
     return response
 
 
@@ -200,27 +199,26 @@ async def validate_data_many(background_tasks: BackgroundTasks,
         raise InvalidPayloadError(request)
     tmp_dir = Path(tempfile.mkdtemp())
     background_tasks.add_task(shutil.rmtree, tmp_dir)
+
+    data = []
+    for file in files:
+        contents = await file.read()
+        local_ags_file = tmp_dir / file.filename
+        local_ags_file.write_bytes(contents)
+        result = bgs.validate(local_ags_file)
+        data.append(result)
+
     if fmt == Format.TEXT:
         full_logfile = tmp_dir / 'results.log'
         with full_logfile.open('wt') as f:
-            for file in files:
-                contents = await file.read()
-                local_ags_file = tmp_dir / file.filename
-                local_ags_file.write_bytes(contents)
-                result = bgs.validate(local_ags_file)
-                log = bgs.to_plain_text(result)
+            for result in data:
+                log = ags.to_plain_text(result)
                 f.write(log)
                 f.write('=' * 80 + '\n')
         response = FileResponse(full_logfile, media_type="text/plain")
     else:
-        data = []
-        for file in files:
-            contents = await file.read()
-            local_ags_file = tmp_dir / file.filename
-            local_ags_file.write_bytes(contents)
-            result = bgs.validate(local_ags_file)
-            data.append(result)
         response = prepare_validation_response(request, data)
+
     return response
 
 
