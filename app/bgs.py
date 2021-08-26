@@ -8,6 +8,7 @@ from typing import Optional
 from python_ags4 import AGS4
 
 from app import ags
+from app.bgs_rules import BGS_RULES
 from app.response_templates import PLAIN_TEXT_TEMPLATE
 
 
@@ -67,47 +68,10 @@ def check_file(filename: Path) -> dict:
     errors = {}
     tables, headings = AGS4.AGS4_to_dataframe(filename)
 
-    # Required Groups
-    result = check_required_groups(headings)
-    if result:
-        errors['Required Groups'] = result
-
-    # Required BGS Groups
-    result = check_required_bgs_groups(headings)
-    if result:
-        errors['Required BGS Groups'] = result
-
-    return errors
-
-
-def check_required_groups(headings: list) -> list:
-    """ Groups must include PROJ, LOCA or HOLE, ABBR, TYPE, UNIT """
-    errors = []
-    desc = ''
-    required = ['PROJ', 'ABBR', 'TYPE', 'UNIT']
-    for group in required:
-        if group not in headings:
-            desc += group + ', '
-    if 'LOCA' not in headings and 'HOLE' not in headings:
-        desc += '(LOCA or HOLE)' + ', '
-    if desc:
-        desc = 'Required groups not present: ' + desc
-        desc = desc.rstrip(', ')
-    if desc:
-        errors.append({'line': '-', 'group': '', 'desc': desc})
-
-    return errors
-
-
-def check_required_bgs_groups(headings: list) -> list:
-    """ Groups must include GEOL for BGS """
-    errors = []
-    desc = ''
-    group = 'GEOL'
-    if group not in headings:
-        desc += f'Required BGS groups not present: {group}'
-    if desc:
-        errors.append({'line': '-', 'group': '', 'desc': desc})
+    for rule, func in BGS_RULES.items():
+        result = func(tables)
+        if result:
+            errors[rule] = result
 
     return errors
 
