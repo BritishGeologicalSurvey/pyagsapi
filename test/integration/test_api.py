@@ -8,7 +8,8 @@ from httpx import AsyncClient
 from requests_toolbelt.multipart.encoder import MultipartEncoder
 
 from app.main import app
-from test.fixtures import DICTIONARIES, FROZEN_TIME, ISVALID_RSP_DATA
+from test.fixtures import (BAD_FILE_DATA, DICTIONARIES, FROZEN_TIME,
+                           GOOD_FILE_DATA, ISVALID_RSP_DATA)
 from test.fixtures_json import JSON_RESPONSES
 from test.fixtures_plain_text import PLAIN_TEXT_RESPONSES
 
@@ -201,6 +202,48 @@ async def test_validatemany_text(async_client):
     assert response.status_code == 200
     for log in PLAIN_TEXT_RESPONSES.values():
         assert log.strip() in response.text
+
+
+@pytest.mark.asyncio
+async def test_convert_good_files(async_client):
+    # Arrange
+    fields = []
+    for name, data in GOOD_FILE_DATA:
+        filename = TEST_FILE_DIR / name
+        file = ('files', (filename.name, open(filename, 'rb'), 'text/plain'))
+        fields.append(file)
+    mp_encoder = MultipartEncoder(fields=fields)
+
+    # Act
+    async with async_client as ac:
+        response = await ac.post(
+            '/convert/',
+            headers={'Content-Type': mp_encoder.content_type},
+            data=mp_encoder.to_string())
+
+    # Assert
+    assert response.status_code == 200
+
+
+@pytest.mark.asyncio
+async def test_convert_bad_files(async_client):
+    # Arrange
+    fields = []
+    for name, data in BAD_FILE_DATA:
+        filename = TEST_FILE_DIR / name
+        file = ('files', (filename.name, open(filename, 'rb'), 'text/plain'))
+        fields.append(file)
+    mp_encoder = MultipartEncoder(fields=fields)
+
+    # Act
+    async with async_client as ac:
+        response = await ac.post(
+            '/convert/',
+            headers={'Content-Type': mp_encoder.content_type},
+            data=mp_encoder.to_string())
+
+    # Assert
+    assert response.status_code == 200
 
 
 @pytest.fixture(scope="function")
