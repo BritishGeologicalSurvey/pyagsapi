@@ -3,7 +3,9 @@ from typing import Dict, List, Union
 
 from pydantic import BaseModel, Field, validator
 
-VALID_KEYS = (
+from app.bgs_rules import BGS_RULES
+
+VALID_KEYS = [
     # AGS schema rules
     'Rule 1', 'Rule 2', 'Rule 2a', 'Rule 2b', 'Rule 2c', 'Rule 3', 'Rule 4a', 'Rule 4b',
     'Rule 5', 'Rule 7', 'Rule 9', 'Rule 10a', 'Rule 10b', 'Rule 10c', 'Rule 11a',
@@ -11,9 +13,9 @@ VALID_KEYS = (
     'Rule 18', 'Rule 19', 'Rule 19a', 'Rule 19b', 'Rule 19c', 'Rule 20',
     # Errors
     'File read error', 'UnicodeDecodeError',
-    # BGS data rules
-    'Required Groups', 'Required BGS Groups',
-)
+]
+# Add BGS data rules
+VALID_KEYS.extend(list(BGS_RULES.keys()))
 
 
 class LineError(BaseModel):
