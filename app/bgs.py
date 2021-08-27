@@ -41,7 +41,7 @@ def validate(filename: Path,
             errors = dict(response['errors'], **bgs_errors)
         else:
             errors = bgs_errors
-        error_count = len(reduce(lambda acc, current: acc + current, errors.values(), []))
+        error_count = len(reduce(lambda total, current: total + current, errors.values(), []))
         if error_count > 0:
             message = f'{error_count} error(s) found in file!'
             valid = False

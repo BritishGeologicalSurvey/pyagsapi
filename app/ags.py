@@ -57,7 +57,7 @@ def validate(filename: Path, standard_AGS4_dictionary: Optional[str] = None) -> 
             # 'Metadata' is not created for some files with errors
             dictionary = ''
 
-        error_count = len(reduce(lambda acc, current: acc + current, errors.values(), []))
+        error_count = len(reduce(lambda total, current: total + current, errors.values(), []))
         if error_count > 0:
             message = f'{error_count} error(s) found in file!'
             valid = False
