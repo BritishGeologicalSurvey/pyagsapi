@@ -1,0 +1,132 @@
+@charset "utf-8";
+/* Tabbed panels */
+.TabbedPanels {
+	zoom: 1; /*IE7 hack*/
+}
+.closeBtn {
+	position: absolute;
+	right: 0.5em;
+	top: 0.5em;
+	width: 2em;
+	background-color: #c7d5ec;
+	z-index: 100;
+}
+#midCol .TabbedPanelsTab, #midAndRightCol .TabbedPanelsTab {
+	background-color: #c7d5ec;
+	border: 0.1em solid #b0b1b3;
+	margin: 0.1em;
+	padding: 0.5%;
+	position: relative;
+	cursor: pointer;
+	box-shadow: 0.1em 0.1em 0.1em #e2e3e4;
+	z-index: 0;
+}
+#midCol .TabbedPanels .TabbedPanelsTab, #midAndRightCol .TabbedPanels .TabbedPanelsTab {
+	float: left;
+	display: block;
+	display: inline-block;
+	border-top-right-radius: 0.5em;
+	border-top-left-radius: 0.5em;
+}
+.TabbedPanelsTabFake {
+	top: 0.1em;
+	float: left;
+	width: 40%;
+	padding: 0.5%;
+	cursor: pointer;
+}
+#midCol .TabbedPanelsTabHover, #midAndRightCol .TabbedPanelsTabHover {
+	background-color: #b0b1b3;
+}
+#midCol .TabbedPanelsTabSelected, #midAndRightCol .TabbedPanelsTabSelected {
+	background-color: #013171;
+	color: #fff;
+	font-style: italic;
+}
+#midCol .TabbedPanelsTab a, #midAndRightCol .TabbedPanelsTab a {
+	color: #000;
+	text-decoration: none;
+	display: block;
+	padding: 0.5%;
+}
+#midCol .TabbedPanelsTabSelected a, #midAndRightCol .TabbedPanelsTabSelected a
+{ color:#fff;}
+#midCol .TabbedPanelsContentGroup, #midAndRightCol .TabbedPanelsContentGroup {
+	clear: both;
+	position: relative;
+	display: block;
+}
+#midCol .TabbedPanels .TabbedPanelsContent, #midAndRightCol .TabbedPanels .TabbedPanelsContent {
+	width:98%;
+	padding: 0.5%;
+	background-color: #fff;
+	position: absolute;
+	left: 0;
+	border: solid 0.1em #b0b1b3;
+	z-index: 20;
+	display: block;
+	margin-top: 0.5em;
+}
+#midCol .VTabbedPanels .TabbedPanelsTab, #midAndRightCol .VTabbedPanels .TabbedPanelsTab {
+	margin: 0;
+	margin-right: 1%;
+	clear: both;
+	position: absolute;
+	display: block;
+	top: 0;
+}
+#midCol .VTabbedPanels .TabbedPanelsTabSelected, #midAndRightCol .VTabbedPanels .TabbedPanelsTabSelected {
+	background-color: #013171;
+	border-bottom: solid 0.1em #999;
+	color: #fff;
+}
+#midCol .VTabbedPanels .TabbedPanelsContentGroup, #midAndRightCol .VTabbedPanels .TabbedPanelsContentGroup {
+	clear: none;
+	float: left;
+	width: 98%;
+	position: relative;
+	background: #fff;
+	padding-bottom: 0.8em;
+	display: block;
+}
+#midCol .VTabbedPanels.jQueryTabs, #midAndRightCol .VTabbedPanels.jQueryTabs, #midCol .TabbedPanels.jQueryTabs, #midAndRightCol .TabbedPanels.jQueryTabs {
+	position: relative;
+	overflow:auto;
+}
+#midCol .sectionBox .sectionBody .VTabbedPanels h3, #midAndRightCol .sectionBox .sectionBody .VTabbedPanels h3 {
+	color: #013171;
+	margin: 0;
+}
+#midCol .sectionBox .sectionBody .VTabbedPanels.jQueryTabs .TabbedPanelsTabSelected h3, #midAndRightCol .sectionBox .sectionBody .VTabbedPanels.jQueryTabs .TabbedPanelsTabSelected h3 {
+	color: #fff;
+}
+#midCol .VTabbedPanels .TabbedPanelsContent, #midAndRightCol .VTabbedPanels .TabbedPanelsContent {
+	background: #e2e3e4;
+	border: solid 0.1em #b0b1b3;
+	padding: 0.5%;
+	z-index: 20;
+}
+ @media screen and (min-width:35em) {
+#midCol .VTabbedPanels .TabbedPanelsTab, #midAndRightCol .VTabbedPanels .TabbedPanelsTab {
+	width: 48% !important;
+	border-bottom-left-radius: 0.5em;
+	border-top-left-radius: 0.5em;
+}
+#midCol .VTabbedPanels .jQueryTabbedContent, #midAndRightCol .VTabbedPanels .jQueryTabbedContent {
+	float: right;
+	width: 45.5%;
+	border-top-right-radius: 0.5em;
+	border-bottom-right-radius: 0.5em;
+	padding-right: 2%;
+}
+}
+@media screen and (max-width:35em) {
+#midCol .VTabbedPanels .TabbedPanelsTab, #midAndRightCol .VTabbedPanels .TabbedPanelsTab, #midCol .VTabbedPanels .jQueryTabbedContent, #midAndRightCol .VTabbedPanels .jQueryTabbedContent {
+	width: 95%;
+	display: block;
+}
+#midCol .VTabbedPanels .jQueryTabbedContent, #midAndRightCol .VTabbedPanels .jQueryTabbedContent {
+	margin-top: 2.5em;
+	position: absolute;
+}
+}
