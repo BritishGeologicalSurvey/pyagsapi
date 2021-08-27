@@ -101,10 +101,31 @@ def check_eastings_northings_range(tables: dict) -> List[dict]:
     return errors
 
 
+def check_drill_depth_present(tables: dict) -> List[dict]:
+    """Drill depth value is populate and not zero"""
+    errors = []
+    try:
+        depth = tables['HDPH']
+        if any(depth['HDPH_TOP'].isna()):
+            errors.append(
+                {'line': '-', 'group': 'HDPH',
+                 'desc': 'HDPH_TOP contains null values'})
+        if any(depth['HDPH_BASE'].isna()) or any(depth['HDPH_BASE'] == 0):
+            errors.append(
+                {'line': '-', 'group': 'HDPH',
+                 'desc': 'HDPH_BASE contains zero or null values'})
+    except KeyError:
+        # LOCA not present, already checked in earlier rule
+        pass
+
+    return errors
+
+
 BGS_RULES = {
     'Required Groups': check_required_groups,
     'Required BGS Groups': check_required_bgs_groups,
     'Spatial Referencing': check_spatial_referencing_system,
     'Eastings/Northings Present': check_eastings_northings_present,
     'Eastings/Northings Range': check_eastings_northings_range,
+    'Drill Depth Present': check_drill_depth_present,
 }

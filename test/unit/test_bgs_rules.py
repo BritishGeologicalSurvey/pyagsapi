@@ -80,3 +80,21 @@ def test_eastings_northings_range():
     errors = BGS_RULES['Eastings/Northings Range'](tables)
 
     assert errors == expected
+
+
+def test_drill_depth_present():
+    # Arrange
+    filename = TEST_FILE_DIR / 'bgs_rules' / 'drill_depth_present.ags'
+    expected = [
+        {'line': '-',
+         'group': 'HDPH',
+         'desc': 'HDPH_TOP contains null values'},
+        {'line': '-',
+         'group': 'HDPH',
+         'desc': 'HDPH_BASE contains zero or null values'},
+    ]
+    tables, _ = load_AGS4_as_numeric(filename)
+
+    errors = BGS_RULES['Drill Depth Present'](tables)
+
+    assert errors == expected
