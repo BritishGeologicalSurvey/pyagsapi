@@ -115,6 +115,12 @@ def convert(filename: Path, results_dir: Path) -> Tuple[Optional[Path], dict]:
             # headers.
             success = False
             error_message = "ERROR: File contains duplicate headers"
+        except SystemExit:
+            # There are two function calls in python_ags4.AGS4 that throw a
+            # sys.exit in reponse to a bad file.  The associated errors are
+            # summarised here.
+            success = False
+            error_message = "ERROR: UNIT and/or TYPE rows missing OR mismatched column numbers"
     elif filename.suffix == '.xlsx':
         try:
             AGS4.excel_to_AGS4(filename, converted_file)
