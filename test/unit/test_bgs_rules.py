@@ -44,3 +44,21 @@ def test_spatial_referencing():
     errors = BGS_RULES['Spatial Referencing'](tables)
 
     assert errors == [expected]
+
+
+def test_eastings_northings_present():
+    # Arrange
+    filename = TEST_FILE_DIR / 'bgs_rules' / 'eastings_northings_present.ags'
+    expected = [
+        {'line': '-',
+         'group': 'LOCA',
+         'desc': 'LOCA_NATE contains zeros or null values'},
+        {'line': '-',
+         'group': 'LOCA',
+         'desc': 'LOCA_NATN contains zeros or null values'}
+    ]
+    tables, _ = load_AGS4_as_numeric(filename)
+
+    errors = BGS_RULES['Eastings/Northings Present'](tables)
+
+    assert errors == expected

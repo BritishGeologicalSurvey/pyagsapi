@@ -61,8 +61,29 @@ def check_spatial_referencing_system(tables: dict) -> List[dict]:
     return errors
 
 
+def check_eastings_northings_present(tables: dict) -> List[dict]:
+    """ Eastings and Northings columns are populated"""
+    errors = []
+    try:
+        location = tables['LOCA']
+        if any(location['LOCA_NATE'].isna()) or any(location['LOCA_NATE'] == 0):
+            errors.append(
+                {'line': '-', 'group': 'LOCA',
+                 'desc': 'LOCA_NATE contains zeros or null values'})
+        if any(location['LOCA_NATN'].isna()) or any(location['LOCA_NATN'] == 0):
+            errors.append(
+                {'line': '-', 'group': 'LOCA',
+                 'desc': 'LOCA_NATN contains zeros or null values'})
+    except KeyError:
+        # LOCA not present, already checked in earlier rule
+        pass
+
+    return errors
+
+
 BGS_RULES = {
     'Required Groups': check_required_groups,
     'Required BGS Groups': check_required_bgs_groups,
     'Spatial Referencing': check_spatial_referencing_system,
+    'Eastings/Northings Present': check_eastings_northings_present,
 }
