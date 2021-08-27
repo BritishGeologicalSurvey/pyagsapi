@@ -62,7 +62,7 @@ def check_spatial_referencing_system(tables: dict) -> List[dict]:
 
 
 def check_eastings_northings_present(tables: dict) -> List[dict]:
-    """ Eastings and Northings columns are populated"""
+    """Eastings and Northings columns are populated"""
     errors = []
     try:
         location = tables['LOCA']
@@ -81,9 +81,30 @@ def check_eastings_northings_present(tables: dict) -> List[dict]:
     return errors
 
 
+def check_eastings_northings_range(tables: dict) -> List[dict]:
+    """Eastings and Northings columns fall within reasonable range"""
+    errors = []
+    try:
+        location = tables['LOCA']
+        if any(location['LOCA_NATE'] < 1e5) or any(location['LOCA_NATE'] > 8e5):
+            errors.append(
+                {'line': '-', 'group': 'LOCA',
+                 'desc': 'LOCA_NATE values outside 100,000 to 800,000 range'})
+        if any(location['LOCA_NATN'] < 1e5) or any(location['LOCA_NATN'] > 1.4e6):
+            errors.append(
+                {'line': '-', 'group': 'LOCA',
+                 'desc': 'LOCA_NATN values outside 100,000 to 1,400,000 range'})
+    except KeyError:
+        # LOCA not present, already checked in earlier rule
+        pass
+
+    return errors
+
+
 BGS_RULES = {
     'Required Groups': check_required_groups,
     'Required BGS Groups': check_required_bgs_groups,
     'Spatial Referencing': check_spatial_referencing_system,
     'Eastings/Northings Present': check_eastings_northings_present,
+    'Eastings/Northings Range': check_eastings_northings_range,
 }

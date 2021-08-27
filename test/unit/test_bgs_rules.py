@@ -62,3 +62,21 @@ def test_eastings_northings_present():
     errors = BGS_RULES['Eastings/Northings Present'](tables)
 
     assert errors == expected
+
+
+def test_eastings_northings_range():
+    # Arrange
+    filename = TEST_FILE_DIR / 'bgs_rules' / 'eastings_northings_range.ags'
+    expected = [
+        {'line': '-',
+         'group': 'LOCA',
+         'desc': 'LOCA_NATE values outside 100,000 to 800,000 range'},
+        {'line': '-',
+         'group': 'LOCA',
+         'desc': 'LOCA_NATN values outside 100,000 to 1,400,000 range'},
+    ]
+    tables, _ = load_AGS4_as_numeric(filename)
+
+    errors = BGS_RULES['Eastings/Northings Range'](tables)
+
+    assert errors == expected
