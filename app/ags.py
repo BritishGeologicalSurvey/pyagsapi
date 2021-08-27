@@ -3,15 +3,13 @@ import datetime as dt
 from functools import reduce
 import logging
 from pathlib import Path
-import re
-import subprocess
 from typing import Tuple, Optional
 
 import python_ags4
 from python_ags4 import AGS4
 
+from app.response_templates import PLAIN_TEXT_TEMPLATE
 
-from app.response_templates import PLAIN_TEXT_TEMPLATE, RESPONSE_TEMPLATE
 
 logger = logging.getLogger(__name__)
 
@@ -32,10 +30,7 @@ def validate(filename: Path, standard_AGS4_dictionary: Optional[str] = None) -> 
     logger.info("Validate called for %", filename.name)
 
     # Prepare response with metadata
-    response = {'filename': filename.name,
-                'filesize': filename.stat().st_size,
-                'checker': f'python_ags4 v{python_ags4.__version__}',
-                'time': dt.datetime.now(tz=dt.timezone.utc)}
+    response = _prepare_response_metadata(filename)
 
     # Select dictionary file if exists
     if standard_AGS4_dictionary:
@@ -47,6 +42,11 @@ def validate(filename: Path, standard_AGS4_dictionary: Optional[str] = None) -> 
             raise ValueError(msg)
     else:
         dictionary_file = None
+
+    # Return early if file is not .ags format
+    if filename.suffix != '.ags':
+        response['message'] = f"ERROR: {filename.name} is not .ags format"
+        return response
 
     # Get error information from file
     try:
@@ -89,44 +89,57 @@ def to_plain_text(response: dict) -> str:
     return PLAIN_TEXT_TEMPLATE.render(response)
 
 
-def convert(filename: Path, results_dir: Path) -> Tuple[Optional[Path], str]:
+def convert(filename: Path, results_dir: Path) -> Tuple[Optional[Path], dict]:
     """
     Convert filename between .ags and .xlsx.  Write output to file in
-    results_dir and return path alongside processing log."""
+    results_dir and return path alongside job status data in dictionary."""
+    # Prepare variables and directory
     new_extension = '.ags' if filename.suffix == '.xlsx' else '.xlsx'
     converted_file = results_dir / (filename.stem + new_extension)
     logger.info("Converting %s to %s", filename.name, converted_file.name)
     if not results_dir.exists():
         results_dir.mkdir()
 
-    args = [
-        'ags4_cli', 'convert', filename, converted_file
-    ]
-    # Use subprocess to run the file.  It will swallow errors.
-    # A timeout prevents the whole process hanging indefinitely.
-    result = subprocess.run(args, capture_output=True,
-                            text=True, timeout=30)
-    logger.debug(result)
-    # Generate response based on result of subprocess
-    filesize = filename.stat().st_size / 1024
-    time_utc = dt.datetime.now(tz=dt.timezone.utc).strftime('%Y-%m-%d %H:%M:%S')
-    if result.returncode != 0:
-        message = 'ERROR: ' + result.stderr
-        converted_file.unlink(missing_ok=True)
-        converted_file = None
-    elif result.stdout.startswith('ERROR: '):
-        message = result.stdout
-        converted_file.unlink(missing_ok=True)
-        converted_file = None
+    # Prepare response with metadata
+    response = _prepare_response_metadata(filename)
+
+    # Do the conversion
+    success = True
+    if filename.suffix == '.ags':
+        try:
+            AGS4.AGS4_to_excel(filename, converted_file)
+        except IndexError:
+            success = False
+            error_message = "ERROR: File does not have AGS format layout"
+        except UnboundLocalError:
+            # This error is thrown in response to a bug in the upstream code,
+            # which in turn is only triggered if the AGS file has duplicate
+            # headers.
+            success = False
+            error_message = "ERROR: File contains duplicate headers"
+    elif filename.suffix == '.xlsx':
+        try:
+            AGS4.excel_to_AGS4(filename, converted_file)
+        except AttributeError as err:
+            # Include error details here in case they provide a clue e.g. which
+            # attribute is missing
+            success = False
+            error_message = f"ERROR: Bad spreadsheet layout ({err.args[0]})"
     else:
-        message = f"SUCCESS: {filename.name} converted to {converted_file.name}"
+        success = False
+        error_message = f"ERROR: {filename.name} is not .ags or .xlsx format"
 
-    log = RESPONSE_TEMPLATE.format(filename=filename.name,
-                                   filesize=filesize,
-                                   time_utc=time_utc,
-                                   message=message)
+    # Update response and clean failed files
+    if success:
+        response['message'] = f"SUCCESS: {filename.name} converted to {converted_file.name}"
+        response['valid'] = True
+    else:
+        response['message'] = error_message
+        response['valid'] = False
+        converted_file.unlink(missing_ok=True)
+        converted_file = None
 
-    return (converted_file, log)
+    return (converted_file, response)
 
 
 def is_valid(filename: Path, standard_AGS4_dictionary: Optional[str] = None) -> bool:
@@ -136,30 +149,22 @@ def is_valid(filename: Path, standard_AGS4_dictionary: Optional[str] = None) -> 
     return validate(filename, standard_AGS4_dictionary=standard_AGS4_dictionary)['valid']
 
 
-def get_unicode_message(stderr: str, filename: str) -> str:
+def _prepare_response_metadata(filename: Path) -> dict:
     """
-    Generate useful message from Unicode error
+    Prepare a dictionary containing metadata to include in the response.
     """
-    m = re.search(r'.*in position (\d+):.*', stderr)
-    char_no, line_no, line, char = line_of_error(filename, int(m.group(1)))
-    message = f'ERROR: Unreadable character "{char}" at position {char_no} on line: {line_no}\nStarting: {line}\n\n'
-    return message
+    try:
+        filesize = filename.stat().st_size
+    except FileNotFoundError:
+        filesize = 0
 
-
-def line_of_error(filename: Path, char_no: int) -> Tuple[int, int, str, str]:
-    """
-    Return character, line number and start of line containing character at char_no.
-    Also return problem character
-    """
-    with open(filename, encoding='ISO-8859-1') as f:
-        upto = f.read(char_no)
-        line_no = upto.count('\n') + 1
-        line = upto.split('\n')[-1]
-        char_no = len(line) + 1
-        char = f.read(1)
-    return char_no, line_no, line, char
-
-
-class Ags4CliError(Exception):
-    """Class for exceptions resulting from ags4_cli call."""
-    pass
+    response = {'filename': filename.name,
+                'filesize': filesize,
+                'checker': f'python_ags4 v{python_ags4.__version__}',
+                'time': dt.datetime.now(tz=dt.timezone.utc),
+                # The following are usually overwritten
+                'message': '',
+                'dictionary': '',
+                'errors': {},
+                'valid': False}
+    return response

@@ -1,15 +1,5 @@
 # Text templates used to build responses.
-from textwrap import dedent
-
 from jinja2 import Template
-
-RESPONSE_TEMPLATE = dedent("""
-    File Name: \t {filename}
-    File Size: \t {filesize:0.0f} kB
-    Time (UTC): \t {time_utc}
-
-    {message}
-    """).strip()
 
 PLAIN_TEXT_TEMPLATE = Template("""
 {{ filename }}: {{ message }}

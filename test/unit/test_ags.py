@@ -35,20 +35,20 @@ def test_validate(filename, expected):
 @pytest.mark.parametrize('dictionary', DICTIONARIES.values())
 def test_validate_custom_dictionary(dictionary):
     # Arrange
-    filename = TEST_FILE_DIR / 'example1.ags'
+    filename = TEST_FILE_DIR / 'example_ags.ags'
 
     # Act
     response = ags.validate(filename,
                             standard_AGS4_dictionary=dictionary)
 
     # Assert
-    assert response['filename'] == 'example1.ags'
+    assert response['filename'] == 'example_ags.ags'
     assert response['dictionary'] == dictionary
 
 
 def test_validate_custom_dictionary_bad_file():
     # Arrange
-    filename = TEST_FILE_DIR / 'example1.ags'
+    filename = TEST_FILE_DIR / 'example_ags.ags'
     dictionary = 'bad_file.ags'
 
     # Act
@@ -69,13 +69,15 @@ def test_convert(tmp_path, filename, expected):
     results_dir = tmp_path / 'results'
     if not results_dir.exists:
         results_dir.mkdir()
+    expected_message, expected_new_file_name = expected
 
     # Act
-    converted_file, log = ags.convert(filename, results_dir)
+    converted_file, response = ags.convert(filename, results_dir)
 
     # Assert
     assert converted_file is not None and converted_file.exists()
-    assert re.search(expected, log)
+    assert response['filename'] == filename.name
+    assert re.search(expected_message, response['message'])
 
 
 @pytest.mark.parametrize('filename, expected', BAD_FILE_DATA)
@@ -88,14 +90,13 @@ def test_convert_bad_files(tmp_path, filename, expected):
     expected_message, expected_size = expected
 
     # Act
-    converted_file, log = ags.convert(filename, results_dir)
+    converted_file, response = ags.convert(filename, results_dir)
 
     # Assert
     assert converted_file is None
-    assert f"File Name: \t {filename.name}" in log
-    assert f"File Size: \t {expected_size:n} kB" in log
-    assert 'ERROR:' in log
-    assert re.search(expected_message, log)
+    assert response['filename'] == filename.name
+    assert response['filesize'] == expected_size
+    assert response['message'] == expected_message
 
 
 @pytest.mark.parametrize('filename, expected', ISVALID_RSP_DATA)
@@ -113,7 +114,7 @@ def test_is_valid(filename, expected):
 @pytest.mark.parametrize('dictionary', DICTIONARIES.values())
 def test_is_valid_custom_dictionary(dictionary):
     # Arrange
-    filename = TEST_FILE_DIR / 'example1.ags'
+    filename = TEST_FILE_DIR / 'example_ags.ags'
 
     # Act
     result = ags.is_valid(filename,
@@ -124,7 +125,7 @@ def test_is_valid_custom_dictionary(dictionary):
 
 
 @pytest.mark.parametrize('filename', [
-    'example1.ags', 'nonsense.ags', 'random_binary.ags',
+    'example_ags.ags', 'nonsense.ags', 'random_binary.ags',
     'real/Blackburn Southern Bypass.ags'])
 def test_to_plain_text(filename):
     # Arrange
