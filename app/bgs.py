@@ -3,7 +3,7 @@ import datetime as dt
 from functools import reduce
 import logging
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Tuple
 
 from python_ags4 import AGS4
 
@@ -66,11 +66,7 @@ def validate(filename: Path,
 
 def check_file(filename: Path) -> dict:
     errors = {}
-    tables, headings = AGS4.AGS4_to_dataframe(filename)
-
-    # Convert tables to numeric data for analysis
-    for group, df in tables.items():
-        tables[group] = AGS4.convert_to_numeric(df)
+    tables, headers = load_AGS4_as_numeric(filename)
 
     for rule, func in BGS_RULES.items():
         result = func(tables)
@@ -78,6 +74,17 @@ def check_file(filename: Path) -> dict:
             errors[rule] = result
 
     return errors
+
+
+def load_AGS4_as_numeric(filename: Path) -> Tuple[dict, dict]:
+    """Read AGS4 file and convert to numeric data types."""
+    tables, headings = AGS4.AGS4_to_dataframe(filename)
+
+    # Convert tables to numeric data for analysis
+    for group, df in tables.items():
+        tables[group] = AGS4.convert_to_numeric(df)
+
+    return tables, headings
 
 
 def to_plain_text(response: dict) -> str:
