@@ -12,6 +12,8 @@ BGS_FILE_DATA = {
     'empty.ags': ('2 error(s) found in file!', False),
     'real/43370.ags': ('All checks passed!', True),
     'extension_is.bad': ('ERROR: extension_is.bad is not .ags format', False),
+    'real/JohnStPrimarySchool.ags': ('1 error(s) found in file!', False),
+    'real/19684.ags': ('2 error(s) found in file!', False),
 }
 
 AGS_FILE_DATA = {

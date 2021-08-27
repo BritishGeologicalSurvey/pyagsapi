@@ -66,12 +66,32 @@ def validate(filename: Path,
 
 def check_file(filename: Path) -> dict:
     errors = {}
-    tables, headers = load_AGS4_as_numeric(filename)
+    error_message = None
 
-    for rule, func in BGS_RULES.items():
-        result = func(tables)
-        if result:
-            errors[rule] = result
+    try:
+        # Try to load and convert the file
+        tables, headers = load_AGS4_as_numeric(filename)
+    except IndexError:
+        # This error is triggered by AGS3 files
+        error_message = "ERROR: File does not have AGS4 format layout"
+    except UnboundLocalError:
+        # This error is thrown in response to a bug in the upstream code,
+        # which in turn is only triggered if the AGS file has duplicate
+        # headers.
+        error_message = "ERROR: File contains duplicate headers"
+    except SystemExit:
+        #  There are two function calls in python_ags4.AGS4 that throw a
+        # sys.exit in reponse to a bad file.  The associated errors are
+        # summarised here.
+        error_message = "ERROR: UNIT and/or TYPE rows missing OR mismatched column numbers"
+
+    if error_message:
+        errors['File read error'] = [{'line': '-', 'group': '', 'desc': error_message}]
+    else:
+        for rule, func in BGS_RULES.items():
+            result = func(tables)
+            if result:
+                errors[rule] = result
 
     return errors
 
