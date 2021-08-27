@@ -108,7 +108,7 @@ def convert(filename: Path, results_dir: Path) -> Tuple[Optional[Path], dict]:
             AGS4.AGS4_to_excel(filename, converted_file)
         except IndexError:
             success = False
-            error_message = "ERROR: File does not have AGS format layout"
+            error_message = "ERROR: File does not have AGS4 format layout"
         except UnboundLocalError:
             # This error is thrown in response to a bug in the upstream code,
             # which in turn is only triggered if the AGS file has duplicate
