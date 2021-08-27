@@ -1,5 +1,4 @@
 """Functions for each of the BGS data validation rules"""
-from python_ags4 import AGS4
 
 
 def check_required_groups(tables: dict) -> list:
@@ -40,13 +39,14 @@ def check_required_bgs_groups(tables: dict) -> list:
 
 def check_spatial_referencing_system(tables: dict) -> list:
     """ Spatial referencing system defined in LOCA_GREF, LOCA_LREF or LOCA_LLZ """
+    ref_found = False
     errors = []
+
     try:
-        ref_found = False
-        loca = AGS4.convert_to_numeric(tables['LOCA'])
+        location = tables['LOCA']
         for col in ['LOCA_GREF', 'LOCA_LREF', 'LOCA_LLZ']:
             try:
-                if all(loca[col] != ''):
+                if all(location[col] != ''):
                     ref_found = True
             except KeyError:
                 pass

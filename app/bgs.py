@@ -68,6 +68,10 @@ def check_file(filename: Path) -> dict:
     errors = {}
     tables, headings = AGS4.AGS4_to_dataframe(filename)
 
+    # Convert tables to numeric data for analysis
+    for group, df in tables.items():
+        tables[group] = AGS4.convert_to_numeric(df)
+
     for rule, func in BGS_RULES.items():
         result = func(tables)
         if result:
