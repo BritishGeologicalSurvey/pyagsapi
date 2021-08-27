@@ -121,6 +121,31 @@ def check_drill_depth_present(tables: dict) -> List[dict]:
     return errors
 
 
+def check_drill_depth_geol_record(tables: dict) -> List[dict]:
+    """Drill depths have corresponding records in geol table"""
+    errors = []
+    try:
+        depth = tables['HDPH']
+        geology = tables['GEOL']
+        geology_ids = set(geology['LOCA_ID'].unique())
+        depth_ids = set(depth['LOCA_ID'].unique())
+
+        if not_in_geology := depth_ids.difference(geology_ids):
+            errors.append(
+                {'line': '-', 'group': 'HDPH',
+                 'desc': f'HDPH LOCA_IDs not in GEOL group ({not_in_geology})'})
+        if not_in_depth := geology_ids.difference(depth_ids):
+            errors.append(
+                {'line': '-', 'group': 'HDPH',
+                 'desc': f'GEOL LOCA_IDs not in HDPH group ({not_in_depth})'})
+
+    except KeyError:
+        # LOCA not present, already checked in earlier rule
+        pass
+
+    return errors
+
+
 BGS_RULES = {
     'Required Groups': check_required_groups,
     'Required BGS Groups': check_required_bgs_groups,
@@ -128,4 +153,5 @@ BGS_RULES = {
     'Eastings/Northings Present': check_eastings_northings_present,
     'Eastings/Northings Range': check_eastings_northings_range,
     'Drill Depth Present': check_drill_depth_present,
+    'Drill Depth GEOL Record': check_drill_depth_geol_record,
 }

@@ -98,3 +98,19 @@ def test_drill_depth_present():
     errors = BGS_RULES['Drill Depth Present'](tables)
 
     assert errors == expected
+
+
+def test_drill_depth_geol_record():
+    # Arrange
+    filename = TEST_FILE_DIR / 'bgs_rules' / 'drill_depth_geol_record.ags'
+    expected = [
+        {'line': '-', 'group': 'HDPH',
+         'desc': "HDPH LOCA_IDs not in GEOL group ({'BH108'})"},
+        {'line': '-', 'group': 'HDPH',
+         'desc': "GEOL LOCA_IDs not in HDPH group ({'BH109'})"},
+    ]
+    tables, _ = load_AGS4_as_numeric(filename)
+
+    errors = BGS_RULES['Drill Depth GEOL Record'](tables)
+
+    assert errors == expected
