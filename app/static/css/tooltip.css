@@ -5,7 +5,7 @@
     display: inline-block;
     border-bottom: 1px dotted black;
   }
-  
+
   .tooltip .tooltiptext {
     visibility: hidden;
     width: 120px;
@@ -19,7 +19,7 @@
     top: -5px;
     left: 110%;
   }
-  
+
   .tooltip .tooltiptext::after {
     content: "";
     position: absolute;
@@ -33,6 +33,5 @@
   .tooltip:hover .tooltiptext {
     visibility: visible;
     }
-    
-/* Popup text style end */    
 
+/* Popup text style end */    

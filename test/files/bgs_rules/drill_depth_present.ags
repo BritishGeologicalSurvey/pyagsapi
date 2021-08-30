@@ -1,0 +1,6 @@
+"GROUP","HDPH"
+"HEADING","LOCA_ID","HDPH_TOP","HDPH_BASE","HDPH_TYPE","HDPH_STAR","HDPH_ENDD","HDPH_CREW","HDPH_EXC","HDPH_SHOR","HDPH_STAB","HDPH_DIML","HDPH_DIMW","HDPH_DBIT","HDPH_BCON","HDPH_BTYP","HDPH_BLEN","HDPH_LOG","HDPH_LOGD","HDPH_REM","HDPH_ENV","HDPH_METH","HDPH_CONT","FILE_FSET"
+"UNIT","","m","m","","yyyy-mm-ddThh:mm:ss","yyyy-mm-ddThh:mm:ss","","","","","m","m","","","","m","","yyyy-mm-dd","","","","",""
+"TYPE","ID","2DP","2DP","PA","DT","DT","X","X","X","X","2DP","2DP","X","X","X","2DP","X","DT","X","X","X","X","X"
+"DATA","Null","","","CP+RC","","","","Dando 2000","","","","","","","","","IJ","","","","","",""
+"DATA","Zerobase","0.00","0","CP+RC","","","","Dando 2000","","","","","","","","","TW","","","","","",""

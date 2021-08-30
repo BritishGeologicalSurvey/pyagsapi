@@ -17,8 +17,6 @@ logger = logging.getLogger(__name__)
 _dictionary_files = list(Path(python_ags4.__file__).parent.glob('Standard_dictionary*.ags'))
 STANDARD_DICTIONARIES = {f.name: f.absolute() for f in _dictionary_files}
 
-logger = logging.getLogger(__name__)
-
 
 def validate(filename: Path, standard_AGS4_dictionary: Optional[str] = None) -> dict:
     """
@@ -59,7 +57,7 @@ def validate(filename: Path, standard_AGS4_dictionary: Optional[str] = None) -> 
             # 'Metadata' is not created for some files with errors
             dictionary = ''
 
-        error_count = len(reduce(lambda acc, current: acc + current, errors.values(), []))
+        error_count = len(reduce(lambda total, current: total + current, errors.values(), []))
         if error_count > 0:
             message = f'{error_count} error(s) found in file!'
             valid = False
@@ -110,13 +108,19 @@ def convert(filename: Path, results_dir: Path) -> Tuple[Optional[Path], dict]:
             AGS4.AGS4_to_excel(filename, converted_file)
         except IndexError:
             success = False
-            error_message = "ERROR: File does not have AGS format layout"
+            error_message = "ERROR: File does not have AGS4 format layout"
         except UnboundLocalError:
             # This error is thrown in response to a bug in the upstream code,
             # which in turn is only triggered if the AGS file has duplicate
             # headers.
             success = False
             error_message = "ERROR: File contains duplicate headers"
+        except SystemExit:
+            # There are two function calls in python_ags4.AGS4 that throw a
+            # sys.exit in reponse to a bad file.  The associated errors are
+            # summarised here.
+            success = False
+            error_message = "ERROR: UNIT and/or TYPE rows missing OR mismatched column numbers"
     elif filename.suffix == '.xlsx':
         try:
             AGS4.excel_to_AGS4(filename, converted_file)

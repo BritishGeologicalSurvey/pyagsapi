@@ -21113,7 +21113,6 @@ JSON_RESPONSES = {
         'errors': {},
         'valid': False
     },
-
 }
 
 # These response values break the schema
