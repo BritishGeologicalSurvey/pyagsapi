@@ -72,14 +72,14 @@ docker run -d --name mycontainer -p 80:80 ghcr.io/britishgeologicalsurvey/pyagsa
 To ammend the GUI HTML we recommend running via `Docker` using your own `Dockerfile` like the below. 
 
 ```
-FROM ghcr.io/britishgeologicalsurvey/pyagsapi:latest
+FROM ghcr.io/britishgeologicalsurvey/pyagsapi:2.0
 
-# Add images to static
-COPY customisation/logo.png app/app/static/logo.png
-
-# Add index.html
-COPY customisation/index.html app/app/templates/index.html
+COPY content/static /app/app/static
+COPY content/templates /app/app/templates
 ```
+
+Example HTML can be found in the `example-html` folder. 
+
 ## Deployment
 
 ### Docker
@@ -106,7 +106,7 @@ Please raise any feature requests, issues or pull requests against this reposito
 Containers for the application are hosted in the GitHub Container Registry  
 
 Every push to `Main` branch commits builds `pyagsapi:latest`
-Pushed Tagged Releases with v* (v* == v0.1.0-alpha) builds `pyagsapi:0.1.0-alpha` (the "v" gets dropped for the tag)
+Pushed Tagged Releases with v* (v* == v2.0) builds `pyagsapi:2.0` (the "v" gets dropped for the tag)
 
 > Making tagged release via the GitHub.com gui does not build a container, developers need to create a tag locally then `git push origin v0.1.0-test`
 
