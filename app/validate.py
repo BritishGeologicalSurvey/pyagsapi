@@ -45,23 +45,24 @@ def validate(filename: Path,
     else:
         dictionary_file = None
 
-    # Return early if file is not .ags format
-    if filename.suffix != '.ags':
-        response['message'] = f"ERROR: {filename.name} is not .ags format"
-        response['valid'] = False
-        return response
-
-    # Run checkers to extract errors and other metadata
     all_errors = {}
     all_checkers = []
-    for checker in checkers:
-        # result is a dictionary with 'errors', 'checkers' and other keys
-        result = checker(filename, standard_AGS4_dictionary=dictionary_file)
-        # Pull 'errors' out to add to running total
-        all_errors.update(result.pop('errors'))
-        all_checkers.append(result.pop('checkers'))
-        # Add remaining keys to response
-        response.update(result)
+    # Don't process if file is not .ags format
+    if filename.suffix != '.ags':
+        all_errors.update(
+            {'Non .ags file': [
+                {'line': '-', 'group': '', 'desc': f'{filename.name} is not an .ags file'}
+            ]})
+    else:
+        # Run checkers to extract errors and other metadata
+        for checker in checkers:
+            # result is a dictionary with 'errors', 'checker' and other keys
+            result = checker(filename, standard_AGS4_dictionary=dictionary_file)
+            # Pull 'errors' out to add to running total
+            all_errors.update(result.pop('errors'))
+            all_checkers.append(result.pop('checker'))
+            # Add remaining keys to response
+            response.update(result)
 
     error_count = len(reduce(lambda total, current: total + current, all_errors.values(), []))
     if error_count > 0:

@@ -1,16 +1,115 @@
 """Tests for calls to validate function."""
+import datetime as dt
 from pathlib import Path
 
 from freezegun import freeze_time
 import pytest
 
 from app import ags
-from app.validate import validate
+from app import validate
 from test.fixtures import (DICTIONARIES, FROZEN_TIME, ISVALID_RSP_DATA)
 from test.fixtures_json import JSON_RESPONSES
 from test.fixtures_plain_text import PLAIN_TEXT_RESPONSES
 
 TEST_FILE_DIR = Path(__file__).parent.parent / 'files'
+
+
+def mock_check_ags(filename, standard_AGS4_dictionary=None):
+    return dict(checker='ags', dictionary='some_dict',
+                errors={})
+
+
+def mock_check_bgs(filename, **kwargs):
+    return dict(checker='bgs',
+                errors={'BGS': [{}]})
+
+
+@freeze_time(FROZEN_TIME)
+def test_validate_default_checker():
+    """Simulate a valid file with AGS checker"""
+    # Arrange
+    filename = TEST_FILE_DIR / 'does_not_matter.ags'
+    expected = {
+        'checkers': ['ags'],
+        'dictionary': 'some_dict',
+        'errors': {},
+        'filename': filename.name,
+        'filesize': 0,
+        'message': 'All checks passed!',
+        'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
+        'valid': True}
+
+    # Act
+    response = validate.validate(filename, checkers=[mock_check_ags])
+
+    # Assert
+    response == expected
+
+
+@freeze_time(FROZEN_TIME)
+def test_validate_bgs_checker():
+    """Simulate a failing file with BGS checker."""
+    # Arrange
+    filename = TEST_FILE_DIR / 'does_not_matter.ags'
+    expected = {
+        'checkers': ['bgs'],
+        'dictionary': '',
+        'errors': {'BGS': [{}]},
+        'filename': filename.name,
+        'filesize': 0,
+        'message': '1 error(s) found in file!',
+        'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
+        'valid': False}
+
+    # Act
+    response = validate.validate(filename, checkers=[mock_check_bgs])
+
+    # Assert
+    response == expected
+
+
+@freeze_time(FROZEN_TIME)
+def test_validate_both_checkers():
+    """Simulate a combination with both checkers."""
+    # Arrange
+    filename = TEST_FILE_DIR / 'does_not_matter.ags'
+    expected = {
+        'checkers': ['bgs', 'ags'],
+        'dictionary': 'some_dict',
+        'errors': {'BGS': [{}]},
+        'filename': filename.name,
+        'filesize': 0,
+        'message': '1 error(s) found in file!',
+        'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
+        'valid': False}
+
+    # Act
+    response = validate.validate(filename, checkers=[mock_check_bgs, mock_check_ags])
+
+    # Assert
+    response == expected
+
+
+@freeze_time(FROZEN_TIME)
+def test_validate_non_ags():
+    # Arrange
+    filename = TEST_FILE_DIR / 'bad.extension'
+    expected = {
+        'checkers': [],
+        'dictionary': '',
+        'errors': {'Non .ags extension': [
+            {'desc': 'bad.extension is not an .ags file', 'group': '', 'line': '-'}]},
+        'filename': 'bad.extension',
+        'filesize': 0,
+        'message': '1 error(s) found in file!',
+        'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
+        'valid': False}
+
+    # Act
+    response = validate.validate(filename)
+
+    # Assert
+    response == expected
 
 
 @freeze_time(FROZEN_TIME)
@@ -21,11 +120,11 @@ def test_validate(filename, expected):
     filename = TEST_FILE_DIR / filename
 
     # Act
-    response = validate(filename)
+    response = validate.validate(filename)
 
     # Assert
     # Check that metadata fields are correct
-    for key in ['filename', 'filesize', 'checker', 'time', 'dictionary',
+    for key in ['filename', 'filesize', 'checkers', 'time', 'dictionary',
                 'errors', 'message', 'valid']:
         assert response[key] == expected[key]
 
@@ -36,8 +135,8 @@ def test_validate_custom_dictionary(dictionary):
     filename = TEST_FILE_DIR / 'example_ags.ags'
 
     # Act
-    response = validate(filename,
-                        standard_AGS4_dictionary=dictionary)
+    response = validate.validate(filename,
+                                 standard_AGS4_dictionary=dictionary)
 
     # Assert
     assert response['filename'] == 'example_ags.ags'
@@ -51,7 +150,7 @@ def test_validate_custom_dictionary_bad_file():
 
     # Act
     with pytest.raises(ValueError) as err:
-        validate(filename, standard_AGS4_dictionary=dictionary)
+        validate.validate(filename, standard_AGS4_dictionary=dictionary)
 
     # Assert
     message = str(err.value)
@@ -66,7 +165,7 @@ def test_is_valid(filename, expected):
     filename = TEST_FILE_DIR / filename
 
     # Act
-    result = ags.is_valid(filename)
+    result = validate.is_valid(filename)
 
     # Assert
     assert result == expected
@@ -78,8 +177,8 @@ def test_is_valid_custom_dictionary(dictionary):
     filename = TEST_FILE_DIR / 'example_ags.ags'
 
     # Act
-    result = ags.is_valid(filename,
-                          standard_AGS4_dictionary=dictionary)
+    result = validate.is_valid(filename,
+                               standard_AGS4_dictionary=dictionary)
 
     # Assert
     assert result
@@ -94,7 +193,7 @@ def test_to_plain_text(filename):
     expected = PLAIN_TEXT_RESPONSES[filename]
 
     # Act
-    text = ags.to_plain_text(response)
+    text = validate.to_plain_text(response)
 
     # Assert
     assert text.strip() == expected.strip()
