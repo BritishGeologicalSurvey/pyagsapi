@@ -50,7 +50,7 @@ Group: UNIT - UNIT table not found.
 Group: TYPE - TYPE table not found.
 """,
     'random_binary.ags': """
-random_binary.ags: Unable to open file.
+random_binary.ags: 1 error(s) found in file!
 
 # Metadata
 

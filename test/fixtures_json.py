@@ -40,7 +40,7 @@ JSON_RESPONSES = {
         'checker': 'python_ags4 v0.3.6',
         'dictionary': '',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
-        'message': 'Unable to open file.',
+        'message': '1 error(s) found in file!',
         'errors': {
             'UnicodeDecodeError': [{'line': 1,
                                     'group': '',
@@ -53,7 +53,7 @@ JSON_RESPONSES = {
         'checker': 'python_ags4 v0.3.6',
         'dictionary': '',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
-        'message': 'Unable to open file.',
+        'message': '1 error(s) found in file!',
         'errors': {
             'UnicodeDecodeError': [{'line': 263,
                                     'group': '',

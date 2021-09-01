@@ -1,11 +1,15 @@
-"""Functions for checking AGS files."""
+"""
+checker functions check a file against the rules.  They also catch errors
+to do with opening the files.
+"""
 import logging
 from pathlib import Path
 from typing import Tuple, Optional
 
+import python_ags4
 from python_ags4 import AGS4
 
-from app.bgs_rules import BGS_RULES
+from app.bgs_rules import BGS_RULES, bgs_rules_version
 
 logger = logging.getLogger(__name__)
 
@@ -29,7 +33,8 @@ def check_ags(filename: Path, standard_AGS4_dictionary: Optional[str] = None) ->
         errors = {'UnicodeDecodeError': [{'line': line_no, 'group': '', 'desc': description}]}
         dictionary = ''
 
-    return dict(errors=errors, dictionary=dictionary)
+    return dict(checker=f'python_ags4 v{python_ags4.__version__}',
+                errors=errors, dictionary=dictionary)
 
 
 def check_bgs(filename: Path, **kwargs) -> dict:
@@ -43,9 +48,6 @@ def check_bgs(filename: Path, **kwargs) -> dict:
     try:
         # Try to load and convert the file
         tables, headers = load_AGS4_as_numeric(filename)
-    except IndexError:
-        # This error is triggered by AGS3 files
-        error_message = "ERROR: File does not have AGS4 format layout"
     except UnboundLocalError:
         # This error is thrown in response to a bug in the upstream code,
         # which in turn is only triggered if the AGS file has duplicate
@@ -65,7 +67,8 @@ def check_bgs(filename: Path, **kwargs) -> dict:
             if result:
                 errors[rule] = result
 
-    return dict(errors=errors)
+    return dict(checker=f'bgs_rules v{bgs_rules_version}',
+                errors=errors)
 
 
 def load_AGS4_as_numeric(filename: Path) -> Tuple[dict, dict]:

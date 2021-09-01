@@ -1,4 +1,7 @@
-"""Validation function and helpers"""
+"""
+The validate function calls checkers to validate files and combines the
+results in the requested format.
+"""
 import datetime as dt
 from functools import reduce
 import logging
@@ -18,7 +21,7 @@ STANDARD_DICTIONARIES = {f.name: f.absolute() for f in _dictionary_files}
 
 
 def validate(filename: Path,
-             checkers: List[Callable[Path, dict]] = [check_ags],
+             checkers: List[Callable[[Path], dict]] = [check_ags],
              standard_AGS4_dictionary: Optional[str] = None) -> dict:
     """
     Validate filename (against optional dictionary) and respond in
@@ -50,11 +53,13 @@ def validate(filename: Path,
 
     # Run checkers to extract errors and other metadata
     all_errors = {}
+    all_checkers = []
     for checker in checkers:
-        # Result is a dictionary with 'errors' and other keys
+        # result is a dictionary with 'errors', 'checkers' and other keys
         result = checker(filename, standard_AGS4_dictionary=dictionary_file)
         # Pull 'errors' out to add to running total
         all_errors.update(result.pop('errors'))
+        all_checkers.append(result.pop('checkers'))
         # Add remaining keys to response
         response.update(result)
 
@@ -66,7 +71,7 @@ def validate(filename: Path,
         message = 'All checks passed!'
         valid = True
 
-    response.update(errors=all_errors, message=message, valid=valid)
+    response.update(errors=all_errors, message=message, valid=valid, checkers=all_checkers)
 
     return response
 
@@ -94,11 +99,11 @@ def _prepare_response_metadata(filename: Path) -> dict:
 
     response = {'filename': filename.name,
                 'filesize': filesize,
-                'checker': f'python_ags4 v{python_ags4.__version__}',
                 'time': dt.datetime.now(tz=dt.timezone.utc),
                 # The following are usually overwritten
                 'message': '',
                 'dictionary': '',
                 'errors': {},
+                'checkers': [],
                 'valid': True}
     return response
