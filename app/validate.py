@@ -82,11 +82,14 @@ def to_plain_text(response: dict) -> str:
     return PLAIN_TEXT_TEMPLATE.render(response)
 
 
-def is_valid(filename: Path, standard_AGS4_dictionary: Optional[str] = None) -> bool:
+def is_valid(filename: Path,
+             checkers: List[Callable[[Path], dict]] = [check_ags],
+             standard_AGS4_dictionary: Optional[str] = None) -> bool:
     """
     Validate filename and parse returned log to determine if file is valid.
     """
-    return validate(filename, standard_AGS4_dictionary=standard_AGS4_dictionary)['valid']
+    return validate(filename, checkers,
+                    standard_AGS4_dictionary=standard_AGS4_dictionary)['valid']
 
 
 def _prepare_response_metadata(filename: Path) -> dict:
