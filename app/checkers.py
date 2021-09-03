@@ -29,8 +29,8 @@ def check_ags(filename: Path, standard_AGS4_dictionary: Optional[str] = None) ->
 
     except UnicodeDecodeError as err:
         line_no = len(err.object[:err.end].split(b'\n'))
-        description = err.reason
-        errors = {'UnicodeDecodeError': [{'line': line_no, 'group': '', 'desc': description}]}
+        description = f"UnicodeDecodeError: {err.reason}"
+        errors = {'File read error': [{'line': line_no, 'group': '', 'desc': description}]}
         dictionary = ''
 
     return dict(checker=f'python_ags4 v{python_ags4.__version__}',

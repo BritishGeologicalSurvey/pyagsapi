@@ -50,7 +50,7 @@ def validate(filename: Path,
     # Don't process if file is not .ags format
     if filename.suffix != '.ags':
         all_errors.update(
-            {'Non .ags file': [
+            {'File read error': [
                 {'line': '-', 'group': '', 'desc': f'{filename.name} is not an .ags file'}
             ]})
     else:

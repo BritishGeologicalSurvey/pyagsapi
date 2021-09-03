@@ -42,9 +42,9 @@ JSON_RESPONSES = {
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
         'message': '1 error(s) found in file!',
         'errors': {
-            'UnicodeDecodeError': [{'line': 1,
-                                    'group': '',
-                                    'desc': 'invalid continuation byte'}]},
+            'File read error': [{'line': 1,
+                                 'group': '',
+                                 'desc': 'UnicodeDecodeError: invalid continuation byte'}]},
         'valid': False
     },
     'real/CG014058_F.ags': {
@@ -55,9 +55,9 @@ JSON_RESPONSES = {
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
         'message': '1 error(s) found in file!',
         'errors': {
-            'UnicodeDecodeError': [{'line': 263,
-                                    'group': '',
-                                    'desc': 'invalid continuation byte'}]},
+            'File read error': [{'line': 263,
+                                 'group': '',
+                                 'desc': 'UnicodeDecodeError: invalid continuation byte'}]},
         'valid': False
     },
     'real/Blackburn Southern Bypass.ags': {
@@ -21110,7 +21110,7 @@ JSON_RESPONSES = {
         'dictionary': '',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
         'message': '1 error(s) found in file!',
-        'errors': {'Non .ags file': [
+        'errors': {'File read error': [
              {'line': '-', 'group': '', 'desc': 'extension_is.bad is not an .ags file'}]},
         'valid': False
     },
