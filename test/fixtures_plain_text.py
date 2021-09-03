@@ -60,9 +60,9 @@ Time: 2021-08-23 14:25:43+00:00
 
 # Errors
 
-## UnicodeDecodeError
+## File read error
 
-Line: 1 - invalid continuation byte
+Line: 1 - UnicodeDecodeError: invalid continuation byte
 """,
     'real/Blackburn Southern Bypass.ags': """
 Blackburn Southern Bypass.ags: 93 error(s) found in file!

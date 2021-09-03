@@ -4,7 +4,7 @@ import re
 
 import pytest
 
-from app.convert import convert
+from app.conversion import convert
 from test.fixtures import (BAD_FILE_DATA, GOOD_FILE_DATA)
 
 TEST_FILE_DIR = Path(__file__).parent.parent / 'files'

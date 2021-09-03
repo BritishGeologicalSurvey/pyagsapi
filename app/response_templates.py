@@ -7,7 +7,9 @@ PLAIN_TEXT_TEMPLATE = Template("""
 # Metadata
 
 File size: {{ filesize }} bytes
+{%- if checkers != [] %}
 Checkers: {{ checkers }}
+{%- endif %}
 {%- if dictionary != '' %}
 Dictionary: {{ dictionary }}
 {%- endif %}

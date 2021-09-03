@@ -8,7 +8,7 @@ from typing import List
 from fastapi import APIRouter, BackgroundTasks, File, Form, Request, UploadFile
 from fastapi.responses import FileResponse, StreamingResponse
 
-from app import ags, bgs
+from app import conversion, validation
 from app.errors import error_responses, InvalidPayloadError
 from app.schemas import ValidationResponse
 
@@ -86,7 +86,7 @@ async def is_valid(background_tasks: BackgroundTasks,
     contents = await file.read()
     local_ags_file = tmp_dir / file.filename
     local_ags_file.write_bytes(contents)
-    valid = ags.is_valid(local_ags_file, standard_AGS4_dictionary=dictionary)
+    valid = validation.is_valid(local_ags_file, standard_AGS4_dictionary=dictionary)
     data = [valid]
     response = prepare_validation_response(request, data)
     return response
@@ -110,9 +110,9 @@ async def validate(background_tasks: BackgroundTasks,
     contents = await file.read()
     local_ags_file = tmp_dir / file.filename
     local_ags_file.write_bytes(contents)
-    result = ags.validate(local_ags_file, standard_AGS4_dictionary=dictionary)
+    result = validation.validate(local_ags_file, standard_AGS4_dictionary=dictionary)
     if fmt == Format.TEXT:
-        log = ags.to_plain_text(result)
+        log = validation.to_plain_text(result)
         logfile = tmp_dir / 'results.log'
         logfile.write_text(log)
         response = FileResponse(logfile, media_type="text/plain")
@@ -143,14 +143,14 @@ async def validate_many(background_tasks: BackgroundTasks,
         contents = await file.read()
         local_ags_file = tmp_dir / file.filename
         local_ags_file.write_bytes(contents)
-        result = ags.validate(local_ags_file, standard_AGS4_dictionary=dictionary)
+        result = validation.validate(local_ags_file, standard_AGS4_dictionary=dictionary)
         data.append(result)
 
     if fmt == Format.TEXT:
         full_logfile = tmp_dir / 'results.log'
         with full_logfile.open('wt') as f:
             for result in data:
-                log = ags.to_plain_text(result)
+                log = validation.to_plain_text(result)
                 f.write(log)
                 f.write('=' * 80 + '\n')
         response = FileResponse(full_logfile, media_type="text/plain")
@@ -178,8 +178,8 @@ async def convert_many(background_tasks: BackgroundTasks,
             contents = await file.read()
             local_file = tmp_dir / file.filename
             local_file.write_bytes(contents)
-            converted, result = ags.convert(local_file, results_dir)
-            log = ags.to_plain_text(result)
+            converted, result = conversion.convert(local_file, results_dir)
+            log = validation.to_plain_text(result)
             f.write(log)
             f.write('\n' + '=' * 80 + '\n')
     zipped_file = tmp_dir / RESULTS
@@ -217,16 +217,16 @@ async def validate_data_many(background_tasks: BackgroundTasks,
         local_ags_file = tmp_dir / file.filename
         local_ags_file.write_bytes(contents)
         if validate == 'validate':
-            result = bgs.validate(local_ags_file, ags_validation=True, standard_AGS4_dictionary=dictionary)
+            result = validation.validate(local_ags_file, ags_validation=True, standard_AGS4_dictionary=dictionary)
         else:
-            result = bgs.validate(local_ags_file)
+            result = validation.validate(local_ags_file)
         data.append(result)
 
     if fmt == Format.TEXT:
         full_logfile = tmp_dir / 'results.log'
         with full_logfile.open('wt') as f:
             for result in data:
-                log = ags.to_plain_text(result)
+                log = validation.to_plain_text(result)
                 f.write(log)
                 f.write('=' * 80 + '\n')
         response = FileResponse(full_logfile, media_type="text/plain")

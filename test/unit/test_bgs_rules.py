@@ -2,7 +2,7 @@
 from pathlib import Path
 
 from app.bgs_rules import BGS_RULES
-from app.bgs import load_AGS4_as_numeric
+from app.checkers import load_AGS4_as_numeric
 
 TEST_FILE_DIR = Path(__file__).parent.parent / 'files'
 

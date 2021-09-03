@@ -19,7 +19,7 @@ AGS_FILE_DATA = {
 
 @pytest.mark.parametrize('filename, expected_rules', [
     ('example_ags.ags', []),
-    ('random_binary.ags', ['UnicodeDecodeError']),
+    ('random_binary.ags', ['File read error']),
     ('nonsense.ags', ['Rule 2a', 'Rule 3', 'Rule 5', 'Rule 13', 'Rule 14', 'Rule 15', 'Rule 17']),
     ('empty.ags', ['Rule 13', 'Rule 14', 'Rule 15', 'Rule 17']),
     ('real/A3040_03.ags', ['Rule 2a', 'Rule 3', 'Rule 2c', 'Rule 19a', 'Rule 19b', 'Rule 4a', 'Rule 5']),
