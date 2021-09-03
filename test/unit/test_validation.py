@@ -42,7 +42,7 @@ def test_validate_default_checker():
     response = validation.validate(filename, checkers=[mock_check_ags])
 
     # Assert
-    response == expected
+    assert response == expected
 
 
 @freeze_time(FROZEN_TIME)
@@ -64,7 +64,7 @@ def test_validate_bgs_checker():
     response = validation.validate(filename, checkers=[mock_check_bgs])
 
     # Assert
-    response == expected
+    assert response == expected
 
 
 @freeze_time(FROZEN_TIME)
@@ -86,7 +86,7 @@ def test_validate_both_checkers():
     response = validation.validate(filename, checkers=[mock_check_bgs, mock_check_ags])
 
     # Assert
-    response == expected
+    assert response == expected
 
 
 @freeze_time(FROZEN_TIME)
@@ -96,7 +96,7 @@ def test_validate_non_ags():
     expected = {
         'checkers': [],
         'dictionary': '',
-        'errors': {'Non .ags extension': [
+        'errors': {'File read error': [
             {'desc': 'bad.extension is not an .ags file', 'group': '', 'line': '-'}]},
         'filename': 'bad.extension',
         'filesize': 0,
@@ -108,7 +108,7 @@ def test_validate_non_ags():
     response = validation.validate(filename)
 
     # Assert
-    response == expected
+    assert response == expected
 
 
 @freeze_time(FROZEN_TIME)
