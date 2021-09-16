@@ -74,3 +74,5 @@ will start an IPython debugger session in the event of test failure.
 `pyagsapi` was created by and is maintained by the British Geological Survey.
 It is distributed under the [LGPL v3.0 licence](LICENSE).
 Copyright: © BGS / UKRI 2021
+
+Contains data supplied by Natural Environment Research Council.
