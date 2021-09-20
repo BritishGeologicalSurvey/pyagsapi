@@ -2,19 +2,6 @@
 
 FROZEN_TIME = "2021-08-23 14:25:43"
 
-ISVALID_RSP_DATA = [
-    ('example_ags.ags', True),
-    ('nonsense.ags', False),
-    ('empty.ags', False),
-    ('real/A3040_03.ags', False),
-    ('example_xlsx.xlsx', False),
-    ('random_binary.ags', False),
-    ('real/CG014058_F.ags', False),
-    ('real/Blackburn Southern Bypass.ags', False),  # this file contains BOM character
-    ('real/19684.ags', False),  # this file contains BOM character
-    ('extension_is.bad', False),
-]
-
 GOOD_FILE_DATA = [
     ('example_ags.ags', ('SUCCESS: example_ags.ags converted to example_ags.xlsx', 'example_ags.xlsx')),
     ('example_xlsx.xlsx', ('SUCCESS: example_xlsx.xlsx converted to example_xlsx.ags', 'example_xlsx.ags')),

@@ -12,7 +12,7 @@ VALID_KEYS = [
     'Rule 11b', 'Rule 11c', 'Rule 13', 'Rule 14', 'Rule 15', 'Rule 16', 'Rule 17',
     'Rule 18', 'Rule 19', 'Rule 19a', 'Rule 19b', 'Rule 19c', 'Rule 20',
     # Errors
-    'File read error', 'UnicodeDecodeError',
+    'File read error'
 ]
 # Add BGS data rules
 VALID_KEYS.extend(list(BGS_RULES.keys()))
@@ -33,7 +33,7 @@ class LineError(BaseModel):
 class Validation(BaseModel):
     filename: str = Field(..., example="example.ags")
     filesize: int = Field(None, example="1024")
-    checker: str = Field(None, example="python_ags4 v0.3.6")
+    checkers: List[str] = Field(None, example=["python_ags4 v0.3.6"])
     dictionary: str = Field(None, example="Standard_dictionary_v4_1.ags")
     time: datetime = Field(None, example="2021-08-18 09:23:29")
     message: str = Field(None, example="7 error(s) found in file!")

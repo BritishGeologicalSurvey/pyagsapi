@@ -8,7 +8,8 @@ from typing import List
 from fastapi import APIRouter, BackgroundTasks, File, Form, Request, UploadFile
 from fastapi.responses import FileResponse, StreamingResponse
 
-from app import ags, bgs
+from app import conversion, validation
+from app.checkers import check_ags, check_bgs
 from app.errors import error_responses, InvalidPayloadError
 from app.schemas import ValidationResponse
 
@@ -38,6 +39,17 @@ class Dictionary(str, Enum):
     V4_1 = "v4_1"
 
 
+# Enum for checker logic
+class Checker(str, Enum):
+    ags = "ags"
+    bgs = "bgs"
+
+
+checker_functions = {
+    Checker.ags: check_ags,
+    Checker.bgs: check_bgs,
+}
+
 format_form = Form(
     default=Format.JSON,
     title='Response Format',
@@ -52,8 +64,8 @@ dictionary_form = Form(
 
 validate_form = Form(
     default=None,
-    title='AGS Validation Option',
-    description='If set validate against AGS dictionary',
+    title='Validation Options',
+    description='If set validate against AGS schema',
 )
 
 validation_file = File(
@@ -69,69 +81,20 @@ conversion_file = File(
 )
 
 
-@router.post("/isvalid/",
-             response_model=ValidationResponse,
-             responses=log_responses)
-async def is_valid(background_tasks: BackgroundTasks,
-                   file: UploadFile = validation_file,
-                   std_dictionary: Dictionary = dictionary_form,
-                   request: Request = None):
-    if not file.filename:
-        raise InvalidPayloadError(request)
-    tmp_dir = Path(tempfile.mkdtemp())
-    background_tasks.add_task(shutil.rmtree, tmp_dir)
-    dictionary = None
-    if std_dictionary:
-        dictionary = f'Standard_dictionary_{std_dictionary}.ags'
-    contents = await file.read()
-    local_ags_file = tmp_dir / file.filename
-    local_ags_file.write_bytes(contents)
-    valid = ags.is_valid(local_ags_file, standard_AGS4_dictionary=dictionary)
-    data = [valid]
-    response = prepare_validation_response(request, data)
-    return response
-
-
 @router.post("/validate/",
              response_model=ValidationResponse,
              responses=log_responses)
 async def validate(background_tasks: BackgroundTasks,
-                   file: UploadFile = validation_file,
+                   files: List[UploadFile] = validation_file,
                    std_dictionary: Dictionary = dictionary_form,
+                   checkers: List[Checker] = validate_form,
                    fmt: Format = format_form,
                    request: Request = None):
-    if not file.filename:
+    if not files[0].filename or not checkers:
         raise InvalidPayloadError(request)
-    tmp_dir = Path(tempfile.mkdtemp())
-    background_tasks.add_task(shutil.rmtree, tmp_dir)
-    dictionary = None
-    if std_dictionary:
-        dictionary = f'Standard_dictionary_{std_dictionary}.ags'
-    contents = await file.read()
-    local_ags_file = tmp_dir / file.filename
-    local_ags_file.write_bytes(contents)
-    result = ags.validate(local_ags_file, standard_AGS4_dictionary=dictionary)
-    if fmt == Format.TEXT:
-        log = ags.to_plain_text(result)
-        logfile = tmp_dir / 'results.log'
-        logfile.write_text(log)
-        response = FileResponse(logfile, media_type="text/plain")
-    else:
-        data = [result]
-        response = prepare_validation_response(request, data)
-    return response
 
+    checkers = [checker_functions[c] for c in checkers]
 
-@router.post("/validatemany/",
-             response_model=ValidationResponse,
-             responses=log_responses)
-async def validate_many(background_tasks: BackgroundTasks,
-                        files: List[UploadFile] = validation_file,
-                        std_dictionary: Dictionary = dictionary_form,
-                        fmt: Format = format_form,
-                        request: Request = None):
-    if not files[0].filename:
-        raise InvalidPayloadError(request)
     tmp_dir = Path(tempfile.mkdtemp())
     background_tasks.add_task(shutil.rmtree, tmp_dir)
     dictionary = None
@@ -143,14 +106,16 @@ async def validate_many(background_tasks: BackgroundTasks,
         contents = await file.read()
         local_ags_file = tmp_dir / file.filename
         local_ags_file.write_bytes(contents)
-        result = ags.validate(local_ags_file, standard_AGS4_dictionary=dictionary)
+        result = validation.validate(
+            local_ags_file, checkers=checkers, standard_AGS4_dictionary=dictionary)
         data.append(result)
 
     if fmt == Format.TEXT:
         full_logfile = tmp_dir / 'results.log'
         with full_logfile.open('wt') as f:
+            f.write('=' * 80 + '\n')
             for result in data:
-                log = ags.to_plain_text(result)
+                log = validation.to_plain_text(result)
                 f.write(log)
                 f.write('=' * 80 + '\n')
         response = FileResponse(full_logfile, media_type="text/plain")
@@ -163,9 +128,9 @@ async def validate_many(background_tasks: BackgroundTasks,
 @router.post("/convert/",
              response_class=StreamingResponse,
              responses=zip_responses)
-async def convert_many(background_tasks: BackgroundTasks,
-                       files: List[UploadFile] = conversion_file,
-                       request: Request = None):
+async def convert(background_tasks: BackgroundTasks,
+                  files: List[UploadFile] = conversion_file,
+                  request: Request = None):
     if not files[0].filename:
         raise InvalidPayloadError(request)
     RESULTS = 'results'
@@ -174,12 +139,13 @@ async def convert_many(background_tasks: BackgroundTasks,
     results_dir.mkdir()
     full_logfile = results_dir / 'conversion.log'
     with full_logfile.open('wt') as f:
+        f.write('=' * 80 + '\n')
         for file in files:
             contents = await file.read()
             local_file = tmp_dir / file.filename
             local_file.write_bytes(contents)
-            converted, result = ags.convert(local_file, results_dir)
-            log = ags.to_plain_text(result)
+            converted, result = conversion.convert(local_file, results_dir)
+            log = validation.to_plain_text(result)
             f.write(log)
             f.write('\n' + '=' * 80 + '\n')
     zipped_file = tmp_dir / RESULTS
@@ -191,48 +157,6 @@ async def convert_many(background_tasks: BackgroundTasks,
 
     response = StreamingResponse(zipped_stream, media_type="application/x-zip-compressed")
     response.headers["Content-Disposition"] = f"attachment; filename={RESULTS}.zip"
-    return response
-
-
-@router.post("/validatedatamany/",
-             response_model=ValidationResponse,
-             responses=log_responses)
-async def validate_data_many(background_tasks: BackgroundTasks,
-                             files: List[UploadFile] = validation_file,
-                             std_dictionary: Dictionary = dictionary_form,
-                             fmt: Format = format_form,
-                             validate: str = validate_form,
-                             request: Request = None):
-    if not files[0].filename:
-        raise InvalidPayloadError(request)
-    tmp_dir = Path(tempfile.mkdtemp())
-    background_tasks.add_task(shutil.rmtree, tmp_dir)
-    dictionary = None
-    if std_dictionary:
-        dictionary = f'Standard_dictionary_{std_dictionary}.ags'
-
-    data = []
-    for file in files:
-        contents = await file.read()
-        local_ags_file = tmp_dir / file.filename
-        local_ags_file.write_bytes(contents)
-        if validate == 'validate':
-            result = bgs.validate(local_ags_file, ags_validation=True, standard_AGS4_dictionary=dictionary)
-        else:
-            result = bgs.validate(local_ags_file)
-        data.append(result)
-
-    if fmt == Format.TEXT:
-        full_logfile = tmp_dir / 'results.log'
-        with full_logfile.open('wt') as f:
-            for result in data:
-                log = ags.to_plain_text(result)
-                f.write(log)
-                f.write('=' * 80 + '\n')
-        response = FileResponse(full_logfile, media_type="text/plain")
-    else:
-        response = prepare_validation_response(request, data)
-
     return response
 
 

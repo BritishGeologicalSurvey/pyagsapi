@@ -57,7 +57,7 @@ class InvalidPayloadError(Exception):
 
         error_data = {
             'error': 'Invalid payload',
-            'desc': 'Please select at least one file',
+            'desc': 'Please select at least one file and at least one checker',
         }
         error = Error(**error_data)
         response_data['errors'].append(error)

@@ -1,6 +1,8 @@
 """Functions for each of the BGS data validation rules"""
 from typing import List
 
+bgs_rules_version = '2.0.0'
+
 
 def check_required_groups(tables: dict) -> List[dict]:
     """ Groups must include PROJ, LOCA or HOLE, ABBR, TYPE, UNIT """
