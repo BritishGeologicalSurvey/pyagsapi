@@ -114,3 +114,21 @@ def test_drill_depth_geol_record():
     errors = BGS_RULES['Drill Depth GEOL Record'](tables)
 
     assert errors == expected
+
+
+def test_loca_within_great_britain():
+    # Arrange
+    filename = TEST_FILE_DIR / 'bgs_rules' / 'loca_within_great_britain.ags'
+    expected = [
+        {'desc': 'NATE / NATN outside Great Britain (Bad NATE)',
+         'group': 'LOCA',
+         'line': '-'},
+        {'desc': 'NATE / NATN outside Great Britain (Bad NATN)',
+         'group': 'LOCA',
+         'line': '-'}
+    ]
+    tables, _ = load_AGS4_as_numeric(filename)
+
+    errors = BGS_RULES['LOCA within Great Britain'](tables)
+
+    assert errors == expected

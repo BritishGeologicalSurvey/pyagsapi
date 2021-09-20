@@ -1,6 +1,11 @@
 """Functions for each of the BGS data validation rules"""
+from pathlib import Path
 from typing import List
 
+from shapely.geometry import Point
+import geopandas as gpd
+
+COUNTRY_OUTLINES = Path(__file__).parent / 'country_outlines.gpkg'
 bgs_rules_version = '2.0.0'
 
 
@@ -13,6 +18,7 @@ def check_required_groups(tables: dict) -> List[dict]:
     for group in required:
         if group not in tables.keys():
             missing.append(group)
+
     if 'LOCA' not in tables.keys() and 'HOLE' not in tables.keys():
         missing.append('(LOCA or HOLE)')
 
@@ -148,6 +154,35 @@ def check_drill_depth_geol_record(tables: dict) -> List[dict]:
     return errors
 
 
+def check_loca_within_great_britain(tables: dict) -> List[dict]:
+    """Location coordinates fall on land within Great Britain."""
+    errors = []
+    try:
+        # Load LOCA group to GeoPandas
+        location = tables['LOCA'].set_index('LOCA_ID')
+        location['geom'] = list(zip(location['LOCA_NATE'], location['LOCA_NATN']))
+        location['geom'] = location['geom'].apply(Point)
+        location = gpd.GeoDataFrame(location, geometry='geom', crs='EPSG:27700')
+
+        # Load and extract gb_outline geometry
+        gb_outline = gpd.read_file(COUNTRY_OUTLINES, layer='gb_outline')
+        gb_outline = gb_outline.loc[0, 'geometry']
+
+        # Find locations outside gb_polygon
+        outside = location.loc[location.intersects(gb_outline) == False].index.tolist()  # noqa Check only works with "==" and not "is"
+        if outside:
+            for loca_id in outside:
+                errors.append(
+                    {'line': '-', 'group': 'LOCA',
+                     'desc': f'NATE / NATN outside Great Britain ({loca_id})'})
+
+    except KeyError:
+        # LOCA not present, already checked in earlier rule
+        pass
+
+    return errors
+
+
 BGS_RULES = {
     'Required Groups': check_required_groups,
     'Required BGS Groups': check_required_bgs_groups,
@@ -156,4 +191,5 @@ BGS_RULES = {
     'Eastings/Northings Range': check_eastings_northings_range,
     'Drill Depth Present': check_drill_depth_present,
     'Drill Depth GEOL Record': check_drill_depth_geol_record,
+    'LOCA within Great Britain': check_loca_within_great_britain,
 }
