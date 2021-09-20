@@ -246,7 +246,7 @@ async def test_convert_bad_files(async_client, tmp_path):
 
 
 @pytest.mark.asyncio
-async def test_validate_data_many_json(async_client):
+async def test_validate_bgs_json(async_client):
     # Arrange
     filename = TEST_FILE_DIR / 'example_ags.ags'
     file = ('files', (filename.name, open(filename, 'rb'), 'text/plain'))
@@ -271,10 +271,41 @@ async def test_validate_data_many_json(async_client):
     assert body['type'] == 'success'
     assert body['self'] is not None
     assert len(body['data']) == 1
+    assert len(body['data'][0]['checkers']) == 1
 
 
 @pytest.mark.asyncio
-async def test_validate_data_many_text(async_client):
+async def test_validate_ags_bgs_json(async_client):
+    # Arrange
+    filename = TEST_FILE_DIR / 'example_ags.ags'
+    file = ('files', (filename.name, open(filename, 'rb'), 'text/plain'))
+    fields = [file]
+    fields.append(('checkers', 'ags'))
+    fields.append(('checkers', 'bgs'))
+    fields.append(('fmt', 'json'))
+    mp_encoder = MultipartEncoder(fields=fields)
+
+    # Act
+    async with async_client as ac:
+        response = await ac.post(
+            '/validate/',
+            headers={'Content-Type': mp_encoder.content_type},
+            data=mp_encoder.to_string())
+
+    # Assert
+    assert response.status_code == 200
+    assert response.headers['content-type'] == 'application/json'
+    body = response.json()
+    assert set(body.keys()) == {'msg', 'type', 'self', 'data'}
+    assert body['msg'] is not None
+    assert body['type'] == 'success'
+    assert body['self'] is not None
+    assert len(body['data']) == 1
+    assert len(body['data'][0]['checkers']) == 2
+
+
+@pytest.mark.asyncio
+async def test_validate_bgs_text(async_client):
     # Arrange
     filename = TEST_FILE_DIR / 'example_ags.ags'
     file = ('files', (filename.name, open(filename, 'rb'), 'text/plain'))
