@@ -68,6 +68,9 @@ pytest -vs test
 The test environment is configured so that adding `--pdb` to the test command
 will start an IPython debugger session in the event of test failure.
 
+### Example Files
+
+Files in https://github.com/BritishGeologicalSurvey/pyagsapi/tree/main/test/files/real are a random collection of real AGS files which have been submitted to the BGS and are available under OGL, we have included them here as example files to test pyagsapi with. 
 
 ### Licence
 
