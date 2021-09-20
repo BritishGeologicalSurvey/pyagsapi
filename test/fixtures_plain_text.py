@@ -1,5 +1,6 @@
 PLAIN_TEXT_RESPONSES = {
     'example_ags.ags': """
+================================================================================
 example_ags.ags: All checks passed!
 
 # Metadata
@@ -8,8 +9,11 @@ File size: 4039 bytes
 Checkers: ['python_ags4 v0.3.6']
 Dictionary: Standard_dictionary_v4_1.ags
 Time: 2021-08-23 14:25:43+00:00
+
+================================================================================
 """,
     'nonsense.ags': """
+================================================================================
 nonsense.ags: 7 error(s) found in file!
 
 # Metadata
@@ -48,8 +52,11 @@ Group: UNIT - UNIT table not found.
 ## Rule 17
 
 Group: TYPE - TYPE table not found.
+
+================================================================================
 """,
     'random_binary.ags': """
+================================================================================
 random_binary.ags: 1 error(s) found in file!
 
 # Metadata
@@ -63,8 +70,11 @@ Time: 2021-08-23 14:25:43+00:00
 ## File read error
 
 Line: 1 - UnicodeDecodeError: invalid continuation byte
+
+================================================================================
 """,
     'real/Blackburn Southern Bypass.ags': """
+================================================================================
 Blackburn Southern Bypass.ags: 93 error(s) found in file!
 
 # Metadata
@@ -179,5 +189,7 @@ Line: 1 - Does not start with a valid data descriptor.
 ## Rule 5
 
 Line: 1 - Contains fields that are not enclosed in double quotes.
+
+================================================================================
 """
 }

@@ -6,7 +6,7 @@ from freezegun import freeze_time
 import pytest
 
 from app import validation
-from test.fixtures import (DICTIONARIES, FROZEN_TIME, ISVALID_RSP_DATA)
+from test.fixtures import (DICTIONARIES, FROZEN_TIME)
 from test.fixtures_json import JSON_RESPONSES
 from test.fixtures_plain_text import PLAIN_TEXT_RESPONSES
 
@@ -158,38 +158,14 @@ def test_validate_custom_dictionary_bad_file():
         assert key in message
 
 
-@pytest.mark.parametrize('filename, expected', ISVALID_RSP_DATA)
-def test_is_valid(filename, expected):
-    # Arrange
-    filename = TEST_FILE_DIR / filename
-
-    # Act
-    result = validation.is_valid(filename)
-
-    # Assert
-    assert result == expected
-
-
-@pytest.mark.parametrize('dictionary', DICTIONARIES.values())
-def test_is_valid_custom_dictionary(dictionary):
-    # Arrange
-    filename = TEST_FILE_DIR / 'example_ags.ags'
-
-    # Act
-    result = validation.is_valid(filename,
-                                 standard_AGS4_dictionary=dictionary)
-
-    # Assert
-    assert result
-
-
 @pytest.mark.parametrize('filename', [
     'example_ags.ags', 'nonsense.ags', 'random_binary.ags',
     'real/Blackburn Southern Bypass.ags'])
 def test_to_plain_text(filename):
     # Arrange
     response = JSON_RESPONSES[filename]
-    expected = PLAIN_TEXT_RESPONSES[filename]
+    # Strip out lines added by router included in common fixture
+    expected = PLAIN_TEXT_RESPONSES[filename].replace('=' * 80 + '\n', '')
 
     # Act
     text = validation.to_plain_text(response)

@@ -10,7 +10,7 @@ from requests_toolbelt.multipart.encoder import MultipartEncoder
 
 from app.main import app
 from test.fixtures import (BAD_FILE_DATA, DICTIONARIES, FROZEN_TIME,
-                           GOOD_FILE_DATA, ISVALID_RSP_DATA)
+                           GOOD_FILE_DATA)
 from test.fixtures_json import JSON_RESPONSES
 from test.fixtures_plain_text import PLAIN_TEXT_RESPONSES
 
@@ -25,65 +25,17 @@ def test_openapi_json(client):
     assert '/validate' in response.text
 
 
-@pytest.mark.parametrize('filename, expected', ISVALID_RSP_DATA)
-@pytest.mark.asyncio
-async def test_isvalid(async_client, filename, expected):
-    # Arrange
-    filename = TEST_FILE_DIR / filename
-    mp_encoder = MultipartEncoder(
-        fields={'file': (filename.name, open(filename, 'rb'), 'text/plain')})
-
-    # Act
-    async with async_client as ac:
-        response = await ac.post(
-            '/isvalid/',
-            headers={'Content-Type': mp_encoder.content_type},
-            data=mp_encoder.to_string())
-
-    # Assert
-    assert response.status_code == 200
-    assert response.headers['content-type'] == 'application/json'
-    body = response.json()
-    assert set(body.keys()) == {'msg', 'type', 'self', 'data'}
-    assert body['msg'] is not None
-    assert body['type'] == 'success'
-    assert body['self'] is not None
-    assert len(body['data']) == 1
-    assert body['data'][0] == expected
-
-
-@pytest.mark.parametrize('dictionary', DICTIONARIES.keys())
-@pytest.mark.asyncio
-async def test_isvalid_custom_dictionary(async_client, dictionary):
-    # Arrange
-    filename = TEST_FILE_DIR / 'example_ags.ags'
-    mp_encoder = MultipartEncoder(
-        fields={'file': (filename.name, open(filename, 'rb'), 'text/plain'),
-                'std_dictionary': dictionary})
-
-    # Act
-    async with async_client as ac:
-        response = await ac.post(
-            '/isvalid/',
-            headers={'Content-Type': mp_encoder.content_type},
-            data=mp_encoder.to_string())
-
-    # Assert
-    assert response.status_code == 200
-    assert response.headers['content-type'] == 'application/json'
-    body = response.json()
-    assert len(body['data']) == 1
-    assert body['data'][0]
-
-
 @pytest.mark.parametrize('filename, expected',
                          [item for item in JSON_RESPONSES.items()])
 @pytest.mark.asyncio
 async def test_validate_json(async_client, filename, expected):
     # Arrange
     filename = TEST_FILE_DIR / filename
-    mp_encoder = MultipartEncoder(
-        fields={'file': (filename.name, open(filename, 'rb'), 'text/plain')})
+    file = ('files', (filename.name, open(filename, 'rb'), 'text/plain'))
+    fields = []
+    fields.append(file)
+    fields.append(('checkers', 'ags'))
+    mp_encoder = MultipartEncoder(fields=fields)
 
     # Act
     async with async_client as ac:
@@ -106,13 +58,14 @@ async def test_validate_json(async_client, filename, expected):
 
 
 @pytest.mark.asyncio
-async def test_validatemany_json(async_client):
+async def test_validate_many_json(async_client):
     # Arrange
     fields = []
     for name in JSON_RESPONSES.keys():
         filename = TEST_FILE_DIR / name
         file = ('files', (filename.name, open(filename, 'rb'), 'text/plain'))
         fields.append(file)
+    fields.append(('checkers', 'ags'))
     fields.append(('std_dictionary', 'v4_1'))
     fields.append(('fmt', 'json'))
     mp_encoder = MultipartEncoder(fields=fields)
@@ -120,7 +73,7 @@ async def test_validatemany_json(async_client):
     # Act
     async with async_client as ac:
         response = await ac.post(
-            '/validatemany/',
+            '/validate/',
             headers={'Content-Type': mp_encoder.content_type},
             data=mp_encoder.to_string())
 
@@ -141,9 +94,12 @@ async def test_validatemany_json(async_client):
 async def test_validate_custom_dictionary(async_client, dictionary, expected):
     # Arrange
     filename = TEST_FILE_DIR / 'example_ags.ags'
-    mp_encoder = MultipartEncoder(
-        fields={'file': (filename.name, open(filename, 'rb'), 'text/plain'),
-                'std_dictionary': dictionary})
+    file = ('files', (filename.name, open(filename, 'rb'), 'text/plain'))
+    fields = []
+    fields.append(file)
+    fields.append(('checkers', 'ags'))
+    fields.append(('std_dictionary', dictionary))
+    mp_encoder = MultipartEncoder(fields=fields)
 
     # Act
     async with async_client as ac:
@@ -169,9 +125,12 @@ async def test_validate_custom_dictionary(async_client, dictionary, expected):
 async def test_validate_text(async_client, filename, expected):
     # Arrange
     filename = TEST_FILE_DIR / filename
-    mp_encoder = MultipartEncoder(
-        fields={'file': (filename.name, open(filename, 'rb'), 'text/plain'),
-                'fmt': 'text'})
+    file = ('files', (filename.name, open(filename, 'rb'), 'text/plain'))
+    fields = []
+    fields.append(file)
+    fields.append(('checkers', 'ags'))
+    fields.append(('fmt', 'text'))
+    mp_encoder = MultipartEncoder(fields=fields)
 
     # Act
     async with async_client as ac:
@@ -188,13 +147,14 @@ async def test_validate_text(async_client, filename, expected):
 
 @freeze_time(FROZEN_TIME)
 @pytest.mark.asyncio
-async def test_validatemany_text(async_client):
+async def test_validate_many_text(async_client):
     # Arrange
     fields = []
     for name in JSON_RESPONSES.keys():
         filename = TEST_FILE_DIR / name
         file = ('files', (filename.name, open(filename, 'rb'), 'text/plain'))
         fields.append(file)
+    fields.append(('checkers', 'ags'))
     fields.append(('std_dictionary', 'v4_1'))
     fields.append(('fmt', 'text'))
     mp_encoder = MultipartEncoder(fields=fields)
@@ -202,7 +162,7 @@ async def test_validatemany_text(async_client):
     # Act
     async with async_client as ac:
         response = await ac.post(
-            '/validatemany/',
+            '/validate/',
             headers={'Content-Type': mp_encoder.content_type},
             data=mp_encoder.to_string())
 
@@ -286,18 +246,19 @@ async def test_convert_bad_files(async_client, tmp_path):
 
 
 @pytest.mark.asyncio
-async def test_validatedatamany_json(async_client):
+async def test_validate_data_many_json(async_client):
     # Arrange
     filename = TEST_FILE_DIR / 'example_ags.ags'
     file = ('files', (filename.name, open(filename, 'rb'), 'text/plain'))
     fields = [file]
+    fields.append(('checkers', 'bgs'))
     fields.append(('fmt', 'json'))
     mp_encoder = MultipartEncoder(fields=fields)
 
     # Act
     async with async_client as ac:
         response = await ac.post(
-            '/validatedatamany/',
+            '/validate/',
             headers={'Content-Type': mp_encoder.content_type},
             data=mp_encoder.to_string())
 
@@ -313,18 +274,19 @@ async def test_validatedatamany_json(async_client):
 
 
 @pytest.mark.asyncio
-async def test_validatedatamany_text(async_client):
+async def test_validate_data_many_text(async_client):
     # Arrange
     filename = TEST_FILE_DIR / 'example_ags.ags'
     file = ('files', (filename.name, open(filename, 'rb'), 'text/plain'))
     fields = [file]
+    fields.append(('checkers', 'bgs'))
     fields.append(('fmt', 'text'))
     mp_encoder = MultipartEncoder(fields=fields)
 
     # Act
     async with async_client as ac:
         response = await ac.post(
-            '/validatedatamany/',
+            '/validate/',
             headers={'Content-Type': mp_encoder.content_type},
             data=mp_encoder.to_string())
 
