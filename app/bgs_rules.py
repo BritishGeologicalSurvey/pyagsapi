@@ -244,6 +244,14 @@ def check_locx_is_not_duplicate_of_other_column(tables: dict) -> List[dict]:
         # LOCA not present, already checked in earlier rule
         errors = []
 
+
+
+def check_sample_referencing(tables: dict) -> List[dict]:
+    """If a SAMP group exists it must:
+        - have an identifier SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF)
+    """
+    errors = []
+
     return errors
 
 
@@ -295,5 +303,9 @@ BGS_RULES = {
     'Drill Depth GEOL Record': check_drill_depth_geol_record,
     'LOCA within Great Britain': check_loca_within_great_britain,
     'LOCA_LOCX is not duplicate of other column': check_locx_is_not_duplicate_of_other_column,
+<<<<<<< HEAD
     'LOCA_ID references': check_loca_id_references_are_valid,
+=======
+    'Sample Referencing': check_sample_referencing,
+>>>>>>> Add basic function and failing test
 }

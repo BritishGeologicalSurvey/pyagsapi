@@ -156,6 +156,18 @@ def test_loca_locx_is_not_duplicate_of_other_column():
 
     errors = BGS_RULES['LOCA_LOCX is not duplicate of other column'](tables)
 
+
+def test_sample_referential_integrity_no_key():
+    # Arrange
+    filename = TEST_FILE_DIR / 'bgs_rules' / 'sample_referencing_no_key.ags'
+    expected = [
+        {'line': '-', 'group': 'SAMP',
+         'desc': "No sample id: either SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF)"},
+    ]
+    tables, _ = load_AGS4_as_numeric(filename)
+
+    errors = BGS_RULES['Sample Referencing'](tables)
+
     assert errors == expected
 
 
