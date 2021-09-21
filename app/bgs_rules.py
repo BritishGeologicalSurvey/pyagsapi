@@ -268,15 +268,19 @@ def orphans_comp(samp_ids: list, tables: dict, errors: dict) -> dict:
     children = {group: table for group, table in tables.items()
                 if {'LOCA_ID', 'SAMP_TOP', 'SAMP_TYPE', 'SAMP_REF'} <= set(table.columns)}
     for group, child in children.items():
-        child_ids = set((child['LOCA_ID'] + ',' +
-                         child['SAMP_TOP'].astype(str) + ',' +
-                         child['SAMP_TYPE'] + ',' +
-                         child['SAMP_REF']))
+        child_ids = set(composite_ids(child))
         if no_parent_ids := child_ids.difference(set(samp_ids)):
             errors.append(
                 {'line': '-', 'group': f'{group}',
                  'desc': f'No parent id: LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF not in SAMP group ({no_parent_ids})'})
     return errors
+
+
+def composite_ids(df):
+    return list((df['LOCA_ID'] + ',' +
+                 df['SAMP_TOP'].astype(str) + ',' +
+                 df['SAMP_TYPE'] + ',' +
+                 df['SAMP_REF']))
 
 
 def check_sample_referencing(tables: dict) -> List[dict]:
@@ -304,10 +308,7 @@ def check_sample_referencing(tables: dict) -> List[dict]:
                 errors.append(
                     {'line': '-', 'group': 'SAMP',
                      'desc': 'No sample id: either SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF)'})
-            samp_ids = list((sample['LOCA_ID'] + ',' +
-                             sample['SAMP_TOP'].astype(str) + ',' +
-                             sample['SAMP_TYPE'] + ',' +
-                             sample['SAMP_REF']))
+            samp_ids = composite_ids(sample)
             errors = unique_ids(samp_ids, errors)
             errors = orphans_comp(samp_ids, tables, errors)
         else:
