@@ -256,6 +256,8 @@ def unique_ids(samp_ids: list, errors: dict) -> dict:
 def orphans_samp(samp_ids: list, tables: dict, errors: dict) -> dict:
     children = {group: table for group, table in tables.items() if 'SAMP_ID' in table.columns}
     for group, child in children.items():
+        if group == 'SAMP':
+            continue
         child_ids = set(child[child['SAMP_ID'] != '']['SAMP_ID'])
         if no_parent_ids := sorted(list(child_ids.difference(set(samp_ids)))):
             errors.append(
@@ -268,6 +270,8 @@ def orphans_comp(samp_ids: list, tables: dict, errors: dict) -> dict:
     children = {group: table for group, table in tables.items()
                 if {'LOCA_ID', 'SAMP_TOP', 'SAMP_TYPE', 'SAMP_REF'} <= set(table.columns)}
     for group, child in children.items():
+        if group == 'SAMP':
+            continue
         child_ids = set(composite_ids(child))
         if no_parent_ids := sorted(list(child_ids.difference(set(samp_ids)))):
             errors.append(
@@ -281,6 +285,14 @@ def composite_ids(df):
                  df['SAMP_TOP'].astype(str) + ',' +
                  df['SAMP_TYPE'] + ',' +
                  df['SAMP_REF']))
+
+
+def valid_comp_ids(df):
+    valid_ids = df[(df['LOCA_ID'] != '') &
+                   (df['SAMP_TOP'].notna()) &
+                   (df['SAMP_TYPE'] != '') &
+                   (df['SAMP_REF'] != '')][['LOCA_ID', 'SAMP_TOP', 'SAMP_TYPE', 'SAMP_REF']]
+    return composite_ids(valid_ids)
 
 
 def check_sample_referencing(tables: dict) -> List[dict]:
@@ -299,16 +311,11 @@ def check_sample_referencing(tables: dict) -> List[dict]:
             errors = orphans_samp(samp_ids, tables, errors)
         elif all(sample['SAMP_ID'] == ''):
             # No SAMP_ID have a value, check composite ids only
-            valid_ids = sample[
-                (sample['LOCA_ID'] != '') &
-                (sample['SAMP_TOP'].notna()) &
-                (sample['SAMP_TYPE'] != '') &
-                (sample['SAMP_REF'] != '')][['LOCA_ID', 'SAMP_TOP', 'SAMP_TYPE', 'SAMP_REF']]
-            if len(valid_ids) < len(sample):
+            samp_ids = valid_comp_ids(sample)
+            if len(samp_ids) < len(sample):
                 errors.append(
                     {'line': '-', 'group': 'SAMP',
                      'desc': 'No sample id: either SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF)'})
-            samp_ids = composite_ids(sample)
             errors = unique_ids(samp_ids, errors)
             errors = orphans_comp(samp_ids, tables, errors)
         else:
