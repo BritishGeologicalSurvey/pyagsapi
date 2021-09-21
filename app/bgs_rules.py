@@ -198,6 +198,7 @@ def check_loca_within_great_britain(tables: dict) -> List[dict]:
         return {'line': '-', 'group': 'LOCA',
                 'desc': f'NATE / NATN outside Great Britain and Northern Ireland ({row.name})'}
 
+    # Apply check to data
     try:
         # Load LOCA group to GeoPandas (assuming UK grid for now)
         location = tables['LOCA'].set_index('LOCA_ID')
@@ -216,6 +217,35 @@ def check_loca_within_great_britain(tables: dict) -> List[dict]:
     return errors
 
 
+def check_locx_is_not_duplicate_of_other_column(tables: dict) -> List[dict]:
+    """LOCA_LOCX and LOCA_LOCY are not duplicates of other columns"""
+
+    def check_for_duplicates(row):
+        """Return errors for rows that contain duplicates."""
+        error = None
+
+        if row['LOCA_NATE'] == row['LOCA_LOCX'] or row['LOCA_NATN'] == row['LOCA_LOCY']:
+            error = {'line': '-', 'group': 'LOCA',
+                     'desc': f'LOCX / LOCY duplicates NATE / NATN ({row.name})'}
+        elif (float(row['LOCA_LON']) == row['LOCA_LOCX'] or
+              float(row['LOCA_LAT']) == row['LOCA_LOCY']):
+            error = {'line': '-', 'group': 'LOCA',
+                     'desc': f'LOCX / LOCY duplicates LON / LAT ({row.name})'}
+
+        return error
+
+    # Apply check to data
+    try:
+        location = tables['LOCA'].set_index('LOCA_ID')
+        result = location.apply(check_for_duplicates, axis=1)
+        errors = result[result.notnull()].to_list()
+    except KeyError:
+        # LOCA not present, already checked in earlier rule
+        pass
+
+    return errors
+
+
 BGS_RULES = {
     'Required Groups': check_required_groups,
     'Required BGS Groups': check_required_bgs_groups,
@@ -225,4 +255,5 @@ BGS_RULES = {
     'Drill Depth Present': check_drill_depth_present,
     'Drill Depth GEOL Record': check_drill_depth_geol_record,
     'LOCA within Great Britain': check_loca_within_great_britain,
+    'LOCA_LOCX is not duplicate of other column': check_locx_is_not_duplicate_of_other_column,
 }
