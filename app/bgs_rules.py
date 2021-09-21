@@ -319,14 +319,17 @@ def check_sample_referencing(tables: dict) -> List[dict]:
             errors = unique_ids(samp_ids, errors)
             errors = orphans_comp(samp_ids, tables, errors)
         else:
-            # Some SAMP_ID have a value, check two types of id
-            if any(sample['SAMP_ID'] == ''):
+            # Some SAMP_ID have a value, check both types of id
+            samp_ids = list(sample[sample['SAMP_ID'] != '']['SAMP_ID'])
+            comp_ids = valid_comp_ids(sample[sample['SAMP_ID'] == ''])
+            if len(samp_ids) + len(comp_ids) < len(sample):
                 errors.append(
                     {'line': '-', 'group': 'SAMP',
                      'desc': 'No sample id: either SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF)'})
-                samp_ids = list(sample[sample['SAMP_ID'] != '']['SAMP_ID'])
-                errors = unique_ids(samp_ids, errors)
-                errors = orphans_samp(samp_ids, tables, errors)
+            errors = unique_ids(comp_ids, errors)
+            errors = orphans_comp(comp_ids, tables, errors)
+            errors = unique_ids(samp_ids, errors)
+            errors = orphans_samp(samp_ids, tables, errors)
 
     except KeyError:
         # SAMP not present

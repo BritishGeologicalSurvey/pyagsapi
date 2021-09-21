@@ -181,6 +181,11 @@ mix_ids_expected = [
     {'line': '-', 'group': 'SAMP',
      'desc': "Duplicate sample id: SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF) must be unique"},
     {'line': '-', 'group': 'CONG',
+     'desc': ("No parent id: LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF not in SAMP group "
+              "(['327-16C,24.55,U,24', '327-16D,24.55,U,24'])")},
+    {'line': '-', 'group': 'SAMP',
+     'desc': "Duplicate sample id: SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF) must be unique"},
+    {'line': '-', 'group': 'CONG',
      'desc': "No parent id: SAMP_ID not in SAMP group (['A67890'])"},
 ]
 
