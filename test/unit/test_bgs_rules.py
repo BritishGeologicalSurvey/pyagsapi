@@ -163,7 +163,16 @@ samp_ids_expected = [
     {'line': '-', 'group': 'SAMP',
      'desc': "Duplicate sample id: SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF) must be unique"},
     {'line': '-', 'group': 'CONG',
-     'desc': "No parent ids: SAMP_IDs not in SAMP group ({'A67890'})"},
+     'desc': "No parent id: SAMP_ID not in SAMP group ({'A67890'})"},
+]
+
+comp_ids_expected = [
+    {'line': '-', 'group': 'SAMP',
+     'desc': "No sample id: either SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF)"},
+    {'line': '-', 'group': 'SAMP',
+     'desc': "Duplicate sample id: SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF) must be unique"},
+    {'line': '-', 'group': 'CONG',
+     'desc': "No parent id: LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF not in SAMP group ({'CBH03,9.9,U,36'})"},
 ]
 
 mix_ids_expected = [
@@ -172,12 +181,13 @@ mix_ids_expected = [
     {'line': '-', 'group': 'SAMP',
      'desc': "Duplicate sample id: SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF) must be unique"},
     {'line': '-', 'group': 'CONG',
-     'desc': "No parent ids: SAMP_IDs not in SAMP group ({'A67890'})"},
+     'desc': "No parent id: SAMP_ID not in SAMP group ({'A67890'})"},
 ]
 
 
 @pytest.mark.parametrize('filename, expected', [
     ('sample_referencing_samp_ids.ags', samp_ids_expected),
+    ('sample_referencing_comp_ids.ags', comp_ids_expected),
     ('sample_referencing_mix_ids.ags', mix_ids_expected),
 ])
 def test_sample_referential_integrity(filename, expected):
