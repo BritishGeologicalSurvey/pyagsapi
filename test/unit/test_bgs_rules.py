@@ -157,9 +157,25 @@ def test_loca_locx_is_not_duplicate_of_other_column():
     errors = BGS_RULES['LOCA_LOCX is not duplicate of other column'](tables)
 
 
-def test_sample_referential_integrity_no_key():
+def test_sample_referential_integrity_samp_ids():
     # Arrange
-    filename = TEST_FILE_DIR / 'bgs_rules' / 'sample_referencing.ags'
+    filename = TEST_FILE_DIR / 'bgs_rules' / 'sample_referencing_samp_ids.ags'
+    expected = [
+        {'line': '-', 'group': 'SAMP',
+         'desc': "Duplicate sample id: SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF) must be unique"},
+        {'line': '-', 'group': 'CONG',
+         'desc': "No parent ids: SAMP_IDs not in SAMP group ({'A67890'})"},
+    ]
+    tables, _ = load_AGS4_as_numeric(filename)
+
+    errors = BGS_RULES['Sample Referencing'](tables)
+
+    assert errors == expected
+
+
+def test_sample_referential_integrity_mix_ids():
+    # Arrange
+    filename = TEST_FILE_DIR / 'bgs_rules' / 'sample_referencing_mix_ids.ags'
     expected = [
         {'line': '-', 'group': 'SAMP',
          'desc': "No sample id: either SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF)"},

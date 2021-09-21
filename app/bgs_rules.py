@@ -245,6 +245,24 @@ def check_locx_is_not_duplicate_of_other_column(tables: dict) -> List[dict]:
         errors = []
 
 
+def unique_ids(samp_ids: list, errors: dict) -> dict:
+    if len(samp_ids) > len(set(samp_ids)):
+        errors.append(
+            {'line': '-', 'group': 'SAMP',
+             'desc': 'Duplicate sample id: SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF) must be unique'})
+    return errors
+
+
+def orphans(samp_ids: list, tables: dict, errors: dict) -> dict:
+    children = {group: table for group, table in tables.items() if 'SAMP_ID' in table.columns}
+    for group, child in children.items():
+        child_ids = set(child[child['SAMP_ID'] != '']['SAMP_ID'])
+        if no_parent_ids := child_ids.difference(set(samp_ids)):
+            errors.append(
+                {'line': '-', 'group': f'{group}',
+                 'desc': f'No parent ids: SAMP_IDs not in SAMP group ({no_parent_ids})'})
+    return errors
+
 
 def check_sample_referencing(tables: dict) -> List[dict]:
     """If a SAMP group exists it must:
@@ -255,24 +273,22 @@ def check_sample_referencing(tables: dict) -> List[dict]:
     errors = []
     try:
         sample = tables['SAMP']
-        if any(sample['SAMP_ID'] == ''):
-            errors.append(
-                {'line': '-', 'group': 'SAMP',
-                 'desc': 'No sample id: either SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF)'})
-        # Only check valid IDs for uniqueness
-        samp_ids = sample[sample['SAMP_ID'] != '']['SAMP_ID']
-        if len(samp_ids) > len(samp_ids.unique()):
-            errors.append(
-                {'line': '-', 'group': 'SAMP',
-                 'desc': 'Duplicate sample id: SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF) must be unique'})
-        # Get and check groups containing children (SAMP is a redundant child of itself in the dict)
-        children = {group: table for group, table in tables.items() if 'SAMP_ID' in table.columns}
-        for group, child in children.items():
-            child_ids = set(child[child['SAMP_ID'] != '']['SAMP_ID'])
-            if no_parent_ids := child_ids.difference(set(samp_ids)):
+        if all(sample['SAMP_ID'] != ''):
+            # All SAMP_ID have a value, check samp_ids only
+            errors = unique_ids(sample['SAMP_ID'], errors)
+            errors = orphans(sample['SAMP_ID'], tables, errors)
+        elif all(sample['SAMP_ID'] == ''):
+            # No SAMP_ID have a value, check composite ids only
+            pass
+        else:
+            # Some SAMP_ID have a value, check two types of id
+            if any(sample['SAMP_ID'] == ''):
                 errors.append(
-                    {'line': '-', 'group': f'{group}',
-                     'desc': f'No parent ids: SAMP_IDs not in SAMP group ({no_parent_ids})'})
+                    {'line': '-', 'group': 'SAMP',
+                     'desc': 'No sample id: either SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF)'})
+                errors = unique_ids(sample[sample['SAMP_ID'] != '']['SAMP_ID'], errors)
+                errors = orphans(sample[sample['SAMP_ID'] != '']['SAMP_ID'], tables, errors)
+
     except KeyError:
         # SAMP not present
         pass
