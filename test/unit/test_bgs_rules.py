@@ -120,19 +120,16 @@ def test_loca_within_great_britain():
     # Arrange
     filename = TEST_FILE_DIR / 'bgs_rules' / 'loca_within_great_britain.ags'
     expected = [
-        {'desc': 'NATE / NATN outside Great Britain (Bad NATE)',
+        {'desc': 'NATE / NATN outside Great Britain and Northern Ireland (Bad NATE)',
          'group': 'LOCA',
          'line': '-'},
-        {'desc': 'NATE / NATN outside Great Britain (Bad NATN)',
+        {'desc': 'NATE / NATN outside Great Britain and Northern Ireland (Bad NATN)',
          'group': 'LOCA',
          'line': '-'},
-        {'desc': 'NATE / NATN outside Great Britain (Derry)',
+        {'desc': 'NATE / NATN outside Great Britain and Northern Ireland (Derry)',  # these coords given in EPSG:27700
          'group': 'LOCA',
          'line': '-'},
-        {'desc': 'NATE / NATN outside Great Britain (Omagh)',
-         'group': 'LOCA',
-         'line': '-'},
-        {'desc': 'NATE / NATN outside Great Britain (Belfast)',
+        {'desc': 'NATE / NATN in Northern Ireland but LOCA_GREF undefined (Belfast)',
          'group': 'LOCA',
          'line': '-'}
     ]

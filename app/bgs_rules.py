@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import List
 
 from shapely.geometry import Point
+from pyproj.transformer import Transformer
 import geopandas as gpd
 
 """
@@ -21,6 +22,7 @@ with open('app/gb_outline.geojson', 'wt') as outfile:
 
 
 GB_OUTLINE = Path(__file__).parent / 'gb_outline.geojson'
+NI_OUTLINE = Path(__file__).parent / 'ni_outline.geojson'
 bgs_rules_version = '2.0.0'
 
 
@@ -172,24 +174,40 @@ def check_drill_depth_geol_record(tables: dict) -> List[dict]:
 def check_loca_within_great_britain(tables: dict) -> List[dict]:
     """Location coordinates fall on land within Great Britain."""
     errors = []
+
+    def check_coordinates(row):
+        """Return errors for rows that are outside polygons."""
+        gb_outline = gpd.read_file(GB_OUTLINE).loc[0, 'geometry']
+        ni_outline = gpd.read_file(NI_OUTLINE).loc[0, 'geometry']
+        to_irish_grid = Transformer.from_crs("EPSG:27700", "EPSG:29903", always_xy=True)
+
+        # Check for points within gb_outline
+        if row['geometry'].intersects(gb_outline):
+            return None
+
+        # Check if points outside gb_outline are in ni_outline
+        ni_grid_geometry = Point(to_irish_grid.transform(row['geometry'].x, row['geometry'].y))
+        if ni_grid_geometry.intersects(ni_outline):
+            if row['LOCA_GREF']:
+                return None
+            else:
+                return {'line': '-', 'group': 'LOCA',
+                        'desc': f'NATE / NATN in Northern Ireland but LOCA_GREF undefined ({row.name})'}
+
+        # Otherwise return error
+        return {'line': '-', 'group': 'LOCA',
+                'desc': f'NATE / NATN outside Great Britain and Northern Ireland ({row.name})'}
+
     try:
         # Load LOCA group to GeoPandas (assuming UK grid for now)
         location = tables['LOCA'].set_index('LOCA_ID')
-        location['geom'] = list(zip(location['LOCA_NATE'], location['LOCA_NATN']))
-        location['geom'] = location['geom'].apply(Point)
-        location = gpd.GeoDataFrame(location, geometry='geom', crs='EPSG:27700')
+        location['geometry'] = list(zip(location['LOCA_NATE'], location['LOCA_NATN']))
+        location['geometry'] = location['geometry'].apply(Point)
+        location = gpd.GeoDataFrame(location, geometry='geometry', crs='EPSG:27700')
 
-        # Load and extract gb_outline geometry
-        gb_outline = gpd.read_file(GB_OUTLINE)
-        gb_outline = gb_outline.loc[0, 'geometry']
-
-        # Find locations outside gb_polygon
-        outside = location.loc[location.intersects(gb_outline) == False].index.tolist()  # noqa Check only works with "==" and not "is"
-        if outside:
-            for loca_id in outside:
-                errors.append(
-                    {'line': '-', 'group': 'LOCA',
-                     'desc': f'NATE / NATN outside Great Britain ({loca_id})'})
+        # Find locations outside gb or northern ireland
+        result = location.apply(check_coordinates, axis=1)
+        errors = result[result.notnull()].to_list()
 
     except KeyError:
         # LOCA not present, already checked in earlier rule
