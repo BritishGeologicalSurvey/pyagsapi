@@ -8,6 +8,7 @@ from typing import Tuple, Optional
 
 import python_ags4
 from python_ags4 import AGS4
+import pandas as pd
 
 from app.bgs_rules import BGS_RULES, bgs_rules_version
 
@@ -78,5 +79,15 @@ def load_AGS4_as_numeric(filename: Path) -> Tuple[dict, dict]:
     # Convert tables to numeric data for analysis
     for group, df in tables.items():
         tables[group] = AGS4.convert_to_numeric(df)
+
+    # Force conversion of coordinate columns, even if type says text
+    coord_columns = ['LOCA_NATE', 'LOCA_NATN', 'LOCA_LOCX', 'LOCA_LOCY']
+    if tables:
+        for column in coord_columns:
+            try:
+                tables['LOCA'][column] = pd.to_numeric(tables['LOCA'][column])
+            except KeyError:
+                # Not all files have all columns
+                pass
 
     return tables, headings

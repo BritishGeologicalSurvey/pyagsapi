@@ -173,7 +173,6 @@ def check_drill_depth_geol_record(tables: dict) -> List[dict]:
 
 def check_loca_within_great_britain(tables: dict) -> List[dict]:
     """Location coordinates fall on land within Great Britain."""
-    errors = []
 
     def check_coordinates(row):
         """Return errors for rows that are outside polygons."""
@@ -212,7 +211,7 @@ def check_loca_within_great_britain(tables: dict) -> List[dict]:
 
     except KeyError:
         # LOCA not present, already checked in earlier rule
-        pass
+        errors = []
 
     return errors
 
@@ -227,6 +226,8 @@ def check_locx_is_not_duplicate_of_other_column(tables: dict) -> List[dict]:
         if row['LOCA_NATE'] == row['LOCA_LOCX'] or row['LOCA_NATN'] == row['LOCA_LOCY']:
             error = {'line': '-', 'group': 'LOCA',
                      'desc': f'LOCX / LOCY duplicates NATE / NATN ({row.name})'}
+        elif row['LOCA_LON'] == '' and row['LOCA_LAT'] == '':
+            error = None
         elif (float(row['LOCA_LON']) == row['LOCA_LOCX'] or
               float(row['LOCA_LAT']) == row['LOCA_LOCY']):
             error = {'line': '-', 'group': 'LOCA',
@@ -241,7 +242,7 @@ def check_locx_is_not_duplicate_of_other_column(tables: dict) -> List[dict]:
         errors = result[result.notnull()].to_list()
     except KeyError:
         # LOCA not present, already checked in earlier rule
-        pass
+        errors = []
 
     return errors
 
