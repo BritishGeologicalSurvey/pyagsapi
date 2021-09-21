@@ -257,6 +257,12 @@ def check_sample_referencing(tables: dict) -> List[dict]:
             errors.append(
                 {'line': '-', 'group': 'SAMP',
                  'desc': 'No sample id: either SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF)'})
+        # Only check valid IDs for uniqueness
+        samp_ids = sample[sample['SAMP_ID'] != '']['SAMP_ID']
+        if len(samp_ids) > len(samp_ids.unique()):
+            errors.append(
+                {'line': '-', 'group': 'SAMP',
+                 'desc': 'Duplicate sample id: SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF) must be unique'})
     except KeyError:
         # SAMP not present
         pass

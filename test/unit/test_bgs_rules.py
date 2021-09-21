@@ -163,6 +163,8 @@ def test_sample_referential_integrity_no_key():
     expected = [
         {'line': '-', 'group': 'SAMP',
          'desc': "No sample id: either SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF)"},
+        {'line': '-', 'group': 'SAMP',
+         'desc': "Duplicate sample id: SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF) must be unique"},
     ]
     tables, _ = load_AGS4_as_numeric(filename)
 
