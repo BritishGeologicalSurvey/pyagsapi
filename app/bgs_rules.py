@@ -251,6 +251,15 @@ def check_sample_referencing(tables: dict) -> List[dict]:
         - have an identifier SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF)
     """
     errors = []
+    try:
+        sample = tables['SAMP']
+        if any(sample['SAMP_ID'] == ''):
+            errors.append(
+                {'line': '-', 'group': 'SAMP',
+                 'desc': 'No sample id: either SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF)'})
+    except KeyError:
+        # SAMP not present
+        pass
 
     return errors
 
