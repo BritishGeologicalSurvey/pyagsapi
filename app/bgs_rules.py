@@ -5,7 +5,22 @@ from typing import List
 from shapely.geometry import Point
 import geopandas as gpd
 
-COUNTRY_OUTLINES = Path(__file__).parent / 'country_outlines.gpkg'
+"""
+The gb_outline.geojson file contains public sector information licensed under
+Open Government Licence v3.0.  It was generated from Ordnance Survey Open Data
+via the following commands:
+
+import geopandas as gpd
+gb_outline = gpd.read_file('app/country_outlines.gpkg', layer='gb_outline')
+simple = gb_outline.geometry.simplify(100, preserve_topology=False)
+buffer = simple.buffer(1000)
+simple_buffer = buffer.simplify(1000)
+with open('app/gb_outline.geojson', 'wt') as outfile:
+    outfile.write(simple_buffer.to_json())
+"""
+
+
+GB_OUTLINE = Path(__file__).parent / 'gb_outline.geojson'
 bgs_rules_version = '2.0.0'
 
 
@@ -158,14 +173,14 @@ def check_loca_within_great_britain(tables: dict) -> List[dict]:
     """Location coordinates fall on land within Great Britain."""
     errors = []
     try:
-        # Load LOCA group to GeoPandas
+        # Load LOCA group to GeoPandas (assuming UK grid for now)
         location = tables['LOCA'].set_index('LOCA_ID')
         location['geom'] = list(zip(location['LOCA_NATE'], location['LOCA_NATN']))
         location['geom'] = location['geom'].apply(Point)
         location = gpd.GeoDataFrame(location, geometry='geom', crs='EPSG:27700')
 
         # Load and extract gb_outline geometry
-        gb_outline = gpd.read_file(COUNTRY_OUTLINES, layer='gb_outline')
+        gb_outline = gpd.read_file(GB_OUTLINE)
         gb_outline = gb_outline.loc[0, 'geometry']
 
         # Find locations outside gb_polygon

@@ -125,8 +125,18 @@ def test_loca_within_great_britain():
          'line': '-'},
         {'desc': 'NATE / NATN outside Great Britain (Bad NATN)',
          'group': 'LOCA',
+         'line': '-'},
+        {'desc': 'NATE / NATN outside Great Britain (Derry)',
+         'group': 'LOCA',
+         'line': '-'},
+        {'desc': 'NATE / NATN outside Great Britain (Omagh)',
+         'group': 'LOCA',
+         'line': '-'},
+        {'desc': 'NATE / NATN outside Great Britain (Belfast)',
+         'group': 'LOCA',
          'line': '-'}
     ]
+
     tables, _ = load_AGS4_as_numeric(filename)
 
     errors = BGS_RULES['LOCA within Great Britain'](tables)
