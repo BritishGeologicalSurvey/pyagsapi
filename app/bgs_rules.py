@@ -249,6 +249,8 @@ def check_locx_is_not_duplicate_of_other_column(tables: dict) -> List[dict]:
 def check_sample_referencing(tables: dict) -> List[dict]:
     """If a SAMP group exists it must:
         - have an identifier SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF)
+        - all identifiers must be unique
+        - for any children of SAMP, child IDs must appear in SAMP group
     """
     errors = []
     try:
@@ -263,15 +265,11 @@ def check_sample_referencing(tables: dict) -> List[dict]:
             errors.append(
                 {'line': '-', 'group': 'SAMP',
                  'desc': 'Duplicate sample id: SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF) must be unique'})
-        # Get groups containing children
-        samp_ids = set(samp_ids)
-        children = {}
-        for group, table in tables.items():
-            if group != 'SAMP' and 'SAMP_ID' in table.columns:
-                children[group] = table
+        # Get and check groups containing children (SAMP is a redundant child of itself in the dict)
+        children = {group: table for group, table in tables.items() if 'SAMP_ID' in table.columns}
         for group, child in children.items():
             child_ids = set(child[child['SAMP_ID'] != '']['SAMP_ID'])
-            if no_parent_ids := child_ids.difference(samp_ids):
+            if no_parent_ids := child_ids.difference(set(samp_ids)):
                 errors.append(
                     {'line': '-', 'group': f'{group}',
                      'desc': f'No parent ids: SAMP_IDs not in SAMP group ({no_parent_ids})'})
