@@ -14,8 +14,7 @@
       </ul>
     <h2>Tools</h2>
     <ul>
-        <li><a href="#validator">Schema Validator</a></li>
-        <li><a href="#datavalidator">Data Validator</a></li>
+        <li><a href="#validator">Schema & Data Validator</a></li>
         <li><a href="#converter">File Conversion .ags <--> .xlsx</a></li>
         <li><a href="#openapi">OpenAPI Documentation</a></li>
     </ul>
@@ -24,21 +23,22 @@
 <hr>
 <section id="validator">
     <br>
-    <h2>Validator</h2>
-    <br>
+    <h2>AGS Schema & Data Validation</h2>
     <form action="/validate/" enctype="multipart/form-data" method="post">
         <div class="tooltip"><p>Select AGS version, if not specified in TRAN_AGS: </p>
         <span class="tooltiptext">Tool uses AGS version specified in the supplied file, if not present, uses selection here, default is v4.0.4</span>
       </div>
       <br><br>
-      <input type="radio" id="4.0.3" name="std_dictionary" value="v4_0_3">
-      <label for="4.0.3">4.0.3</label>
-      <input type="radio" id="4.0.4" name="std_dictionary" value="v4_0_4" checked>
-      <label for="4.0.4">4.0.4</label>
-      <input type="radio" id="4.1" name="std_dictionary" value="v4_1">
-      <label for="4.1">4.1</label>
+      <fieldset>
+          <legend>Select Version</legend>
+          <input type="radio" id="4.0.3" name="std_dictionary" value="v4_0_3">
+          <label for="4.0.3">4.0.3</label>
+          <input type="radio" id="4.0.4" name="std_dictionary" value="v4_0_4" checked>
+          <label for="4.0.4">4.0.4</label>
+          <input type="radio" id="4.1" name="std_dictionary" value="v4_1">
+          <label for="4.1">4.1</label>
+      </fieldset>
         <br>
-      <br>
       <fieldset>
         <legend>Select checkers</legend>
         <input type="checkbox" id="ags_validate" name="checkers" value="ags" checked>
@@ -46,61 +46,56 @@
         <input type="checkbox" id="bgs_validate" name="checkers" value="bgs" checked>
         <label for="bgs_validate"> I would like to run BGS data validation</label><br>
       </fieldset>
-      <br>
         <br>
-      <p>Select .ags file(s) for validation (v4.x only).</p>
+      <fieldset>
+          <legend>Select response format:</legend>
+          <input type="radio" id="text" name="fmt" value="text">
+          <label for="text">Plain Text</label>
+          <input type="radio" id="json" name="fmt" value="json" checked>
+          <label for="json">JSON</label><br>
+      </fieldset>
         <br>
-      <input name="files" type="file" multiple>
-        <br><br>
-      <p>Select response format:</p>
-        <br>
-      <input type="radio" id="text" name="fmt" value="text">
-      <label for="text">Plain Text</label>
-      <input type="radio" id="json" name="fmt" value="json" checked>
-      <label for="json">JSON</label><br>
-      <br>
-      <input type="submit">
+      <fieldset>
+          <legend>Select .ags file(s) for validation (v4.x only). and submit</legend>
+          <input name="files" type="file" multiple>
+          <input type="submit">
+      </fieldset>
     </form>
-</section>
-<br>
-<hr>
-<section id="datavalidator">
-  <br>
-  <h2>Data Validator</h2>
-  <p>Data validation against the National Geoscience Data Repository requirements</p>
-  <br>
-  <h3>Validation rules</h3>
-            <p>Your files will be validated against the following rules as defined by BGS/NGDC:</p>
-            <ul>
-            	<li>Groups shall include PROJ, LOCA or HOLE, ABBR, TYPE, UNIT</li>
-                <li>Groups may include GEOL</li>
-                    <ul>
-                    <li>Required for BGS submission</li>
-                    </ul>
-                        <li>Spatial referencing system defined in LOCA_GREF, LOCA_LREF or LOCA_LLZ</li>
-                    <ul>
-                        <li>Example: LOCA_GREF:OSGB, LOCA_LREF:London Grid 1, LOCA_LLZ:WGS84</li>
-                    </ul>
-                <li>LOCA_NATE and LOCA_NATN are populated</li>
-                    <ul>
-                        <li>Zeros or null do not pass</li>
-                    </ul>
-                <li>LOCA_NATE and LOCA_NATN values fall within reasonable range</li>
-                    <ul>
-                        <li>LOCA_NATE values inside 100,000 to 800,000 range</li>
-                        <li>LOCA_NATN values outside 100,000 to 1,400,000 range</li>
-                    </ul>
-                <li>Drill depth value (HDPH) is populated and not zero</li>
-                    <ul>
-                        <li>HDPH_TOP does not contain null values</li>
-                        <li>HDPH_BASE does not contain zero or null values</li>
-                    </ul>
-                <li>Drill depths (HDPH) have corresponding records in GEOL table</li>
+    <h2>AGS Validation</h2>
+    <p>Performs validation using the <a href="https://gitlab.com/ags-data-format-wg/ags-python-library.">Official AGS Python Library</a> which implements checks of the rules as written in the AGS data format standard v4.x</p>
+    <h2>BGS Data Validation</h2>
+      <p>Data validation against the National Geoscience Data Repository requirements</p>
+      <h3>Validation rules</h3>
+        <p>Your files will be validated against the following rules as defined by BGS/NGDC:</p>
+        <ul>
+            <li>Groups shall include PROJ, LOCA or HOLE, ABBR, TYPE, UNIT</li>
+            <li>Groups may include GEOL</li>
                 <ul>
-                    <li>Checking HDPH LOCA_IDs are in GEOL group AND GEOL LOCA_IDs are in HDPH group</li>
+                <li>Required for BGS submission</li>
                 </ul>
+                    <li>Spatial referencing system defined in LOCA_GREF, LOCA_LREF or LOCA_LLZ</li>
+                <ul>
+                    <li>Example: LOCA_GREF:OSGB, LOCA_LREF:London Grid 1, LOCA_LLZ:WGS84</li>
+                </ul>
+            <li>LOCA_NATE and LOCA_NATN are populated</li>
+                <ul>
+                    <li>Zeros or null do not pass</li>
+                </ul>
+            <li>LOCA_NATE and LOCA_NATN values fall within reasonable range</li>
+                <ul>
+                    <li>LOCA_NATE values inside 100,000 to 800,000 range</li>
+                    <li>LOCA_NATN values outside 100,000 to 1,400,000 range</li>
+                </ul>
+            <li>Drill depth value (HDPH) is populated and not zero</li>
+                <ul>
+                    <li>HDPH_TOP does not contain null values</li>
+                    <li>HDPH_BASE does not contain zero or null values</li>
+                </ul>
+            <li>Drill depths (HDPH) have corresponding records in GEOL table</li>
+            <ul>
+                <li>Checking HDPH LOCA_IDs are in GEOL group AND GEOL LOCA_IDs are in HDPH group</li>
             </ul>
-    <br>
+        </ul>
 </section>
 <br>
 <hr>
@@ -111,9 +106,12 @@
       </div>
       <br>
     <br>
+    <fieldset>
+        <legend>Select files</legend>
     <form action="/convert/" enctype="multipart/form-data" method="post">
     <input name="files" type="file" multiple>
     <input type="submit">
+    </fieldset>
     </form>
 </section>
 <br>
