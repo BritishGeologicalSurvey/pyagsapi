@@ -12,3 +12,4 @@
 "TYPE","ID","2DP","X","PA","ID","X","2DP","X","X","PA","PA","2DP","2DP","2DP","2DP","2DP","2DP","XN","0DP","2SF","1DP","3DP","X","X","X","X","X","X"
 "DATA","CBH01","6.80","10","B","","3","2.00","Dark brown sandy organic silty CLAY.","","1D Oedometer","","75.00","19.85","200.40","180.80","1.19","0.40","2.65","93","","","5.684","","BS1377:Part 5: 1990, clause 3","Causeway Geotech Ltd","","",""
 "DATA","CBH03","9.90","36","U","","5","9.90","Grey slightly sandy silty CLAY.","","1D Oedometer","","75.10","19.63","20.90","19.60","2.13","1.76","2.65","109","","","0.508","","BS1377:Part 5: 1990, clause 3","Causeway Geotech Ltd","","",""
+"DATA","CBH03","","","","","5","9.90","Grey slightly sandy silty CLAY.","","1D Oedometer","","75.10","19.63","20.90","19.60","2.13","1.76","2.65","109","","","0.508","","BS1377:Part 5: 1990, clause 3","Causeway Geotech Ltd","","",""

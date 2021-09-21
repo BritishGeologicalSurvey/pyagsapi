@@ -163,7 +163,7 @@ samp_ids_expected = [
     {'line': '-', 'group': 'SAMP',
      'desc': "Duplicate sample id: SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF) must be unique"},
     {'line': '-', 'group': 'CONG',
-     'desc': "No parent id: SAMP_ID not in SAMP group ({'A67890'})"},
+     'desc': "No parent id: SAMP_ID not in SAMP group (['A67890'])"},
 ]
 
 comp_ids_expected = [
@@ -172,7 +172,7 @@ comp_ids_expected = [
     {'line': '-', 'group': 'SAMP',
      'desc': "Duplicate sample id: SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF) must be unique"},
     {'line': '-', 'group': 'CONG',
-     'desc': "No parent id: LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF not in SAMP group ({'CBH03,9.9,U,36'})"},
+     'desc': "No parent id: LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF not in SAMP group (['CBH03,9.9,U,36', 'CBH03,nan,,'])"},
 ]
 
 mix_ids_expected = [
@@ -181,7 +181,7 @@ mix_ids_expected = [
     {'line': '-', 'group': 'SAMP',
      'desc': "Duplicate sample id: SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF) must be unique"},
     {'line': '-', 'group': 'CONG',
-     'desc': "No parent id: SAMP_ID not in SAMP group ({'A67890'})"},
+     'desc': "No parent id: SAMP_ID not in SAMP group (['A67890'])"},
 ]
 
 

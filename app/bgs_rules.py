@@ -257,7 +257,7 @@ def orphans_samp(samp_ids: list, tables: dict, errors: dict) -> dict:
     children = {group: table for group, table in tables.items() if 'SAMP_ID' in table.columns}
     for group, child in children.items():
         child_ids = set(child[child['SAMP_ID'] != '']['SAMP_ID'])
-        if no_parent_ids := child_ids.difference(set(samp_ids)):
+        if no_parent_ids := sorted(list(child_ids.difference(set(samp_ids)))):
             errors.append(
                 {'line': '-', 'group': f'{group}',
                  'desc': f'No parent id: SAMP_ID not in SAMP group ({no_parent_ids})'})
@@ -269,7 +269,7 @@ def orphans_comp(samp_ids: list, tables: dict, errors: dict) -> dict:
                 if {'LOCA_ID', 'SAMP_TOP', 'SAMP_TYPE', 'SAMP_REF'} <= set(table.columns)}
     for group, child in children.items():
         child_ids = set(composite_ids(child))
-        if no_parent_ids := child_ids.difference(set(samp_ids)):
+        if no_parent_ids := sorted(list(child_ids.difference(set(samp_ids)))):
             errors.append(
                 {'line': '-', 'group': f'{group}',
                  'desc': f'No parent id: LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF not in SAMP group ({no_parent_ids})'})
