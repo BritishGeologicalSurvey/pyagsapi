@@ -275,8 +275,9 @@ def check_sample_referencing(tables: dict) -> List[dict]:
         sample = tables['SAMP']
         if all(sample['SAMP_ID'] != ''):
             # All SAMP_ID have a value, check samp_ids only
-            errors = unique_ids(sample['SAMP_ID'], errors)
-            errors = orphans(sample['SAMP_ID'], tables, errors)
+            samp_ids = list(sample['SAMP_ID'])
+            errors = unique_ids(samp_ids, errors)
+            errors = orphans(samp_ids, tables, errors)
         elif all(sample['SAMP_ID'] == ''):
             # No SAMP_ID have a value, check composite ids only
             pass
@@ -286,8 +287,9 @@ def check_sample_referencing(tables: dict) -> List[dict]:
                 errors.append(
                     {'line': '-', 'group': 'SAMP',
                      'desc': 'No sample id: either SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF)'})
-                errors = unique_ids(sample[sample['SAMP_ID'] != '']['SAMP_ID'], errors)
-                errors = orphans(sample[sample['SAMP_ID'] != '']['SAMP_ID'], tables, errors)
+                samp_ids = list(sample[sample['SAMP_ID'] != '']['SAMP_ID'])
+                errors = unique_ids(samp_ids, errors)
+                errors = orphans(samp_ids, tables, errors)
 
     except KeyError:
         # SAMP not present
