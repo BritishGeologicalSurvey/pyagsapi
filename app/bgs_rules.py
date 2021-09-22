@@ -256,20 +256,6 @@ def unique_ids(samp_ids: List[str]) -> List[dict]:
     return errors
 
 
-def orphans_samp(samp_ids: List[str], tables: dict) -> List[dict]:
-    errors = []
-    children = {group: table for group, table in tables.items() if 'SAMP_ID' in table.columns}
-    for group, child in children.items():
-        if group == 'SAMP':
-            continue
-        child_ids = set(child[child['SAMP_ID'] != '']['SAMP_ID'])
-        if no_parent_ids := sorted(list(child_ids.difference(set(samp_ids)))):
-            errors.append(
-                {'line': '-', 'group': f'{group}',
-                 'desc': f'No parent id: SAMP_ID not in SAMP group ({no_parent_ids})'})
-    return errors
-
-
 def orphans_comp(samp_ids: List[str], tables: dict) -> List[dict]:
     errors = []
     children = {group: table for group, table in tables.items()
@@ -285,11 +271,38 @@ def orphans_comp(samp_ids: List[str], tables: dict) -> List[dict]:
     return errors
 
 
+def consistent_pairs(samp_ids: List[str], tables: dict) -> List[dict]:
+    """As a side-effect this allso picks up orphans on SAMP_ID"""
+    errors = []
+    id_map = {samp_id: set() for samp_id in samp_ids}
+    orphans = set()
+    children = {group: table for group, table in tables.items()
+                if {'LOCA_ID', 'SAMP_TOP', 'SAMP_TYPE', 'SAMP_REF', 'SAMP_ID'} <= set(table.columns)}
+    for group, child in children.items():
+        for pair in valid_samp_comp_id_pairs(child):
+            try:
+                id_map[pair[0]].add(pair[1])
+            except KeyError:
+                orphans.add(pair[0])
+        if orphans:
+            errors.append(
+                {'line': '-', 'group': f'{group}',
+                 'desc': f'No parent id: SAMP_ID not in SAMP group ({sorted(list(orphans))})'})
+
+    for samp_id, comp_id in id_map.items():
+        if len(comp_id) > 1:
+            errors.append(
+                {'line': '-', 'group': 'SAMP',
+                 'desc': f'Inconsistent id: SAMP_ID {samp_id} has multiple component ids ({sorted(list(comp_id))})'})
+
+    return errors
+
+
 def composite_ids(df):
-    return list((df['LOCA_ID'] + ',' +
-                 df['SAMP_TOP'].astype(str) + ',' +
-                 df['SAMP_TYPE'] + ',' +
-                 df['SAMP_REF']))
+    return (df['LOCA_ID'] + ',' +
+            df['SAMP_TOP'].astype(str) + ',' +
+            df['SAMP_TYPE'] + ',' +
+            df['SAMP_REF'])
 
 
 def valid_comp_ids(df):
@@ -297,7 +310,17 @@ def valid_comp_ids(df):
                    (df['SAMP_TOP'].notna()) &
                    (df['SAMP_TYPE'] != '') &
                    (df['SAMP_REF'] != '')]
-    return composite_ids(valid_ids)
+    return list(composite_ids(valid_ids))
+
+
+def valid_samp_comp_id_pairs(df):
+    valid_ids = df[(df['LOCA_ID'] != '') &
+                   (df['SAMP_TOP'].notna()) &
+                   (df['SAMP_TYPE'] != '') &
+                   (df['SAMP_REF'] != '') &
+                   (df['SAMP_ID'] != '')]
+    pairs = list(zip(valid_ids['SAMP_ID'], composite_ids(valid_ids)))
+    return pairs
 
 
 def check_sample_referencing(tables: dict) -> List[dict]:
@@ -313,7 +336,7 @@ def check_sample_referencing(tables: dict) -> List[dict]:
             # All SAMP_ID have a value, check samp_ids only
             samp_ids = list(sample['SAMP_ID'])
             errors.extend(unique_ids(samp_ids))
-            errors.extend(orphans_samp(samp_ids, tables))
+            errors.extend(consistent_pairs(samp_ids, tables))
         elif all(sample['SAMP_ID'] == ''):
             # No SAMP_ID have a value, check composite ids only
             samp_ids = valid_comp_ids(sample)
@@ -334,7 +357,7 @@ def check_sample_referencing(tables: dict) -> List[dict]:
             errors.extend(unique_ids(comp_ids))
             errors.extend(orphans_comp(comp_ids, tables))
             errors.extend(unique_ids(samp_ids))
-            errors.extend(orphans_samp(samp_ids, tables))
+            errors.extend(consistent_pairs(samp_ids, tables))
 
     except KeyError:
         # SAMP not present

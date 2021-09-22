@@ -32,6 +32,9 @@ BGS_RULES_ERRORS = {
          'desc': "Duplicate sample id: SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF) must be unique"},
         {'line': '-', 'group': 'CONG',
          'desc': "No parent id: SAMP_ID not in SAMP group (['A67890'])"},
+        {'line': '-', 'group': 'SAMP',
+         'desc': ("Inconsistent id: SAMP_ID A12345 has multiple component ids "
+                  "(['327-16B,24.55,U,24', '327-16C,24.55,U,24'])")},
     ],
     'sample_referencing_comp_ids.ags': [
         {'line': '-', 'group': 'SAMP',
