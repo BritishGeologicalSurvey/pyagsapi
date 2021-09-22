@@ -5,6 +5,10 @@ python-multipart==0.0.5
 colorlog==5.0.1
 shortuuid==1.0.1
 Jinja2==3.0.1
+Fiona==1.8.20
+Shapely==1.7.1
+pyproj==3.2.1
+geopandas==0.9.0
 # These libraries are already in FastAPI container but need updated
 fastapi==0.68.0
 uvicorn==0.15.0
