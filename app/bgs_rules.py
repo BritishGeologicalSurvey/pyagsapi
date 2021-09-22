@@ -298,6 +298,13 @@ def consistent_pairs(samp_ids: List[str], tables: dict) -> List[dict]:
     return errors
 
 
+def valid_ids(df):
+    return df[(df['LOCA_ID'] != '') &
+              (df['SAMP_TOP'].notna()) &
+              (df['SAMP_TYPE'] != '') &
+              (df['SAMP_REF'] != '')]
+
+
 def composite_ids(df):
     return (df['LOCA_ID'] + ',' +
             df['SAMP_TOP'].astype(str) + ',' +
@@ -306,20 +313,13 @@ def composite_ids(df):
 
 
 def valid_comp_ids(df):
-    valid_ids = df[(df['LOCA_ID'] != '') &
-                   (df['SAMP_TOP'].notna()) &
-                   (df['SAMP_TYPE'] != '') &
-                   (df['SAMP_REF'] != '')]
-    return list(composite_ids(valid_ids))
+    return list(composite_ids(valid_ids(df)))
 
 
 def valid_samp_comp_id_pairs(df):
-    valid_ids = df[(df['LOCA_ID'] != '') &
-                   (df['SAMP_TOP'].notna()) &
-                   (df['SAMP_TYPE'] != '') &
-                   (df['SAMP_REF'] != '') &
-                   (df['SAMP_ID'] != '')]
-    pairs = list(zip(valid_ids['SAMP_ID'], composite_ids(valid_ids)))
+    ids = valid_ids(df)
+    ids = ids[ids['SAMP_ID'] != '']
+    pairs = list(zip(ids['SAMP_ID'], composite_ids(ids)))
     return pairs
 
 
