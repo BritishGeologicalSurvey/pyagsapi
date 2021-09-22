@@ -291,7 +291,7 @@ def valid_comp_ids(df):
     valid_ids = df[(df['LOCA_ID'] != '') &
                    (df['SAMP_TOP'].notna()) &
                    (df['SAMP_TYPE'] != '') &
-                   (df['SAMP_REF'] != '')][['LOCA_ID', 'SAMP_TOP', 'SAMP_TYPE', 'SAMP_REF']]
+                   (df['SAMP_REF'] != '')]
     return composite_ids(valid_ids)
 
 
