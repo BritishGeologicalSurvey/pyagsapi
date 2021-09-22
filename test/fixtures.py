@@ -25,3 +25,34 @@ DICTIONARIES = {
     'v4_0_4': "Standard_dictionary_v4_0_4.ags",
     'v4_1': "Standard_dictionary_v4_1.ags"
 }
+
+BGS_RULES_ERRORS = {
+    'sample_referencing_samp_ids.ags': [
+        {'line': '-', 'group': 'SAMP',
+         'desc': "Duplicate sample id: SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF) must be unique"},
+        {'line': '-', 'group': 'CONG',
+         'desc': "No parent id: SAMP_ID not in SAMP group (['A67890'])"},
+    ],
+    'sample_referencing_comp_ids.ags': [
+        {'line': '-', 'group': 'SAMP',
+         'desc': "No sample id: either SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF)"},
+        {'line': '-', 'group': 'SAMP',
+         'desc': "Duplicate sample id: SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF) must be unique"},
+        {'line': '-', 'group': 'CONG',
+         'desc': ("No parent id: LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF not in SAMP group "
+                  "(['CBH03,9.9,U,36', 'CBH03,nan,,'])")},
+    ],
+    'sample_referencing_mix_ids.ags': [
+        {'line': '-', 'group': 'SAMP',
+         'desc': "No sample id: either SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF)"},
+        {'line': '-', 'group': 'SAMP',
+         'desc': "Duplicate sample id: SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF) must be unique"},
+        {'line': '-', 'group': 'CONG',
+         'desc': ("No parent id: LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF not in SAMP group "
+                  "(['327-16C,24.55,U,24', '327-16D,24.55,U,24'])")},
+        {'line': '-', 'group': 'SAMP',
+         'desc': "Duplicate sample id: SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF) must be unique"},
+        {'line': '-', 'group': 'CONG',
+         'desc': "No parent id: SAMP_ID not in SAMP group (['A67890'])"},
+    ]
+}

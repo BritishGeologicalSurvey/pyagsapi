@@ -5,6 +5,7 @@ import pytest
 
 from app.bgs_rules import BGS_RULES
 from app.checkers import load_AGS4_as_numeric
+from test.fixtures import BGS_RULES_ERRORS
 
 TEST_FILE_DIR = Path(__file__).parent.parent / 'files'
 
@@ -159,41 +160,10 @@ def test_loca_locx_is_not_duplicate_of_other_column():
     errors = BGS_RULES['LOCA_LOCX is not duplicate of other column'](tables)
 
 
-samp_ids_expected = [
-    {'line': '-', 'group': 'SAMP',
-     'desc': "Duplicate sample id: SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF) must be unique"},
-    {'line': '-', 'group': 'CONG',
-     'desc': "No parent id: SAMP_ID not in SAMP group (['A67890'])"},
-]
-
-comp_ids_expected = [
-    {'line': '-', 'group': 'SAMP',
-     'desc': "No sample id: either SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF)"},
-    {'line': '-', 'group': 'SAMP',
-     'desc': "Duplicate sample id: SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF) must be unique"},
-    {'line': '-', 'group': 'CONG',
-     'desc': "No parent id: LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF not in SAMP group (['CBH03,9.9,U,36', 'CBH03,nan,,'])"},
-]
-
-mix_ids_expected = [
-    {'line': '-', 'group': 'SAMP',
-     'desc': "No sample id: either SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF)"},
-    {'line': '-', 'group': 'SAMP',
-     'desc': "Duplicate sample id: SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF) must be unique"},
-    {'line': '-', 'group': 'CONG',
-     'desc': ("No parent id: LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF not in SAMP group "
-              "(['327-16C,24.55,U,24', '327-16D,24.55,U,24'])")},
-    {'line': '-', 'group': 'SAMP',
-     'desc': "Duplicate sample id: SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF) must be unique"},
-    {'line': '-', 'group': 'CONG',
-     'desc': "No parent id: SAMP_ID not in SAMP group (['A67890'])"},
-]
-
-
 @pytest.mark.parametrize('filename, expected', [
-    ('sample_referencing_samp_ids.ags', samp_ids_expected),
-    ('sample_referencing_comp_ids.ags', comp_ids_expected),
-    ('sample_referencing_mix_ids.ags', mix_ids_expected),
+    ('sample_referencing_samp_ids.ags', BGS_RULES_ERRORS['sample_referencing_samp_ids.ags']),
+    ('sample_referencing_comp_ids.ags', BGS_RULES_ERRORS['sample_referencing_comp_ids.ags']),
+    ('sample_referencing_mix_ids.ags', BGS_RULES_ERRORS['sample_referencing_mix_ids.ags']),
 ])
 def test_sample_referential_integrity(filename, expected):
     # Arrange
