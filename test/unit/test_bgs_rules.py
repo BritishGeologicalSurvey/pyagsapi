@@ -159,6 +159,8 @@ def test_loca_locx_is_not_duplicate_of_other_column():
 
     errors = BGS_RULES['LOCA_LOCX is not duplicate of other column'](tables)
 
+    assert errors == expected
+
 
 @pytest.mark.parametrize('filename, expected', [
     ('sample_referencing_samp_ids.ags', BGS_RULES_ERRORS['sample_referencing_samp_ids.ags']),

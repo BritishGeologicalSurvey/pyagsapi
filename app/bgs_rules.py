@@ -244,6 +244,8 @@ def check_locx_is_not_duplicate_of_other_column(tables: dict) -> List[dict]:
         # LOCA not present, already checked in earlier rule
         errors = []
 
+    return errors
+
 
 def unique_ids(samp_ids: List[str]) -> List[dict]:
     errors = []
