@@ -35,6 +35,9 @@ BGS_RULES_ERRORS = {
         {'line': '-', 'group': 'SAMP',
          'desc': ("Inconsistent id: SAMP_ID A12345 has multiple component ids "
                   "(['327-16B,24.55,U,24', '327-16C,24.55,U,24'])")},
+        {'line': '-', 'group': 'SAMP',
+         'desc': ("Inconsistent id: SAMP_ID A98765 has multiple component ids "
+                  "(['327-16E,24.55,B,24', '327-16E,24.55,U,24'])")},
     ],
     'sample_referencing_comp_ids.ags': [
         {'line': '-', 'group': 'SAMP',
