@@ -5,6 +5,7 @@ from typing import List
 from shapely.geometry import Point
 from pyproj.transformer import Transformer
 import geopandas as gpd
+import pandas as pd
 
 """
 The gb_outline.geojson file contains public sector information licensed under
@@ -247,125 +248,6 @@ def check_locx_is_not_duplicate_of_other_column(tables: dict) -> List[dict]:
     return errors
 
 
-def unique_ids(samp_ids: List[str]) -> List[dict]:
-    errors = []
-    if len(samp_ids) > len(set(samp_ids)):
-        errors.append(
-            {'line': '-', 'group': 'SAMP',
-             'desc': 'Duplicate sample id: SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF) must be unique'})
-    return errors
-
-
-def orphans_comp(samp_ids: List[str], tables: dict) -> List[dict]:
-    errors = []
-    children = {group: table for group, table in tables.items()
-                if {'LOCA_ID', 'SAMP_TOP', 'SAMP_TYPE', 'SAMP_REF'} <= set(table.columns)}
-    for group, child in children.items():
-        if group == 'SAMP':
-            continue
-        child_ids = set(composite_ids(child))
-        if no_parent_ids := sorted(list(child_ids.difference(set(samp_ids)))):
-            errors.append(
-                {'line': '-', 'group': f'{group}',
-                 'desc': f'No parent id: LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF not in SAMP group ({no_parent_ids})'})
-    return errors
-
-
-def consistent_pairs(samp_ids: List[str], tables: dict) -> List[dict]:
-    """As a side-effect this allso picks up orphans on SAMP_ID"""
-    errors = []
-    id_map = {samp_id: set() for samp_id in samp_ids}
-    orphans = set()
-    children = {group: table for group, table in tables.items()
-                if {'LOCA_ID', 'SAMP_TOP', 'SAMP_TYPE', 'SAMP_REF', 'SAMP_ID'} <= set(table.columns)}
-    for group, child in children.items():
-        for pair in valid_samp_comp_id_pairs(child):
-            try:
-                id_map[pair[0]].add(pair[1])
-            except KeyError:
-                orphans.add(pair[0])
-        if orphans:
-            errors.append(
-                {'line': '-', 'group': f'{group}',
-                 'desc': f'No parent id: SAMP_ID not in SAMP group ({sorted(list(orphans))})'})
-
-    for samp_id, comp_id in id_map.items():
-        if len(comp_id) > 1:
-            errors.append(
-                {'line': '-', 'group': 'SAMP',
-                 'desc': f'Inconsistent id: SAMP_ID {samp_id} has multiple component ids ({sorted(list(comp_id))})'})
-
-    return errors
-
-
-def valid_ids(df):
-    return df[(df['LOCA_ID'] != '') &
-              (df['SAMP_TOP'].notna()) &
-              (df['SAMP_TYPE'] != '') &
-              (df['SAMP_REF'] != '')]
-
-
-def composite_ids(df):
-    return (df['LOCA_ID'] + ',' +
-            df['SAMP_TOP'].astype(str) + ',' +
-            df['SAMP_TYPE'] + ',' +
-            df['SAMP_REF'])
-
-
-def valid_comp_ids(df):
-    return list(composite_ids(valid_ids(df)))
-
-
-def valid_samp_comp_id_pairs(df):
-    ids = valid_ids(df)
-    ids = ids[ids['SAMP_ID'] != '']
-    pairs = list(zip(ids['SAMP_ID'], composite_ids(ids)))
-    return pairs
-
-
-def check_sample_referencing(tables: dict) -> List[dict]:
-    """If a SAMP group exists it must:
-        - have an identifier SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF)
-        - all identifiers must be unique
-        - for any children of SAMP, child IDs must appear in SAMP group
-    """
-    errors = []
-    try:
-        sample = tables['SAMP']
-        if all(sample['SAMP_ID'] != ''):
-            # All SAMP_ID have a value, check samp_ids only
-            samp_ids = list(sample['SAMP_ID'])
-            errors.extend(unique_ids(samp_ids))
-            errors.extend(consistent_pairs(samp_ids, tables))
-        elif all(sample['SAMP_ID'] == ''):
-            # No SAMP_ID have a value, check composite ids only
-            samp_ids = valid_comp_ids(sample)
-            if len(samp_ids) < len(sample):
-                errors.append(
-                    {'line': '-', 'group': 'SAMP',
-                     'desc': 'No sample id: either SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF)'})
-            errors.extend(unique_ids(samp_ids))
-            errors.extend(orphans_comp(samp_ids, tables))
-        else:
-            # Some SAMP_ID have a value, check both types of id
-            samp_ids = list(sample[sample['SAMP_ID'] != '']['SAMP_ID'])
-            comp_ids = valid_comp_ids(sample[sample['SAMP_ID'] == ''])
-            if len(samp_ids) + len(comp_ids) < len(sample):
-                errors.append(
-                    {'line': '-', 'group': 'SAMP',
-                     'desc': 'No sample id: either SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF)'})
-            errors.extend(unique_ids(comp_ids))
-            errors.extend(orphans_comp(comp_ids, tables))
-            errors.extend(unique_ids(samp_ids))
-            errors.extend(consistent_pairs(samp_ids, tables))
-
-    except KeyError:
-        # SAMP not present
-        pass
-
-    return errors
-
-
 def check_loca_id_references_are_valid(tables: dict) -> List[dict]:
     """Groups that have LOCA_ID column have populated it with valid record"""
     errors = []
@@ -404,6 +286,89 @@ def check_loca_id_references_are_valid(tables: dict) -> List[dict]:
     return errors
 
 
+def check_sample_referencing(tables: dict) -> List[dict]:
+    """If a SAMP group exists it must:
+        - have an identifier SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF)
+        - all identifiers must be unique
+        - for any children of SAMP, child IDs must appear in SAMP group
+    """
+
+    def id_pair(row):
+        samp_id = None
+        if 'SAMP_ID' in row.keys() and row['SAMP_ID'] != '':
+            samp_id = row['SAMP_ID']
+
+        comp_id = None
+        if ({'LOCA_ID', 'SAMP_TOP', 'SAMP_TYPE', 'SAMP_REF'} <= set(row.keys()) and
+                (row['LOCA_ID'] != '' and row['SAMP_TOP'] is not None and
+                 row['SAMP_TYPE'] != '' and row['SAMP_REF'] != '')):
+            comp_id = f"{row['LOCA_ID']},{row['SAMP_TOP']},{row['SAMP_TYPE']},{row['SAMP_REF']}"
+        return pd.Series([samp_id, comp_id])
+
+    def orphans(samp_ids, tables: dict) -> List[dict]:
+        errors = []
+        children = [group for group in tables.keys()
+                    if ('SAMP_ID' in tables[group].columns
+                        or {'LOCA_ID', 'SAMP_TOP', 'SAMP_TYPE', 'SAMP_REF'} <= set(tables[group].columns))
+                    and group != 'SAMP']
+
+        for group in children:
+            child_id_pairs = tables[group].apply(id_pair, axis=1)
+            child_id_pairs.columns = ['samp_id', 'comp_id']
+
+            # Remove null pairs, fill blank sample ids with composite ids and remove duplicates
+            child_id_pairs = child_id_pairs[child_id_pairs.notna().any(axis=1)]
+            child_id_pairs['samp_id'].fillna(child_id_pairs['comp_id'], inplace=True)
+            child_id_pairs = child_id_pairs[~ child_id_pairs['samp_id'].duplicated()]
+
+            if no_parent_ids := sorted(list(set(child_id_pairs['samp_id']).difference(set(samp_ids)))):
+                errors.append(
+                    {'line': '-', 'group': f'{group}',
+                     'desc': (f'No parent id: SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF) '
+                              f'not in SAMP group ({no_parent_ids})')})
+        return errors
+
+    # Check data
+    errors = []
+    try:
+        sample = tables['SAMP']
+        samp_id_pairs = sample.apply(id_pair, axis=1)
+        samp_id_pairs.columns = ['samp_id', 'comp_id']
+
+        # Check for missing IDs
+        for row_id in samp_id_pairs[samp_id_pairs.isna().all(axis=1)].index.to_list():
+            errors.append(
+                {'line': '-', 'group': 'SAMP',
+                 'desc': f"Record {row_id + 1} is missing either SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF)"})
+
+        #  Remove null pairs and fill blank sample ids with composite ids
+        samp_id_pairs = samp_id_pairs[samp_id_pairs.notna().any(axis=1)]
+        samp_id_pairs['samp_id'].fillna(samp_id_pairs['comp_id'], inplace=True)
+
+        # Check for duplicate IDs
+        for samp_id in sorted(list(set(samp_id_pairs[samp_id_pairs['samp_id'].duplicated()]['samp_id']))):
+            errors.append(
+                {'line': '-', 'group': 'SAMP',
+                 'desc': (f'Duplicate sample id {samp_id}: SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF) '
+                          f'must be unique')})
+        # remove duplicate ids
+        samp_id_pairs = samp_id_pairs[~ samp_id_pairs['samp_id'].duplicated()]
+
+        # Check for inconsistent IDs
+        for samp_id in samp_id_pairs[samp_id_pairs['comp_id'].duplicated()]['samp_id']:
+            errors.append(
+                {'line': '-', 'group': 'SAMP',
+                 'desc': f'Inconsistent id {samp_id}: references duplicate component data'})
+
+        errors.extend(orphans(samp_id_pairs['samp_id'], tables))
+
+    except KeyError:
+        # SAMP not present
+        pass
+
+    return errors
+
+
 BGS_RULES = {
     'Required Groups': check_required_groups,
     'Required BGS Groups': check_required_bgs_groups,
@@ -414,9 +379,6 @@ BGS_RULES = {
     'Drill Depth GEOL Record': check_drill_depth_geol_record,
     'LOCA within Great Britain': check_loca_within_great_britain,
     'LOCA_LOCX is not duplicate of other column': check_locx_is_not_duplicate_of_other_column,
-<<<<<<< HEAD
     'LOCA_ID references': check_loca_id_references_are_valid,
-=======
     'Sample Referencing': check_sample_referencing,
->>>>>>> Add basic function and failing test
 }

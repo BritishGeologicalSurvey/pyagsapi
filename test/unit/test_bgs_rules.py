@@ -162,21 +162,6 @@ def test_loca_locx_is_not_duplicate_of_other_column():
     assert errors == expected
 
 
-@pytest.mark.parametrize('filename, expected', [
-    ('sample_referencing_samp_ids.ags', BGS_RULES_ERRORS['sample_referencing_samp_ids.ags']),
-    ('sample_referencing_comp_ids.ags', BGS_RULES_ERRORS['sample_referencing_comp_ids.ags']),
-    ('sample_referencing_mix_ids.ags', BGS_RULES_ERRORS['sample_referencing_mix_ids.ags']),
-])
-def test_sample_referential_integrity(filename, expected):
-    # Arrange
-    filename = TEST_FILE_DIR / 'bgs_rules' / filename
-    tables, _ = load_AGS4_as_numeric(filename)
-
-    errors = BGS_RULES['Sample Referencing'](tables)
-
-    assert errors == expected
-
-
 def test_loca_references_are_valid():
     # Arrange
     filename = TEST_FILE_DIR / 'bgs_rules' / 'loca_references_are_valid.ags'
@@ -191,5 +176,20 @@ def test_loca_references_are_valid():
     tables, _ = load_AGS4_as_numeric(filename)
 
     errors = BGS_RULES['LOCA_ID references'](tables)
+
+    assert errors == expected
+
+
+@pytest.mark.parametrize('filename, expected', [
+    ('sample_referencing_samp_ids.ags', BGS_RULES_ERRORS['sample_referencing_samp_ids.ags']),
+    ('sample_referencing_comp_ids.ags', BGS_RULES_ERRORS['sample_referencing_comp_ids.ags']),
+    ('sample_referencing_mix_ids.ags', BGS_RULES_ERRORS['sample_referencing_mix_ids.ags']),
+])
+def test_sample_referential_integrity(filename, expected):
+    # Arrange
+    filename = TEST_FILE_DIR / 'bgs_rules' / filename
+    tables, _ = load_AGS4_as_numeric(filename)
+
+    errors = BGS_RULES['Sample Referencing'](tables)
 
     assert errors == expected
