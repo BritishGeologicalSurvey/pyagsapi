@@ -157,3 +157,21 @@ def test_loca_locx_is_not_duplicate_of_other_column():
     errors = BGS_RULES['LOCA_LOCX is not duplicate of other column'](tables)
 
     assert errors == expected
+
+
+def test_loca_references_are_valid():
+    # Arrange
+    filename = TEST_FILE_DIR / 'bgs_rules' / 'loca_references_are_valid.ags'
+    expected = [
+        {'desc': 'Record 2 has missing LOCA_ID',
+         'group': 'HDPH',
+         'line': '-'},
+        {'desc': 'LOCA_ID (Sydney) is not found in LOCA group',
+         'group': 'SAMP',
+         'line': '-'},
+    ]
+    tables, _ = load_AGS4_as_numeric(filename)
+
+    errors = BGS_RULES['LOCA_ID references'](tables)
+
+    assert errors == expected

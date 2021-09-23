@@ -247,6 +247,44 @@ def check_locx_is_not_duplicate_of_other_column(tables: dict) -> List[dict]:
     return errors
 
 
+def check_loca_id_references_are_valid(tables: dict) -> List[dict]:
+    """Groups that have LOCA_ID column have populated it with valid record"""
+    errors = []
+    # Extract IDs from LOCA table
+    try:
+        loca_ids = tables['LOCA']['LOCA_ID'].unique()
+    except KeyError:
+        # LOCA not present, already checked in earlier rule
+        return errors
+
+    tables_referencing_loca = [table_name for table_name in tables.keys()
+                               if 'LOCA_ID' in tables[table_name].columns
+                               and table_name != 'LOCA']
+
+    # Check each table for valid references
+    for table in tables_referencing_loca:
+        # define check function here because value of `table` changes.
+        def check_loca_references(row):
+            # table, loca_ids are taken from enclosing scope
+            if not row['LOCA_ID']:
+                # Record number is 0-indexed in name column
+                error = {'line': '-', 'group': table,
+                         'desc': f'Record {row.name + 1} has missing LOCA_ID'}
+            elif row['LOCA_ID'] not in loca_ids:
+                error = {'line': '-', 'group': table,
+                         'desc': f'LOCA_ID ({row["LOCA_ID"]}) is not found in LOCA group'}
+            else:
+                error = None
+
+            return error
+
+        # Run check and add result to error list
+        result = tables[table].apply(check_loca_references, axis=1)
+        errors.extend(result[result.notnull()].to_list())
+
+    return errors
+
+
 BGS_RULES = {
     'Required Groups': check_required_groups,
     'Required BGS Groups': check_required_bgs_groups,
@@ -257,4 +295,5 @@ BGS_RULES = {
     'Drill Depth GEOL Record': check_drill_depth_geol_record,
     'LOCA within Great Britain': check_loca_within_great_britain,
     'LOCA_LOCX is not duplicate of other column': check_locx_is_not_duplicate_of_other_column,
+    'LOCA_ID references': check_loca_id_references_are_valid,
 }
