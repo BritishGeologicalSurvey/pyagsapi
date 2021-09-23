@@ -9,7 +9,8 @@ JSON_RESPONSES = {
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
         'message': 'All checks passed!',
         'errors': {},
-        'valid': True
+        'valid': True,
+        'additional_metadata': {}
     },
     'nonsense.ags': {
         'filename': 'nonsense.ags',
@@ -32,7 +33,8 @@ JSON_RESPONSES = {
             'Rule 14': [{'line': '-', 'group': 'TRAN', 'desc': 'TRAN table not found.'}],
             'Rule 15': [{'line': '-', 'group': 'UNIT', 'desc': 'UNIT table not found.'}],
             'Rule 17': [{'line': '-', 'group': 'TYPE', 'desc': 'TYPE table not found.'}]},
-        'valid': False
+        'valid': False,
+        'additional_metadata': {}
     },
     'random_binary.ags': {
         'filename': 'random_binary.ags',
@@ -45,7 +47,8 @@ JSON_RESPONSES = {
             'File read error': [{'line': 1,
                                  'group': '',
                                  'desc': 'UnicodeDecodeError: invalid continuation byte'}]},
-        'valid': False
+        'valid': False,
+        'additional_metadata': {}
     },
     'real/CG014058_F.ags': {
         'filename': 'CG014058_F.ags',
@@ -58,7 +61,8 @@ JSON_RESPONSES = {
             'File read error': [{'line': 263,
                                  'group': '',
                                  'desc': 'UnicodeDecodeError: invalid continuation byte'}]},
-        'valid': False
+        'valid': False,
+        'additional_metadata': {}
     },
     'real/Blackburn Southern Bypass.ags': {
         'filename': 'Blackburn Southern Bypass.ags',
@@ -345,7 +349,8 @@ JSON_RESPONSES = {
              'Rule 5': [{'desc': 'Contains fields that are not enclosed in double quotes.',
                          'group': '',
                          'line': 1}]},
-        'valid': False
+        'valid': False,
+        'additional_metadata': {}
     },
     'real/A3040_03.ags': {
         'filename': 'A3040_03.ags',
@@ -21102,7 +21107,9 @@ JSON_RESPONSES = {
                                  'double quotes.',
                          'group': '',
                          'line': 2081}]},
-        'valid': False},
+        'valid': False,
+        'additional_metadata': {}
+    },
     'extension_is.bad': {
         'filename': 'extension_is.bad',
         'filesize': 0,
@@ -21112,7 +21119,8 @@ JSON_RESPONSES = {
         'message': '1 error(s) found in file!',
         'errors': {'File read error': [
              {'line': '-', 'group': '', 'desc': 'extension_is.bad is not an .ags file'}]},
-        'valid': False
+        'valid': False,
+        'additional_metadata': {}
     },
 }
 
@@ -21130,7 +21138,8 @@ BROKEN_JSON_RESPONSES = [
                          'group': '',
                          'desc': ''}],
         },
-        'valid': False
+        'valid': False,
+        'additional_metadata': {}
     },
     {
         'filename': 'nonsense.ags',
@@ -21144,6 +21153,7 @@ BROKEN_JSON_RESPONSES = [
                         'group': '',
                         'desc': ''}],
         },
-        'valid': False
+        'valid': False,
+        'additional_metadata': {}
     },
 ]

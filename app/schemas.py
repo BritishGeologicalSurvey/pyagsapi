@@ -39,6 +39,7 @@ class Validation(BaseModel):
     message: str = Field(None, example="7 error(s) found in file!")
     errors: Dict[str, List[LineError]] = Field(..., example="Rule 1a")
     valid: bool = Field(..., example='false')
+    additional_metadata: dict = Field(...)
 
     @validator('errors')
     def errors_keys_must_be_known_rules(cls, errors):

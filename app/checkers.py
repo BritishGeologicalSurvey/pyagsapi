@@ -45,6 +45,7 @@ def check_bgs(filename: Path, **kwargs) -> dict:
     """
     errors = {}
     error_message = None
+    bgs_metadata = {}
 
     try:
         # Try to load and convert the file
@@ -63,13 +64,23 @@ def check_bgs(filename: Path, **kwargs) -> dict:
     if error_message:
         errors['File read error'] = [{'line': '-', 'group': '', 'desc': error_message}]
     else:
+        # Create additional metadata using bgs prefix
+        proj_rows = len(tables['PROJ'][tables['PROJ']['HEADING'] == 'DATA']) if 'PROJ' in headers else 0
+        loca_rows = len(tables['LOCA'][tables['LOCA']['HEADING'] == 'DATA']) if 'LOCA' in headers else 0
+        bgs_metadata = {
+            'bgs_groups': f'{len(headers)} groups identified in file',
+            'bgs_proj_rows': f'{proj_rows} data rows in PROJ group',
+            'bgs_loca_rows': f'{loca_rows} data rows in LOCA group',
+        }
+
         for rule, func in BGS_RULES.items():
             result = func(tables)
             if result:
                 errors[rule] = result
 
     return dict(checker=f'bgs_rules v{bgs_rules_version}',
-                errors=errors)
+                errors=errors,
+                additional_metadata=bgs_metadata)
 
 
 def load_AGS4_as_numeric(filename: Path) -> Tuple[dict, dict]:

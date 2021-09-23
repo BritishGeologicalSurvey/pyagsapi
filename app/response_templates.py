@@ -14,7 +14,9 @@ Checkers: {{ checkers }}
 Dictionary: {{ dictionary }}
 {%- endif %}
 Time: {{ time }}
-
+{% for key, value in additional_metadata.items() -%}
+{{value}}
+{% endfor %}
 {% if not valid -%}
 # Errors
 
