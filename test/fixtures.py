@@ -45,6 +45,8 @@ BGS_RULES_ERRORS = {
         {'line': '-', 'group': 'SAMP',
          'desc': "Duplicate sample id CBH01,6.8,B,10: SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF) must be unique"},
         {'line': '-', 'group': 'CONG',
+         'desc': "Record 3 is missing either SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF)"},
+        {'line': '-', 'group': 'CONG',
          'desc': ("No parent id: SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF) not in SAMP group "
                   "(['CBH03,9.9,U,36'])")},
     ],
@@ -56,6 +58,8 @@ BGS_RULES_ERRORS = {
                   "must be unique")},
         {'line': '-', 'group': 'SAMP',
          'desc': "Duplicate sample id A12345: SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF) must be unique"},
+        {'line': '-', 'group': 'CONG',
+         'desc': "Inconsistent id A67890: references duplicate component data"},
         {'line': '-', 'group': 'CONG',
          'desc': ("No parent id: SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF) not in SAMP group "
                   "(['327-16D,24.55,U,24', 'A67890'])")},

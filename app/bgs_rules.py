@@ -305,7 +305,7 @@ def check_sample_referencing(tables: dict) -> List[dict]:
             comp_id = f"{row['LOCA_ID']},{row['SAMP_TOP']},{row['SAMP_TYPE']},{row['SAMP_REF']}"
         return pd.Series([samp_id, comp_id])
 
-    def orphans(samp_ids, tables: dict) -> List[dict]:
+    def child_consistency(samp_ids, tables: dict) -> List[dict]:
         errors = []
         children = [group for group in tables.keys()
                     if ('SAMP_ID' in tables[group].columns
@@ -315,12 +315,7 @@ def check_sample_referencing(tables: dict) -> List[dict]:
         for group in children:
             child_id_pairs = tables[group].apply(id_pair, axis=1)
             child_id_pairs.columns = ['samp_id', 'comp_id']
-
-            # Remove null pairs, fill blank sample ids with composite ids and remove duplicates
-            child_id_pairs = child_id_pairs[child_id_pairs.notna().any(axis=1)]
-            child_id_pairs['samp_id'].fillna(child_id_pairs['comp_id'], inplace=True)
-            child_id_pairs = child_id_pairs[~ child_id_pairs['samp_id'].duplicated()]
-
+            errors, child_id_pairs = internal_consistency(group, child_id_pairs)
             if no_parent_ids := sorted(list(set(child_id_pairs['samp_id']).difference(set(samp_ids)))):
                 errors.append(
                     {'line': '-', 'group': f'{group}',
@@ -328,43 +323,46 @@ def check_sample_referencing(tables: dict) -> List[dict]:
                               f'not in SAMP group ({no_parent_ids})')})
         return errors
 
+    def internal_consistency(group, id_pairs):
+        errors = []
+
+        # Check for missing IDs
+        for row_id in id_pairs[id_pairs.isna().all(axis=1)].index.to_list():
+            errors.append(
+                {'line': '-', 'group': f'{group}',
+                 'desc': f"Record {row_id + 1} is missing either SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF)"})
+
+        #  Remove null pairs and fill blank sample ids with composite ids
+        id_pairs = id_pairs[id_pairs.notna().any(axis=1)]
+        id_pairs['samp_id'].fillna(id_pairs['comp_id'], inplace=True)
+
+        # Check for duplicate IDs
+        for samp_id in sorted(list(set(id_pairs[id_pairs['samp_id'].duplicated()]['samp_id']))):
+            errors.append(
+                {'line': '-', 'group': f'{group}',
+                 'desc': (f'Duplicate sample id {samp_id}: SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF) '
+                          f'must be unique')})
+        # remove duplicate ids
+        id_pairs = id_pairs[~ id_pairs['samp_id'].duplicated()]
+
+        # Check for inconsistent IDs
+        for samp_id in id_pairs[id_pairs['comp_id'].duplicated()]['samp_id']:
+            errors.append(
+                {'line': '-', 'group': f'{group}',
+                 'desc': f'Inconsistent id {samp_id}: references duplicate component data'})
+
+        return errors, id_pairs
+
     # Check data
-    errors = []
     try:
         sample = tables['SAMP']
         samp_id_pairs = sample.apply(id_pair, axis=1)
         samp_id_pairs.columns = ['samp_id', 'comp_id']
-
-        # Check for missing IDs
-        for row_id in samp_id_pairs[samp_id_pairs.isna().all(axis=1)].index.to_list():
-            errors.append(
-                {'line': '-', 'group': 'SAMP',
-                 'desc': f"Record {row_id + 1} is missing either SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF)"})
-
-        #  Remove null pairs and fill blank sample ids with composite ids
-        samp_id_pairs = samp_id_pairs[samp_id_pairs.notna().any(axis=1)]
-        samp_id_pairs['samp_id'].fillna(samp_id_pairs['comp_id'], inplace=True)
-
-        # Check for duplicate IDs
-        for samp_id in sorted(list(set(samp_id_pairs[samp_id_pairs['samp_id'].duplicated()]['samp_id']))):
-            errors.append(
-                {'line': '-', 'group': 'SAMP',
-                 'desc': (f'Duplicate sample id {samp_id}: SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF) '
-                          f'must be unique')})
-        # remove duplicate ids
-        samp_id_pairs = samp_id_pairs[~ samp_id_pairs['samp_id'].duplicated()]
-
-        # Check for inconsistent IDs
-        for samp_id in samp_id_pairs[samp_id_pairs['comp_id'].duplicated()]['samp_id']:
-            errors.append(
-                {'line': '-', 'group': 'SAMP',
-                 'desc': f'Inconsistent id {samp_id}: references duplicate component data'})
-
-        errors.extend(orphans(samp_id_pairs['samp_id'], tables))
-
+        errors, samp_id_pairs = internal_consistency('SAMP', samp_id_pairs)
+        errors.extend(child_consistency(samp_id_pairs['samp_id'], tables))
     except KeyError:
         # SAMP not present
-        pass
+        errors = []
 
     return errors
 
