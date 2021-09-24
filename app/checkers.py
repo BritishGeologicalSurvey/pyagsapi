@@ -4,7 +4,8 @@ to do with opening the files.
 """
 import logging
 from pathlib import Path
-from typing import Tuple, Optional, Dict
+import re
+from typing import Tuple, Optional, Dict, List
 
 import python_ags4
 from python_ags4 import AGS4
@@ -48,8 +49,9 @@ def check_bgs(filename: Path, **kwargs) -> dict:
     bgs_metadata = {}
 
     try:
-        # Try to load and convert the file
-        tables, headers = load_AGS4_as_numeric(filename)
+        # Try to load and convert the file.  Coordinate type errors replace
+        # empty dictionary from outer scope
+        tables, headers, errors = load_AGS4_as_numeric(filename)
     except UnboundLocalError:
         # This error is thrown in response to a bug in the upstream code,
         # which in turn is only triggered if the AGS file has duplicate
@@ -101,16 +103,19 @@ def generate_bgs_metadata(tables: Dict[str, pd.DataFrame]) -> dict:
     return bgs_metadata
 
 
-def load_AGS4_as_numeric(filename: Path) -> Tuple[dict, dict]:
+def load_AGS4_as_numeric(filename: Path) -> Tuple[dict, dict, List[dict]]:
     """Read AGS4 file and convert to numeric data types."""
     tables, headings = AGS4.AGS4_to_dataframe(filename)
+
+    # Check the TYPE of coordinate in LOCA
+    coord_columns = ['LOCA_NATE', 'LOCA_NATN', 'LOCA_LOCX', 'LOCA_LOCY']
+    errors = get_coord_column_type_errors(tables, coord_columns)
 
     # Convert tables to numeric data for analysis
     for group, df in tables.items():
         tables[group] = AGS4.convert_to_numeric(df)
 
-    # Force conversion of coordinate columns, even if type says text
-    coord_columns = ['LOCA_NATE', 'LOCA_NATN', 'LOCA_LOCX', 'LOCA_LOCY']
+    # Force conversion of LOCA coordinate columns, even if type is not numeric
     if tables:
         for column in coord_columns:
             try:
@@ -119,4 +124,34 @@ def load_AGS4_as_numeric(filename: Path) -> Tuple[dict, dict]:
                 # Not all files have all columns
                 pass
 
-    return tables, headings
+    return tables, headings, errors
+
+
+def get_coord_column_type_errors(tables: dict, coord_columns: List[str]) -> dict:
+    """
+    Check the coordinate columns in LOCA table have correct data type and
+    return errors for those that don't.
+    """
+    try:
+        loca = tables['LOCA']
+    except KeyError:
+        # If LOCA doesn't exist, other errors are returned elsewhere
+        return {}
+
+    bad_columns = []
+    for column in coord_columns:
+        try:
+            type_ = loca.loc[loca['HEADING'] == 'TYPE', column].tolist()[0]
+            if not re.search(r'(DP|MC|SF|SCI)', type_):
+                bad_columns.append(f"{column} ({type_})")
+        except KeyError:
+            # Ignore columns that don't exist
+            pass
+
+    if bad_columns:
+        error_message = f"Coordinate columns have non-numeric TYPE: {', '.join(bad_columns)}"
+        errors = {"Non-numeric coordinate types": [{'line': '-', 'group': 'LOCA', 'desc': error_message}]}
+    else:
+        errors = {}
+
+    return errors

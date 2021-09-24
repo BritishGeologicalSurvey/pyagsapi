@@ -10,6 +10,7 @@ Checkers: ['python_ags4 v0.3.6']
 Dictionary: Standard_dictionary_v4_1.ags
 Time: 2021-08-23 14:25:43+00:00
 
+
 ================================================================================
 """,
     'nonsense.ags': """
@@ -22,6 +23,7 @@ File size: 9 bytes
 Checkers: ['python_ags4 v0.3.6']
 Dictionary: Standard_dictionary_v4_1.ags
 Time: 2021-08-23 14:25:43+00:00
+
 
 # Errors
 
@@ -65,6 +67,7 @@ File size: 1024 bytes
 Checkers: ['python_ags4 v0.3.6']
 Time: 2021-08-23 14:25:43+00:00
 
+
 # Errors
 
 ## File read error
@@ -82,6 +85,7 @@ Blackburn Southern Bypass.ags: 93 error(s) found in file!
 File size: 6566 bytes
 Checkers: ['python_ags4 v0.3.6']
 Time: 2021-08-23 14:25:43+00:00
+
 
 # Errors
 
