@@ -4,7 +4,7 @@ to do with opening the files.
 """
 import logging
 from pathlib import Path
-from typing import Tuple, Optional
+from typing import Tuple, Optional, Dict
 
 import python_ags4
 from python_ags4 import AGS4
@@ -64,15 +64,10 @@ def check_bgs(filename: Path, **kwargs) -> dict:
     if error_message:
         errors['File read error'] = [{'line': '-', 'group': '', 'desc': error_message}]
     else:
-        # Create additional metadata using bgs prefix
-        proj_rows = len(tables['PROJ'][tables['PROJ']['HEADING'] == 'DATA']) if 'PROJ' in headers else 0
-        loca_rows = len(tables['LOCA'][tables['LOCA']['HEADING'] == 'DATA']) if 'LOCA' in headers else 0
-        bgs_metadata = {
-            'bgs_groups': f'{len(headers)} groups identified in file',
-            'bgs_proj_rows': f'{proj_rows} data rows in PROJ group',
-            'bgs_loca_rows': f'{loca_rows} data rows in LOCA group',
-        }
+        # Get additional metadata
+        bgs_metadata = generate_bgs_metadata(tables)
 
+        # Apply checks
         for rule, func in BGS_RULES.items():
             result = func(tables)
             if result:
@@ -81,6 +76,29 @@ def check_bgs(filename: Path, **kwargs) -> dict:
     return dict(checker=f'bgs_rules v{bgs_rules_version}',
                 errors=errors,
                 additional_metadata=bgs_metadata)
+
+
+def generate_bgs_metadata(tables: Dict[str, pd.DataFrame]) -> dict:
+    """Generate additional metadata from groups."""
+    try:
+        projects = tables['PROJ'].apply(lambda row: f"{row['PROJ_ID']} ({row['PROJ_NAME']})", axis=1).to_list()
+    except KeyError:
+        projects = []
+
+    try:
+        loca_rows = len(tables['LOCA'][tables['LOCA']['HEADING'] == 'DATA'])
+    except KeyError:
+        loca_rows = 0
+
+    groups = tables.keys()
+    bgs_metadata = {
+        'bgs_all_groups': f'{len(groups)} groups identified in file: {" ".join(groups)}',
+        'bgs_file': f'Optional FILE group present: {"FILE" in groups}',
+        'bgs_dict': f'Optional DICT group present: {"DICT" in groups}',
+        'bgs_loca_rows': f'{loca_rows} data rows in LOCA group',
+        'bgs_projects': f'{len(projects)} projects found: {"; ".join(projects)}',
+    }
+    return bgs_metadata
 
 
 def load_AGS4_as_numeric(filename: Path) -> Tuple[dict, dict]:
