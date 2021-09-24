@@ -33,6 +33,17 @@ It may have breaking changes.
 Use versions from tagged [Releases](https://github.com/BritishGeologicalSurvey/pyagsapi/releases) to fix the version in deployment pipelines.
 Available tags are listed in the [Package Registry](https://github.com/BritishGeologicalSurvey/AGS-Validator/pkgs/container/pyagsapi).
 
+### Setting the `root_path`
+
+If you are running behind a proxy, you may need to set the `root_path` using
+the `PYAGSAPI_ROOT_PATH` environment variable:
+
+```
+docker run -p 80:80 -e PYAGSAPI_ROOT_PATH="/pyagsapi" --name pyagsapi ghcr.io/britishgeologicalsurvey/pyagsapi
+```
+
+This will ensure that all references to `self` in responses, and all Swagger
+and REDOC documentation, include the correct path.
 
 
 ## Development
