@@ -1,8 +1,11 @@
 """Test functions for individual BGS rules"""
 from pathlib import Path
 
+import pytest
+
 from app.bgs_rules import BGS_RULES
 from app.checkers import load_AGS4_as_numeric
+from test.fixtures import BGS_RULES_ERRORS
 
 TEST_FILE_DIR = Path(__file__).parent.parent / 'files'
 
@@ -173,5 +176,20 @@ def test_loca_references_are_valid():
     tables, _ = load_AGS4_as_numeric(filename)
 
     errors = BGS_RULES['LOCA_ID references'](tables)
+
+    assert errors == expected
+
+
+@pytest.mark.parametrize('filename, expected', [
+    ('sample_referencing_samp_ids.ags', BGS_RULES_ERRORS['sample_referencing_samp_ids.ags']),
+    ('sample_referencing_comp_ids.ags', BGS_RULES_ERRORS['sample_referencing_comp_ids.ags']),
+    ('sample_referencing_mix_ids.ags', BGS_RULES_ERRORS['sample_referencing_mix_ids.ags']),
+])
+def test_sample_referential_integrity(filename, expected):
+    # Arrange
+    filename = TEST_FILE_DIR / 'bgs_rules' / filename
+    tables, _ = load_AGS4_as_numeric(filename)
+
+    errors = BGS_RULES['Sample Referencing'](tables)
 
     assert errors == expected

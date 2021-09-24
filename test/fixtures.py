@@ -25,3 +25,43 @@ DICTIONARIES = {
     'v4_0_4': "Standard_dictionary_v4_0_4.ags",
     'v4_1': "Standard_dictionary_v4_1.ags"
 }
+
+BGS_RULES_ERRORS = {
+    'sample_referencing_samp_ids.ags': [
+        {'line': '-', 'group': 'SAMP',
+         'desc': "Duplicate sample id A12345: SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF) must be unique"},
+        {'line': '-', 'group': 'SAMP',
+         'desc': "Inconsistent id A99999: references duplicate component data"},
+        {'line': '-', 'group': 'SAMP',
+         'desc': "Inconsistent id A11111: references duplicate component data"},
+        {'line': '-', 'group': 'CONG',
+         'desc': "No parent id: SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF) not in SAMP group (['A67890'])"},
+    ],
+    'sample_referencing_comp_ids.ags': [
+        {'line': '-', 'group': 'SAMP',
+         'desc': "Record 1 is missing either SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF)"},
+        {'line': '-', 'group': 'SAMP',
+         'desc': "Record 4 is missing either SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF)"},
+        {'line': '-', 'group': 'SAMP',
+         'desc': "Duplicate sample id CBH01,6.8,B,10: SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF) must be unique"},
+        {'line': '-', 'group': 'CONG',
+         'desc': "Record 3 is missing either SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF)"},
+        {'line': '-', 'group': 'CONG',
+         'desc': ("No parent id: SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF) not in SAMP group "
+                  "(['CBH03,9.9,U,36'])")},
+    ],
+    'sample_referencing_mix_ids.ags': [
+        {'line': '-', 'group': 'SAMP',
+         'desc': "Record 3 is missing either SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF)"},
+        {'line': '-', 'group': 'SAMP',
+         'desc': ("Duplicate sample id 327-16A,24.55,U,24: SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF) "
+                  "must be unique")},
+        {'line': '-', 'group': 'SAMP',
+         'desc': "Duplicate sample id A12345: SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF) must be unique"},
+        {'line': '-', 'group': 'CONG',
+         'desc': "Inconsistent id A67890: references duplicate component data"},
+        {'line': '-', 'group': 'CONG',
+         'desc': ("No parent id: SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF) not in SAMP group "
+                  "(['327-16D,24.55,U,24', 'A67890'])")},
+    ]
+}
