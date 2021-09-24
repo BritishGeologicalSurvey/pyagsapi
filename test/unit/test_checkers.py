@@ -52,6 +52,10 @@ def test_check_ags(filename, expected_rules):
      ['Required Groups', 'Required BGS Groups'], None),
     ('empty.ags',
      ['Required Groups', 'Required BGS Groups'], None),
+    ('real/Southwark.ags',
+     ['Sample Referencing'], None),
+    ('real/A112794-16 Glenally_Road_Factual_FINAL.ags',
+     ['Spatial Referencing', 'LOCA within Great Britain', 'Sample Referencing'], None),
     ('real/A3040_03.ags',
      ['File read error'], 'ERROR: File contains duplicate headers'),
     ('real/43370.ags',  # File has no errors
