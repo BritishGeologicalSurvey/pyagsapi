@@ -16,6 +16,8 @@ VALID_KEYS = [
 ]
 # Add BGS data rules
 VALID_KEYS.extend(list(BGS_RULES.keys()))
+# BGS rule that is handled outside of the rule functions
+VALID_KEYS.append('Non-numeric coordinate types')
 
 
 class LineError(BaseModel):

@@ -180,6 +180,20 @@ def test_loca_references_are_valid():
     assert errors == expected
 
 
+def test_non_numeric_coord_types():
+    # Arrange
+    filename = TEST_FILE_DIR / 'bgs_rules' / 'non_numeric_coord_types.ags'
+    expected = {'Non-numeric coordinate types': [
+        {"desc": "Coordinate columns have non-numeric TYPE: LOCA_NATE (X), LOCA_NATN (X)",
+         "group": "LOCA",
+         "line": "-"}
+    ]}
+
+    _, _, errors = load_AGS4_as_numeric(filename)
+
+    assert errors == expected
+
+
 @pytest.mark.parametrize('filename, expected', [
     ('sample_referencing_samp_ids.ags', BGS_RULES_ERRORS['sample_referencing_samp_ids.ags']),
     ('sample_referencing_comp_ids.ags', BGS_RULES_ERRORS['sample_referencing_comp_ids.ags']),
