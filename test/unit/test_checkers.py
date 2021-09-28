@@ -52,6 +52,12 @@ def test_check_ags(filename, expected_rules):
      ['Required Groups', 'Required BGS Groups'], None),
     ('empty.ags',
      ['Required Groups', 'Required BGS Groups'], None),
+    ('real/Southwark.ags',
+     ['Sample Referencing'], None),
+    ('real/Mount Severn- Environment Agency.ags',
+     ['Non-numeric coordinate types', 'Spatial Referencing'], None),
+    ('real/A112794-16 Glenally_Road_Factual_FINAL.ags',
+     ['Spatial Referencing', 'LOCA within Great Britain', 'Sample Referencing'], None),
     ('real/A3040_03.ags',
      ['File read error'], 'ERROR: File contains duplicate headers'),
     ('real/43370.ags',  # File has no errors
@@ -79,3 +85,39 @@ def test_check_bgs(filename, expected_rules, file_read_message):
     if file_read_errors:
         assert len(file_read_errors) == 1
         assert file_read_errors[0]['desc'] == file_read_message
+
+
+@pytest.mark.parametrize('filename, expected_metadata', [
+    ('empty.ags', {
+        'bgs_all_groups': '0 groups identified in file: ',
+        'bgs_dict': 'Optional DICT group present: False',
+        'bgs_file': 'Optional FILE group present: False',
+        'bgs_loca_rows': '0 data rows in LOCA group',
+        'bgs_projects': '0 projects found: '
+    }),
+    ('example_ags.ags', {
+        'bgs_all_groups': '7 groups identified in file: '
+                          'PROJ ABBR TRAN TYPE UNIT LOCA SAMP',
+        'bgs_dict': 'Optional DICT group present: False',
+        'bgs_file': 'Optional FILE group present: False',
+        'bgs_loca_rows': '1 data rows in LOCA group',
+        'bgs_projects': '1 projects found: 121415 (ACME Gas Works Redevelopment)'
+    }),
+    ('real/Southwark.ags', {
+        'bgs_all_groups': '12 groups identified in file: '
+                          'PROJ ABBR DICT TRAN TYPE UNIT CHIS GEOL ISPT LOCA SAMP WSTG',
+        'bgs_dict': 'Optional DICT group present: True',
+        'bgs_file': 'Optional FILE group present: False',
+        'bgs_loca_rows': '2 data rows in LOCA group',
+        'bgs_projects': '1 projects found: 7500/75 (Southwark)'}),
+])
+def test_check_bgs_additional_metadata(filename, expected_metadata):
+    """Check addtional metadata is added correctly."""
+    # Arrange
+    filename = TEST_FILE_DIR / filename
+
+    # Act
+    result = check_bgs(filename)
+
+    # Assert
+    assert result['additional_metadata'] == expected_metadata

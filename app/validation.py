@@ -61,6 +61,12 @@ def validate(filename: Path,
             # Pull 'errors' out to add to running total
             all_errors.update(result.pop('errors'))
             all_checkers.append(result.pop('checker'))
+            # Handle additional metadata
+            try:
+                response['additional_metadata'].update(result.pop('additional_metadata'))
+            except KeyError:
+                # No additional metadata
+                pass
             # Add remaining keys to response
             response.update(result)
 
@@ -99,5 +105,6 @@ def _prepare_response_metadata(filename: Path) -> dict:
                 'dictionary': '',
                 'errors': {},
                 'checkers': [],
-                'valid': True}
+                'valid': True,
+                'additional_metadata': {}}
     return response

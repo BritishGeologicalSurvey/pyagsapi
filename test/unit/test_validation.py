@@ -36,7 +36,8 @@ def test_validate_default_checker():
         'filesize': 0,
         'message': 'All checks passed!',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
-        'valid': True}
+        'valid': True,
+        'additional_metadata': {}}
 
     # Act
     response = validation.validate(filename, checkers=[mock_check_ags])
@@ -58,7 +59,8 @@ def test_validate_bgs_checker():
         'filesize': 0,
         'message': '1 error(s) found in file!',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
-        'valid': False}
+        'valid': False,
+        'additional_metadata': {}}
 
     # Act
     response = validation.validate(filename, checkers=[mock_check_bgs])
@@ -80,7 +82,8 @@ def test_validate_both_checkers():
         'filesize': 0,
         'message': '1 error(s) found in file!',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
-        'valid': False}
+        'valid': False,
+        'additional_metadata': {}}
 
     # Act
     response = validation.validate(filename, checkers=[mock_check_bgs, mock_check_ags])
@@ -102,7 +105,8 @@ def test_validate_non_ags():
         'filesize': 0,
         'message': '1 error(s) found in file!',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
-        'valid': False}
+        'valid': False,
+        'additional_metadata': {}}
 
     # Act
     response = validation.validate(filename)
@@ -124,7 +128,7 @@ def test_validate(filename, expected):
     # Assert
     # Check that metadata fields are correct
     for key in ['filename', 'filesize', 'checkers', 'time', 'dictionary',
-                'errors', 'message', 'valid']:
+                'errors', 'message', 'valid', 'additional_metadata']:
         assert response[key] == expected[key]
 
 

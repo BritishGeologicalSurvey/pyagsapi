@@ -1,4 +1,5 @@
 import logging
+import os
 import time
 
 import colorlog
@@ -60,7 +61,7 @@ def setup_logging(logging_level=logging.INFO):
         f"'logging_level': {logging.getLevelName(logging_level)}")
 
 
-app = FastAPI()
+app = FastAPI(root_path=os.getenv('PYAGSAPI_ROOT_PATH', ''))
 
 setup_logging()
 

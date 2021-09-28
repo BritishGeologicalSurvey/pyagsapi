@@ -16,6 +16,8 @@ VALID_KEYS = [
 ]
 # Add BGS data rules
 VALID_KEYS.extend(list(BGS_RULES.keys()))
+# BGS rule that is handled outside of the rule functions
+VALID_KEYS.append('Non-numeric coordinate types')
 
 
 class LineError(BaseModel):
@@ -39,6 +41,7 @@ class Validation(BaseModel):
     message: str = Field(None, example="7 error(s) found in file!")
     errors: Dict[str, List[LineError]] = Field(..., example="Rule 1a")
     valid: bool = Field(..., example='false')
+    additional_metadata: dict = Field(...)
 
     @validator('errors')
     def errors_keys_must_be_known_rules(cls, errors):
