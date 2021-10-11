@@ -368,15 +368,15 @@ def check_sample_referencing(tables: dict) -> List[dict]:
 
 
 BGS_RULES = {
-    'Required Groups': check_required_groups,
-    'Required BGS Groups': check_required_bgs_groups,
-    'Spatial Referencing': check_spatial_referencing_system,
-    'Eastings/Northings Present': check_eastings_northings_present,
-    'Eastings/Northings Range': check_eastings_northings_range,
-    'Drill Depth Present': check_drill_depth_present,
-    'Drill Depth GEOL Record': check_drill_depth_geol_record,
-    'LOCA within Great Britain': check_loca_within_great_britain,
-    'LOCA_LOCX is not duplicate of other column': check_locx_is_not_duplicate_of_other_column,
-    'LOCA_ID references': check_loca_id_references_are_valid,
-    'Sample Referencing': check_sample_referencing,
+    'BGS data validation: Required Groups': check_required_groups,
+    'BGS data validation: Required BGS Groups': check_required_bgs_groups,
+    'BGS data validation: Spatial Referencing': check_spatial_referencing_system,
+    'BGS data validation: Eastings/Northings Present': check_eastings_northings_present,
+    'BGS data validation: Eastings/Northings Range': check_eastings_northings_range,
+    'BGS data validation: Drill Depth Present': check_drill_depth_present,
+    'BGS data validation: Drill Depth GEOL Record': check_drill_depth_geol_record,
+    'BGS data validation: LOCA within Great Britain': check_loca_within_great_britain,
+    'BGS data validation: LOCA_LOCX is not duplicate of other column': check_locx_is_not_duplicate_of_other_column,
+    'BGS data validation: LOCA_ID references': check_loca_id_references_are_valid,
+    'BGS data validation: Sample Referencing': check_sample_referencing,
 }

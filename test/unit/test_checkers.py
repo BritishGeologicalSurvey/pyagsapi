@@ -45,19 +45,20 @@ def test_check_ags(filename, expected_rules):
 
 @pytest.mark.parametrize('filename, expected_rules, file_read_message', [
     ('example_ags.ags',
-     ['Required BGS Groups', 'Spatial Referencing'], None),
+     ['BGS data validation: Required BGS Groups', 'BGS data validation: Spatial Referencing'], None),
     ('random_binary.ags',
-     ['Required Groups', 'Required BGS Groups'], None),
+     ['BGS data validation: Required Groups', 'BGS data validation: Required BGS Groups'], None),
     ('nonsense.ags',
-     ['Required Groups', 'Required BGS Groups'], None),
+     ['BGS data validation: Required Groups', 'BGS data validation: Required BGS Groups'], None),
     ('empty.ags',
-     ['Required Groups', 'Required BGS Groups'], None),
+     ['BGS data validation: Required Groups', 'BGS data validation: Required BGS Groups'], None),
     ('real/Southwark.ags',
-     ['Sample Referencing'], None),
+     ['BGS data validation: Sample Referencing'], None),
     ('real/Mount Severn- Environment Agency.ags',
-     ['Non-numeric coordinate types', 'Spatial Referencing'], None),
+     ['BGS data validation: Non-numeric coordinate types', 'BGS data validation: Spatial Referencing'], None),
     ('real/A112794-16 Glenally_Road_Factual_FINAL.ags',
-     ['Spatial Referencing', 'LOCA within Great Britain', 'Sample Referencing'], None),
+     ['BGS data validation: Spatial Referencing', 'BGS data validation: LOCA within Great Britain',
+      'BGS data validation: Sample Referencing'], None),
     ('real/A3040_03.ags',
      ['File read error'], 'ERROR: File contains duplicate headers'),
     ('real/43370.ags',  # File has no errors
@@ -65,7 +66,7 @@ def test_check_ags(filename, expected_rules):
     ('real/JohnStPrimarySchool.ags',
      ['File read error'], 'ERROR: UNIT and/or TYPE rows missing OR mismatched column numbers'),
     ('real/19684.ags',
-     ['Required Groups', 'Required BGS Groups'], None),
+     ['BGS data validation: Required Groups', 'BGS data validation: Required BGS Groups'], None),
     # This file crashes because it asks for user input
     # ('real/E52A4379 (2).ags', {}),
 ])
