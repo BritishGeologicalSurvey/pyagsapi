@@ -150,7 +150,8 @@ def get_coord_column_type_errors(tables: dict, coord_columns: List[str]) -> dict
 
     if bad_columns:
         error_message = f"Coordinate columns have non-numeric TYPE: {', '.join(bad_columns)}"
-        errors = {"Non-numeric coordinate types": [{'line': '-', 'group': 'LOCA', 'desc': error_message}]}
+        errors = {"BGS data validation: Non-numeric coordinate types":
+                  [{'line': '-', 'group': 'LOCA', 'desc': error_message}]}
     else:
         errors = {}
 

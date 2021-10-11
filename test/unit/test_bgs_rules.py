@@ -18,7 +18,7 @@ def test_required_groups():
                 'desc': 'Required groups not present: ABBR, TYPE, UNIT, (LOCA or HOLE)'}
     tables, _, _ = load_AGS4_as_numeric(filename)
 
-    errors = BGS_RULES['Required Groups'](tables)
+    errors = BGS_RULES['BGS data validation: Required Groups'](tables)
 
     assert errors == [expected]
 
@@ -31,7 +31,7 @@ def test_required_bgs_groups():
                 'desc': 'Required BGS groups not present: GEOL'}
     tables, _, _ = load_AGS4_as_numeric(filename)
 
-    errors = BGS_RULES['Required BGS Groups'](tables)
+    errors = BGS_RULES['BGS data validation: Required BGS Groups'](tables)
 
     assert errors == [expected]
 
@@ -44,7 +44,7 @@ def test_spatial_referencing():
                 'desc': 'Spatial referencing system not in LOCA_GREF, LOCA_LREF or LOCA_LLZ!'}
     tables, _, _ = load_AGS4_as_numeric(filename)
 
-    errors = BGS_RULES['Spatial Referencing'](tables)
+    errors = BGS_RULES['BGS data validation: Spatial Referencing'](tables)
 
     assert errors == [expected]
 
@@ -62,7 +62,7 @@ def test_eastings_northings_present():
     ]
     tables, _, _ = load_AGS4_as_numeric(filename)
 
-    errors = BGS_RULES['Eastings/Northings Present'](tables)
+    errors = BGS_RULES['BGS data validation: Eastings/Northings Present'](tables)
 
     assert errors == expected
 
@@ -80,7 +80,7 @@ def test_eastings_northings_range():
     ]
     tables, _, _ = load_AGS4_as_numeric(filename)
 
-    errors = BGS_RULES['Eastings/Northings Range'](tables)
+    errors = BGS_RULES['BGS data validation: Eastings/Northings Range'](tables)
 
     assert errors == expected
 
@@ -98,7 +98,7 @@ def test_drill_depth_present():
     ]
     tables, _, _ = load_AGS4_as_numeric(filename)
 
-    errors = BGS_RULES['Drill Depth Present'](tables)
+    errors = BGS_RULES['BGS data validation: Drill Depth Present'](tables)
 
     assert errors == expected
 
@@ -114,7 +114,7 @@ def test_drill_depth_geol_record():
     ]
     tables, _, _ = load_AGS4_as_numeric(filename)
 
-    errors = BGS_RULES['Drill Depth GEOL Record'](tables)
+    errors = BGS_RULES['BGS data validation: Drill Depth GEOL Record'](tables)
 
     assert errors == expected
 
@@ -139,7 +139,7 @@ def test_loca_within_great_britain():
 
     tables, _, _ = load_AGS4_as_numeric(filename)
 
-    errors = BGS_RULES['LOCA within Great Britain'](tables)
+    errors = BGS_RULES['BGS data validation: LOCA within Great Britain'](tables)
 
     assert errors == expected
 
@@ -157,7 +157,7 @@ def test_loca_locx_is_not_duplicate_of_other_column():
     ]
     tables, _, _ = load_AGS4_as_numeric(filename)
 
-    errors = BGS_RULES['LOCA_LOCX is not duplicate of other column'](tables)
+    errors = BGS_RULES['BGS data validation: LOCA_LOCX is not duplicate of other column'](tables)
 
     assert errors == expected
 
@@ -175,7 +175,7 @@ def test_loca_references_are_valid():
     ]
     tables, _, _ = load_AGS4_as_numeric(filename)
 
-    errors = BGS_RULES['LOCA_ID references'](tables)
+    errors = BGS_RULES['BGS data validation: LOCA_ID references'](tables)
 
     assert errors == expected
 
@@ -183,7 +183,7 @@ def test_loca_references_are_valid():
 def test_non_numeric_coord_types():
     # Arrange
     filename = TEST_FILE_DIR / 'bgs_rules' / 'non_numeric_coord_types.ags'
-    expected = {'Non-numeric coordinate types': [
+    expected = {'BGS data validation: Non-numeric coordinate types': [
         {"desc": "Coordinate columns have non-numeric TYPE: LOCA_NATE (X), LOCA_NATN (X)",
          "group": "LOCA",
          "line": "-"}
@@ -204,6 +204,6 @@ def test_sample_referential_integrity(filename, expected):
     filename = TEST_FILE_DIR / 'bgs_rules' / filename
     tables, _, _ = load_AGS4_as_numeric(filename)
 
-    errors = BGS_RULES['Sample Referencing'](tables)
+    errors = BGS_RULES['BGS data validation: Sample Referencing'](tables)
 
     assert errors == expected
