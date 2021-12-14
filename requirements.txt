@@ -1,6 +1,6 @@
 aiofiles==0.7.0
 numpy==1.21.2
-python-ags4==0.3.6
+python-ags4==0.3.7
 python-multipart==0.0.5
 colorlog==5.0.1
 shortuuid==1.0.1
