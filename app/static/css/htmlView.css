@@ -1,0 +1,71 @@
+/* htmlView.css */
+/* Styling for HTML validation result viewer plugin */
+
+#resultPopup{
+	display:block;
+    border:1px solid #CCCCCC;
+    background-color:#FAFAFA;
+	margin:5px;
+    padding:0px;
+	}
+
+/* close button */
+#resultPopup>h2>input{
+    float: right;
+    color: #EEE;
+    background-color:#666;
+    padding: 5px 20px;
+    margin: 5px;
+    border: 1px solid #666;
+    border-radius: 3px;
+    font-size: 90%;
+    cursor:pointer;
+    box-shadow: 2px 2px 4px #444;
+    }	
+#resultPopup>h2>input:hover{
+    border: 1px solid #000;
+    background-color: #444;
+    color: #FFF;
+    box-shadow: 1px 1px 2px #222;
+    }   
+  
+input.submitBtn{color:rgb(0,48,66);}
+input.submitBtn:disabled{opacity:0.5;color:#888;}
+  
+#resultPopup>p{
+    padding: 4px 8px;
+    margin: 0px;
+    }
+#res_Files>article{
+    border:1px solid #CCCC;
+    margin:5px;
+    background-color: #FFFFFF;
+    }
+#res_Files>article>h3{color:#FFF;}    
+#res_Files>article>h3.valid{background-color:#080;}
+#res_Files>article>h3.invalid{background-color:#900;color:#FFF;}
+#res_Files>article>h3>*{display:inline-block;padding: 2px 4px;}
+#res_Files>article>h3>em{font-weight:normal;float:right;}
+#res_Files>article>p{}
+#res_Files>article>p>label{display:inline-block;width:8em;}
+#res_Files>article>p>strong{}
+#res_Files>article>h4{background-color:#EEE;margin-top: 10px;}
+
+#res_Files>article>ul{background-color:#FFF;}
+#res_Files>article>ul>li{padding:4px 8px;margin:2px;}
+
+#res_Files>article>ul.fileResSummary{background-color:#FFF;}
+
+#res_Files>article>ul.fileResErrors{margin-left:20px;}
+
+#res_Files>article>ul.fileResErrors>li{list-style-type:none;}
+#res_Files>article>ul.fileResErrors>li.closed{}
+
+#res_Files>article>ul.fileResErrors>li::before{content:"[ + ]  "}
+#res_Files>article>ul.fileResErrors>li.closed::before{content:"[ - ]  "}
+
+#res_Files>article>ul.fileResErrors>li>strong{cursor:pointer;}             /* errGroup name */
+#res_Files>article>ul.fileResErrors>li>em{}                 /* errGroup count */
+#res_Files>article>ul.fileResErrors>li>ul{display:none;}
+#res_Files>article>ul.fileResErrors>li>ul>li>span{color:#800000;}
+
