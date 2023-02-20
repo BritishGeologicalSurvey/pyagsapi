@@ -1,0 +1,235 @@
+@charset "UTF-8";
+
+/* "content.css" - styles for content inside <main> */
+
+/* MAIN */
+
+main{
+	background-color:rgb(255,255,255);
+	margin:0em;
+	padding:0em;
+	min-height:200px;
+	}
+	
+main>div{
+	margin:0em 5%;
+	margin-bottom:10px;
+	padding:0em;
+	}
+	
+main h1{
+	text-align:center;
+	padding:10px;
+	margin:0em -5%;
+	margin-bottom:10px;
+	background-color:rgb(0,48,66);
+	color:rgb(255,255,255);
+	}	
+
+main h2{color:rgb(0,48,66);}
+main h3{color:rgb(0,48,66);}
+main p{color:rgb(0,0,0);}
+main a{color:rgb(0,48,66);}
+main a:hover{color:rgb(102,130,140);}
+
+main div.leftCol50, main div.rightCol50{display:block;width:47%;margin:1%;float:left;}
+main div.leftCol40{display:block;width:37%;margin:1%;float:left;}
+main div.rightCol60{display:block;width:57%;margin:1%;float:left;}
+
+main div.clear{clear:both;}
+
+main img.sectionIcon{height:64px;float:right;border:1px solid rgb(102,130,140);}
+main div.section{clear:both;min-height:70px;margin-top:20px;border-bottom:1px solid rgb(206,196,169);padding:5px;}
+
+/**/
+main form fieldset, div.boxed{border:2px solid rgb(173,156,113);}
+main form fieldset label{width:auto;min-width:auto;}
+
+main fieldset, div.boxed{padding:10px;border:1px solid rgb(102,130,140);}
+
+main fieldset>div{}
+
+main fieldset label{display:inline-block;min-width:8em;padding:5px;}
+main fieldset input{padding:5px;border:1px solid rgb(173,156,113);color:rgb(0,48,66);font-size:100%;}
+main fieldset select{padding:5px;border:1px solid rgb(173,156,113);color:rgb(0,48,66);font-size:100%;}
+
+main fieldset.boxed label{display:inline-block;width:30%;padding:5px;}
+main fieldset.boxed div.visibleFields label{display:inline-block;width:auto;padding:2px 5px;}
+
+
+
+/* TABLES */
+
+main table{margin:10px;}
+main table>tbody{}
+main table>tbody>tr{}
+main table>tbody>tr>*{padding:5px;border:1px solid rgb(255,255,255);}
+main table>tbody>tr>th{background-color:rgb(102,130,140);color:rgb(255,255,255);}
+main table>tbody>tr>td{background-color:rgb(246,246,245);color:rgb(0,0,0);}
+
+main ul{margin-left:40px;}
+main ul>li{color:rgb(0,0,0);}
+
+
+main div>h2, main div>h3{color:rgb(0,48,66);margin-top:10px;}
+
+main div>a.white{text-decoration:none;color:rgb(255,255,255);}
+main span.fileSizeComment{color:rgb(173,156,113);font-weight:normal;font-size:80%;}
+main p.clear{clear:both;}
+
+/* BIG <ENTER> BUTTONS ===================================================== */
+
+input.EnterBtn{
+	background-color:rgb(206,196,169);
+	color:rgb(0,48,66);
+	padding:10px;
+	margin:10px;
+	font-weight:bold;
+	text-align:center;
+	cursor:pointer;
+	border:none;
+	box-shadow: 2px 2px 4px rgb(173,156,113);
+	font-size:120%;
+	}
+
+input.EnterBtn:hover{
+	color:rgb(255,255,255);
+	background-color:rgb(173,156,113);
+	box-shadow: 1px 1px 2px rgb(173,156,113);
+	}
+	
+/* COMMENT / DATA ERROR ===================================================== */
+
+main p.commentBox{text-align:right;}
+main p.commentBox>a{display:inline-block;border:2px solid rgb(206,196,169);margin:0px;padding:5px 10px;text-decoration:none;background-color:rgb(173,156,113);}
+main p.commentBox>a>img{border:2px solid rgb(255,255,255);width:30px;height:30px;border-radius:50%;}
+
+main p.commentBox>a:hover{border:2px solid rgb(173,156,113);background-color:rgb(255,255,255);}
+main p.commentBox>a:hover>img{border:2px solid rgb(173,156,113);}
+
+/* IMAGE BOXES  ===================================================== */
+
+.imgBoxRight70, .imgBoxRight60, .imgBoxRight50, .imgBoxRight40, .imgBoxRight33, .imgBoxRight30, .imgBoxRight20, .imgBoxLeft60, .imgBoxLeft50, .imgBoxLeft40, .imgBoxLeft33, .imgBoxLeft30, .imgBoxLeft20, .imgBoxLeft25, .imgBoxLeft15, .imgBoxLeft10, .imgBoxRight10, .imgBoxLeft100 {
+	margin-bottom: 0.8em;
+	position: relative;
+}
+.imgBoxRight20 img, .imgBoxRight30 img, .imgBoxRight40 img, .imgBoxLeft40 img, .imgBoxRight50 img, .imgBoxRight70 img, .imgBoxRight60 img, .imgBoxLeft50 img, .imgBoxLeft33 img, .imgBoxRight33 img, .imgBoxLeft30 img, .imgBoxLeft25 img, .imgBoxLeft20 img, .imgBoxLeft15 img, .imgBoxLeft10 img, .imgBoxRight10 img, .imgBoxLeft60 img, .imgBoxLeft100 img, div.fullWidthImg img, img.fullWidthImg, .center img {
+	max-width: 100%;
+	border: 0;
+	display: block;
+	margin: auto;
+	margin-bottom: 0.6em;
+}
+.imgBoxRight40 p, .imgBoxLeft40 p, .imgBoxRight50 p, .imgBoxRight60 p, .imgBoxLeft50 p, .imgBoxLeft33 p, .imgBoxRight33 p {
+	margin-top: 2.4em;
+}
+.imgBoxRight40 p:first-child, .imgBoxLeft40 p:first-child, .imgBoxRight50 p:first-child, .imgBoxLeft50 p:first-child, .imgBoxLeft33 p:first-child, .imgBoxRight33 p:first-child, .imgBoxRight60 p:first-child {
+	margin-top: 0;
+}
+
+
+/* FOR '2 COLUMNS' WITHIN midCol ====================================== */
+.leftCol10, .leftCol20, .leftCol40, .leftCol60, .leftCol66, #leftCol50, .leftCol50, .leftCol70 {
+	display: block;
+	float: left;
+	margin-right: 1%;
+	box-sizing: border-box;
+}
+.leftCol33, .imgBoxLeft33, .leftCol25 {
+	display: block;
+	float: left;
+	box-sizing: border-box;
+}
+.rightCol25, .rightCol30, .rightCol33, .rightCol40, #rightCol50, .rightCol50, .rightCol60, .rightCol70 {
+	display: block;
+	float: right;
+	margin-left: 1%;
+	box-sizing: border-box;
+}
+
+.leftCol100 {
+	width: 100%;
+}
+.leftCol70, .rightCol70 {
+	width: 68%;
+}
+.leftCol60 {
+	width: 58%;
+}
+.leftCol66 {
+	width: 65.75%;
+}
+#leftCol50, .leftCol50, #rightCol50, .rightCol50 {
+	width: 48%;
+}
+.leftCol40 {
+	width: 38%;
+}
+.leftCol25, .rightCol25 {
+	width: 22.75%;
+}
+.leftCol10 {
+	width: 10%;
+}
+.leftCol20 {
+	width: 19%;
+}
+.leftCol33, .rightCol33, .imgBoxLeft33 {
+	width: 31%;
+	box-sizing: border-box;
+}
+.rightCol30 {
+	width: 28%;
+}
+.rightCol40 {
+	width: 38%;
+}
+.rightCol60 {
+	width: 58%;
+}
+
+.imgBoxRight70, .imgBoxRight60, .imgBoxRight50, .imgBoxRight40, .imgBoxRight33, .imgBoxRight30, .imgBoxRight20, .imgBoxRight10 {
+	margin-left: 1%;
+	padding-left: 1%;
+	clear: right;
+	float: right;
+}
+.imgBoxLeft50, .imgBoxLeft40, .imgBoxLeft30, .imgBoxLeft25, .imgBoxLeft20, .imgBoxLeft15, .imgBoxLeft10, .imgBoxLeft60, .imgBoxLeft100 {
+	margin-right: 1%;
+	padding-right: 1%;
+	float: left;
+}
+.imgBoxRight50, .imgBoxLeft50 {
+	width: 48%;
+}
+.imgBoxRight40, .imgBoxLeft40 {
+	width: 38%;
+}
+.imgBoxRight33 {
+	width: 28%;
+}
+.imgBoxRight30, .imgBoxLeft30 {
+	width: 25%;
+}
+.imgBoxRight20, .imgBoxLeft20 {
+	width: 19%;
+}
+.imgBoxRight25, .imgBoxLeft25 {
+	width: 23%;
+}
+.imgBoxLeft15, .imgBoxRight15 {
+	width: 15%;
+}
+.imgBoxLeft10, .imgBoxRight10 {
+	min-width: 10%;
+	max-width: 20%;
+}
+.imgBoxLeft60, .imgBoxRight60 {
+	width: 56%;
+}
+.imgBoxLeft70, .imgBoxRight70 {
+	width: 66%;
+}
+
+/* HIDDEN SEARCH-ENGINE LINKS */
+a.white{text-decoration:none;color:transparent;}
