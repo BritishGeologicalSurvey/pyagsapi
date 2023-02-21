@@ -26,8 +26,7 @@ AGS_FILE_DATA = {
     ('empty.ags', {'AGS Format Rule 13', 'AGS Format Rule 14', 'AGS Format Rule 15', 'AGS Format Rule 17'}),
     ('real/A3040_03.ags', {'AGS Format Rule 3'}),
     ('real/43370.ags', {'AGS Format Rule 2a', 'AGS Format Rule 1'}),
-    ('real/JohnStPrimarySchool.ags', {'AGS Format Rule 2a', 'AGS Format Rule 4b', 'AGS Format Rule 5',
-                                      'AGS Format Rule 3'}),
+    ('real/JohnStPrimarySchool.ags', {'File read error'}),
     ('real/19684.ags', {'AGS Format Rule 3'}),
     ('real/E52A4379 (2).ags', {'AGS Format Rule 3'}),
 ])
@@ -66,7 +65,7 @@ def test_check_ags(filename, expected_rules):
     ('real/43370.ags',  # File has no errors
      [], None),
     ('real/JohnStPrimarySchool.ags',
-     ['File read error'], 'ERROR: UNIT and/or TYPE rows missing OR mismatched column numbers'),
+     ['File read error'], 'Line 27 does not have the same number of entries as the HEADING row in GEOL.'),
     ('real/19684.ags',
      ['BGS data validation: Required Groups', 'BGS data validation: Required BGS Groups'], None),
     # This file crashes because it asks for user input

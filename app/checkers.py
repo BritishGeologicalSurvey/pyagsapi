@@ -35,6 +35,10 @@ def check_ags(filename: Path, standard_AGS4_dictionary: Optional[str] = None) ->
         description = f"UnicodeDecodeError: {err.reason}"
         errors = {'File read error': [{'line': line_no, 'group': '', 'desc': description}]}
         dictionary = ''
+    except AGS4.AGS4Error as err:
+        description = f"AGS4Error: {err}"
+        errors = {'File read error': [{'line': '-', 'group': '', 'desc': description}]}
+        dictionary = ''
 
     return dict(checker=f'python_ags4 v{python_ags4.__version__}',
                 errors=errors, dictionary=dictionary)
@@ -58,11 +62,8 @@ def check_bgs(filename: Path, **kwargs) -> dict:
         # which in turn is only triggered if the AGS file has duplicate
         # headers.
         error_message = "ERROR: File contains duplicate headers"
-    except SystemExit:
-        #  There are two function calls in python_ags4.AGS4 that throw a
-        # sys.exit in reponse to a bad file.  The associated errors are
-        # summarised here.
-        error_message = "ERROR: UNIT and/or TYPE rows missing OR mismatched column numbers"
+    except AGS4.AGS4Error as err:
+        error_message = str(err)
 
     if error_message:
         errors['File read error'] = [{'line': '-', 'group': '', 'desc': error_message}]
