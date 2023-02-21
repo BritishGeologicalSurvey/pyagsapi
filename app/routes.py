@@ -1,7 +1,7 @@
 import tempfile
 import shutil
 
-from enum import Enum
+from enum import StrEnum
 from pathlib import Path
 from typing import List
 
@@ -27,20 +27,21 @@ zip_responses['200'] = {
 
 
 # Enum for search logic
-class Format(str, Enum):
+class Format(StrEnum):
     TEXT = "text"
     JSON = "json"
 
 
 # Enum for search logic
-class Dictionary(str, Enum):
-    V4_0_3 = "v4_0_3"
-    V4_0_4 = "v4_0_4"
-    V4_1 = "v4_1"
+class Dictionary(StrEnum):
+    v4_0_3 = "v4_0_3"
+    v4_0_4 = "v4_0_4"
+    v4_1 = "v4_1"
+    v4_1_1 = "v4_1_1"
 
 
 # Enum for checker logic
-class Checker(str, Enum):
+class Checker(StrEnum):
     ags = "ags"
     bgs = "bgs"
 
