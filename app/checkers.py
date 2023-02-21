@@ -25,8 +25,9 @@ def check_ags(filename: Path, standard_AGS4_dictionary: Optional[str] = None) ->
             metadata = errors.pop('Metadata')  # This also removes it from returned errors
             dictionary = [d['desc'] for d in metadata
                           if d['line'] == 'Dictionary'][0]
-        except KeyError:
+        except (KeyError, IndexError):
             # 'Metadata' is not created for some files with errors
+            # or 'Dictionary' is not set in Metadata'
             dictionary = ''
 
     except UnicodeDecodeError as err:
