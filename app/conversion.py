@@ -25,35 +25,35 @@ def convert(filename: Path, results_dir: Path) -> Tuple[Optional[Path], dict]:
     response = _prepare_response_metadata(filename)
 
     # Do the conversion
-    success = True
+    success = False
     if filename.suffix == '.ags':
         try:
             AGS4.AGS4_to_excel(filename, converted_file)
+            success = True
         except IndexError:
-            success = False
             error_message = "ERROR: File does not have AGS4 format layout"
         except UnboundLocalError:
             # This error is thrown in response to a bug in the upstream code,
             # which in turn is only triggered if the AGS file has duplicate
             # headers.
-            success = False
             error_message = "ERROR: File contains duplicate headers"
-        except SystemExit:
-            # There are two function calls in python_ags4.AGS4 that throw a
-            # sys.exit in reponse to a bad file.  The associated errors are
-            # summarised here.
-            success = False
-            error_message = "ERROR: UNIT and/or TYPE rows missing OR mismatched column numbers"
+        except AGS4.AGS4Error as err:
+            error_message = str(err)
     elif filename.suffix == '.xlsx':
         try:
             AGS4.excel_to_AGS4(filename, converted_file)
+            if converted_file.exists():
+                success = True
+            else:
+                # The underlying conversion fails silently,
+                # the file does not then exist.
+                # Propagate a short error message
+                error_message = "ERROR: Conversion failed"
         except AttributeError as err:
             # Include error details here in case they provide a clue e.g. which
             # attribute is missing
-            success = False
             error_message = f"ERROR: Bad spreadsheet layout ({err.args[0]})"
     else:
-        success = False
         error_message = f"ERROR: {filename.name} is not .ags or .xlsx format"
 
     # Update response and clean failed files

@@ -8,16 +8,15 @@ GOOD_FILE_DATA = [
 ]
 
 BAD_FILE_DATA = [
-    ('nonsense.ags', ('ERROR: File does not have AGS4 format layout', 9)),
-    ('empty.ags', ('ERROR: File does not have AGS4 format layout', 0)),
-    ('dummy.xlsx', ("ERROR: Bad spreadsheet layout ('DataFrame' object has no attribute 'HEADING')", 4787)),
-    ('random_binary.ags', ('ERROR: File does not have AGS4 format layout', 1024)),
+    ('nonsense.ags', ('No valid AGS4 data found in input file.', 9)),
+    ('empty.ags', ('No valid AGS4 data found in input file.', 0)),
+    ('dummy.xlsx', ("ERROR: Conversion failed", 4787)),
+    ('random_binary.ags', ('No valid AGS4 data found in input file.', 1024)),
     ('real/A3040_03.ags', ("ERROR: File contains duplicate headers", 264526)),
     ('extension_is.bad', ("ERROR: extension_is.bad is not .ags or .xlsx format", 0)),
-    ('real/JohnStPrimarySchool.ags', ("ERROR: UNIT and/or TYPE rows missing OR mismatched column numbers", 12430)),
-    ('real/19684.ags', ("ERROR: File does not have AGS4 format layout", 12542)),
-    # This file crashes because it asks for user input
-    # ('real/E52A4379 (2).ags', ("ERROR: File contains duplicate headers", 0))
+    ('real/JohnStPrimarySchool.ags', ("Line 27 does not have the same number of entries "
+                                      "as the HEADING row in GEOL.", 12430)),
+    ('real/19684.ags', ("No valid AGS4 data found in input file.", 12542))
 ]
 
 DICTIONARIES = {
