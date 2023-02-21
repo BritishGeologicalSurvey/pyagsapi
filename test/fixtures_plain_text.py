@@ -1,3 +1,4 @@
+# flake8: noqa
 PLAIN_TEXT_RESPONSES = {
     'example_ags.ags': """
 ================================================================================
@@ -21,37 +22,37 @@ nonsense.ags: 7 error(s) found in file!
 
 File size: 9 bytes
 Checkers: ['python_ags4 v0.4.1']
-Dictionary: Standard_dictionary_v4_1.ags
+Dictionary: Standard_dictionary_v4_1_1.ags
 Time: 2021-08-23 14:25:43+00:00
 
 
 # Errors
 
-## Rule 2a
+## AGS Format Rule 2a
 
 Line: 1 - Is not terminated by <CR> and <LF> characters.
 
-## Rule 3
+## AGS Format Rule 3
 
 Line: 1 - Does not start with a valid data descriptor.
 
-## Rule 5
+## AGS Format Rule 5
 
 Line: 1 - Contains fields that are not enclosed in double quotes.
 
-## Rule 13
+## AGS Format Rule 13
 
 Group: PROJ - PROJ table not found.
 
-## Rule 14
+## AGS Format Rule 14
 
 Group: TRAN - TRAN table not found.
 
-## Rule 15
+## AGS Format Rule 15
 
 Group: UNIT - UNIT table not found.
 
-## Rule 17
+## AGS Format Rule 17
 
 Group: TYPE - TYPE table not found.
 
@@ -59,41 +60,99 @@ Group: TYPE - TYPE table not found.
 """,
     'random_binary.ags': """
 ================================================================================
-random_binary.ags: 1 error(s) found in file!
+random_binary.ags: 36 error(s) found in file!
 
 # Metadata
 
 File size: 1024 bytes
 Checkers: ['python_ags4 v0.4.1']
+Dictionary: Standard_dictionary_v4_1_1.ags
 Time: 2021-08-23 14:25:43+00:00
 
 
 # Errors
 
-## File read error
+## AGS Format Rule 1
 
-Line: 1 - UnicodeDecodeError: invalid continuation byte
+Line: 1 - Has Non-ASCII character(s) and/or a byte-order-mark (BOM).
+Line: 2 - Has Non-ASCII character(s).
+Line: 3 - Has Non-ASCII character(s).
+Line: 4 - Has Non-ASCII character(s).
+Line: 5 - Has Non-ASCII character(s).
+Line: 6 - Has Non-ASCII character(s).
+Line: 7 - Has Non-ASCII character(s).
+Line: 8 - Has Non-ASCII character(s).
+
+## AGS Format Rule 13
+
+Group: PROJ - PROJ table not found.
+
+## AGS Format Rule 14
+
+Group: TRAN - TRAN table not found.
+
+## AGS Format Rule 15
+
+Group: UNIT - UNIT table not found.
+
+## AGS Format Rule 17
+
+Group: TYPE - TYPE table not found.
+
+## AGS Format Rule 2a
+
+Line: 1 - Is not terminated by <CR> and <LF> characters.
+Line: 2 - Is not terminated by <CR> and <LF> characters.
+Line: 3 - Is not terminated by <CR> and <LF> characters.
+Line: 4 - Is not terminated by <CR> and <LF> characters.
+Line: 5 - Is not terminated by <CR> and <LF> characters.
+Line: 6 - Is not terminated by <CR> and <LF> characters.
+Line: 7 - Is not terminated by <CR> and <LF> characters.
+Line: 8 - Is not terminated by <CR> and <LF> characters.
+
+## AGS Format Rule 3
+
+Line: 1 - Does not start with a valid data descriptor.
+Line: 2 - Does not start with a valid data descriptor.
+Line: 3 - Does not start with a valid data descriptor.
+Line: 4 - Does not start with a valid data descriptor.
+Line: 5 - Does not start with a valid data descriptor.
+Line: 6 - Does not start with a valid data descriptor.
+Line: 7 - Does not start with a valid data descriptor.
+Line: 8 - Does not start with a valid data descriptor.
+
+## AGS Format Rule 5
+
+Line: 1 - Contains fields that are not enclosed in double quotes.
+Line: 2 - Contains fields that are not enclosed in double quotes.
+Line: 3 - Contains fields that are not enclosed in double quotes.
+Line: 4 - Contains fields that are not enclosed in double quotes.
+Line: 5 - Contains fields that are not enclosed in double quotes.
+Line: 6 - Contains fields that are not enclosed in double quotes.
+Line: 7 - Contains fields that are not enclosed in double quotes.
+Line: 8 - Contains fields that are not enclosed in double quotes.
 
 ================================================================================
 """,
     'real/Blackburn Southern Bypass.ags': """
 ================================================================================
-Blackburn Southern Bypass.ags: 93 error(s) found in file!
+Blackburn Southern Bypass.ags: 95 error(s) found in file!
 
 # Metadata
 
 File size: 6566 bytes
 Checkers: ['python_ags4 v0.4.1']
+Dictionary: Standard_dictionary_v4_0_4.ags
 Time: 2021-08-23 14:25:43+00:00
 
 
 # Errors
 
-## Rule 1
+## AGS Format Rule 1
 
-Line: 1 - Has Non-ASCII character(s).
+Line: 1 - Has Non-ASCII character(s) and/or a byte-order-mark (BOM).
 
-## Rule 2a
+## AGS Format Rule 2a
 
 Line: 1 - Is not terminated by <CR> and <LF> characters.
 Line: 2 - Is not terminated by <CR> and <LF> characters.
@@ -186,13 +245,21 @@ Line: 88 - Is not terminated by <CR> and <LF> characters.
 Line: 89 - Is not terminated by <CR> and <LF> characters.
 Line: 90 - Is not terminated by <CR> and <LF> characters.
 
-## Rule 3
+## AGS Format Rule 3
 
 Line: 1 - Does not start with a valid data descriptor.
 
-## Rule 5
+## AGS Format Rule 5
 
 Line: 1 - Contains fields that are not enclosed in double quotes.
+
+## AGS Format Rule 7
+
+Line: 86 - Headings not in order starting from LOCA_CHKG. Expected order: ...LOCA_ORID|LOCA_ORJO|LOCA_ORCO|LOCA_CHKG|LOCA_APPG|LOCA_PDEP
+
+## General
+
+Line:  - This file seems to be encoded with a byte-order-mark (BOM). It is highly recommended that the file be saved without BOM encoding to avoid issues with other sofware.
 
 ================================================================================
 """
