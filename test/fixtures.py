@@ -23,7 +23,8 @@ BAD_FILE_DATA = [
 DICTIONARIES = {
     'v4_0_3': "Standard_dictionary_v4_0_3.ags",
     'v4_0_4': "Standard_dictionary_v4_0_4.ags",
-    'v4_1': "Standard_dictionary_v4_1.ags"
+    'v4_1': "Standard_dictionary_v4_1.ags",
+    'v4_1_1': "Standard_dictionary_v4_1_1.ags"
 }
 
 BGS_RULES_ERRORS = {
