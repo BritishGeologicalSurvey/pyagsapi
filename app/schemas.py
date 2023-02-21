@@ -7,10 +7,14 @@ from app.bgs_rules import BGS_RULES
 
 VALID_KEYS = [
     # AGS schema rules
-    'Rule 1', 'Rule 2', 'Rule 2a', 'Rule 2b', 'Rule 2c', 'Rule 3', 'Rule 4a', 'Rule 4b',
-    'Rule 5', 'Rule 7', 'Rule 9', 'Rule 10a', 'Rule 10b', 'Rule 10c', 'Rule 11a',
-    'Rule 11b', 'Rule 11c', 'Rule 13', 'Rule 14', 'Rule 15', 'Rule 16', 'Rule 17',
-    'Rule 18', 'Rule 19', 'Rule 19a', 'Rule 19b', 'Rule 19c', 'Rule 20',
+    'AGS Format Rule 1', 'AGS Format Rule 2', 'AGS Format Rule 2a', 'AGS Format Rule 2b',
+    'AGS Format Rule 2c', 'AGS Format Rule 3', 'AGS Format Rule 4a', 'AGS Format Rule 4b',
+    'AGS Format Rule 5', 'AGS Format Rule 6', 'AGS Format Rule 7', 'AGS Format Rule 8',
+    'AGS Format Rule 9', 'AGS Format Rule 10a', 'AGS Format Rule 10b', 'AGS Format Rule 10c',
+    'AGS Format Rule 11a', 'AGS Format Rule 11b', 'AGS Format Rule 11c', 'AGS Format Rule 12',
+    'AGS Format Rule 13', 'AGS Format Rule 14', 'AGS Format Rule 15', 'AGS Format Rule 16',
+    'AGS Format Rule 17', 'AGS Format Rule 18', 'AGS Format Rule 19', 'AGS Format Rule 19a',
+    'AGS Format Rule 19b', 'AGS Format Rule 20', 'General',
     # Errors
     'File read error'
 ]
@@ -28,7 +32,7 @@ class LineError(BaseModel):
     @validator('line')
     def line_if_string_must_be_hyphen(cls, line):
         if type(line) is str:
-            assert line == '-', f"Unknown non-integer line number: '{line}'"
+            assert line in ['-', ''], f"Unknown non-integer line number: '{line}'"
         return line
 
 
