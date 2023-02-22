@@ -129,6 +129,7 @@ async def test_validate_text(async_client, filename, expected):
     fields = []
     fields.append(file)
     fields.append(('checkers', 'ags'))
+    fields.append(('std_dictionary', 'v4_1_1'))
     fields.append(('fmt', 'text'))
     mp_encoder = MultipartEncoder(fields=fields)
 
@@ -150,12 +151,12 @@ async def test_validate_text(async_client, filename, expected):
 async def test_validate_many_text(async_client):
     # Arrange
     fields = []
-    for name in JSON_RESPONSES.keys():
+    for name in PLAIN_TEXT_RESPONSES.keys():
         filename = TEST_FILE_DIR / name
         file = ('files', (filename.name, open(filename, 'rb'), 'text/plain'))
         fields.append(file)
     fields.append(('checkers', 'ags'))
-    fields.append(('std_dictionary', 'v4_1'))
+    fields.append(('std_dictionary', 'v4_1_1'))
     fields.append(('fmt', 'text'))
     mp_encoder = MultipartEncoder(fields=fields)
 

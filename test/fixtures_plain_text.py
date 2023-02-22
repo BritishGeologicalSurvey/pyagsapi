@@ -8,7 +8,7 @@ example_ags.ags: All checks passed!
 
 File size: 4039 bytes
 Checkers: ['python_ags4 v0.4.1']
-Dictionary: Standard_dictionary_v4_1.ags
+Dictionary: Standard_dictionary_v4_1_1.ags
 Time: 2021-08-23 14:25:43+00:00
 
 
@@ -142,7 +142,7 @@ Blackburn Southern Bypass.ags: 95 error(s) found in file!
 
 File size: 6566 bytes
 Checkers: ['python_ags4 v0.4.1']
-Dictionary: Standard_dictionary_v4_0_4.ags
+Dictionary: Standard_dictionary_v4_1_1.ags
 Time: 2021-08-23 14:25:43+00:00
 
 
