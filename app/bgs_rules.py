@@ -181,6 +181,11 @@ def check_loca_within_great_britain(tables: dict) -> List[dict]:
         ni_outline = gpd.read_file(NI_OUTLINE).loc[0, 'geometry']
         to_irish_grid = Transformer.from_crs("EPSG:27700", "EPSG:29903", always_xy=True)
 
+        # Check for empty point
+        if row['geometry'].is_empty:
+            return {'line': '-', 'group': 'LOCA',
+                    'desc': f'NATE / NATN is an empty point ({row.name})'}
+
         # Check for points within gb_outline
         if row['geometry'].intersects(gb_outline):
             return None
