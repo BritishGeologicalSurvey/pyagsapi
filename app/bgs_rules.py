@@ -319,7 +319,7 @@ def check_sample_referencing(tables: dict) -> List[dict]:
                               f'not in SAMP group ({no_parent_ids})')})
         return errors
 
-    def internal_consistency(group, id_pairs):
+    def internal_consistency(group: str, id_pairs: pd.DataFrame):
         errors = []
 
         # Check for missing IDs
@@ -329,7 +329,8 @@ def check_sample_referencing(tables: dict) -> List[dict]:
                  'desc': f"Record {row_id + 1} is missing either SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF)"})
 
         #  Remove null pairs and fill blank sample ids with composite ids
-        id_pairs = id_pairs[id_pairs.notna().any(axis=1)]
+        rows_without_any_nulls = id_pairs.notna().any(axis=1)
+        id_pairs = id_pairs.loc[rows_without_any_nulls].copy()
         id_pairs['samp_id'].fillna(id_pairs['comp_id'], inplace=True)
 
         # Check for duplicate IDs
