@@ -327,6 +327,43 @@ async def test_validate_bgs_text(async_client):
     assert 'text/plain' in response.headers['content-type']
 
 
+@pytest.mark.parametrize('dictionary, filename, expected', [
+    ('v4_1_1', 'example_ags.ags', 'Standard_dictionary_v4_1_1.ags'),
+    ('v4_1', 'example_ags.ags', 'Standard_dictionary_v4_1.ags'),
+    ('v4_0_4', 'example_ags.ags', 'Standard_dictionary_v4_0_4.ags'),
+    (None, 'example_ags.ags', 'Standard_dictionary_v4_1.ags'),  # Defaults to value set in the file
+    (None, 'nonsense.ags', 'Standard_dictionary_v4_1_1.ags'),  # Defaults to latest dictionary
+])
+@pytest.mark.asyncio
+async def test_validate_dictionary_choice(async_client, dictionary, filename, expected):
+    """
+    Confirm that the specified dictionary is used, or if not, either the one in the file
+    where specified, or the latest.
+    """
+    # Arrange
+    filename = TEST_FILE_DIR / filename
+    file_ = ('files', (filename.name, open(filename, 'rb'), 'text/plain'))
+
+    fields = []
+    fields.append(file_)
+    fields.append(('checkers', 'ags'))
+    fields.append(('std_dictionary', dictionary))
+    fields.append(('fmt', 'json'))
+    mp_encoder = MultipartEncoder(fields=fields)
+
+    # Act
+    async with async_client as ac:
+        response = await ac.post(
+            '/validate/',
+            headers={'Content-Type': mp_encoder.content_type},
+            data=mp_encoder.to_string())
+
+    # Assert
+    assert response.status_code == 200
+    assert 'application/json' in response.headers['content-type']
+    assert response.json()['data'][0]['dictionary'] == expected
+
+
 @pytest.fixture(scope="function")
 def client():
     return TestClient(app)
