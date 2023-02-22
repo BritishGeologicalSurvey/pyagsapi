@@ -29,7 +29,7 @@ def validate(filename: Path,
 
     :raises ValueError: Raised if dictionary provided is not available.
     """
-    logger.info("Validate called for %", filename.name)
+    logger.info("Validate called for %s", filename.name)
 
     # Prepare response with metadata
     response = _prepare_response_metadata(filename)
