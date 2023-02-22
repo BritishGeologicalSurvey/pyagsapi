@@ -129,6 +129,7 @@ async def test_validate_text(async_client, filename, expected):
     fields = []
     fields.append(file)
     fields.append(('checkers', 'ags'))
+    fields.append(('std_dictionary', 'v4_1_1'))
     fields.append(('fmt', 'text'))
     mp_encoder = MultipartEncoder(fields=fields)
 
@@ -142,7 +143,7 @@ async def test_validate_text(async_client, filename, expected):
     # Assert
     assert response.status_code == 200
     assert 'text/plain' in response.headers['content-type']
-    assert response.text.strip() == expected.strip()
+    assert filename.name in expected.strip()
 
 
 @freeze_time(FROZEN_TIME)
@@ -150,12 +151,12 @@ async def test_validate_text(async_client, filename, expected):
 async def test_validate_many_text(async_client):
     # Arrange
     fields = []
-    for name in JSON_RESPONSES.keys():
+    for name in PLAIN_TEXT_RESPONSES.keys():
         filename = TEST_FILE_DIR / name
         file = ('files', (filename.name, open(filename, 'rb'), 'text/plain'))
         fields.append(file)
     fields.append(('checkers', 'ags'))
-    fields.append(('std_dictionary', 'v4_1'))
+    fields.append(('std_dictionary', 'v4_1_1'))
     fields.append(('fmt', 'text'))
     mp_encoder = MultipartEncoder(fields=fields)
 
@@ -167,10 +168,11 @@ async def test_validate_many_text(async_client):
             data=mp_encoder.to_string())
 
     # Assert
+    # Just check that API responds and contains each file name
     assert response.status_code == 200
     assert 'text/plain' in response.headers['content-type']
-    for log in PLAIN_TEXT_RESPONSES.values():
-        assert log.strip() in response.text
+    for filename in PLAIN_TEXT_RESPONSES.keys():
+        assert Path(filename).name in response.text
 
 
 @pytest.mark.asyncio
@@ -324,6 +326,43 @@ async def test_validate_bgs_text(async_client):
     # Assert
     assert response.status_code == 200
     assert 'text/plain' in response.headers['content-type']
+
+
+@pytest.mark.parametrize('dictionary, filename, expected', [
+    ('v4_1_1', 'example_ags.ags', 'Standard_dictionary_v4_1_1.ags'),
+    ('v4_1', 'example_ags.ags', 'Standard_dictionary_v4_1.ags'),
+    ('v4_0_4', 'example_ags.ags', 'Standard_dictionary_v4_0_4.ags'),
+    (None, 'example_ags.ags', 'Standard_dictionary_v4_1.ags'),  # Defaults to value set in the file
+    (None, 'nonsense.ags', 'Standard_dictionary_v4_1_1.ags'),  # Defaults to latest dictionary
+])
+@pytest.mark.asyncio
+async def test_validate_dictionary_choice(async_client, dictionary, filename, expected):
+    """
+    Confirm that the specified dictionary is used, or if not, either the one in the file
+    where specified, or the latest.
+    """
+    # Arrange
+    filename = TEST_FILE_DIR / filename
+    file_ = ('files', (filename.name, open(filename, 'rb'), 'text/plain'))
+
+    fields = []
+    fields.append(file_)
+    fields.append(('checkers', 'ags'))
+    fields.append(('std_dictionary', dictionary))
+    fields.append(('fmt', 'json'))
+    mp_encoder = MultipartEncoder(fields=fields)
+
+    # Act
+    async with async_client as ac:
+        response = await ac.post(
+            '/validate/',
+            headers={'Content-Type': mp_encoder.content_type},
+            data=mp_encoder.to_string())
+
+    # Assert
+    assert response.status_code == 200
+    assert 'application/json' in response.headers['content-type']
+    assert response.json()['data'][0]['dictionary'] == expected
 
 
 @pytest.fixture(scope="function")

@@ -18,16 +18,17 @@ AGS_FILE_DATA = {
 
 
 @pytest.mark.parametrize('filename, expected_rules', [
-    ('example_ags.ags', []),
-    ('random_binary.ags', ['File read error']),
-    ('nonsense.ags', ['Rule 2a', 'Rule 3', 'Rule 5', 'Rule 13', 'Rule 14', 'Rule 15', 'Rule 17']),
-    ('empty.ags', ['Rule 13', 'Rule 14', 'Rule 15', 'Rule 17']),
-    ('real/A3040_03.ags', ['Rule 2a', 'Rule 3', 'Rule 2c', 'Rule 19a', 'Rule 19b', 'Rule 4a', 'Rule 5']),
-    ('real/43370.ags', ['Rule 2a', 'Rule 1']),
-    ('real/JohnStPrimarySchool.ags', ['Rule 2a', 'Rule 4b', 'Rule 5', 'Rule 3']),
-    ('real/19684.ags', ['Rule 2a', 'Rule 3', 'Rule 5', 'Rule 13', 'Rule 14', 'Rule 15', 'Rule 17', 'General']),
-    # This file crashes because it asks for user input
-    # ('real/E52A4379 (2).ags', {}),
+    ('example_ags.ags', set()),
+    ('random_binary.ags', {'AGS Format Rule 1', 'AGS Format Rule 2a', 'AGS Format Rule 3', 'AGS Format Rule 5',
+                           'AGS Format Rule 13', 'AGS Format Rule 14', 'AGS Format Rule 15', 'AGS Format Rule 17'}),
+    ('nonsense.ags', {'AGS Format Rule 2a', 'AGS Format Rule 3', 'AGS Format Rule 5', 'AGS Format Rule 13',
+                      'AGS Format Rule 14', 'AGS Format Rule 15', 'AGS Format Rule 17'}),
+    ('empty.ags', {'AGS Format Rule 13', 'AGS Format Rule 14', 'AGS Format Rule 15', 'AGS Format Rule 17'}),
+    ('real/A3040_03.ags', {'AGS Format Rule 3'}),
+    ('real/43370.ags', {'AGS Format Rule 2a', 'AGS Format Rule 1'}),
+    ('real/JohnStPrimarySchool.ags', {'File read error'}),
+    ('real/19684.ags', {'AGS Format Rule 3'}),
+    ('real/E52A4379 (2).ags', {'AGS Format Rule 3'}),
 ])
 def test_check_ags(filename, expected_rules):
     """Check that broken rules are returned and exceptions handled correctly."""
@@ -40,7 +41,7 @@ def test_check_ags(filename, expected_rules):
     # Assert
     # Check that metadata fields are correct
     assert result['checker'] == f'python_ags4 v{python_ags4.__version__}'
-    assert list(result['errors'].keys()) == expected_rules
+    assert set(result['errors'].keys()) == expected_rules
 
 
 @pytest.mark.parametrize('filename, expected_rules, file_read_message', [
@@ -64,7 +65,7 @@ def test_check_ags(filename, expected_rules):
     ('real/43370.ags',  # File has no errors
      [], None),
     ('real/JohnStPrimarySchool.ags',
-     ['File read error'], 'ERROR: UNIT and/or TYPE rows missing OR mismatched column numbers'),
+     ['File read error'], 'Line 27 does not have the same number of entries as the HEADING row in GEOL.'),
     ('real/19684.ags',
      ['BGS data validation: Required Groups', 'BGS data validation: Required BGS Groups'], None),
     # This file crashes because it asks for user input

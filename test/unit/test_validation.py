@@ -123,7 +123,8 @@ def test_validate(filename, expected):
     filename = TEST_FILE_DIR / filename
 
     # Act
-    response = validation.validate(filename)
+    response = validation.validate(filename,
+                                   standard_AGS4_dictionary='Standard_dictionary_v4_1_1.ags')
 
     # Assert
     # Check that metadata fields are correct
