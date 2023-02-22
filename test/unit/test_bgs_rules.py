@@ -125,16 +125,16 @@ def test_loca_within_great_britain():
     expected = [
         {'desc': 'NATE / NATN outside Great Britain and Northern Ireland (Bad NATE)',
          'group': 'LOCA',
-         'line': '-'},
+         'line': '2'},
         {'desc': 'NATE / NATN outside Great Britain and Northern Ireland (Bad NATN)',
          'group': 'LOCA',
-         'line': '-'},
+         'line': '3'},
         {'desc': 'NATE / NATN outside Great Britain and Northern Ireland (Derry)',  # these coords given in EPSG:27700
          'group': 'LOCA',
-         'line': '-'},
+         'line': '4'},
         {'desc': 'NATE / NATN in Northern Ireland but LOCA_GREF undefined (Belfast)',
          'group': 'LOCA',
-         'line': '-'}
+         'line': '6'}
     ]
 
     tables, _, _ = load_AGS4_as_numeric(filename)
