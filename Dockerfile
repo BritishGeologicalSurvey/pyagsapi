@@ -1,4 +1,4 @@
-FROM tiangolo/uvicorn-gunicorn-fastapi:python3.8
+FROM tiangolo/uvicorn-gunicorn-fastapi:python3.8-2021-10-02
 
 ## Install python-ags4
 COPY requirements.txt .
