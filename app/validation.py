@@ -43,7 +43,8 @@ def validate(filename: Path,
                    f"Installed dictionaries: {STANDARD_DICTIONARIES.keys()}")
             raise ValueError(msg)
     else:
-        dictionary_file = None
+        # Choose the highest available version
+        dictionary_file = list(STANDARD_DICTIONARIES.values())[-1]
 
     all_errors = {}
     all_checkers = []

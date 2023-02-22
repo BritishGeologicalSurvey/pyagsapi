@@ -5,7 +5,7 @@ JSON_RESPONSES = {
         'filename': 'example_ags.ags',
         'filesize': 4039,
         'checkers': ['python_ags4 v0.4.1'],
-        'dictionary': 'Standard_dictionary_v4_1.ags',  # "TRAN_AGS" = "4.1"
+        'dictionary': 'Standard_dictionary_v4_1_1.ags',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
         'message': 'All checks passed!',
         'errors': {},
@@ -183,7 +183,7 @@ JSON_RESPONSES = {
         'filename': 'CG014058_F.ags',
         'filesize': 50574,
         'checkers': ['python_ags4 v0.4.1'],
-        'dictionary': '',
+        'dictionary': 'Standard_dictionary_v4_1_1.ags',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
         'message': '1 error(s) found in file!',
         'errors': {'AGS Format Rule 3': [{'desc': 'Line starts with "**PROJ" instead '
@@ -199,7 +199,7 @@ JSON_RESPONSES = {
         'filename': 'Blackburn Southern Bypass.ags',
         'filesize': 6566,
         'checkers': ['python_ags4 v0.4.1'],
-        'dictionary': 'Standard_dictionary_v4_0_4.ags',
+        'dictionary': 'Standard_dictionary_v4_1_1.ags',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
         'message': '95 error(s) found in file!',
         'errors': {'AGS Format Rule 1': [{'desc': 'Has Non-ASCII character(s) and/or '
@@ -593,7 +593,7 @@ JSON_RESPONSES = {
         'filename': 'A3040_03.ags',
         'filesize': 264526,
         'checkers': ['python_ags4 v0.4.1'],
-        'dictionary': '',
+        'dictionary': 'Standard_dictionary_v4_1_1.ags',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
         'message': '1 error(s) found in file!',
         'errors': {'AGS Format Rule 3': [{'desc': 'Line starts with "**PROJ" instead '
@@ -626,7 +626,7 @@ BROKEN_JSON_RESPONSES = [
         'filename': 'nonsense.ags',
         'filesize': 9,
         'checkers': ['python_ags4 v0.4.1'],
-        'dictionary': 'Standard_dictionary_v4_1.ags',
+        'dictionary': 'Standard_dictionary_v4_1_1.ags',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
         'message': '7 error(s) found in file!',
         'errors': {

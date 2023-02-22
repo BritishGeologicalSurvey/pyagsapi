@@ -83,6 +83,22 @@ Line: 6 - Has Non-ASCII character(s).
 Line: 7 - Has Non-ASCII character(s).
 Line: 8 - Has Non-ASCII character(s).
 
+## AGS Format Rule 13
+
+Group: PROJ - PROJ table not found.
+
+## AGS Format Rule 14
+
+Group: TRAN - TRAN table not found.
+
+## AGS Format Rule 15
+
+Group: UNIT - UNIT table not found.
+
+## AGS Format Rule 17
+
+Group: TYPE - TYPE table not found.
+
 ## AGS Format Rule 2a
 
 Line: 1 - Is not terminated by <CR> and <LF> characters.
@@ -115,22 +131,6 @@ Line: 5 - Contains fields that are not enclosed in double quotes.
 Line: 6 - Contains fields that are not enclosed in double quotes.
 Line: 7 - Contains fields that are not enclosed in double quotes.
 Line: 8 - Contains fields that are not enclosed in double quotes.
-
-## AGS Format Rule 13
-
-Group: PROJ - PROJ table not found.
-
-## AGS Format Rule 14
-
-Group: TRAN - TRAN table not found.
-
-## AGS Format Rule 15
-
-Group: UNIT - UNIT table not found.
-
-## AGS Format Rule 17
-
-Group: TYPE - TYPE table not found.
 
 ================================================================================
 """,
@@ -253,13 +253,13 @@ Line: 1 - Does not start with a valid data descriptor.
 
 Line: 1 - Contains fields that are not enclosed in double quotes.
 
-## General
-
-Line:  - This file seems to be encoded with a byte-order-mark (BOM). It is highly recommended that the file be saved without BOM encoding to avoid issues with other sofware.
-
 ## AGS Format Rule 7
 
 Line: 86 - Headings not in order starting from LOCA_CHKG. Expected order: ...LOCA_ORID|LOCA_ORJO|LOCA_ORCO|LOCA_CHKG|LOCA_APPG|LOCA_PDEP
+
+## General
+
+Line:  - This file seems to be encoded with a byte-order-mark (BOM). It is highly recommended that the file be saved without BOM encoding to avoid issues with other sofware.
 
 ================================================================================
 """
