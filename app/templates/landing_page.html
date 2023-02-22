@@ -20,75 +20,72 @@
     <br>
     <h2>AGS Schema & Data Validation</h2>
     <br>
-    <h3>AGS Validation <strong>BETA</strong></h3>
-    <p>Performs validation using the <a href="https://gitlab.com/ags-data-format-wg/ags-python-library.">Official AGS Python Library</a> <strong>BETA version 0.3.6 - FOR TESTING ONLY, NOT FOR PRODUCTION USE</strong>, this implements checks of the rules as written in the AGS data format standard v4.x.</p>
-    <br>
-    <p>BGS aims to update to v1.x of the python library as soon as practicable at which point this will be suitable production use.</p>
+    <h3>AGS Validation </h3>
+      <p>Performs validation using the <a href="https://gitlab.com/ags-data-format-wg/ags-python-library.">Official AGS Python Library</a> <strong>version 0.4.1</strong>, this implements checks of the rules as written in the AGS data format standard v4.x.</p>
     <br>
     <h3>BGS Data Validation</h3>
+      <p>Your files will be validated against the below rules as defined by BGS/NGDC.</p>
       <button type="button" class="collapsible">National Geoscience Data Centre requirements</button>
       <div class="content">
-      <p>Your files will be validated against the following rules as defined by BGS/NGDC:</p>
       <table class="tg">
-<thead>
-  <tr>
-    <th class="tg-0lax">Check</th>
-    <th class="tg-0lax">Notes</th>
-  </tr>
-</thead>
-<tbody>
-  <tr>
-    <td class="tg-0lax"> Required Groups</td>
-    <td class="tg-0lax">Groups shall include PROJ, LOCA or HOLE, ABBR, TYPE, UNIT</td>
-  </tr>
-  <tr>
-    <td class="tg-0lax"> Required BGS Groups</td>
-    <td class="tg-0lax">Groups may include GEOL - required for BGS submission</td>
-  </tr>
-  <tr>
-    <td class="tg-0lax"> Spatial Referencing</td>
-    <td class="tg-0lax">Spatial referencing system defined in LOCA_GREF, LOCA_LREF or LOCA_LLZ.&nbsp;&nbsp;&nbsp;Example: LOCA_GREF:OSGB, LOCA_LREF:London Grid 1, LOCA_LLZ:WGS84</td>
-  </tr>
-  <tr>
-    <td class="tg-0lax"> Easting/Northing present.</td>
-    <td class="tg-0lax">LOCA_NATE and LOCA_NATN are populated. Zeros or null do not pass</td>
-  </tr>
-  <tr>
-    <td class="tg-0lax"> Easting/Northing values fall within&nbsp;&nbsp;&nbsp;reasonable range</td>
-    <td class="tg-0lax">LOCA_NATE values inside 100,000 to 800,000 range. LOCA_NATN values inside&nbsp;&nbsp;&nbsp;100,000 to 1,400,000 range</td>
-  </tr>
-  <tr>
-    <td class="tg-0lax"> Drill Depth (HDPH) present</td>
-    <td class="tg-0lax">HDPH_TOP does not contain null values. HDPH_BASE does not contain zero or&nbsp;&nbsp;&nbsp;null values. </td>
-  </tr>
-  <tr>
-    <td class="tg-0lax"> Drill depths (HDPH) have corresponding&nbsp;&nbsp;&nbsp;records in GEOL table</td>
-    <td class="tg-0lax">Checking HDPH LOCA_IDs are in GEOL group AND GEOL LOCA_IDs are in HDPH&nbsp;&nbsp;&nbsp;group</td>
-  </tr>
-  <tr>
-    <td class="tg-0lax"> Locations are onshore Great Britain or&nbsp;&nbsp;&nbsp;Northern Ireland</td>
-    <td class="tg-0lax">Note: If using Irish grid and GREF not entered, tool cannot currently&nbsp;&nbsp;&nbsp;differentiate from EPSG:27700 (OSGB)</td>
-  </tr>
-  <tr>
-    <td class="tg-0lax"> Any duplication between NATE/NATN, LOCX/LOCY&nbsp;&nbsp;&nbsp;and LON/LAT</td>
-    <td class="tg-0lax">Duplication presumes error in these columns which should be checked</td>
-  </tr>
-  <tr>
-    <td class="tg-0lax"> LOCA_ID references are valid</td>
-    <td class="tg-0lax">Checks all groups which have LOCA_ID are populated with a valid record&nbsp;&nbsp;&nbsp;present in the LOCA Group.</td>
-  </tr>
-  <tr>
-    <td class="tg-0lax"> SAMP_ID or LOCA_ID, SAMP_TOP, SAMP_TYPE,&nbsp;&nbsp;&nbsp;SAMP_REF references are valid</td>
-    <td class="tg-0lax">LOCA_ID, SAMP_TOP, SAMP_TYPE, SAMP_REF are all populated, not null, and&nbsp;&nbsp;&nbsp;unique in combination within SAMP group AND all LOCA_ID values are present in&nbsp;&nbsp;&nbsp;the LOCA group. Also all groups that reference the SAMP group as a parent,&nbsp;&nbsp;&nbsp;use either the SAMP_ID field or the combination of LOCA_ID, SAMP_TOP,&nbsp;&nbsp;&nbsp;SAMP_TYPE, SAMP_REF and that the parent exists in the SAMP group.</td>
-  </tr>
-</tbody>
-</table>
-    <h4>Future data validation rules: (Coming Soon)</h4>
-    <ul>
-    <li>LOC_LAT/LONG lie in reasonable range</li>
-    </ul>
-    </div>
-      <p><b>Files with TRIT & SUCT group present may report a "Duplicate sample id" error, this will be fixed shortly. All other BGS checks are working.</b></p>
+      <thead>
+        <tr>
+          <th class="tg-0lax">Check</th>
+          <th class="tg-0lax">Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="tg-0lax"> Required Groups</td>
+          <td class="tg-0lax">Groups shall include PROJ, LOCA or HOLE, ABBR, TYPE, UNIT</td>
+        </tr>
+        <tr>
+          <td class="tg-0lax"> Required BGS Groups</td>
+          <td class="tg-0lax">Groups may include GEOL - required for BGS submission</td>
+        </tr>
+        <tr>
+          <td class="tg-0lax"> Spatial Referencing</td>
+          <td class="tg-0lax">Spatial referencing system defined in LOCA_GREF, LOCA_LREF or LOCA_LLZ.&nbsp;&nbsp;&nbsp;Example: LOCA_GREF:OSGB, LOCA_LREF:London Grid 1, LOCA_LLZ:WGS84</td>
+        </tr>
+        <tr>
+          <td class="tg-0lax"> Easting/Northing present.</td>
+          <td class="tg-0lax">LOCA_NATE and LOCA_NATN are populated. Zeros or null do not pass</td>
+        </tr>
+        <tr>
+          <td class="tg-0lax"> Easting/Northing values fall within&nbsp;&nbsp;&nbsp;reasonable range</td>
+          <td class="tg-0lax">LOCA_NATE values inside 100,000 to 800,000 range. LOCA_NATN values inside&nbsp;&nbsp;&nbsp;100,000 to 1,400,000 range</td>
+        </tr>
+        <tr>
+          <td class="tg-0lax"> Drill Depth (HDPH) present</td>
+          <td class="tg-0lax">HDPH_TOP does not contain null values. HDPH_BASE does not contain zero or&nbsp;&nbsp;&nbsp;null values. </td>
+        </tr>
+        <tr>
+          <td class="tg-0lax"> Drill depths (HDPH) have corresponding&nbsp;&nbsp;&nbsp;records in GEOL table</td>
+          <td class="tg-0lax">Checking HDPH LOCA_IDs are in GEOL group AND GEOL LOCA_IDs are in HDPH&nbsp;&nbsp;&nbsp;group</td>
+        </tr>
+        <tr>
+          <td class="tg-0lax"> Locations are onshore Great Britain or&nbsp;&nbsp;&nbsp;Northern Ireland</td>
+          <td class="tg-0lax">Note: If using Irish grid and GREF not entered, tool cannot currently&nbsp;&nbsp;&nbsp;differentiate from EPSG:27700 (OSGB)</td>
+        </tr>
+        <tr>
+          <td class="tg-0lax"> Any duplication between NATE/NATN, LOCX/LOCY&nbsp;&nbsp;&nbsp;and LON/LAT</td>
+          <td class="tg-0lax">Duplication presumes error in these columns which should be checked</td>
+        </tr>
+        <tr>
+          <td class="tg-0lax"> LOCA_ID references are valid</td>
+          <td class="tg-0lax">Checks all groups which have LOCA_ID are populated with a valid record&nbsp;&nbsp;&nbsp;present in the LOCA Group.</td>
+        </tr>
+        <tr>
+          <td class="tg-0lax"> SAMP_ID or LOCA_ID, SAMP_TOP, SAMP_TYPE,&nbsp;&nbsp;&nbsp;SAMP_REF references are valid</td>
+          <td class="tg-0lax">LOCA_ID, SAMP_TOP, SAMP_TYPE, SAMP_REF are all populated, not null, and&nbsp;&nbsp;&nbsp;unique in combination within SAMP group AND all LOCA_ID values are present in&nbsp;&nbsp;&nbsp;the LOCA group. Also all groups that reference the SAMP group as a parent,&nbsp;&nbsp;&nbsp;use either the SAMP_ID field or the combination of LOCA_ID, SAMP_TOP,&nbsp;&nbsp;&nbsp;SAMP_TYPE, SAMP_REF and that the parent exists in the SAMP group.</td>
+        </tr>
+      </tbody>
+      </table>
+      <h4>Future data validation rules: (Coming Soon)</h4>
+      <ul>
+      <li>LOC_LAT/LONG lie in reasonable range</li>
+      </ul>
+      </div>
     <br>
     <form action="/validate/" enctype="multipart/form-data" method="post" id="validateForm">
         <br>
@@ -98,9 +95,9 @@
           </div></legend>
           <input type="radio" id="4.0.3" name="std_dictionary" value="v4_0_3">
           <label for="4.0.3">4.0.3</label>
-          <input type="radio" id="4.0.4" name="std_dictionary" value="v4_0_4" checked>
+          <input type="radio" id="4.0.4" name="std_dictionary" value="v4_0_4">
           <label for="4.0.4">4.0.4</label>
-          <input type="radio" id="4.1" name="std_dictionary" value="v4_1">
+          <input type="radio" id="4.1" name="std_dictionary" value="v4_1" checked>
           <label for="4.1">4.1</label>
       </fieldset>
         <br>
@@ -114,14 +111,14 @@
         <br>
       <fieldset>
           <legend>Select response format:</legend>
-          <input type="radio" id="text" name="fmt" value="text" checked>
+          <input type="radio" id="text" name="fmt" value="text">
           <label for="text">Plain Text</label>
           <input type="radio" id="json" name="fmt" value="json">
           <label for="json">JSON</label><br>
       </fieldset>
         <br>
       <fieldset>
-          <legend>Select .ags file(s) for validation (v4.x only). and submit <b>(50 Mb Maximum)</b></legend>
+          <legend>Select .ags / .AGS file(s) for validation (v4.x only) <b>(50 Mb Maximum)</b></legend>
           <input name="files" type="file" multiple>
           <input type="submit" class="submitBtn" value="Validate">
       </fieldset>
@@ -137,12 +134,20 @@
       </div>
       <br>
     <br>
-    <fieldset>
-        <legend>Select files <b>(50 Mb Maximum)</b></legend>
     <form action="/convert/" enctype="multipart/form-data" method="post" id="convertForm">
-    <input name="files" type="file" multiple>
-    <input type="submit" class="submitBtn" value="Convert" >
-    </fieldset>
+      <fieldset>
+        <legend><strong>.ags TO .xlsx only</strong> - sort worksheets in .xlsx file in alphabetical order (Warning: The original group order will be lost)</legend>
+        <input type="radio" id="text" name="fmt" value="True">
+        <label for="text">True</label>
+        <input type="radio" id="json" name="fmt" value="False" checked>
+        <label for="json">False</label><br>
+      </fieldset>
+      <br>
+      <fieldset>
+        <legend>Select files <b>(50 Mb Maximum)</b></legend>
+        <input name="files" type="file" multiple>
+        <input type="submit" class="submitBtn" value="Convert" >
+      </fieldset>
     </form>
 </section>
 <br>
