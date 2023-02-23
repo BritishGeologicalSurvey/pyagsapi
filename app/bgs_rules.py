@@ -352,15 +352,16 @@ def check_sample_referencing(tables: dict) -> List[dict]:
 
     # Check data
     errors = []
-    try:
-        sample = tables['SAMP']
-        samp_id_pairs = sample.apply(id_pair, axis=1)
-        samp_id_pairs.columns = ['samp_id', 'comp_id']
-        errors, samp_id_pairs = internal_consistency('SAMP', samp_id_pairs)
-        errors.extend(child_consistency('SAMP', samp_id_pairs['samp_id'], tables))
-    except KeyError:
-        # SAMP not present
-        pass
+    for group in ['SAMP']:
+        try:
+            sample = tables[group]
+            samp_id_pairs = sample.apply(id_pair, axis=1)
+            samp_id_pairs.columns = ['samp_id', 'comp_id']
+            errors, samp_id_pairs = internal_consistency(group, samp_id_pairs)
+            errors.extend(child_consistency(group, samp_id_pairs['samp_id'], tables))
+        except KeyError:
+            # SAMP not present
+            pass
 
     return errors
 
