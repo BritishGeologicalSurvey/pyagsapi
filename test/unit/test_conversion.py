@@ -30,8 +30,8 @@ def test_convert(tmp_path, filename, expected):
     assert re.search(expected_message, response['message'])
 
 
-@pytest.mark.parametrize('sort_tables', [True, False])
-def test_sort_tables(tmp_path, sort_tables):
+@pytest.mark.parametrize('sort_tables', [True, False, None])
+def test_convert_sort_tables(tmp_path, sort_tables):
     # Arrange
     filename = Path(__file__).parent.parent / 'files' / 'example_ags.ags'
     tables, headings = AGS4.AGS4_to_dataframe(filename)
@@ -41,7 +41,10 @@ def test_sort_tables(tmp_path, sort_tables):
         results_dir.mkdir()
 
     # Act
-    converted_file, response = convert(filename, results_dir, sort_tables=sort_tables)
+    if sort_tables is not None:
+        converted_file, response = convert(filename, results_dir, sort_tables=sort_tables)
+    else:
+        converted_file, response = convert(filename, results_dir)
 
     # Assert
     assert converted_file is not None and converted_file.exists()
