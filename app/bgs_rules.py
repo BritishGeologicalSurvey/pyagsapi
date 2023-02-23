@@ -282,14 +282,15 @@ def check_loca_id_references_are_valid(tables: dict) -> List[dict]:
     return errors
 
 
-samp_id_keys = {
-    'SAMP': ['SAMP_ID'],
-    'TRIT': ['SAMP_ID', 'TRIT_TESN'],
-}
-
-comp_id_keys = {
-    'SAMP': ['LOCA_ID', 'SAMP_TOP', 'SAMP_TYPE', 'SAMP_REF'],
-    'TRIT': ['LOCA_ID', 'SAMP_TOP', 'SAMP_TYPE', 'SAMP_REF', 'TRIT_TESN'],
+group_id_keys = {
+    'SAMP': {
+        'samp_id_keys': ['SAMP_ID'],
+        'comp_id_keys': ['LOCA_ID', 'SAMP_TOP', 'SAMP_TYPE', 'SAMP_REF']
+    },
+    'TRIT': {
+        'samp_id_keys': ['SAMP_ID', 'TRIT_TESN'],
+        'comp_id_keys': ['LOCA_ID', 'SAMP_TOP', 'SAMP_TYPE', 'SAMP_REF', 'TRIT_TESN']
+    },
 }
 
 
@@ -319,19 +320,21 @@ def check_sample_referencing(tables: dict) -> List[dict]:
 
     def id_pair(row, group):
         samp_id = None
-        if set(samp_id_keys[group]) <= set(row.keys()) and values_all_valid(row, samp_id_keys[group]):
-            samp_id = id_from_keys(row, samp_id_keys[group])
+        if (set(group_id_keys[group]['samp_id_keys']) <= set(row.keys())
+                and values_all_valid(row, group_id_keys[group]['samp_id_keys'])):
+            samp_id = id_from_keys(row, group_id_keys[group]['samp_id_keys'])
 
         comp_id = None
-        if set(comp_id_keys[group]) <= set(row.keys()) and values_all_valid(row, comp_id_keys[group]):
-            comp_id = id_from_keys(row, comp_id_keys[group])
+        if (set(group_id_keys[group]['comp_id_keys']) <= set(row.keys())
+                and values_all_valid(row, group_id_keys[group]['comp_id_keys'])):
+            comp_id = id_from_keys(row, group_id_keys[group]['comp_id_keys'])
         return pd.Series([samp_id, comp_id])
 
     def child_consistency(parent_group, samp_ids, tables: dict) -> List[dict]:
         errors = []
         children = [group for group in tables.keys()
-                    if (set(samp_id_keys[parent_group]) <= set(tables[group].columns)
-                        or set(comp_id_keys[parent_group]) <= set(tables[group].columns))
+                    if (set(group_id_keys[parent_group]['samp_id_keys']) <= set(tables[group].columns)
+                        or set(group_id_keys[parent_group]['comp_id_keys']) <= set(tables[group].columns))
                     and group != parent_group]
         for group in children:
             child_id_pairs = tables[group].apply(id_pair, axis=1, args=(parent_group,))
@@ -340,8 +343,8 @@ def check_sample_referencing(tables: dict) -> List[dict]:
             if no_parent_ids := sorted(list(set(child_id_pairs['samp_id']).difference(set(samp_ids)))):
                 errors.append(
                     {'line': '-', 'group': f'{group}',
-                     'desc': (f"No parent id: {','.join(samp_id_keys[parent_group])} or "
-                              f"({','.join(comp_id_keys[parent_group])}) "
+                     'desc': (f"No parent id: {','.join(group_id_keys[parent_group]['samp_id_keys'])} or "
+                              f"({','.join(group_id_keys[parent_group]['comp_id_keys'])}) "
                               f"not in {parent_group} group ({no_parent_ids})")})
         return errors
 
@@ -352,8 +355,9 @@ def check_sample_referencing(tables: dict) -> List[dict]:
         for row_id in id_pairs[id_pairs.isna().all(axis=1)].index.to_list():
             errors.append(
                 {'line': '-', 'group': f'{group}',
-                 'desc': f"Record {row_id + 1} is missing either {','.join(samp_id_keys[parent_group])} or "
-                         f"({','.join(comp_id_keys[parent_group])})"})
+                 'desc': f"Record {row_id + 1} is missing either "
+                         f"{','.join(group_id_keys[parent_group]['samp_id_keys'])} or "
+                         f"({','.join(group_id_keys[parent_group]['comp_id_keys'])})"})
 
         #  Remove null pairs and fill blank sample ids with composite ids
         rows_without_any_nulls = id_pairs.notna().any(axis=1)
@@ -364,8 +368,8 @@ def check_sample_referencing(tables: dict) -> List[dict]:
         for samp_id in sorted(list(set(id_pairs[id_pairs['samp_id'].duplicated()]['samp_id']))):
             errors.append(
                 {'line': '-', 'group': f'{group}',
-                 'desc': (f"Duplicate sample id {samp_id}: {','.join(samp_id_keys[parent_group])} "
-                          f"or ({','.join(comp_id_keys[parent_group])}) "
+                 'desc': (f"Duplicate sample id {samp_id}: {','.join(group_id_keys[parent_group]['samp_id_keys'])} "
+                          f"or ({','.join(group_id_keys[parent_group]['comp_id_keys'])}) "
                           f"must be unique")})
         # remove duplicate ids
         id_pairs = id_pairs[~ id_pairs['samp_id'].duplicated()]
@@ -380,7 +384,7 @@ def check_sample_referencing(tables: dict) -> List[dict]:
 
     # Check data
     errors = []
-    for group in ['SAMP', 'TRIT']:
+    for group in group_id_keys.keys():
         try:
             sample = tables[group]
             samp_id_pairs = sample.apply(id_pair, axis=1, args=(group,))
