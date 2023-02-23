@@ -81,6 +81,14 @@ conversion_file = File(
     description='An AGS or XLSX file',
 )
 
+sort_tables_form = Form(
+    default=False,
+    title='Sort worksheets',
+    description=('Sort the worksheets into alphabetical order '
+                 'or leave in the order found in the AGS file. '
+                 'This option is ignored when converting to AGS.'),
+)
+
 
 @router.post("/validate/",
              response_model=ValidationResponse,
@@ -131,6 +139,7 @@ async def validate(background_tasks: BackgroundTasks,
              responses=zip_responses)
 async def convert(background_tasks: BackgroundTasks,
                   files: List[UploadFile] = conversion_file,
+                  sort_tables: bool = sort_tables_form,
                   request: Request = None):
     if not files[0].filename:
         raise InvalidPayloadError(request)
@@ -145,7 +154,7 @@ async def convert(background_tasks: BackgroundTasks,
             contents = await file.read()
             local_file = tmp_dir / file.filename
             local_file.write_bytes(contents)
-            converted, result = conversion.convert(local_file, results_dir)
+            converted, result = conversion.convert(local_file, results_dir, sort_tables=sort_tables)
             log = validation.to_plain_text(result)
             f.write(log)
             f.write('\n' + '=' * 80 + '\n')
