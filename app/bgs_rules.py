@@ -7,6 +7,8 @@ from pyproj.transformer import Transformer
 import geopandas as gpd
 import pandas as pd
 
+from app.bgs_group_id_keys import get_group_id_keys
+
 """
 The gb_outline.geojson file contains public sector information licensed under
 Open Government Licence v3.0.  It was generated from Ordnance Survey Open Data
@@ -282,27 +284,17 @@ def check_loca_id_references_are_valid(tables: dict) -> List[dict]:
     return errors
 
 
-group_id_keys = {
-    'SAMP': {
-        'samp_id_keys': ['SAMP_ID'],
-        'comp_id_keys': ['LOCA_ID', 'SAMP_TOP', 'SAMP_TYPE', 'SAMP_REF']
-    },
-    'TRIT': {
-        'samp_id_keys': ['SAMP_ID', 'TRIT_TESN'],
-        'comp_id_keys': ['LOCA_ID', 'SAMP_TOP', 'SAMP_TYPE', 'SAMP_REF', 'TRIT_TESN']
-    },
-}
-
-
 def check_sample_referencing(tables: dict) -> List[dict]:
-    """If a SAMP group exists it must:
+    """
+       If a SAMP group exists it must:
         - have an identifier SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF)
         - all identifiers must be unique
-        - for any children of SAMP, child IDs must appear in SAMP group
-       If a TRIT group exists it must:
-        - have an identifier (SAMP_ID,TRIT_TESN) or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF,TRIT_TESN)
+
+       For all child groups see bgs_group_id_keys:
+        - have an identifier matching 'samp_id' or 'comp_id' for that group
         - all identifiers must be unique
-        - for any children of TRIT, child IDs must appear in TRIT group
+        - the identifier SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF)
+          must appear in the SAMP group
     """
 
     def values_all_valid(row, id_keys):
@@ -319,7 +311,7 @@ def check_sample_referencing(tables: dict) -> List[dict]:
         return id_
 
     def id_pair(row, group):
-        id_keys = group_id_keys.get(group, group_id_keys['SAMP'])
+        id_keys = get_group_id_keys(group)
 
         samp_id = None
         if (set(id_keys['samp_id_keys']) <= set(row.keys())
@@ -336,7 +328,7 @@ def check_sample_referencing(tables: dict) -> List[dict]:
         errors = []
         children = []
         for group in tables.keys():
-            id_keys = group_id_keys.get(group, group_id_keys['SAMP'])
+            id_keys = get_group_id_keys(group)
             if ((set(id_keys['samp_id_keys']) <= set(tables[group].columns)
                     or set(id_keys['comp_id_keys']) <= set(tables[group].columns))
                     and group != 'SAMP'):
@@ -363,7 +355,7 @@ def check_sample_referencing(tables: dict) -> List[dict]:
 
     def internal_consistency(group: str, id_pairs: pd.DataFrame):
         errors = []
-        id_keys = group_id_keys.get(group, group_id_keys['SAMP'])
+        id_keys = get_group_id_keys(group)
 
         # Check for missing IDs
         for row_id in id_pairs[id_pairs.isna().all(axis=1)].index.to_list():
