@@ -167,9 +167,7 @@ agsHtml.displayFileResult=function(fileResult){
     var i=0;
     var errGroups=[];
     var errGroup="";
-
-    // console.log("displayFileResult");
-    // console.log(fileResult);
+    var summaries=[];
 
     xhtml=xhtml + "<article>";
 
@@ -184,8 +182,16 @@ agsHtml.displayFileResult=function(fileResult){
     xhtml=xhtml + "<p><label>Time (UTC)</label> <strong>" + fileResult.time.substring(0,19).replace("T"," ") + "</strong></p>";
 
     if(fileResult.additional_metadata){
+
+        summaries=Object.getOwnPropertyNames(fileResult.additional_metadata);
+
         xhtml=xhtml + "<h4>Summary</h4>";
         xhtml=xhtml + "<ul class='fileResSummary'>";
+
+        if(summaries.length === 0){
+            xhtml=xhtml + "<li>No summary generated due to errors reading file (see below)</li>";
+            };
+
         if(fileResult.additional_metadata.bgs_all_groups){
             xhtml=xhtml + "<li>" + fileResult.additional_metadata.bgs_all_groups + "</li>";
             };
