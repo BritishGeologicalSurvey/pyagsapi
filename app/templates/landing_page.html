@@ -137,10 +137,10 @@
     <form action="/convert/" enctype="multipart/form-data" method="post" id="convertForm">
       <fieldset>
         <legend><strong>.ags TO .xlsx only</strong> - sort worksheets in .xlsx file in alphabetical order (Warning: The original group order will be lost)</legend>
-        <input type="radio" id="text" name="fmt" value="True">
-        <label for="text">True</label>
-        <input type="radio" id="json" name="fmt" value="False" checked>
-        <label for="json">False</label><br>
+        <input type="radio" id="alpha" name="sort_tables" value="True">
+        <label for="alpha">True</label>
+        <input type="radio" id="default" name="sort_tables" value="False" checked>
+        <label for="default">False</label><br>
       </fieldset>
       <br>
       <fieldset>
