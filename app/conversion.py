@@ -26,7 +26,7 @@ def convert(filename: Path, results_dir: Path) -> Tuple[Optional[Path], dict]:
 
     # Do the conversion
     success = False
-    if filename.suffix == '.ags':
+    if filename.suffix.lower() == '.ags':
         try:
             AGS4.AGS4_to_excel(filename, converted_file)
             success = True

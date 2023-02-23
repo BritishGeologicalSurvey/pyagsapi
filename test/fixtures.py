@@ -8,7 +8,7 @@ GOOD_FILE_DATA = [
 ]
 
 BAD_FILE_DATA = [
-    ('nonsense.ags', ('No valid AGS4 data found in input file.', 9)),
+    ('nonsense.AGS', ('No valid AGS4 data found in input file.', 9)),
     ('empty.ags', ('No valid AGS4 data found in input file.', 0)),
     ('dummy.xlsx', ("ERROR: Conversion failed", 4787)),
     ('random_binary.ags', ('No valid AGS4 data found in input file.', 1024)),

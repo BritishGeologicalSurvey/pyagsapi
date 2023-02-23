@@ -29,7 +29,7 @@ def validate(filename: Path,
 
     :raises ValueError: Raised if dictionary provided is not available.
     """
-    logger.info("Validate called for %", filename.name)
+    logger.info("Validate called for %s", filename.name)
 
     # Prepare response with metadata
     response = _prepare_response_metadata(filename)
@@ -48,7 +48,7 @@ def validate(filename: Path,
     all_errors = {}
     all_checkers = []
     # Don't process if file is not .ags format
-    if filename.suffix != '.ags':
+    if filename.suffix.lower() != '.ags':
         all_errors.update(
             {'File read error': [
                 {'line': '-', 'group': '', 'desc': f'{filename.name} is not an .ags file'}

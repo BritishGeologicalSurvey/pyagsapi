@@ -12,8 +12,8 @@ JSON_RESPONSES = {
         'valid': True,
         'additional_metadata': {}
     },
-    'nonsense.ags': {
-        'filename': 'nonsense.ags',
+    'nonsense.AGS': {
+        'filename': 'nonsense.AGS',
         'filesize': 9,
         'checkers': ['python_ags4 v0.4.1'],
         'dictionary': 'Standard_dictionary_v4_1_1.ags',
@@ -623,7 +623,7 @@ JSON_RESPONSES = {
 # These response values break the schema
 BROKEN_JSON_RESPONSES = [
     {
-        'filename': 'nonsense.ags',
+        'filename': 'nonsense.AGS',
         'filesize': 9,
         'checkers': ['python_ags4 v0.4.1'],
         'dictionary': 'Standard_dictionary_v4_1_1.ags',
@@ -638,7 +638,7 @@ BROKEN_JSON_RESPONSES = [
         'additional_metadata': {}
     },
     {
-        'filename': 'nonsense.ags',
+        'filename': 'nonsense.AGS',
         'filesize': 9,
         'checkers': ['python_ags4 v0.4.1'],
         'dictionary': 'Standard_dictionary_v4_1_1.ags',

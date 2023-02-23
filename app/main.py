@@ -48,12 +48,13 @@ def setup_logging(logging_level=logging.INFO):
     logging.getLogger('uvicorn.error').addHandler(ch)
     logging.getLogger('uvicorn.error').propagate = False
 
+    # Configure app logger
     # Log application startup (these messages appear once for each uvicorn
     # worker as it starts).
-    app_logger = logging.getLogger(__name__)
-    app_logger.setLevel(logging.INFO)
+    app_logger = logging.getLogger('app')
+    app_logger.setLevel(logging_level)
     app_logger.addHandler(ch)
-    app_logger.propagate = False
+    app_logger.propagate = True
 
     # Start logging
     app_logger.info(

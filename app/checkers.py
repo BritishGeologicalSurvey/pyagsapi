@@ -17,6 +17,13 @@ logger = logging.getLogger(__name__)
 
 
 def check_ags(filename: Path, standard_AGS4_dictionary: Optional[str] = None) -> dict:
+    if standard_AGS4_dictionary:
+        dictionary_file = Path(standard_AGS4_dictionary).name
+    else:
+        dictionary_file = 'None supplied'
+    logger.info("Checking %s against AGS rules (Dictionary: %s).",
+                filename.name, dictionary_file)
+
     # Get error information from file
     try:
         errors = AGS4.check_file(filename,
@@ -49,6 +56,7 @@ def check_bgs(filename: Path, **kwargs) -> dict:
     Validate file against BGS rules.  kwargs parameter required because some
     validation functions have keyword parameters.
     """
+    logger.info("Checking %s against BGS rules.", filename.name)
     errors = {}
     error_message = None
     bgs_metadata = {}
@@ -73,6 +81,7 @@ def check_bgs(filename: Path, **kwargs) -> dict:
 
         # Apply checks
         for rule, func in BGS_RULES.items():
+            logger.info("Checking against %s", rule)
             result = func(tables)
             if result:
                 errors[rule] = result
