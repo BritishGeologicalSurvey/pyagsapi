@@ -58,8 +58,7 @@ def test_check_ags(filename, expected_rules):
     ('real/Mount Severn- Environment Agency.ags',
      ['BGS data validation: Non-numeric coordinate types', 'BGS data validation: Spatial Referencing'], None),
     ('real/A112794-16 Glenally_Road_Factual_FINAL.ags',
-     ['BGS data validation: Spatial Referencing', 'BGS data validation: LOCA within Great Britain',
-      'BGS data validation: Sample Referencing'], None),
+     ['BGS data validation: Spatial Referencing', 'BGS data validation: LOCA within Great Britain'], None),
     ('real/A3040_03.ags',
      ['File read error'], 'ERROR: File contains duplicate headers'),
     ('real/43370.ags',  # File has no errors
