@@ -7,6 +7,8 @@ from freezegun import freeze_time
 import pytest
 from httpx import AsyncClient
 from requests_toolbelt.multipart.encoder import MultipartEncoder
+import pandas as pd
+from python_ags4 import AGS4
 
 from app.main import app
 from test.fixtures import (BAD_FILE_DATA, DICTIONARIES, FROZEN_TIME,
@@ -209,6 +211,46 @@ async def test_convert_good_files(async_client, tmp_path):
         expected_message, expected_new_file_name = expected
         assert (unzipped_files / expected_new_file_name).is_file()
         assert expected_message in log
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize('sort_tables', [True, False])
+async def test_convert_sort_tables(async_client, tmp_path, sort_tables):
+    # Arrange
+    fields = []
+    filename = TEST_FILE_DIR / 'example_ags.ags'
+    tables, headings = AGS4.AGS4_to_dataframe(filename)
+    groups = list(tables.keys())
+
+    file = ('files', (filename.name, open(filename, 'rb'), 'text/plain'))
+    fields.append(file)
+    fields.append(('sort_tables', str(sort_tables)))
+    mp_encoder = MultipartEncoder(fields=fields)
+
+    # Act
+    async with async_client as ac:
+        response = await ac.post(
+            '/convert/',
+            headers={'Content-Type': mp_encoder.content_type},
+            data=mp_encoder.to_string())
+
+    # Assert
+    assert response.status_code == 200
+    assert response.headers['content-type'] == 'application/x-zip-compressed'
+    assert response.headers['content-disposition'] == 'attachment; filename=results.zip'
+
+    zip_file = tmp_path / 'results.zip'
+    unzipped_files = tmp_path / 'results'
+    with open(zip_file, 'wb') as f:
+        f.write(response.content)
+    shutil.unpack_archive(zip_file, unzipped_files, 'zip')
+    xl_file = unzipped_files / 'example_ags.xlsx'
+    assert xl_file.is_file()
+    xl = pd.ExcelFile(xl_file)
+    if sort_tables:
+        assert xl.sheet_names == sorted(groups)
+    else:
+        assert xl.sheet_names == groups
 
 
 @pytest.mark.asyncio
