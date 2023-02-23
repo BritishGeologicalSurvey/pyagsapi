@@ -301,20 +301,20 @@ def check_sample_referencing(tables: dict) -> List[dict]:
             comp_id = f"{row['LOCA_ID']},{row['SAMP_TOP']},{row['SAMP_TYPE']},{row['SAMP_REF']}"
         return pd.Series([samp_id, comp_id])
 
-    def child_consistency(samp_ids, tables: dict) -> List[dict]:
+    def child_consistency(group, samp_ids, tables: dict) -> List[dict]:
         errors = []
-        children = [group for group in tables.keys()
-                    if ('SAMP_ID' in tables[group].columns
-                        or {'LOCA_ID', 'SAMP_TOP', 'SAMP_TYPE', 'SAMP_REF'} <= set(tables[group].columns))
-                    and group != 'SAMP']
+        children = [child_group for child_group in tables.keys()
+                    if ('SAMP_ID' in tables[child_group].columns
+                        or {'LOCA_ID', 'SAMP_TOP', 'SAMP_TYPE', 'SAMP_REF'} <= set(tables[child_group].columns))
+                    and child_group != group]
 
-        for group in children:
-            child_id_pairs = tables[group].apply(id_pair, axis=1)
+        for child_group in children:
+            child_id_pairs = tables[child_group].apply(id_pair, axis=1)
             child_id_pairs.columns = ['samp_id', 'comp_id']
-            errors, child_id_pairs = internal_consistency(group, child_id_pairs)
+            errors, child_id_pairs = internal_consistency(child_group, child_id_pairs)
             if no_parent_ids := sorted(list(set(child_id_pairs['samp_id']).difference(set(samp_ids)))):
                 errors.append(
-                    {'line': '-', 'group': f'{group}',
+                    {'line': '-', 'group': f'{child_group}',
                      'desc': (f'No parent id: SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF) '
                               f'not in SAMP group ({no_parent_ids})')})
         return errors
@@ -351,15 +351,16 @@ def check_sample_referencing(tables: dict) -> List[dict]:
         return errors, id_pairs
 
     # Check data
+    errors = []
     try:
         sample = tables['SAMP']
         samp_id_pairs = sample.apply(id_pair, axis=1)
         samp_id_pairs.columns = ['samp_id', 'comp_id']
         errors, samp_id_pairs = internal_consistency('SAMP', samp_id_pairs)
-        errors.extend(child_consistency(samp_id_pairs['samp_id'], tables))
+        errors.extend(child_consistency('SAMP', samp_id_pairs['samp_id'], tables))
     except KeyError:
         # SAMP not present
-        errors = []
+        pass
 
     return errors
 
