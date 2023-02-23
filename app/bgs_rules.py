@@ -310,6 +310,13 @@ def check_sample_referencing(tables: dict) -> List[dict]:
         id_ = ','.join(values)
         return id_
 
+    def clean_ids(id_pairs: pd.DataFrame):
+        #  Remove null pairs and fill blank sample ids with composite ids
+        rows_without_any_nulls = id_pairs.notna().any(axis=1)
+        id_pairs = id_pairs.loc[rows_without_any_nulls].copy()
+        id_pairs['samp_id'].fillna(id_pairs['comp_id'], inplace=True)
+        return id_pairs
+
     def id_pair(row, group):
         id_keys = get_group_id_keys(group)
 
@@ -342,9 +349,8 @@ def check_sample_referencing(tables: dict) -> List[dict]:
             # Parent ids refer to keys used by SAMP with extra fields
             parent_id_pairs = tables[group].apply(id_pair, axis=1, args=('SAMP',))
             parent_id_pairs.columns = ['samp_id', 'comp_id']
-            rows_without_any_nulls = parent_id_pairs.notna().any(axis=1)
-            parent_id_pairs = parent_id_pairs.loc[rows_without_any_nulls].copy()
-            parent_id_pairs['samp_id'].fillna(parent_id_pairs['comp_id'], inplace=True)
+            parent_id_pairs = clean_ids(parent_id_pairs)
+
             if no_parent_ids := sorted(list(set(parent_id_pairs['samp_id']).difference(set(samp_ids)))):
                 errors.append(
                     {'line': '-', 'group': f'{group}',
@@ -365,10 +371,7 @@ def check_sample_referencing(tables: dict) -> List[dict]:
                          f"{','.join(id_keys['samp_id_keys'])} or "
                          f"({','.join(id_keys['comp_id_keys'])})"})
 
-        #  Remove null pairs and fill blank sample ids with composite ids
-        rows_without_any_nulls = id_pairs.notna().any(axis=1)
-        id_pairs = id_pairs.loc[rows_without_any_nulls].copy()
-        id_pairs['samp_id'].fillna(id_pairs['comp_id'], inplace=True)
+        id_pairs = clean_ids(id_pairs)
 
         # Check for duplicate IDs
         for samp_id in sorted(list(set(id_pairs[id_pairs['samp_id'].duplicated()]['samp_id']))):
@@ -398,7 +401,7 @@ def check_sample_referencing(tables: dict) -> List[dict]:
         errors.extend(child_errors)
     except KeyError:
         # group not in group list
-        pass
+        errors = []
 
     return errors
 
