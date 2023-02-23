@@ -198,6 +198,7 @@ def test_non_numeric_coord_types():
     ('sample_referencing_samp_ids.ags', BGS_RULES_ERRORS['sample_referencing_samp_ids.ags']),
     ('sample_referencing_comp_ids.ags', BGS_RULES_ERRORS['sample_referencing_comp_ids.ags']),
     ('sample_referencing_mix_ids.ags', BGS_RULES_ERRORS['sample_referencing_mix_ids.ags']),
+    ('trit_group_test.ags', BGS_RULES_ERRORS['trit_group_test.ags']),
 ])
 def test_sample_referential_integrity(filename, expected):
     # Arrange
