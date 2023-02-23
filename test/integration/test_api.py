@@ -214,7 +214,7 @@ async def test_convert_good_files(async_client, tmp_path):
 
 
 @pytest.mark.asyncio
-@pytest.mark.parametrize('sort_tables', [True, False])
+@pytest.mark.parametrize('sort_tables', [True, False, None])
 async def test_convert_sort_tables(async_client, tmp_path, sort_tables):
     # Arrange
     fields = []
@@ -224,7 +224,8 @@ async def test_convert_sort_tables(async_client, tmp_path, sort_tables):
 
     file = ('files', (filename.name, open(filename, 'rb'), 'text/plain'))
     fields.append(file)
-    fields.append(('sort_tables', str(sort_tables)))
+    if sort_tables is not None:
+        fields.append(('sort_tables', str(sort_tables)))
     mp_encoder = MultipartEncoder(fields=fields)
 
     # Act
