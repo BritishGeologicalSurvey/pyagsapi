@@ -1,0 +1,64 @@
+# This workflow will install Python dependencies, run tests and lint with a variety of Python versions
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
+
+name: Lint & Test Python package
+
+on:
+  push:
+    paths-ignore:
+      - '**.md'
+  release:
+    types:
+      - released    
+
+env:
+  PY_VERSION: 3.11      
+
+jobs:
+  flake8:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Python
+        uses: actions/setup-python@v4.5.0
+        with:
+          python-version: $PY_VERSION
+          architecture: x64
+
+      - name: Checkout PyTorch
+        uses: actions/checkout@v3.3.0
+
+      - name: Install flake8
+        run: pip install flake8
+
+      - name: Run flake8
+        uses: suo/flake8-github-action@releases/v1
+        with:
+          checkName: 'flake8'   # NOTE: this needs to be the same as the job name
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  test:
+    runs-on: ubuntu-latest
+    needs: [flake8]
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["$PY_VERSION"]
+
+    steps:
+    - uses: actions/checkout@v3.3.0
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4.5.0
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements_dev.txt; fi
+
+    - name: Test with pytest
+      run: |
+        pytest -vs test 
+ 
