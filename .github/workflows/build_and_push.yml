@@ -3,15 +3,15 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Create and publish a Docker image
+name: Build and Push Container
 
 on:
-  push:
-    branches:
-      - main
-  release:
+  workflow_run:
+    workflows: [Lint & Test Python package]
     types:
-      - released
+      - completed 
+    branches:
+      - main     
 
 env:
   REGISTRY: ghcr.io
@@ -20,13 +20,15 @@ env:
 jobs:
   # Push image to GitHub Packages.
   # See also https://docs.docker.com/docker-hub/builds/
-  push:
+  build_and_push:
     runs-on: ubuntu-latest
     permissions:
       packages: write
       contents: read
-
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
+      - run: echo 'The lint & test workflow passed'
+
       - uses: actions/checkout@v2
 
       - name: Build image
