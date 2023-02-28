@@ -10,7 +10,7 @@ from app.validation import _prepare_response_metadata
 logger = logging.getLogger(__name__)
 
 
-def convert(filename: Path, results_dir: Path) -> Tuple[Optional[Path], dict]:
+def convert(filename: Path, results_dir: Path, sort_tables=False) -> Tuple[Optional[Path], dict]:
     """
     Convert filename between .ags and .xlsx.  Write output to file in
     results_dir and return path alongside job status data in dictionary."""
@@ -28,7 +28,7 @@ def convert(filename: Path, results_dir: Path) -> Tuple[Optional[Path], dict]:
     success = False
     if filename.suffix.lower() == '.ags':
         try:
-            AGS4.AGS4_to_excel(filename, converted_file)
+            AGS4.AGS4_to_excel(filename, converted_file, sort_tables=sort_tables)
             success = True
         except IndexError:
             error_message = "ERROR: File does not have AGS4 format layout"
