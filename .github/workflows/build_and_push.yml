@@ -3,7 +3,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Build
+name: Build and Push Container
 
 on:
   workflow_run:
@@ -20,7 +20,7 @@ env:
 jobs:
   # Push image to GitHub Packages.
   # See also https://docs.docker.com/docker-hub/builds/
-  push:
+  build_and_push:
     runs-on: ubuntu-latest
     permissions:
       packages: write
