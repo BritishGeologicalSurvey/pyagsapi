@@ -29,7 +29,7 @@ jobs:
         with:
           
           max-line-length: "120"
-          path: "/app, /test"
+          path: "./app, ./test"
           plugins: "flake8-bugbear==22.1.11 flake8-black flake8-fastapi"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
