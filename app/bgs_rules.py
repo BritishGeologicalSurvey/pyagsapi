@@ -25,7 +25,7 @@ with open('app/gb_outline.geojson', 'wt') as outfile:
 
 GB_OUTLINE = Path(__file__).parent / 'gb_outline.geojson'
 NI_OUTLINE = Path(__file__).parent / 'ni_outline.geojson'
-bgs_rules_version = '2.0.0'
+bgs_rules_version = '3.0.0'
 
 
 def check_required_groups(tables: dict) -> List[dict]:
