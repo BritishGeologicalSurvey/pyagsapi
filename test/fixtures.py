@@ -63,5 +63,6 @@ BGS_RULES_ERRORS = {
         {'line': '-', 'group': 'CONG',
          'desc': ("No parent id: SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF) not in SAMP group "
                   "(['327-16D,24.55,U,24', 'A67890'])")},
-    ]
+    ],
+    'trit_group_test.ags': []  # There should be no duplicates reported
 }
