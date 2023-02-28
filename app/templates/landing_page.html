@@ -90,15 +90,19 @@
     <form action="/validate/" enctype="multipart/form-data" method="post" id="validateForm">
         <br>
       <fieldset>
-          <legend><div class="tooltip">Select AGS Version, if not specified in TRAN_AGS
-            <span class="tooltiptext">Tool uses AGS version specified in the supplied file, if not present, uses selection here, default is v4.0.4</span>
+          <legend><div class="tooltip">Select AGS Version, if "None" uses version specified in TRAN_AGS, if not present, uses v4.1.1. 
+            <span class="tooltiptext">Tool uses AGS version specified. If "None", validator uses version in the supplied file, if not present, uses v4.1.1</span>
           </div></legend>
+          <input type="radio" id="none" name="std_dictionary" value="" checked>
+          <label for="none">None</label>
           <input type="radio" id="4.0.3" name="std_dictionary" value="v4_0_3">
           <label for="4.0.3">4.0.3</label>
           <input type="radio" id="4.0.4" name="std_dictionary" value="v4_0_4">
           <label for="4.0.4">4.0.4</label>
-          <input type="radio" id="4.1" name="std_dictionary" value="v4_1" checked>
+          <input type="radio" id="4.1" name="std_dictionary" value="v4_1">
           <label for="4.1">4.1</label>
+          <input type="radio" id="4.1.1" name="std_dictionary" value="v4_1_1">
+          <label for="4.1.1">4.1.1</label>
       </fieldset>
         <br>
       <fieldset>

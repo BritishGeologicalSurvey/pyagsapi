@@ -3,7 +3,6 @@ from pathlib import Path
 from typing import List
 
 from shapely.geometry import Point
-from pyproj.transformer import Transformer
 import geopandas as gpd
 import pandas as pd
 
