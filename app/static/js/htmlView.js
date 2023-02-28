@@ -75,7 +75,7 @@ agsHtml.checkFiles=function(fileList,extns){
 
 agsHtml.convertFileChange=function(evt){
     const currFiles=$("#convertForm input:file")[0].files;
-    var fileCheck=agsHtml.checkFiles(currFiles,"xslx,ags");
+    var fileCheck=agsHtml.checkFiles(currFiles,"xlsx,ags");
     if(fileCheck.valid){
         $("#convertForm input:submit").prop("disabled",false);
         }
