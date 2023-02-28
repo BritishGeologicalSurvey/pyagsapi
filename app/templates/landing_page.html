@@ -90,9 +90,7 @@
     <form action="/validate/" enctype="multipart/form-data" method="post" id="validateForm">
         <br>
       <fieldset>
-          <legend><div class="tooltip">Select AGS Version, if "None" uses version specified in TRAN_AGS, if not present, uses v4.1.1. 
-            <span class="tooltiptext">Tool uses AGS version specified. If "None", validator uses version in the supplied file, if not present, uses v4.1.1</span>
-          </div></legend>
+          <legend>Select AGS Version - if "None", tool uses version specified in TRAN_AGS, if not specified, tool uses v4.1.1.</legend>
           <input type="radio" id="none" name="std_dictionary" value="" checked>
           <label for="none">None</label>
           <input type="radio" id="4.0.3" name="std_dictionary" value="v4_0_3">
@@ -140,7 +138,7 @@
     <br>
     <form action="/convert/" enctype="multipart/form-data" method="post" id="convertForm">
       <fieldset>
-        <legend><strong>.ags TO .xlsx only</strong> - sort worksheets in .xlsx file in alphabetical order (Warning: The original group order will be lost)</legend>
+        <legend>Sort worksheets in .xlsx file in alphabetical order <strong>(Warning: .ags to .xlsx only. The original group order will be lost)</strong></legend>
         <input type="radio" id="alpha" name="sort_tables" value="True">
         <label for="alpha">True</label>
         <input type="radio" id="default" name="sort_tables" value="False" checked>
