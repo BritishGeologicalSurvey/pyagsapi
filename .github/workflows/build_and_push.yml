@@ -11,7 +11,9 @@ on:
     types:
       - completed 
     branches:
-      - main     
+      - main  
+  release:
+    types: [published]       
 
 env:
   REGISTRY: ghcr.io
