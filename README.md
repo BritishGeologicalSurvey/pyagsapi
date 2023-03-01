@@ -1,7 +1,5 @@
 # pyagsapi - AGS File Utilities API
 
-![Lint & Testing](https://github.com/github/docs/actions/workflows/lint_and_test.yml/badge.svg)
-
 ![Build & Push](https://github.com/github/docs/actions/workflows/main.yml/badge.svg)
 
 A HTTP API for the [AGS Python library](https://gitlab.com/ags-data-format-wg/ags-python-library).
