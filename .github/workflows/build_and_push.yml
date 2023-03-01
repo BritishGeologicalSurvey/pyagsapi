@@ -11,7 +11,7 @@ on:
       - main
   release:
     types:
-      - released     
+      - published    
 
 env:
   REGISTRY: ghcr.io
