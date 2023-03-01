@@ -6,9 +6,12 @@
 name: Build and Push Container
 
 on:
-  push:
+  workflow_run:
+    workflows: [Lint & Test Python package]
+    types:
+      - completed 
     branches:
-      - main
+      - main  
   release:
     types:
       - published    
