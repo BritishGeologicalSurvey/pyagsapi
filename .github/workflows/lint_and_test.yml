@@ -7,9 +7,6 @@ on:
   push:
     paths-ignore:
       - '**.md'
-  release:
-    types:
-      - released  
 
 jobs:
   lint_and_test:
