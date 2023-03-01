@@ -1,5 +1,7 @@
 # pyagsapi - AGS File Utilities API
 
+![Build & Push](https://github.com/github/docs/actions/workflows/main.yml/badge.svg)
+
 A HTTP API for the [AGS Python library](https://gitlab.com/ags-data-format-wg/ags-python-library).
 
 It can:
