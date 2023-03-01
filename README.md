@@ -95,7 +95,7 @@ COPY content/static /app/app/static
 COPY content/templates /app/app/templates
 ```
 
-### Container Registry
+## Container Registry
 
 Containers for the application are hosted in the GitHub Container Registry
 
@@ -105,7 +105,7 @@ Push Tagged Releases with `^v?[0-9]+[.][0-9]+([.][0-9])?` (v* == v2.0) builds `p
 
 You can also push release candidates using the format `/^v?[0-9]+[.][0-9]+([.][0-9])?\-rc/` e.g. v3.1.1-rc builds `pyagsapi:3.1.1-rc`
 
-### Example Files
+## Example Files
 
 Files in [https://github.com/BritishGeologicalSurvey/pyagsapi/tree/main/test/files/real](https://github.com/BritishGeologicalSurvey/pyagsapi/tree/main/test/files/real) are a random collection of real AGS files which have been submitted to the BGS and are available under OGL, we have included them here as example files for testing pyagsapi.
 
