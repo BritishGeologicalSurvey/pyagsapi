@@ -24,6 +24,8 @@ def check_ags(filename: Path, standard_AGS4_dictionary: Optional[str] = None) ->
     logger.info("Checking %s against AGS rules (Dictionary: %s).",
                 filename.name, dictionary_file)
 
+    ags_metadata = {}
+    can_proceed = False
     # Get error information from file
     try:
         errors = AGS4.check_file(filename,
@@ -36,6 +38,8 @@ def check_ags(filename: Path, standard_AGS4_dictionary: Optional[str] = None) ->
             # 'Metadata' is not created for some files with errors
             # or 'Dictionary' is not set in Metadata'
             dictionary = ''
+        # Further checkers can only proceed if the file is AGS4 format
+        can_proceed = not (('AGS Format Rule 3' in errors) and ('AGS3' in errors['AGS Format Rule 3'][0]['desc']))
 
     except UnicodeDecodeError as err:
         line_no = len(err.object[:err.end].split(b'\n'))
@@ -47,8 +51,12 @@ def check_ags(filename: Path, standard_AGS4_dictionary: Optional[str] = None) ->
         errors = {'File read error': [{'line': '-', 'group': '', 'desc': description}]}
         dictionary = ''
 
+    if not can_proceed:
+        ags_metadata['AGS Error'] = 'Further checks unable to proceed due to file error, see errors'
+
     return dict(checker=f'python_ags4 v{python_ags4.__version__}',
-                errors=errors, dictionary=dictionary)
+                errors=errors, dictionary=dictionary,
+                can_proceed=can_proceed, additional_metadata=ags_metadata)
 
 
 def check_bgs(filename: Path, **kwargs) -> dict:
@@ -87,7 +95,7 @@ def check_bgs(filename: Path, **kwargs) -> dict:
                 errors[rule] = result
 
     return dict(checker=f'bgs_rules v{bgs_rules_version}',
-                errors=errors,
+                errors=errors, can_proceed=True,
                 additional_metadata=bgs_metadata)
 
 

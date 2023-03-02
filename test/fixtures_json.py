@@ -193,7 +193,7 @@ JSON_RESPONSES = {
                                           'group': '',
                                           'line': 1}]},
         'valid': False,
-        'additional_metadata': {}
+        'additional_metadata': {'AGS Error': 'Further checks unable to proceed due to file error, see errors'}
     },
     'real/Blackburn Southern Bypass.ags': {
         'filename': 'Blackburn Southern Bypass.ags',
@@ -604,7 +604,7 @@ JSON_RESPONSES = {
                                           'line': 1}]},
 
         'valid': False,
-        'additional_metadata': {}
+        'additional_metadata': {'AGS Error': 'Further checks unable to proceed due to file error, see errors'}
     },
     'extension_is.bad': {
         'filename': 'extension_is.bad',

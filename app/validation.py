@@ -67,8 +67,11 @@ def validate(filename: Path,
             except KeyError:
                 # No additional metadata
                 pass
+            can_proceed = result.pop('can_proceed')
             # Add remaining keys to response
             response.update(result)
+            if not can_proceed:
+                break
 
     error_count = len(reduce(lambda total, current: total + current, all_errors.values(), []))
     if error_count > 0:

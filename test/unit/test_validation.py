@@ -15,12 +15,13 @@ TEST_FILE_DIR = Path(__file__).parent.parent / 'files'
 
 def mock_check_ags(filename, standard_AGS4_dictionary=None):
     return dict(checker='ags', dictionary='some_dict',
-                errors={})
+                errors={}, can_proceed=True)
 
 
 def mock_check_bgs(filename, **kwargs):
     return dict(checker='bgs',
-                errors={'BGS': [{}]})
+                errors={'BGS': [{}]},
+                can_proceed=True)
 
 
 @freeze_time(FROZEN_TIME)

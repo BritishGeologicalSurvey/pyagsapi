@@ -24,14 +24,13 @@ AGS_FILE_DATA = {
     ('nonsense.AGS', {'AGS Format Rule 2a', 'AGS Format Rule 3', 'AGS Format Rule 5', 'AGS Format Rule 13',
                       'AGS Format Rule 14', 'AGS Format Rule 15', 'AGS Format Rule 17'}),
     ('empty.ags', {'AGS Format Rule 13', 'AGS Format Rule 14', 'AGS Format Rule 15', 'AGS Format Rule 17'}),
-    ('real/A3040_03.ags', {'AGS Format Rule 3'}),
     ('real/43370.ags', {'AGS Format Rule 2a', 'AGS Format Rule 1'}),
-    ('real/JohnStPrimarySchool.ags', {'File read error'}),
-    ('real/19684.ags', {'AGS Format Rule 3'}),
-    ('real/E52A4379 (2).ags', {'AGS Format Rule 3'}),
 ])
 def test_check_ags(filename, expected_rules):
-    """Check that broken rules are returned and exceptions handled correctly."""
+    """
+       Check that broken rules are returned and exceptions handled correctly.
+       These file should return a True can_proceed flag.
+    """
     # Arrange
     filename = TEST_FILE_DIR / filename
 
@@ -42,6 +41,33 @@ def test_check_ags(filename, expected_rules):
     # Check that metadata fields are correct
     assert result['checker'] == f'python_ags4 v{python_ags4.__version__}'
     assert set(result['errors'].keys()) == expected_rules
+    assert result['can_proceed']
+
+
+@pytest.mark.parametrize('filename, expected_rules', [
+    ('real/A3040_03.ags', {'AGS Format Rule 3'}),
+    ('real/JohnStPrimarySchool.ags', {'File read error'}),
+    ('real/19684.ags', {'AGS Format Rule 3'}),
+    ('real/E52A4379 (2).ags', {'AGS Format Rule 3'}),
+])
+def test_check_ags_file_errors(filename, expected_rules):
+    """
+       Check that broken rules are returned and exceptions handled correctly.
+       These file should return additional metadata and a False can_proceed flag.
+    """
+    # Arrange
+    filename = TEST_FILE_DIR / filename
+
+    # Act
+    result = check_ags(filename)
+
+    # Assert
+    # Check that metadata fields are correct
+    assert result['checker'] == f'python_ags4 v{python_ags4.__version__}'
+    assert set(result['errors'].keys()) == expected_rules
+    assert not result['can_proceed']
+    assert result['additional_metadata']['AGS Error'] == ("Further checks unable to proceed"
+                                                          " due to file error, see errors")
 
 
 @pytest.mark.parametrize('filename, expected_rules, file_read_message', [
