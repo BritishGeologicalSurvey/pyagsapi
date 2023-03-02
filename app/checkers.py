@@ -72,6 +72,8 @@ def check_bgs(filename: Path, **kwargs) -> dict:
         error_message = "ERROR: File contains duplicate headers"
     except AGS4.AGS4Error as err:
         error_message = str(err)
+    except IndexError:
+        error_message = "ERROR: File cannot be read, please use AGS checker to confirm format errors"
 
     if error_message:
         errors['File read error'] = [{'line': '-', 'group': '', 'desc': error_message}]
