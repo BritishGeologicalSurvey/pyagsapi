@@ -53,6 +53,8 @@ def test_check_ags(filename, expected_rules):
      ['BGS data validation: Required Groups', 'BGS data validation: Required BGS Groups'], None),
     ('empty.ags',
      ['BGS data validation: Required Groups', 'BGS data validation: Required BGS Groups'], None),
+    ('ags3.ags',
+     ['File read error'], 'ERROR: File cannot be read, please use AGS checker to confirm format errors'),
     ('real/Southwark.ags',
      ['BGS data validation: Sample Referencing'], None),
     ('real/Mount Severn- Environment Agency.ags',
