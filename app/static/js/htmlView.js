@@ -189,7 +189,7 @@ agsHtml.displayFileResult=function(fileResult){
         xhtml=xhtml + "<ul class='fileResSummary'>";
 
         if(summaries.length === 0){
-            xhtml=xhtml + "<li>No summary generated due to errors reading file (see below)</li>";
+            xhtml=xhtml + "<li>No summary generated due to errors reading file (see below) or BGS validation not selected (required for summary)</li>";
             };
 
         if(fileResult.additional_metadata.bgs_all_groups){
