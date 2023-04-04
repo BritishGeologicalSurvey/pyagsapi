@@ -1,6 +1,20 @@
 # pyagsapi - AGS File Utilities API
 
-![Build & Push](https://github.com/github/docs/actions/workflows/main.yml/badge.svg)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/BritishGeologicalSurvey/pyagsapi?style=for-the-badge)
+![GitHub Release Date](https://img.shields.io/github/release-date/BritishGeologicalSurvey/pyagsapi?style=for-the-badge)
+![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/BritishGeologicalSurvey/pyagsapi?style=for-the-badge)
+![GitHub Workflow Status (with branch)](https://img.shields.io/github/actions/workflow/status/BritishGeologicalSurvey/pyagsapi/lint_and_test.yml?label=Tests&style=for-the-badge)
+![GitHub Workflow Status (with branch)](https://img.shields.io/github/actions/workflow/status/BritishGeologicalSurvey/pyagsapi/main.yml?style=for-the-badge)
+![GitHub language count](https://img.shields.io/github/languages/count/BritishGeologicalSurvey/pyagsapi?style=for-the-badge)
+![GitHub top language](https://img.shields.io/github/languages/top/BritishGeologicalSurvey/pyagsapi?style=for-the-badge)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/BritishGeologicalSurvey/pyagsapi?style=for-the-badge)
+![GitHub repo size](https://img.shields.io/github/repo-size/BritishGeologicalSurvey/pyagsapi?style=for-the-badge)
+![GitHub](https://img.shields.io/github/license/BritishGeologicalSurvey/pyagsapi?style=for-the-badge)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/y/BritishGeologicalSurvey/pyagsapi?style=for-the-badge)
+![GitHub commits since tagged version](https://img.shields.io/github/commits-since/BritishGeologicalSurvey/pyagsapi/v4.4?style=for-the-badge)
+![GitHub last commit](https://img.shields.io/github/last-commit/BritishGeologicalSurvey/pyagsapi?style=for-the-badge)
+![GitHub contributors](https://img.shields.io/github/contributors/BritishGeologicalSurvey/pyagsapi?style=for-the-badge)
+
 
 A HTTP API for the [AGS Python library](https://gitlab.com/ags-data-format-wg/ags-python-library).
 
