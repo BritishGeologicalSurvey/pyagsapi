@@ -27,6 +27,10 @@ zip_responses['200'] = {
     "content": {"application/x-zip-compressed": {}},
     "description": "Return a zip containing successfully converted files and log file"}
 
+pdf_responses = dict(error_responses)
+pdf_responses['200'] = {
+    "content": {"application/pdf": {}},
+    "description": "Return a AGS Borehole log in .PDF format"}
 
 # Enum for search logic
 class Format(StrEnum):
