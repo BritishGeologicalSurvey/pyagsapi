@@ -158,17 +158,14 @@
 <br>
 <section id="ags_log">
   <h2>AGS Log Viewer</h2>
-    <div class="tooltip"><p>View synthetic log from BGS held AGS data</p>
-      <span class="tooltiptext">Submit BGS LOCA ID to view synthetic log from NGDC held AGS data</span>
-    </div>
+    <p>Submit BGS LOCA ID to view log from NGDC held AGS data. Find BGS LOCA ID on <a href="https://mapapps2.bgs.ac.uk/geoindex/home.html?layer=AGSBoreholes">GeoIndex Web Viewer</a> or by querying the <a href="https://ogcapi.bgs.ac.uk/collections/onshoreboreholeindex/items">BGS OGCAPI-Features Server</a></p>
     <br>
   <br>
-  <form action="/ags_log/" enctype="multipart/form-data" method="get" id="logForm">
+  <form action="/ags_log/" method="get" id="logForm">
     <fieldset>
-      <legend>Submit BGS LOCA ID - Find BGS LOCA ID by querying https://ogcapi.bgs.ac.uk/collections/onshoreboreholeindex/items.</b></legend>
-      <label for="fname">BGS LOCA ID</label><br>
-      <input type="text" id="fname" name="fname" value="20200204094811691619"><br>
-      <input type="submit" class="submitBtn" value="ags_log" >
+      <legend>Enter BGS LOCA ID</legend>
+      <input type="text" id="bgs_loca_id" name="bgs_loca_id" value="20200204094811691619"><br>
+      <input type="submit" class="submitBtn" value="View Log" >
     </fieldset>
   </form>
 </section>
