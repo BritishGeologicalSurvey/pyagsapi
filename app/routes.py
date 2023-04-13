@@ -1,12 +1,14 @@
 import tempfile
 import shutil
+import requests
 
 from enum import StrEnum
 from pathlib import Path
 from typing import List
 
-from fastapi import APIRouter, BackgroundTasks, File, Form, Request, UploadFile
+from fastapi import APIRouter, BackgroundTasks, File, Form, Request, UploadFile, Response
 from fastapi.responses import FileResponse, StreamingResponse
+
 
 from app import conversion, validation
 from app.checkers import check_ags, check_bgs
@@ -179,3 +181,15 @@ def prepare_validation_response(request, data):
         'data': data,
     }
     return ValidationResponse(**response_data, media_type="application/json")
+
+@router.get("/ags_log/{bgs_loca_id}")
+async def get_ags_log(bgs_loca_id: int, response: Response):
+    url = f"https://webservices.bgs.ac.uk/GWBV/viewborehole?loca_id={bgs_loca_id}"
+    response.content = requests.get(url).content
+    response.headers["Content-Disposition"] = "attachment; filename=viewborehole.pdf"
+    response.headers["Content-Type"] = "application/pdf"
+    if response.status_code == 200:
+        return response.content
+    else:
+        return {"error": f"Failed to retrieve borehole {bgs_loca_id}"}
+    
