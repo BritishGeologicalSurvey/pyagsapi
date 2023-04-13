@@ -187,14 +187,13 @@ def prepare_validation_response(request, data):
     return ValidationResponse(**response_data, media_type="application/json")
 
 
-@router.get("/ags_log/{bgs_loca_id}",
-             response_class=FileResponse,
+@router.get("/ags_log/",
              responses=pdf_responses)
 async def get_ags_log(bgs_loca_id: int):
     url = f"https://webservices.bgs.ac.uk/GWBV/viewborehole?loca_id={bgs_loca_id}"
     response = requests.get(url)
     if response.status_code == 200:
-        headers = {'Content-Disposition': 'attachment; filename="viewborehole.pdf"'}
+        headers = {'Content-Disposition': 'attachment; filename="boreholelog.pdf"'}
         return Response(response.content, headers=headers, media_type='application/pdf')
     else:
         return {"error": f"Failed to retrieve borehole {bgs_loca_id}"}
