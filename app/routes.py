@@ -187,7 +187,9 @@ def prepare_validation_response(request, data):
     return ValidationResponse(**response_data, media_type="application/json")
 
 
-@router.get("/ags_log/{bgs_loca_id}")
+@router.get("/ags_log/{bgs_loca_id}",
+             response_class=FileResponse,
+             responses=pdf_responses)
 async def get_ags_log(bgs_loca_id: int):
     url = f"https://webservices.bgs.ac.uk/GWBV/viewborehole?loca_id={bgs_loca_id}"
     response = requests.get(url)
