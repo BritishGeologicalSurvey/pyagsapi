@@ -416,3 +416,34 @@ def client():
 @pytest.fixture(scope="function")
 def async_client():
     return AsyncClient(app=app, base_url="http://test")
+
+
+@pytest.mark.asyncio
+async def test_get_ags_log():
+    """
+    Confirm that the endpoint can return the expected .pdf.
+    """
+
+    # Arrange 
+    # Define the borehole ID to use for the test
+    bgs_loca_id = 20190430093402523419
+    fields = [bgs_loca_id]
+    mp_encoder = MultipartEncoder(fields=fields)
+
+    # Act
+    async with async_client as ac:
+        response = await ac.get(
+            '/ags_log/',
+            headers={'Content-Type': mp_encoder.content_type},
+            data=mp_encoder.to_string())
+
+    # Assert    
+    # Check that the response status code is 200
+    assert response.status_code == 200
+    # Check that the response headers include the Content-Disposition header
+    assert "Content-Disposition" in response.headers
+    # Check that the response media type is "application/pdf"
+    assert response.headers["Content-Type"] == "application/pdf"
+    # Check that the response content is not empty
+    assert len(response.content) > 0
+
