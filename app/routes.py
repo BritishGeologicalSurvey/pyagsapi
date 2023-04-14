@@ -194,7 +194,7 @@ def prepare_validation_response(request, data):
 @router.get("/ags_log/",
              responses=pdf_responses)
 async def get_ags_log(bgs_loca_id: int,
-                      response_type: Response_type = Response_type.attachment):
+                      response_type: Response_type = Response_type.inline):
     url = f"https://webservices.bgs.ac.uk/GWBV/viewborehole?loca_id={bgs_loca_id}"
     response = requests.get(url)
     if response.status_code == 200:
