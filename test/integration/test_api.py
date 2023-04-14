@@ -427,15 +427,12 @@ async def test_get_ags_log():
     # Arrange 
     # Define the borehole ID to use for the test
     bgs_loca_id = 20190430093402523419
-    fields = [bgs_loca_id]
-    mp_encoder = MultipartEncoder(fields=fields)
 
     # Act
     async with async_client as ac:
         response = await ac.get(
-            '/ags_log/',
-            headers={'Content-Type': mp_encoder.content_type},
-            data=mp_encoder.to_string())
+            f'/ags_log/?bgs_loca_id={bgs_loca_id}'
+        )
 
     # Assert    
     # Check that the response status code is 200
