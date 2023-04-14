@@ -51,6 +51,10 @@ class Checker(StrEnum):
     ags = "ags"
     bgs = "bgs"
 
+# Enum for pdf response type logic
+class Response_type(StrEnum):
+    attachment = "attachment"
+    inline = "inline"
 
 checker_functions = {
     Checker.ags: check_ags,
@@ -189,12 +193,13 @@ def prepare_validation_response(request, data):
 
 @router.get("/ags_log/",
              responses=pdf_responses)
-async def get_ags_log(bgs_loca_id: int):
+async def get_ags_log(bgs_loca_id: int,
+                      response_type: Response_type = Response_type.attachment):
     url = f"https://webservices.bgs.ac.uk/GWBV/viewborehole?loca_id={bgs_loca_id}"
     response = requests.get(url)
     if response.status_code == 200:
         filename = f"{bgs_loca_id}_log.pdf"
-        headers = {'Content-Disposition': f'attachment; filename="{filename}"'}
+        headers = {'Content-Disposition': f'{response_type.value}; filename="{filename}"'}
         return Response(response.content, headers=headers, media_type='application/pdf')
     else:
         return {"error": f"Failed to retrieve borehole {bgs_loca_id}"}
