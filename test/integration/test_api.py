@@ -419,7 +419,7 @@ def async_client():
 
 
 @pytest.mark.asyncio
-async def test_get_ags_log():
+async def test_get_ags_log(async_client):
     """
     Confirm that the endpoint can return the expected .pdf.
     """
