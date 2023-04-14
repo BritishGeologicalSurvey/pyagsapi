@@ -195,7 +195,7 @@ def prepare_validation_response(request, data):
              responses=pdf_responses)
 async def get_ags_log(bgs_loca_id: int,
                       response_type: Response_type = Response_type.attachment):
-    url = f"https://gwbv.bgs.ac.uk/GWBV/viewborehole?loca_id={bgs_loca_id}"
+    url = f"https://webservices.bgs.ac.uk/GWBV/viewborehole?loca_id={bgs_loca_id}"
     response = requests.get(url)
     if response.status_code == 200:
         filename = f"{bgs_loca_id}_log.pdf"
