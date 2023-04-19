@@ -6,7 +6,7 @@ from enum import StrEnum
 from pathlib import Path
 from typing import List
 
-from fastapi import APIRouter, BackgroundTasks, File, Form, Request, UploadFile, Response
+from fastapi import APIRouter, BackgroundTasks, File, Form, Query, Request, UploadFile, Response
 from fastapi.responses import FileResponse, StreamingResponse
 
 
@@ -100,6 +100,19 @@ sort_tables_form = Form(
     description=('Sort the worksheets into alphabetical order '
                  'or leave in the order found in the AGS file. '
                  'This option is ignored when converting to AGS.'),
+)
+
+ags_log_query = Query(
+    ...,
+    title="BGS borehole ID",
+    description="BGS borehole ID",
+    example=20190430093402523419,
+)
+
+response_type_query = Query(
+    default=ResponseType.inline,
+    title='PDF Response Type',
+    description='PDF response type: inline or attachment',
 )
 
 
@@ -197,8 +210,8 @@ def prepare_validation_response(request, data):
 @router.get("/ags_log/",
             response_class=Response,
             responses=pdf_responses)
-async def get_ags_log(bgs_loca_id: int,
-                      response_type: ResponseType = ResponseType.inline):
+def get_ags_log(bgs_loca_id: int = ags_log_query,
+                response_type: ResponseType = response_type_query):
     url = f"https://webservices.bgs.ac.uk/GWBV/viewborehole?loca_id={bgs_loca_id}"
     response = requests.get(url)
     if response.status_code == 200:

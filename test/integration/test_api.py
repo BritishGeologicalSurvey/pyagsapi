@@ -408,8 +408,7 @@ async def test_validate_dictionary_choice(async_client, dictionary, filename, ex
     assert response.json()['data'][0]['dictionary'] == expected
 
 
-@pytest.mark.asyncio
-async def test_get_ags_log(async_client):
+def test_get_ags_log(client):
     """
     Confirm that the endpoint can return the expected .pdf.
     """
@@ -418,8 +417,8 @@ async def test_get_ags_log(async_client):
     bgs_loca_id = 20190430093402523419
 
     # Act
-    async with async_client as ac:
-        response = await ac.get(
+    with client as ac:
+        response = ac.get(
             f'/ags_log/?bgs_loca_id={bgs_loca_id}'
         )
 
