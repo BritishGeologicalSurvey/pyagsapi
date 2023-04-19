@@ -8,7 +8,7 @@ from typing import List
 
 from fastapi import APIRouter, BackgroundTasks, File, Form, Query, Request, UploadFile, Response
 from fastapi.responses import FileResponse, StreamingResponse
-
+from fastapi.exceptions import HTTPException
 
 from app import conversion, validation
 from app.checkers import check_ags, check_bgs
@@ -219,4 +219,5 @@ def get_ags_log(bgs_loca_id: int = ags_log_query,
         headers = {'Content-Disposition': f'{response_type.value}; filename="{filename}"'}
         return Response(response.content, headers=headers, media_type='application/pdf')
     else:
-        return {"error": f"Failed to retrieve borehole {bgs_loca_id}"}
+        raise HTTPException(status_code=404,
+                            detail=f"Failed to retrieve borehole {bgs_loca_id}")
