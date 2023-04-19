@@ -32,6 +32,7 @@ pdf_responses['200'] = {
     "content": {"application/pdf": {}},
     "description": "Return a AGS Borehole log in .PDF format"}
 
+
 # Enum for search logic
 class Format(StrEnum):
     TEXT = "text"
@@ -51,10 +52,12 @@ class Checker(StrEnum):
     ags = "ags"
     bgs = "bgs"
 
+
 # Enum for pdf response type logic
 class Response_type(StrEnum):
     attachment = "attachment"
     inline = "inline"
+
 
 checker_functions = {
     Checker.ags: check_ags,
@@ -192,7 +195,7 @@ def prepare_validation_response(request, data):
 
 
 @router.get("/ags_log/",
-             responses=pdf_responses)
+            responses=pdf_responses)
 async def get_ags_log(bgs_loca_id: int,
                       response_type: Response_type = Response_type.inline):
     url = f"https://webservices.bgs.ac.uk/GWBV/viewborehole?loca_id={bgs_loca_id}"

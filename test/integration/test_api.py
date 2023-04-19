@@ -423,8 +423,7 @@ async def test_get_ags_log(async_client):
     """
     Confirm that the endpoint can return the expected .pdf.
     """
-
-    # Arrange 
+    # Arrange
     # Define the borehole ID to use for the test
     bgs_loca_id = 20190430093402523419
 
@@ -434,7 +433,7 @@ async def test_get_ags_log(async_client):
             f'/ags_log/?bgs_loca_id={bgs_loca_id}'
         )
 
-    # Assert    
+    # Assert
     # Check that the response status code is 200
     assert response.status_code == 200
     # Check that the response headers include the Content-Disposition header
@@ -443,4 +442,3 @@ async def test_get_ags_log(async_client):
     assert response.headers["Content-Type"] == "application/pdf"
     # Check that the response content is not empty
     assert len(response.content) > 0
-
