@@ -408,25 +408,32 @@ async def test_validate_dictionary_choice(async_client, dictionary, filename, ex
     assert response.json()['data'][0]['dictionary'] == expected
 
 
-def test_get_ags_log(client):
+@pytest.mark.parametrize('response_type, response_type_result', [
+    ('inline', 'inline'),
+    ('attachment', 'attachment'),
+    (None, 'inline')  # Defaults to 'inline'
+])
+def test_get_ags_log(client, response_type, response_type_result):
     """
     Confirm that the endpoint can return the expected .pdf.
     """
     # Arrange
     # Define the borehole ID to use for the test
     bgs_loca_id = 20190430093402523419
+    query = f'/ags_log/?bgs_loca_id={bgs_loca_id}'
+    if response_type:
+        query += f'&response_type={response_type}'
 
     # Act
     with client as ac:
-        response = ac.get(
-            f'/ags_log/?bgs_loca_id={bgs_loca_id}'
-        )
+        response = ac.get(query)
 
     # Assert
     # Check that the response status code is 200
     assert response.status_code == 200
-    # Check that the response headers include the Content-Disposition header
-    assert "Content-Disposition" in response.headers
+    # Check that the response headers include the correct Content-Disposition header
+    content_disposition = f'{response_type_result}; filename="{bgs_loca_id}_log.pdf"'
+    assert response.headers["Content-Disposition"] == content_disposition
     # Check that the response media type is "application/pdf"
     assert response.headers["Content-Type"] == "application/pdf"
     # Check that the response content is not empty
