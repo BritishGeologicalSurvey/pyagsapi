@@ -54,7 +54,7 @@ class Checker(StrEnum):
 
 
 # Enum for pdf response type logic
-class Response_type(StrEnum):
+class ResponseType(StrEnum):
     attachment = "attachment"
     inline = "inline"
 
@@ -195,9 +195,10 @@ def prepare_validation_response(request, data):
 
 
 @router.get("/ags_log/",
+            response_class=Response,
             responses=pdf_responses)
 async def get_ags_log(bgs_loca_id: int,
-                      response_type: Response_type = Response_type.inline):
+                      response_type: ResponseType = ResponseType.inline):
     url = f"https://webservices.bgs.ac.uk/GWBV/viewborehole?loca_id={bgs_loca_id}"
     response = requests.get(url)
     if response.status_code == 200:
