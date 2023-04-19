@@ -408,16 +408,6 @@ async def test_validate_dictionary_choice(async_client, dictionary, filename, ex
     assert response.json()['data'][0]['dictionary'] == expected
 
 
-@pytest.fixture(scope="function")
-def client():
-    return TestClient(app)
-
-
-@pytest.fixture(scope="function")
-def async_client():
-    return AsyncClient(app=app, base_url="http://test")
-
-
 @pytest.mark.asyncio
 async def test_get_ags_log(async_client):
     """
@@ -442,3 +432,13 @@ async def test_get_ags_log(async_client):
     assert response.headers["Content-Type"] == "application/pdf"
     # Check that the response content is not empty
     assert len(response.content) > 0
+
+
+@pytest.fixture(scope="function")
+def client():
+    return TestClient(app)
+
+
+@pytest.fixture(scope="function")
+def async_client():
+    return AsyncClient(app=app, base_url="http://test")
