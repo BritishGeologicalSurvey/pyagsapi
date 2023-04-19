@@ -438,6 +438,8 @@ def test_get_ags_log(client, response_type, response_type_result):
     assert response.headers["Content-Type"] == "application/pdf"
     # Check that the response content is not empty
     assert len(response.content) > 0
+    # Check it is a PDF file
+    assert response.content.startswith(b'%PDF')
 
 
 def test_get_unknown_ags_log(client):
