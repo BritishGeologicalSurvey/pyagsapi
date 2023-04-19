@@ -440,6 +440,26 @@ def test_get_ags_log(client, response_type, response_type_result):
     assert len(response.content) > 0
 
 
+def test_get_unknown_ags_log(client):
+    """
+    Confirm that the endpoint can return the expected .pdf.
+    """
+    # Arrange
+    # Define the borehole ID to use for the test
+    bgs_loca_id = 0
+    query = f'/ags_log/?bgs_loca_id={bgs_loca_id}'
+
+    # Act
+    with client as ac:
+        response = ac.get(query)
+
+    # Assert
+    # Check that the response status code is 404
+    assert response.status_code == 404
+    body = response.json()
+    assert body['errors'][0]['desc'] == 'Failed to retrieve borehole 0'
+
+
 @pytest.fixture(scope="function")
 def client():
     return TestClient(app)
