@@ -444,7 +444,7 @@ def test_get_ags_log(client, response_type, response_type_result):
 
 def test_get_unknown_ags_log(client):
     """
-    Confirm that the endpoint can return the expected .pdf.
+    Confirm that the endpoint can return the expected error when an unknown bgs_loca_id is submitted.
     """
     # Arrange
     # Define the borehole ID to use for the test
