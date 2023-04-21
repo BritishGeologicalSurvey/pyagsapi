@@ -212,7 +212,7 @@ def prepare_validation_response(request, data):
             responses=pdf_responses)
 def get_ags_log(bgs_loca_id: int = ags_log_query,
                 response_type: ResponseType = response_type_query):
-    url = f"https://webservices.bgs.ac.uk/GWBV/viewborehole?loca_id={bgs_loca_id}"
+    url = f"https://gwbv.bgs.ac.uk/GWBV/viewborehole?loca_id={bgs_loca_id}"
     response = requests.get(url)
     print(response)
     print(response.status_code)
