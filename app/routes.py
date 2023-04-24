@@ -117,6 +117,7 @@ response_type_query = Query(
 
 
 @router.post("/validate/",
+             tags=["validate"],
              response_model=ValidationResponse,
              responses=log_responses)
 async def validate(background_tasks: BackgroundTasks,
@@ -161,6 +162,7 @@ async def validate(background_tasks: BackgroundTasks,
 
 
 @router.post("/convert/",
+             tags=["convert"],
              response_class=StreamingResponse,
              responses=zip_responses)
 async def convert(background_tasks: BackgroundTasks,
@@ -208,6 +210,7 @@ def prepare_validation_response(request, data):
 
 
 @router.get("/ags_log/",
+            tags=["ags_log"],
             response_class=Response,
             responses=pdf_responses)
 def get_ags_log(bgs_loca_id: int = ags_log_query,

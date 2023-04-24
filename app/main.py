@@ -84,8 +84,18 @@ def custom_openapi():
     openapi_schema = get_openapi(
         title="pyagsapi - AGS File Utilities Tools and API",
         version="4.5.0",
-        description=("The API performs schema validation, data validation and conversion of your AGS files. "
+        description=("The API performs schema validation, data validation and conversion of your AGS files. It also exports a graphical log from AGS data held by NGDC"
                      "Schema validation and conversion uses https://gitlab.com/ags-data-format-wg/ags-python-library"),
+        terms_of_service="https://www.bgs.ac.uk/legal-and-policy/terms-of-use/",
+        contact={
+            "name": "BGS Enquiries",
+            "url": "https://www.bgs.ac.uk/about-bgs/contact-us/",
+            "email": "enquiries@bgs.ac.uk",
+        },
+        license_info={
+            "name": "Open Government Licence v3",
+            "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+        },             
         routes=app.routes,
     )
     openapi_schema["info"]["x-logo"] = {
@@ -95,6 +105,32 @@ def custom_openapi():
     app.openapi_schema = openapi_schema
     return app.openapi_schema
 
+tags_metadata = [
+    {
+        "name": "validate",
+        "description": "Validate an AGS4 file to the AGS File Format v4.x rules and the NGDC data submission requirements. Uses the Offical AGS4 Python Library.",
+        "externalDocs": {
+            "description": "Official AGS4 Python Library",
+            "url": "https://gitlab.com/ags-data-format-wg/ags-python-library",
+        },
+    },
+    {
+        "name": "convert",
+        "description": "Convert files between .ags and .xlsx format. Option to sort worksheets in .xlsx file in alphabetical order. ",
+        "externalDocs": {
+            "description": "Official AGS4 Python Library",
+            "url": "https://gitlab.com/ags-data-format-wg/ags-python-library",
+        },
+    },
+    {
+        "name": "ags_log",
+        "description": "Generate a graphical log (.pdf) from AGS data held by the National Geoscience Data Centre.",
+        "externalDocs": {
+            "description": "NGDC AGS Data",
+            "url": "https://ogcapi.bgs.ac.uk/collections/agsboreholeindex",
+        },
+    },
+]
 
 app.openapi = custom_openapi
 
