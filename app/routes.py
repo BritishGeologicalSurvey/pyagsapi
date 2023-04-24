@@ -119,7 +119,9 @@ response_type_query = Query(
 @router.post("/validate/",
              tags=["validate"],
              response_model=ValidationResponse,
-             responses=log_responses)
+             responses=log_responses,
+            summary="Validate AGS4 File(s)",
+            description="Validate an AGS4 file to the AGS File Format v4.x rules and the NGDC data submission requirements. Uses the Offical AGS4 Python Library.")
 async def validate(background_tasks: BackgroundTasks,
                    files: List[UploadFile] = validation_file,
                    std_dictionary: Dictionary = dictionary_form,
@@ -164,7 +166,9 @@ async def validate(background_tasks: BackgroundTasks,
 @router.post("/convert/",
              tags=["convert"],
              response_class=StreamingResponse,
-             responses=zip_responses)
+             responses=zip_responses,
+             summary="Convert files between .ags and .xlsx format",
+             description="Convert files between .ags and .xlsx format. Option to sort worksheets in .xlsx file in alphabetical order.")
 async def convert(background_tasks: BackgroundTasks,
                   files: List[UploadFile] = conversion_file,
                   sort_tables: bool = sort_tables_form,
@@ -212,7 +216,9 @@ def prepare_validation_response(request, data):
 @router.get("/ags_log/",
             tags=["ags_log"],
             response_class=Response,
-            responses=pdf_responses)
+            responses=pdf_responses,
+            summary="Generate Graphical Log",
+            description="Generate a graphical log (.pdf) from AGS data held by the National Geoscience Data Centre.")
 def get_ags_log(bgs_loca_id: int = ags_log_query,
                 response_type: ResponseType = response_type_query):
     url = f"https://gwbv.bgs.ac.uk/GWBV/viewborehole?loca_id={bgs_loca_id}"
@@ -226,3 +232,4 @@ def get_ags_log(bgs_loca_id: int = ags_log_query,
     else:
         raise HTTPException(status_code=404,
                             detail=f"Failed to retrieve borehole {bgs_loca_id}. {bgs_loca_id} may not exist or may be confidential")
+    
