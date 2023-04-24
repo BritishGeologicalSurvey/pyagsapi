@@ -62,7 +62,7 @@ def setup_logging(logging_level=logging.INFO):
         f"'logging_level': {logging.getLevelName(logging_level)}")
 
 
-app = FastAPI(root_path=os.getenv('PYAGSAPI_ROOT_PATH', ''), openapi_tags=tags_metadata)
+app = FastAPI(root_path=os.getenv('PYAGSAPI_ROOT_PATH', ''))
 
 setup_logging()
 
@@ -76,33 +76,6 @@ app.mount("/static", StaticFiles(directory="app/static"), name="static")
 @app.get("/", response_class=HTMLResponse, include_in_schema=False)
 async def landing_page(request: Request):
     return templates.TemplateResponse('landing_page.html', {'request': request})
-
-tags_metadata = [
-    {
-        "name": "validate",
-        "description": "Validate an AGS4 file to the AGS File Format v4.x rules and the NGDC data submission requirements. Uses the Offical AGS4 Python Library.",
-        "externalDocs": {
-            "description": "Official AGS4 Python Library",
-            "url": "https://gitlab.com/ags-data-format-wg/ags-python-library",
-        },
-    },
-    {
-        "name": "convert",
-        "description": "Convert files between .ags and .xlsx format. Option to sort worksheets in .xlsx file in alphabetical order. ",
-        "externalDocs": {
-            "description": "Official AGS4 Python Library",
-            "url": "https://gitlab.com/ags-data-format-wg/ags-python-library",
-        },
-    },
-    {
-        "name": "ags_log",
-        "description": "Generate a graphical log (.pdf) from AGS data held by the National Geoscience Data Centre.",
-        "externalDocs": {
-            "description": "NGDC AGS Data",
-            "url": "https://ogcapi.bgs.ac.uk/collections/agsboreholeindex",
-        },
-    },
-]
 
 def custom_openapi():
     if app.openapi_schema:
@@ -130,6 +103,33 @@ def custom_openapi():
     }
     app.openapi_schema = openapi_schema
     return app.openapi_schema
+
+tags_metadata = [
+    {
+        "name": "validate",
+        "description": "Validate an AGS4 file to the AGS File Format v4.x rules and the NGDC data submission requirements. Uses the Offical AGS4 Python Library.",
+        "externalDocs": {
+            "description": "Official AGS4 Python Library",
+            "url": "https://gitlab.com/ags-data-format-wg/ags-python-library",
+        },
+    },
+    {
+        "name": "convert",
+        "description": "Convert files between .ags and .xlsx format. Option to sort worksheets in .xlsx file in alphabetical order. ",
+        "externalDocs": {
+            "description": "Official AGS4 Python Library",
+            "url": "https://gitlab.com/ags-data-format-wg/ags-python-library",
+        },
+    },
+    {
+        "name": "ags_log",
+        "description": "Generate a graphical log (.pdf) from AGS data held by the National Geoscience Data Centre.",
+        "externalDocs": {
+            "description": "NGDC AGS Data",
+            "url": "https://ogcapi.bgs.ac.uk/collections/agsboreholeindex",
+        },
+    },
+]
 
 app.openapi = custom_openapi
 
