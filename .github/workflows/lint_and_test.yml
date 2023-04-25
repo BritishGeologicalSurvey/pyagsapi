@@ -35,12 +35,12 @@ jobs:
     - name: Lint app/ with flake8
       run: |
         # exit-zero treats all errors as warnings. 
-        flake8 app/ --exit-zero 
+        flake8 app/ 
 
     - name: Lint test/ with flake8
       run: |
         # exit-zero treats all errors as warnings. 
-        flake8 test/ --exit-zero  
+        flake8 test/  
 
     - name: Test with pytest
       run: |

@@ -20,7 +20,8 @@ agsHtml.injectResultPopup=function(){
     xhtml=xhtml + '</div>';
     $("#validator").after(xhtml);
     agsHtml.hideResultPopup();
-    $("main input:submit").prop("disabled",true);
+    $("#validator input:submit").prop("disabled",true);
+    $("#converter input:submit").prop("disabled",true);
     return true;
     };
 

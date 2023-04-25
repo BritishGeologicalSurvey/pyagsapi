@@ -6,11 +6,13 @@ from fastapi.testclient import TestClient
 from freezegun import freeze_time
 import pytest
 from httpx import AsyncClient
+import requests
 from requests_toolbelt.multipart.encoder import MultipartEncoder
 import pandas as pd
 from python_ags4 import AGS4
 
 from app.main import app
+import app.routes as app_routes
 from test.fixtures import (BAD_FILE_DATA, DICTIONARIES, FROZEN_TIME,
                            GOOD_FILE_DATA)
 from test.fixtures_json import JSON_RESPONSES
@@ -406,6 +408,113 @@ async def test_validate_dictionary_choice(async_client, dictionary, filename, ex
     assert response.status_code == 200
     assert 'application/json' in response.headers['content-type']
     assert response.json()['data'][0]['dictionary'] == expected
+
+
+@pytest.mark.parametrize('response_type, response_type_result', [
+    ('inline', 'inline'),
+    ('attachment', 'attachment'),
+    (None, 'inline')  # Defaults to 'inline'
+])
+def test_get_ags_log(client, monkeypatch, response_type, response_type_result):
+    """
+    Confirm that the endpoint can return the expected .pdf.
+    """
+    # Arrange
+    # Define the borehole ID to use for the test
+    bgs_loca_id = 20190430093402523419
+    query = f'/ags_log/?bgs_loca_id={bgs_loca_id}'
+    # Patch the Borehole Viewer to be something that cannot be reached
+    monkeypatch.setattr(app_routes, "BOREHOLE_VIEWER_URL",
+                        'https://webservices.bgs.ac.uk/GWBV/viewborehole?loca_id={bgs_loca_id}')
+
+    if response_type:
+        query += f'&response_type={response_type}'
+
+    # Act
+    with client as ac:
+        response = ac.get(query)
+
+    # Assert
+    # Check that the response status code is 200
+    assert response.status_code == 200
+    # Check that the response headers include the correct Content-Disposition header
+    content_disposition = f'{response_type_result}; filename="{bgs_loca_id}_log.pdf"'
+    assert response.headers["Content-Disposition"] == content_disposition
+    # Check that the response media type is "application/pdf"
+    assert response.headers["Content-Type"] == "application/pdf"
+    # Check that the response content is not empty
+    assert len(response.content) > 0
+    # Check it is a PDF file
+    assert response.content.startswith(b'%PDF')
+
+
+def test_get_ags_log_unknown_borehole(client, monkeypatch):
+    """
+    Confirm that the endpoint can return the expected error when an unknown bgs_loca_id is submitted.
+    """
+    # Arrange
+    # Define the borehole ID to use for the test
+    bgs_loca_id = 0
+    query = f'/ags_log/?bgs_loca_id={bgs_loca_id}'
+    # Patch the Borehole Viewer to be something that cannot be reached
+    monkeypatch.setattr(app_routes, "BOREHOLE_VIEWER_URL",
+                        'https://webservices.bgs.ac.uk/GWBV/viewborehole?loca_id={bgs_loca_id}')
+
+    # Act
+    with client as ac:
+        response = ac.get(query)
+
+    # Assert
+    # Check that the response status code is 404
+    assert response.status_code == 404
+    body = response.json()
+    assert body['errors'][0]['desc'] == 'Failed to retrieve borehole 0. It may not exist or may be confidential'
+
+
+def test_get_ags_log_generator_unreachable(client, monkeypatch):
+    # Arrange
+    bgs_loca_id = 0
+    query = f'/ags_log/?bgs_loca_id={bgs_loca_id}'
+    # Patch the Borehole Viewer to be something that cannot be reached
+    monkeypatch.setattr(app_routes, "BOREHOLE_VIEWER_URL", f'http://unreachable.com/{bgs_loca_id}')
+
+    # Act
+    with client as ac:
+        response = ac.get(query)
+
+    # Assert
+    assert response.status_code == 500
+    body = response.json()
+    assert body['errors'][0]['desc'] == 'The borehole generator could not be reached.  Please try again later.'
+
+
+def test_get_ags_log_generator_error(client, monkeypatch):
+    # Arrange
+    bgs_loca_id = 0
+    query = f'/ags_log/?bgs_loca_id={bgs_loca_id}'
+
+    # Patch the requests to return a response that behaves as though the URL had returned a 500 error.
+    class MockResponse:
+        status_code = 500
+
+        def raise_for_status(self):
+            raise requests.exceptions.HTTPError
+
+        monkeypatch.setattr(app_routes.requests, 'get', lambda: MockResponse)
+
+    def mock_get(*args, **kwargs):
+        return MockResponse()
+
+    monkeypatch.setattr(app_routes.requests, 'get', mock_get)
+
+    # Act
+    with client as ac:
+        response = ac.get(query)
+
+    # Assert
+    assert response.status_code == 500
+    body = response.json()
+    assert body['errors'][0]['desc'] == 'The borehole generator returned an error.'
 
 
 @pytest.fixture(scope="function")
