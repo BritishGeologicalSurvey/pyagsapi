@@ -415,7 +415,7 @@ async def test_validate_dictionary_choice(async_client, dictionary, filename, ex
     ('attachment', 'attachment'),
     (None, 'inline')  # Defaults to 'inline'
 ])
-def test_get_ags_log(client, response_type, response_type_result):
+def test_get_ags_log(client, monkeypatch, response_type, response_type_result):
     """
     Confirm that the endpoint can return the expected .pdf.
     """
@@ -423,6 +423,10 @@ def test_get_ags_log(client, response_type, response_type_result):
     # Define the borehole ID to use for the test
     bgs_loca_id = 20190430093402523419
     query = f'/ags_log/?bgs_loca_id={bgs_loca_id}'
+    # Patch the Borehole Viewer to be something that cannot be reached
+    monkeypatch.setattr(app_routes, "BOREHOLE_VIEWER_URL", 
+                        'https://webservices.bgs.ac.uk/GWBV/viewborehole?loca_id={bgs_loca_id}')
+
     if response_type:
         query += f'&response_type={response_type}'
 

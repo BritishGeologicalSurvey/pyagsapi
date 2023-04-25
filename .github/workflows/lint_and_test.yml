@@ -42,8 +42,8 @@ jobs:
         # exit-zero treats all errors as warnings. 
         flake8 test/ --exit-zero  
 
-#    - name: Test with pytest
-#      run: |
-#        python -m pytest         
+    - name: Test with pytest
+      run: |
+        python -m pytest         
 
  
