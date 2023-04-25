@@ -30,7 +30,7 @@ zip_responses['200'] = {
 pdf_responses = dict(error_responses)
 pdf_responses['200'] = {
     "content": {"application/pdf": {}},
-    "description": "Return a AGS Borehole log in .PDF format"}
+    "description": "Returns a graphical log of AGS data in .PDF format"}
 
 
 # Enum for search logic
@@ -104,9 +104,9 @@ sort_tables_form = Form(
 
 ags_log_query = Query(
     ...,
-    title="BGS borehole ID",
-    description="BGS borehole ID",
-    example=20190430093402523419,
+    title="BGS LOCA ID",
+    description="BGS LOCA ID",
+    example="20190430093402523419",
 )
 
 response_type_query = Query(
