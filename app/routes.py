@@ -30,7 +30,7 @@ zip_responses['200'] = {
 pdf_responses = dict(error_responses)
 pdf_responses['200'] = {
     "content": {"application/pdf": {}},
-    "description": "Returns a graphical log of AGS data in .PDF format"}
+    "description": "Return a graphical log of AGS data in .PDF format"}
 
 
 # Enum for search logic
@@ -225,8 +225,7 @@ def get_ags_log(bgs_loca_id: int = ags_log_query,
                 response_type: ResponseType = response_type_query):
     url = f"https://gwbv.bgs.ac.uk/GWBV/viewborehole?loca_id={bgs_loca_id}"
     response = requests.get(url)
-    print(response)
-    print(response.status_code)
+
     if response.status_code == 200:
         filename = f"{bgs_loca_id}_log.pdf"
         headers = {'Content-Disposition': f'{response_type.value}; filename="{filename}"'}
@@ -234,4 +233,3 @@ def get_ags_log(bgs_loca_id: int = ags_log_query,
     else:
         raise HTTPException(status_code=404,
                             detail=f"Failed to retrieve borehole {bgs_loca_id}. {bgs_loca_id} may not exist or may be confidential")
-    
