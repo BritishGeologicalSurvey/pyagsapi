@@ -468,7 +468,7 @@ def test_get_ags_log_unknown_borehole(client, monkeypatch):
     # Check that the response status code is 404
     assert response.status_code == 404
     body = response.json()
-    assert body['errors'][0]['desc'] == 'Failed to retrieve borehole 0.  It may not exist or may be confidential'
+    assert body['errors'][0]['desc'] == 'Failed to retrieve borehole 0. It may not exist or may be confidential'
 
 
 def test_get_ags_log_generator_unreachable(client, monkeypatch):
