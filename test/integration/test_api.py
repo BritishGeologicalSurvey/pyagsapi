@@ -448,7 +448,7 @@ def test_get_ags_log(client, monkeypatch, response_type, response_type_result):
     assert response.content.startswith(b'%PDF')
 
 
-def test_get_ags_log_unknown_borehole(client):
+def test_get_ags_log_unknown_borehole(client, monkeypatch):
     """
     Confirm that the endpoint can return the expected error when an unknown bgs_loca_id is submitted.
     """
@@ -456,6 +456,9 @@ def test_get_ags_log_unknown_borehole(client):
     # Define the borehole ID to use for the test
     bgs_loca_id = 0
     query = f'/ags_log/?bgs_loca_id={bgs_loca_id}'
+    # Patch the Borehole Viewer to be something that cannot be reached
+    monkeypatch.setattr(app_routes, "BOREHOLE_VIEWER_URL", 
+                        'https://webservices.bgs.ac.uk/GWBV/viewborehole?loca_id={bgs_loca_id}')
 
     # Act
     with client as ac:
