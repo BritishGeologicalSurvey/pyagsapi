@@ -424,7 +424,7 @@ def test_get_ags_log(client, monkeypatch, response_type, response_type_result):
     bgs_loca_id = 20190430093402523419
     query = f'/ags_log/?bgs_loca_id={bgs_loca_id}'
     # Patch the Borehole Viewer to be something that cannot be reached
-    monkeypatch.setattr(app_routes, "BOREHOLE_VIEWER_URL", 
+    monkeypatch.setattr(app_routes, "BOREHOLE_VIEWER_URL",
                         'https://webservices.bgs.ac.uk/GWBV/viewborehole?loca_id={bgs_loca_id}')
 
     if response_type:
@@ -492,6 +492,7 @@ def test_get_ags_log_generator_error(client, monkeypatch):
     # Arrange
     bgs_loca_id = 0
     query = f'/ags_log/?bgs_loca_id={bgs_loca_id}'
+    
     # Patch the requests to return a response that behaves as though the URL had returned a 500 error.
     class MockResponse:
         status_code = 500

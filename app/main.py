@@ -77,13 +77,15 @@ app.mount("/static", StaticFiles(directory="app/static"), name="static")
 async def landing_page(request: Request):
     return templates.TemplateResponse('landing_page.html', {'request': request})
 
+
 def custom_openapi():
     if app.openapi_schema:
         return app.openapi_schema
     openapi_schema = get_openapi(
         title="pyagsapi - AGS File Utilities Tools and API",
         version="4.5.1",
-        description=("The API performs schema validation, data validation and conversion of your AGS files. It also exports a graphical log from AGS data held by NGDC. "
+        description=("The API performs schema validation, data validation and conversion of your AGS files. "
+                     "It also exports a graphical log from AGS data held by NGDC. "
                      "Schema validation and conversion uses https://gitlab.com/ags-data-format-wg/ags-python-library"),
         terms_of_service="https://www.bgs.ac.uk/legal-and-policy/terms-of-use/",
         contact={
@@ -94,7 +96,7 @@ def custom_openapi():
         license_info={
             "name": "Open Government Licence v3",
             "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
-        },            
+        },          
         routes=app.routes,
     )
     openapi_schema["info"]["x-logo"] = {
@@ -103,6 +105,7 @@ def custom_openapi():
     }
     app.openapi_schema = openapi_schema
     return app.openapi_schema
+
 
 app.openapi = custom_openapi
 

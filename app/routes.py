@@ -240,7 +240,8 @@ def get_ags_log(bgs_loca_id: int = ags_log_query,
     except HTTPError:
         if response.status_code == 404:
             raise HTTPException(status_code=404,
-                                detail=f"Failed to retrieve borehole {bgs_loca_id}.  It may not exist or may be confidential")
+                                detail=f"Failed to retrieve borehole {bgs_loca_id}. "
+                                "It may not exist or may be confidential")
         else:
             raise HTTPException(status_code=500,
                                 detail="The borehole generator returned an error.")
