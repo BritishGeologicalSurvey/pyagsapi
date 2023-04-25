@@ -21,11 +21,11 @@ A HTTP API for the [AGS Python library](https://gitlab.com/ags-data-format-wg/ag
 It can:
 
 - Validate AGS files to v4.x of the AGS data format standard
+- Validate AGS files for submission to the [National Geoscience Data Center (NGDC)](http://transfer.bgs.ac.uk/ingestion)
 - Convert between AGS format files and spreadsheet files `.ags` <-> `.xlsx`
+- Download PDF logs of existing files within the National Geoscience Data Centre
 
-Additionally .ags files can be validated for submission to the [National Geoscience Data Center (NGDC)](http://transfer.bgs.ac.uk/ingestion)
-
-It is built on the FastAPI framework, using the official FastAPI docker image as it's base.
+It is built on the FastAPI framework, using the official FastAPI Docker image.
 
 The core Python API provides the functionality to validate and convert AGS geotechnical data. From here, standard Python web frameworks like Uvicorn and Starlette provide the web API/wrapper atop the core Python API.
 
@@ -55,12 +55,11 @@ This will ensure that all references to `self` in responses, and all Swagger and
 
 ### From Source
 
-pyagsapi runs on Python 3.
+pyagsapi runs on Python >= 3.11.
 
-```python
+```bash
 python -m venv pyagsapi
-cd pyagsapi
-. bin/activate
+source pyagsapi/bin/activate
 git clone https://github.com/BritishGeologicalSurvey/pyagsapi.git
 cd pyagsapi
 pip install -r requirements.txt
@@ -77,14 +76,7 @@ Please raise any feature requests, issues or pull requests against this reposito
 
 AGS Validator is written in Python and based on the [FastAPI](https://fastapi.tiangolo.com/) framework. It runs on the [Uvicorn](https://www.uvicorn.org/) ASGI server.
 
-Use the following commands to run the API locally:
-
-```bash
-git clone https://github.com/BritishGeologicalSurvey/pyagsapi
-cd pyagsapi
-pip install -r requirements.txt
-uvicorn app.main:app --reload
-```
+Use the instructions above to run the API locally.
 
 By default, the API is served at [http://localhost:8000](http://localhost:8000).
 
