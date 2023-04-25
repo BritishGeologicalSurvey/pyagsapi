@@ -120,8 +120,9 @@ response_type_query = Query(
              tags=["validate"],
              response_model=ValidationResponse,
              responses=log_responses,
-            summary="Validate AGS4 File(s)",
-            description="Validate an AGS4 file to the AGS File Format v4.x rules and the NGDC data submission requirements. Uses the Offical AGS4 Python Library.")
+             summary="Validate AGS4 File(s)",
+             description=("Validate an AGS4 file to the AGS File Format v4.x rules and the NGDC data"
+                          " submission requirements. Uses the Offical AGS4 Python Library."))
 async def validate(background_tasks: BackgroundTasks,
                    files: List[UploadFile] = validation_file,
                    std_dictionary: Dictionary = dictionary_form,
@@ -168,7 +169,8 @@ async def validate(background_tasks: BackgroundTasks,
              response_class=StreamingResponse,
              responses=zip_responses,
              summary="Convert files between .ags and .xlsx format",
-             description="Convert files between .ags and .xlsx format. Option to sort worksheets in .xlsx file in alphabetical order.")
+             description=("Convert files between .ags and .xlsx format. Option to"
+                          " sort worksheets in .xlsx file in alphabetical order."))
 async def convert(background_tasks: BackgroundTasks,
                   files: List[UploadFile] = conversion_file,
                   sort_tables: bool = sort_tables_form,
