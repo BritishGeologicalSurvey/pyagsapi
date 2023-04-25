@@ -32,18 +32,18 @@ jobs:
       run: |
         pip install -r requirements_dev.txt
 
-    - name: Lint app/ with flake8
+    - name: Lint app/ and test/ with flake8
       run: |
-        # exit-zero treats all errors as warnings. 
-        flake8 app/ 
-
-    - name: Lint test/ with flake8
-      run: |
-        # exit-zero treats all errors as warnings. 
-        flake8 test/  
-
+        flake8 app/ test/
+        
     - name: Test with pytest
       run: |
         python -m pytest         
 
+    
+
+
+
+
+    
  
