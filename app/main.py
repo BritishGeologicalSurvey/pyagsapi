@@ -96,7 +96,7 @@ def custom_openapi():
         license_info={
             "name": "Open Government Licence v3",
             "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
-        },          
+        },       
         routes=app.routes,
     )
     openapi_schema["info"]["x-logo"] = {
