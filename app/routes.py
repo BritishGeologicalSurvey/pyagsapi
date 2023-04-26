@@ -220,11 +220,12 @@ def prepare_validation_response(request, data):
 
 
 @router.get("/ags_log/",
-            tags=["ags_log"],
+            # tags=["ags_log"],
+            # summary="Generate Graphical Log",
+            # description="Generate a graphical log (.pdf) from AGS data held by the National Geoscience Data Centre.",
+            include_in_schema=False, 
             response_class=Response,
-            responses=pdf_responses,
-            summary="Generate Graphical Log",
-            description="Generate a graphical log (.pdf) from AGS data held by the National Geoscience Data Centre.")
+            responses=pdf_responses)
 def get_ags_log(bgs_loca_id: int = ags_log_query,
                 response_type: ResponseType = response_type_query):
     url = BOREHOLE_VIEWER_URL.format(bgs_loca_id=bgs_loca_id)
