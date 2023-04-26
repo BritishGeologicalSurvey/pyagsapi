@@ -17,10 +17,14 @@
     <link rel="stylesheet" href="//resources.bgs.ac.uk/webapps/resources/css/content.css">
 	<link rel="stylesheet" href="//agsapi.bgs.ac.uk/static/css/tooltip.css">
 	<link rel="stylesheet" href="/static/css/htmlView.css">
+	<link rel="stylesheet" href="https://npmcdn.com/leaflet@1.0.0-rc.2/dist/leaflet.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css"/>
 
     <script type="text/javascript" src="//resources.bgs.ac.uk/webapps/resources/js/jquery.min.js"></script>
     <script type="text/javascript" src="//resources.bgs.ac.uk/webapps/resources/js/main.js"></script>
     <script type="text/javascript" src="/static/js/htmlView.js"></script>
+	<script src="https://npmcdn.com/leaflet@1.0.0-rc.2/dist/leaflet.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
 
 	<!-- Google Tag Manager -->
 	<!-- Global site tag (gtag.js) - Google Analytics -->
@@ -73,6 +77,12 @@
   transition: max-height 0.2s ease-out;
   background-color: #edf3f4;
 }
+
+#map {
+			width:600px;
+			height: 500px;
+		}
+
 </style>
   </head>
   <body>
@@ -456,6 +466,71 @@
 		}
 	});
 	}
+	</script>
+	<script type="text/javascript">
+
+		var map = L.map('map', {
+			center: [56, -5],
+			zoom: 5
+		});
+	  
+	  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+		maxZoom: 19,
+		attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+	}).addTo(map);
+	
+		var wmsLayer = L.tileLayer.wms('https://map.bgs.ac.uk/arcgis/services/AGS/AGS_Export/MapServer/WMSServer?', {
+			layers: 'Boreholes',
+		format: 'image/png',
+		transparent: true,
+		attribution: "AGS Data from British Geological Survey",
+		}).addTo(map);
+	
+	  var drawnItems = new L.FeatureGroup();
+	map.addLayer(drawnItems);
+	
+	var drawControl = new L.Control.Draw({
+		draw: {
+			polyline: false,
+			circle: false,
+			rectangle: false,
+			marker: false,
+			circlemarker: false,
+			polygon: {
+				allowIntersection: false,
+				drawError: {
+					color: '#e1e100',
+					message: '<strong>Oh snap!<strong> you can\'t draw that!'
+				},
+				shapeOptions: {
+					color: '#97009c'
+				}
+			}
+		},
+		edit: {
+			featureGroup: drawnItems
+		}
+	});
+	map.addControl(drawControl);
+	
+	map.on('draw:created', function (e) {
+		var type = e.layerType,
+			layer = e.layer;
+	
+		if (type === 'polygon') {
+			// Do something with the polygon, e.g. add it to the map
+			drawnItems.addLayer(layer);
+		}
+	});
+	  
+	map.on('click', function(e) {        
+			var popLocation= e.latlng;
+			var popup = L.popup()
+			.setLatLng(popLocation)
+			.setContent('<p>Wheres my AGS Data!!</p>')
+			.openOn(map);        
+		});
+	  
 	</script>
   </body>
 </html>
