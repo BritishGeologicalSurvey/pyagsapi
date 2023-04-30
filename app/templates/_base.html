@@ -490,8 +490,8 @@
 		).addTo(map);
 
 		var trees = L.featureGroup
-			.ogcApi("https://maps.ecere.com/ogcapi/", {
-				collection: "SanDiegoCDB:Trees",
+			.ogcApi("https://ogcapi.bgs.ac.uk/", {
+				collection: "agsboreholeindex",
 				onEachFeature: function (feat, layer) {
 					layer.bindPopup(Object.entries(feat.properties).join("<br>"));
 				},
