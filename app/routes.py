@@ -136,7 +136,33 @@ async def validate(background_tasks: BackgroundTasks,
                    request: Request = None):
     if not files[0].filename or not checkers:
         raise InvalidPayloadError(request)
+    """
+    Validate an AGS4 file to the AGS File Format v4.x rules and the NGDC data submission requirements.
+    Uses the Official AGS4 Python Library.
 
+    :param background_tasks: Background tasks for deleting temporary directories.
+    :type background_tasks: BackgroundTasks
+
+    :param files: List of AGS4 files to be validated.
+    :type files: List[UploadFile]
+
+    :param std_dictionary: The standard dictionary to use for validation. Options are "BGS" or "AGS".
+    :type std_dictionary: Dictionary
+
+    :param checkers: List of validation rules to be used during validation.
+    :type checkers: List[Checker]
+
+    :param fmt: The format to return the validation results in. Options are "text" or "json".
+    :type fmt: Format
+
+    :param request: The request object.
+    :type request: Request
+
+    :return: A response with the validation results in either plain text or JSON format.
+    :rtype: Union[FileResponse, ValidationResponse]
+
+    :raises InvalidPayloadError: If the payload is missing files or checkers.
+    """
     checkers = [checker_functions[c] for c in checkers]
 
     tmp_dir = Path(tempfile.mkdtemp())
@@ -182,6 +208,27 @@ async def convert(background_tasks: BackgroundTasks,
                   request: Request = None):
     if not files[0].filename:
         raise InvalidPayloadError(request)
+    """
+    Convert files between .ags and .xlsx format. Option to sort worksheets in .xlsx file in alphabetical order.
+
+    :param background_tasks: A background task that manages file conversion asynchronously.
+    :type background_tasks: BackgroundTasks
+
+    :param files: A list of files to be converted. Must be in .ags or .xlsx format.
+    :type files: List[UploadFile]
+
+    :param sort_tables: A boolean indicating whether to sort worksheets in the .xlsx file in alphabetical order.
+    :type sort_tables: bool
+
+    :param request: The HTTP request object.
+    :type request: Request
+
+    :return: A streaming response containing a .zip file with the converted files and a log file.
+    :rtype: StreamingResponse
+
+    :raises InvalidPayloadError: If the request payload is invalid.
+    :raises Exception: If the conversion fails or an unexpected error occurs.
+    """
     RESULTS = 'results'
     tmp_dir = Path(tempfile.mkdtemp())
     results_dir = tmp_dir / RESULTS
