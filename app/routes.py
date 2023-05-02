@@ -225,10 +225,27 @@ def prepare_validation_response(request, data):
             # summary="Generate Graphical Log",
             # description="Generate a graphical log (.pdf) from AGS data held by the National Geoscience Data Centre.",
             include_in_schema=False,
-            response_class=StreamingResponse,
-            responses=zip_responses)
+            response_class=Response,
+            responses=pdf_responses)
 def get_ags_log(bgs_loca_id: int = ags_log_query,
                 response_type: ResponseType = response_type_query):
+    """
+    Get a graphical log (.pdf) for a single borehole in AGS format from the National Geoscience Data Centre.
+    
+    :param bgs_loca_id: The unique identifier of the borehole to generate the log for.
+    :type bgs_loca_id: int
+
+    :param response_type: The type of response to return (e.g. 'attachment' to force download or 'inline' to display in browser).
+    :type response_type: ResponseType, optional
+
+    :return: A response containing a .pdf file with the generated borehole log.
+    :rtype: Response
+
+    :raises HTTPException 500: If the borehole generator could not be reached.
+    :raises HTTPException 404: If the specified borehole does not exist or is confidential.
+    :raises HTTPException 500: If the borehole generator returns an error.
+
+    """    
     url = BOREHOLE_VIEWER_URL.format(bgs_loca_id=bgs_loca_id)
 
     try:
@@ -258,14 +275,28 @@ def get_ags_log(bgs_loca_id: int = ags_log_query,
             # summary="Export a single borehole in .ags format",
             # description="Export a single borehole in .ags format from AGS data held by the National Geoscience Data Centre.",
             include_in_schema=False,
-            response_class=Response,
-            responses=pdf_responses)
-def post_ags_export(bgs_loca_id: int = ags_export_query,
-                response_type: ResponseType = response_type_query):
-    url = BOREHOLE_EXPORT_URL.format(bgs_loca_id=bgs_loca_id)
+            response_class=StreamingResponse,
+            responses=zip_responses)
+def post_ags_export(bgs_loca_id: int = ags_export_query,):
+    """
+    Export a single borehole in .ags format from AGS data held by the National Geoscience Data Centre.
+    
+    :param bgs_loca_id: The unique identifier of the borehole to export.
+    :type bgs_loca_id: int
+    
+    :return: A streaming response containing a .zip file with the exported borehole data.
+    :rtype: StreamingResponse
+    
+    :raises HTTPException 500: If the borehole exporter could not be reached.
+    :raises HTTPException 404: If the specified borehole does not exist or is confidential.
+    :raises HTTPException 500: If the borehole exporter returns an error.
+    """
+    url = BOREHOLE_EXPORT_URL
+    data = {"bgs_loca_id": bgs_loca_id}
+    headers = {"Content-Type": "application/json"}
 
     try:
-        response = requests.post(url, timeout=10)
+        response = requests.post(url, json=data, headers=headers, timeout=10)
     except (Timeout, ConnectionError):
         raise HTTPException(status_code=500,
                             detail="The borehole exporter could not be reached.  Please try again later.")
@@ -281,9 +312,6 @@ def post_ags_export(bgs_loca_id: int = ags_export_query,
             raise HTTPException(status_code=500,
                                 detail="The borehole exporter returned an error.")
 
-    filename = f"{bgs_loca_id}.zip"
-    headers = {'Content-Disposition': f'{response_type.value}; filename="{filename}"'}
-
     response = StreamingResponse(zipped_stream, media_type="application/x-zip-compressed")
-    response.headers["Content-Disposition"] = f"attachment; filename={RESULTS}.zip"
+    response.headers["Content-Disposition"] = f"attachment; filename={bgs_loca_id}.zip"
     return response
