@@ -6,18 +6,28 @@
 <section id="identification">
     <h1>AGS4 File Utilities Tool and API</h1>
     <br>
-    <p>This tool and associated <a href="/docs/">API</a> allow schema validation, data validation and conversion of your <a href="https://www.ags.org.uk/data-format/">AGS files</a>. Files are not saved or stored by this tool. Also included here are links to other AGS data related BGS services and applications</p>
+    <p>This tool and associated <a href="/docs/">API</a> allow schema validation, data validation and conversion of your <a href="https://www.ags.org.uk/data-format/">AGS files</a>. Files are not saved or stored by this tool. Also included are links to our other AGS data related services and applications</p>
     <h2>Tools and Utilities</h2>
     <ul> 
+        <li><a href="#deposit">AGS Data Submission</a></li>   
         <li><a href="#validator">AGS Schema & Data Validator</a></li>
-        <li><a href="#deposit">AGS Data Submission</a></li> 
-        <li><a href="#converter">File Conversion .ags &#8596; .xlsx</a></li>
         <li><a href="#ags_data">AGS Data Discovery</a></li>
+        <li><a href="#converter">File Conversion .ags &#8596; .xlsx</a></li>
+        <li><a href="#ags_logs">AGS Graphical Logs</a></li>
         <li><a href="#openapi">API Documentation</a></li>
     </ul>
 </section>
 <br>
 <hr>
+<section id="deposit">
+  <br>
+  <h2>AGS Data Submission</h2>
+  <br>
+  <p>Deposit your AGS data with the National Geoscience Data Centre (NGDC) <a href="http://transfer.bgs.ac.uk/ingestion"><b>here</b></a>. Please validate your files prior to submission. For further details please see <a href="https://www.bgs.ac.uk/technologies/geotechnical-data-services/">geotechnical data services.</a></p>
+</section>
+<br>
+<br>
+<br>
 <section id="validator">
     <br>
     <h2>AGS4 Schema & Data Validation</h2>
@@ -132,54 +142,46 @@
 <br>
 <br>
 <br>
-<section id="deposit">
+<section id="ags_data">
+  <h2>AGS Data Discovery</h2>
   <br>
-  <h2>AGS Data Submission</h2>
+  <p>Use the map below to find AGS data, click on the markers to find borehole information, links to graphical logs and the original submitted data.</p>
+  <p><b>The map will show a maximum of 100 markers - zooming may be required for display</b></p>
   <br>
-  <p>Deposit your AGS data with the National Geoscience Data Centre (NGDC). Please validate your files prior to submission. For further details please see <a href="https://www.bgs.ac.uk/technologies/geotechnical-data-services/">here</a></p>
-  <div class="btn-wrap">
-    <a href="http://transfer.bgs.ac.uk/ingestion" class="button primary-background button btn-icon-arrow-right-white before " style="width: 165.226px;">Deposit data</a></div>
+  <div id="map" style="width: 100%; height: 600px"></div>
   <br>
-</section>
+</section> 
 <br>
 <br>
 <br>
 <section id="converter">
-    <h2>AGS Converter</h2>
-      <div class="tooltip"><p>Convert .ags file(s) to/from .xlsx.</p>
-        <span class="tooltiptext">Which ever format file is submitted, the opposite will be returned e.g. if 5 .ags files and 3 .xlsx files were submitted the result would be 5 .xlsx files and 3 .ags files</span>
-      </div>
-      <br>
+  <h2>AGS Converter</h2>
+    <div class="tooltip"><p>Convert .ags file(s) to/from .xlsx.</p>
+      <span class="tooltiptext">Which ever format file is submitted, the opposite will be returned e.g. if 5 .ags files and 3 .xlsx files were submitted the result would be 5 .xlsx files and 3 .ags files</span>
+    </div>
     <br>
-    <form action="/convert/" enctype="multipart/form-data" method="post" id="convertForm">
-      <fieldset>
-        <legend>Sort worksheets in .xlsx file in alphabetical order <strong>(Warning: .ags to .xlsx only. The original group order will be lost)</strong></legend>
-        <input type="radio" id="alpha" name="sort_tables" value="True">
-        <label for="alpha">True</label>
-        <input type="radio" id="default" name="sort_tables" value="False" checked>
-        <label for="default">False</label><br>
-      </fieldset>
-      <br>
-      <fieldset>
-        <legend>Select files <b>(50 Mb Maximum)</b></legend>
-        <input name="files" type="file" multiple>
-        <input type="submit" class="submitBtn" value="Convert" >
-      </fieldset>
-    </form>
+  <br>
+  <form action="/convert/" enctype="multipart/form-data" method="post" id="convertForm">
+    <fieldset>
+      <legend>Sort worksheets in .xlsx file in alphabetical order <strong>(Warning: .ags to .xlsx only. The original group order will be lost)</strong></legend>
+      <input type="radio" id="alpha" name="sort_tables" value="True">
+      <label for="alpha">True</label>
+      <input type="radio" id="default" name="sort_tables" value="False" checked>
+      <label for="default">False</label><br>
+    </fieldset>
+    <br>
+    <fieldset>
+      <legend>Select files <b>(50 Mb Maximum)</b></legend>
+      <input name="files" type="file" multiple>
+      <input type="submit" class="submitBtn" value="Convert" >
+    </fieldset>
+  </form>
 </section>
 <br>
 <br>
-<section>
-  
-</section>
 <br>
-<br>
-<section id="ags_data">
-  <h2>AGS Data Discovery</h2>
-  <br>
-  <p>Use the map below to find AGS data, click on the markers to find borehole information and links to graphical logs and the original submitted data.</p>
-  <br>
-  <div id="map" style="width: 800px; height: 600px"></div>
+<section id="ags_logs"> 
+  <h2>AGS Graphical Logs</h2>
   <br>
     <p>Submit BGS LOCA ID to view log from NGDC held AGS data. Find BGS LOCA ID on <a href="https://mapapps2.bgs.ac.uk/geoindex/home.html?layer=AGSBoreholes">GeoIndex Web Viewer</a> or by querying the <a href="https://ogcapi.bgs.ac.uk/collections/onshoreboreholeindex/items">BGS OGCAPI-Features Server</a></p>
     <br>
