@@ -320,13 +320,14 @@ def get_ags_log(bgs_loca_id: int = ags_log_query,
 
 
 @router.post("/ags_export/",
-                # tags=["ags_export"],
-                # summary="Export a single borehole in .ags format",
-                # description="Export a single borehole in .ags format from AGS data held by the National Geoscience Data Centre.",
-                include_in_schema=False,
-                response_class=StreamingResponse,
-                responses=zip_responses)
-def post_ags_export(bgs_loca_id: int = ags_export_query,):
+             # tags=["ags_export"],
+             # summary="Export a single borehole in .ags format",
+             # description="Export a single borehole in .ags format from AGS data \
+             # held by the National Geoscience Data Centre.",
+             include_in_schema=False,
+             response_class=StreamingResponse,
+             responses=zip_responses)
+def post_ags_export(bgs_loca_id: int):
     """
     Export a single borehole in .ags format from AGS data held by the National Geoscience Data Centre.
 
