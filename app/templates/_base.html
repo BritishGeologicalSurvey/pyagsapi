@@ -19,24 +19,14 @@
 	<link rel="stylesheet" href="/static/css/htmlView.css">
 	<link rel="stylesheet" href="https://npmcdn.com/leaflet@1.0.0-rc.2/dist/leaflet.css" />
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css"/>
+	<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" crossorigin=""/>
 
     <script type="text/javascript" src="//resources.bgs.ac.uk/webapps/resources/js/jquery.min.js"></script>
     <script type="text/javascript" src="//resources.bgs.ac.uk/webapps/resources/js/main.js"></script>
     <script type="text/javascript" src="/static/js/htmlView.js"></script>
+	<script type="text/javascript" src="https://unpkg.com/leaflet/dist/leaflet-src.js" crossorigin=""></script>
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>
 	
-	<link
-			rel="stylesheet"
-			href="https://unpkg.com/leaflet/dist/leaflet.css"
-			crossorigin=""
-		/>
-		<script
-			src="https://unpkg.com/leaflet/dist/leaflet-src.js"
-			crossorigin=""
-		></script>
-
-		<script src="/static/js/Leaflet.FeatureGroup.OGCAPI.js"></script>
-
-
 	<!-- Google Tag Manager -->
 	<!-- Global site tag (gtag.js) - Google Analytics -->
 	<script async src="https://www.googletagmanager.com/gtag/js?id=G-J768KTXMCP"></script>
@@ -478,30 +468,8 @@
 	});
 	}
 	</script>
-	<script>
-		var map = L.map("map", {});
-
-		var positron = L.tileLayer(
-			"https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png",
-			{
-				attribution:
-					'&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
-			}
-		).addTo(map);
-
-		var trees = L.featureGroup
-			.ogcApi("https://ogcapi.bgs.ac.uk/", {
-				collection: "agsboreholeindex",
-				onEachFeature: function (feat, layer) {
-					layer.bindPopup(Object.entries(feat.properties).join("<br>"));
-				},
-			})
-			.addTo(map);
-
-		trees.once("ready", function (ev) {
-			map.fitBounds(trees.getBounds());
-		});
-	</script>
+	<script src="/static/js/Leaflet.FeatureGroup.OGCAPI.js"></script>
+	<script src="/static/js/map.js"></script>
 
   </body>
 </html>

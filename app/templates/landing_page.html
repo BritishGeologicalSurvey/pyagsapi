@@ -6,12 +6,13 @@
 <section id="identification">
     <h1>AGS4 File Utilities Tool and API</h1>
     <br>
-    <p>This tool and associated <a href="/docs/">API</a> allow schema validation, data validation and conversion of your <a href="https://www.ags.org.uk/data-format/">AGS files</a>. Files are not saved or stored by this tool.</p>
-    <h2>Tools</h2>
-    <ul>
+    <p>This tool and associated <a href="/docs/">API</a> allow schema validation, data validation and conversion of your <a href="https://www.ags.org.uk/data-format/">AGS files</a>. Files are not saved or stored by this tool. Also included here are links to other AGS data related BGS services and applications</p>
+    <h2>Tools and Utilities</h2>
+    <ul> 
         <li><a href="#validator">AGS Schema & Data Validator</a></li>
+        <li><a href="#deposit">AGS Data Submission</a></li> 
         <li><a href="#converter">File Conversion .ags &#8596; .xlsx</a></li>
-        <li><a href="#ags_log">AGS Log Viewer</a></li>
+        <li><a href="#ags_data">AGS Data Discovery</a></li>
         <li><a href="#openapi">API Documentation</a></li>
     </ul>
 </section>
@@ -131,6 +132,18 @@
 <br>
 <br>
 <br>
+<section id="deposit">
+  <br>
+  <h2>AGS Data Submission</h2>
+  <br>
+  <p>Deposit your AGS data with the National Geoscience Data Centre (NGDC). Please validate your files prior to submission. For further details please see <a href="https://www.bgs.ac.uk/technologies/geotechnical-data-services/">here</a></p>
+  <div class="btn-wrap">
+    <a href="http://transfer.bgs.ac.uk/ingestion" class="button primary-background button btn-icon-arrow-right-white before " style="width: 165.226px;">Deposit data</a></div>
+  <br>
+</section>
+<br>
+<br>
+<br>
 <section id="converter">
     <h2>AGS Converter</h2>
       <div class="tooltip"><p>Convert .ags file(s) to/from .xlsx.</p>
@@ -156,11 +169,18 @@
 </section>
 <br>
 <br>
-<div id="map" style="width: 800px; height: 600px"></div>
+<section>
+  
+</section>
 <br>
 <br>
-<section id="ags_log">
-  <h2>AGS Log Viewer</h2>
+<section id="ags_data">
+  <h2>AGS Data Discovery</h2>
+  <br>
+  <p>Use the map below to find AGS data, click on the markers to find borehole information and links to graphical logs and the original submitted data.</p>
+  <br>
+  <div id="map" style="width: 800px; height: 600px"></div>
+  <br>
     <p>Submit BGS LOCA ID to view log from NGDC held AGS data. Find BGS LOCA ID on <a href="https://mapapps2.bgs.ac.uk/geoindex/home.html?layer=AGSBoreholes">GeoIndex Web Viewer</a> or by querying the <a href="https://ogcapi.bgs.ac.uk/collections/onshoreboreholeindex/items">BGS OGCAPI-Features Server</a></p>
     <br>
   <br>
