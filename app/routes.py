@@ -18,6 +18,7 @@ from app.errors import error_responses, InvalidPayloadError
 from app.schemas import ValidationResponse
 
 BOREHOLE_VIEWER_URL = "https://gwbv.bgs.ac.uk/GWBV/viewborehole?loca_id={bgs_loca_id}"
+BOREHOLE_EXPORT_URL = "https://gwbv.bgs.ac.uk/ags_export/"
 
 router = APIRouter()
 
@@ -229,6 +230,39 @@ def prepare_validation_response(request, data):
 def get_ags_log(bgs_loca_id: int = ags_log_query,
                 response_type: ResponseType = response_type_query):
     url = BOREHOLE_VIEWER_URL.format(bgs_loca_id=bgs_loca_id)
+
+    try:
+        response = requests.get(url, timeout=10)
+    except (Timeout, ConnectionError):
+        raise HTTPException(status_code=500,
+                            detail="The borehole generator could not be reached.  Please try again later.")
+
+    try:
+        response.raise_for_status()
+    except HTTPError:
+        if response.status_code == 404:
+            raise HTTPException(status_code=404,
+                                detail=f"Failed to retrieve borehole {bgs_loca_id}. "
+                                "It may not exist or may be confidential")
+        else:
+            raise HTTPException(status_code=500,
+                                detail="The borehole generator returned an error.")
+
+    filename = f"{bgs_loca_id}_log.pdf"
+    headers = {'Content-Disposition': f'{response_type.value}; filename="{filename}"'}
+
+    return Response(response.content, headers=headers, media_type='application/pdf')
+
+@router.post("/ags_export/",
+            # tags=["ags_export"],
+            # summary="Export a single borehole in .ags format",
+            # description="Export a single borehole in .ags format from AGS data held by the National Geoscience Data Centre.",
+            include_in_schema=False,
+            response_class=Response,
+            responses=pdf_responses)
+def post_ags_export(bgs_loca_id: int = ags_log_query,
+                response_type: ResponseType = response_type_query):
+    url = BOREHOLE_EXPORT_URL.format(bgs_loca_id=bgs_loca_id)
 
     try:
         response = requests.get(url, timeout=10)
