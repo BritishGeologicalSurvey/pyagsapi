@@ -225,8 +225,8 @@ def prepare_validation_response(request, data):
             # summary="Generate Graphical Log",
             # description="Generate a graphical log (.pdf) from AGS data held by the National Geoscience Data Centre.",
             include_in_schema=False,
-            response_class=Response,
-            responses=pdf_responses)
+            response_class=StreamingResponse,
+            responses=zip_responses)
 def get_ags_log(bgs_loca_id: int = ags_log_query,
                 response_type: ResponseType = response_type_query):
     url = BOREHOLE_VIEWER_URL.format(bgs_loca_id=bgs_loca_id)
@@ -260,15 +260,15 @@ def get_ags_log(bgs_loca_id: int = ags_log_query,
             include_in_schema=False,
             response_class=Response,
             responses=pdf_responses)
-def post_ags_export(bgs_loca_id: int = ags_log_query,
+def post_ags_export(bgs_loca_id: int = ags_export_query,
                 response_type: ResponseType = response_type_query):
     url = BOREHOLE_EXPORT_URL.format(bgs_loca_id=bgs_loca_id)
 
     try:
-        response = requests.get(url, timeout=10)
+        response = requests.post(url, timeout=10)
     except (Timeout, ConnectionError):
         raise HTTPException(status_code=500,
-                            detail="The borehole generator could not be reached.  Please try again later.")
+                            detail="The borehole exporter could not be reached.  Please try again later.")
 
     try:
         response.raise_for_status()
@@ -279,9 +279,11 @@ def post_ags_export(bgs_loca_id: int = ags_log_query,
                                 "It may not exist or may be confidential")
         else:
             raise HTTPException(status_code=500,
-                                detail="The borehole generator returned an error.")
+                                detail="The borehole exporter returned an error.")
 
-    filename = f"{bgs_loca_id}_log.pdf"
+    filename = f"{bgs_loca_id}.zip"
     headers = {'Content-Disposition': f'{response_type.value}; filename="{filename}"'}
 
-    return Response(response.content, headers=headers, media_type='application/pdf')
+    response = StreamingResponse(zipped_stream, media_type="application/x-zip-compressed")
+    response.headers["Content-Disposition"] = f"attachment; filename={RESULTS}.zip"
+    return response
