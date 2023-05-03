@@ -33,47 +33,67 @@ geologyOfbtn = L.tileLayer.betterWms('http://ogc.bgs.ac.uk/cgi-bin/BGS_Bedrock_a
 var topo = L.esri.basemapLayer("Topographic");
 var imagery = L.esri.basemapLayer("Imagery").addTo(map);
 
-var positron = L.tileLayer(
-    "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png", {
-    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',    
-}).addTo(map);
-
-/** Use the L.tileLayer.betterWms extension to load the wms layer */
-agsindex = L.tileLayer.betterWms('https://map.bgs.ac.uk/arcgis/services/AGS/AGS_Export/MapServer/WMSServer?', {
+var agsindex = L.tileLayer.wms('https://map.bgs.ac.uk/arcgis/services/AGS/AGS_Export/MapServer/WMSServer?', {
     layers: 'Boreholes',
-    tiled: true,
     format: 'image/png',
     transparent: true,
-    opacity: 0.7,
-    continuousWorld: true,
+    attribution: "AGS Data from British Geological Survey",
     zIndex: 1001
-
 }).addTo(map);
 
-var agsboreholes = L.featureGroup
-.ogcApi("https://ogcapi.bgs.ac.uk/", {
-    collection: "agsboreholeindex",
-    onEachFeature: function (feat, layer) {
-        var properties = feat.properties;
-        var popupContent = "<b>AGS Borehole Information</b><br><hr>" +
-            "<b>BGS LOCA ID: </b>" + properties.bgs_loca_id + "<br>" +
-            "<b>Depth (m): </b>" + properties.loca_fdep + "<br>" +
-            "<b>Project Name: </b>" + properties.proj_name + "<br>" +
-            "<b>Project Engineer: </b>" + properties.proj_eng + "<br>" +
-            "<b>Project Contractor: </b>" + properties.proj_cont + "<br>" +
-            "<b>Original LOCA ID: </b>" + properties.loca_id + "<br>" +
-            "<b>AGS Graphical Log: </b>" + "<a href=" + "https://agsapi.bgs.ac.uk/ags_log/?bgs_loca_id=" + properties.bgs_loca_id + " target=" + "_blank" + ">View</a>" + "<br>" +
-            "<b>AGS Submission Record (raw data): </b>" + "<a href=" + properties.dad_item_url + " target=" + "_blank" + ">View</a>" + "<br>";
-        layer.bindPopup(popupContent);
-    },
-}).addTo(map);
+(async () => {
+    const airports = await fetch('https://demo.ldproxy.net/zoomstack/collections/airports/items?limit=100', {
+      headers: {
+        'Accept': 'application/geo+json'
+      }
+    }).then(response => response.json());
+    const iconurl = 'data:image/svg+xml;base64,'+btoa('<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><rect width="200" height="200" rx="24" fill="#000"/><path d="M 91.268,28.17 C 91.308,16.432 109.015,16.432 109.015,28.514 L 109.015,77.831 L 178.023,119.336 L 178.023,137.549 L 109.319,114.945 L 109.319,151.776 L 125.205,164.221 L 125.205,178.61 L 100.698,171.001 L 76.191,178.61 L 76.191,164.221 L 91.915,151.776 L 91.915,114.945 L 23.191,137.549 L 23.191,119.336 L 91.248,77.831 L 91.248,28.17 z" fill="#fff"/></svg>');
+    L.geoJSON(airports, {
+      pointToLayer: function (feature, latlng) {
+        return L.marker(latlng, { 
+          icon: L.icon({
+            iconUrl: iconurl,
+            iconSize: [20, 20],
+            iconAnchor: [10, 10],
+            popupAnchor: [0, -10]
+          })
+        });
+      },
+      onEachFeature: onEachFeature
+    }).addTo(map);
+})();    
+
+function onEachFeature(feature, layer) {
+    var popupContent = "<a href='https://demo.ldproxy.net/zoomstack/collections/airports/items/" + feature.id + "' target='_blank'>" + feature.properties.name + "</a>";
+    if (feature.properties && feature.properties.popupContent) {
+        popupContent += feature.properties.popupContent;
+    }
+    layer.bindPopup(popupContent);
+}
+
+// var agsboreholes = L.featureGroup
+// .ogcApi("https://ogcapi.bgs.ac.uk/", {
+//     collection: "agsboreholeindex",
+//     onEachFeature: function (feat, layer) {
+//         var properties = feat.properties;
+//         var popupContent = "<b>AGS Borehole Information</b><br><hr>" +
+//             "<b>BGS LOCA ID: </b>" + properties.bgs_loca_id + "<br>" +
+//             "<b>Depth (m): </b>" + properties.loca_fdep + "<br>" +
+//             "<b>Project Name: </b>" + properties.proj_name + "<br>" +
+//             "<b>Project Engineer: </b>" + properties.proj_eng + "<br>" +
+//             "<b>Project Contractor: </b>" + properties.proj_cont + "<br>" +
+//             "<b>Original LOCA ID: </b>" + properties.loca_id + "<br>" +
+//             "<b>AGS Graphical Log: </b>" + "<a href=" + "https://agsapi.bgs.ac.uk/ags_log/?bgs_loca_id=" + properties.bgs_loca_id + " target=" + "_blank" + ">View</a>" + "<br>" +
+//             "<b>AGS Submission Record (raw data): </b>" + "<a href=" + properties.dad_item_url + " target=" + "_blank" + ">View</a>" + "<br>";
+//         layer.bindPopup(popupContent);
+//     },
+// }).addTo(map);
 
 baseMaps["<span>Topographic</span>"] = topo;
 baseMaps["<span>Imagery</span>"] = imagery;
-baseMaps["<span>OpenStreetMap</span>"] = positron;
 overlays["<span>Geology</span>"] = geologyOfbtn;
 overlays["<span>AGS Index</span>"] = agsindex;
-overlays["<span>AGS Details</span>"] = agsboreholes;
+// overlays["<span>AGS Info</span>"] = agsboreholes;
 
 control = L.control.layers(baseMaps, overlays, { collapsed: true }).addTo(map);
 
@@ -130,6 +150,6 @@ searchControl.on('results', function (data) {
     // do something with the search results
 });
 
-agsboreholes.once("ready", function (ev) {
-    map.fitBounds(agsboreholes.getBounds());
-});
+// agsboreholes.once("ready", function (ev) {
+//     map.fitBounds(agsboreholes.getBounds());
+// });
