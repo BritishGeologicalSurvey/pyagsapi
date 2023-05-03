@@ -28,7 +28,7 @@ geologyOfbtn = L.tileLayer.betterWms('http://ogc.bgs.ac.uk/cgi-bin/BGS_Bedrock_a
 
 }).addTo(map);
 
-// /** Use the L.tileLayer.betterWms extension to load the wms layer */
+// /** Use the L.tileLayer.betterWms extension to load the 50k wms layer */
 // 50kgeology = L.tileLayer.betterWms('https://map.bgs.ac.uk/arcgis/services/BGS_Detailed_Geology/MapServer/WMSServer?', {
 //     layers: 'BGS.50k.Bedrock,BGS.50k.Superficial.deposits,BGS.50k.Linear.features',
 //     tiled: true,
@@ -52,6 +52,24 @@ var agsindex = L.tileLayer.wms('https://map.bgs.ac.uk/arcgis/services/AGS/AGS_Ex
     attribution: "AGS Data from British Geological Survey",
     zIndex: 1001
 }).addTo(map);
+
+// var agsboreholes = L.featureGroup
+// .ogcApi("https://ogcapi.bgs.ac.uk/", {
+//     collection: "agsboreholeindex",
+//     onEachFeature: function (feat, layer) {
+//         var properties = feat.properties;
+//         var popupContent = "<b>AGS Borehole Information</b><br><hr>" +
+//             "<b>BGS LOCA ID: </b>" + properties.bgs_loca_id + "<br>" +
+//             "<b>Depth (m): </b>" + properties.loca_fdep + "<br>" +
+//             "<b>Project Name: </b>" + properties.proj_name + "<br>" +
+//             "<b>Project Engineer: </b>" + properties.proj_eng + "<br>" +
+//             "<b>Project Contractor: </b>" + properties.proj_cont + "<br>" +
+//             "<b>Original LOCA ID: </b>" + properties.loca_id + "<br>" +
+//             "<b>AGS Graphical Log: </b>" + "<a href=" + "https://agsapi.bgs.ac.uk/ags_log/?bgs_loca_id=" + properties.bgs_loca_id + " target=" + "_blank" + ">View</a>" + "<br>" +
+//             "<b>AGS Submission Record (raw data): </b>" + "<a href=" + properties.dad_item_url + " target=" + "_blank" + ">View</a>" + "<br>";
+//         layer.bindPopup(popupContent);
+//     },
+// });
 
 (async () => {
     const agsboreholes = await fetch('https://ogcapi.bgs.ac.uk/collections/agsboreholeindex/items?limit=100', {
