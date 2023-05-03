@@ -72,7 +72,7 @@ var agsindex = L.tileLayer.wms('https://map.bgs.ac.uk/arcgis/services/AGS/AGS_Ex
 // });
 
 (async () => {
-    const agsboreholes = await fetch('https://ogcapi.bgs.ac.uk/collections/agsboreholeindex/items?limit=100', {
+    const agsboreholes = await fetch('https://ogcapi.bgs.ac.uk/collections/agsboreholeindex/items?bbox=' + map.getBounds().toBBoxString() + '&limit=100', {
       headers: {
         'Accept': 'application/geo+json'
       }
