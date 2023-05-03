@@ -32,6 +32,11 @@ zip_responses['200'] = {
     "content": {"application/x-zip-compressed": {}},
     "description": "Return a zip containing successfully converted files and log file"}
 
+zip_ags_responses = dict(error_responses)
+zip_ags_responses['200'] = {
+    "content": {"application/x-zip-compressed": {}},
+    "description": "Return a zip containing .ags file and metadata .txt file"}
+
 pdf_responses = dict(error_responses)
 pdf_responses['200'] = {
     "content": {"application/pdf": {}},
@@ -108,6 +113,13 @@ sort_tables_form = Form(
 )
 
 ags_log_query = Query(
+    ...,
+    title="BGS LOCA ID",
+    description="BGS LOCA ID",
+    example="20190430093402523419",
+)
+
+ags_export_query = Query(
     ...,
     title="BGS LOCA ID",
     description="BGS LOCA ID",
@@ -271,7 +283,7 @@ def prepare_validation_response(request, data):
             # tags=["ags_log"],
             # summary="Generate Graphical Log",
             # description="Generate a graphical log (.pdf) from AGS data held by the National Geoscience Data Centre.",
-            include_in_schema=False,
+            include_in_schema=True,
             response_class=Response,
             responses=pdf_responses)
 def get_ags_log(bgs_loca_id: int = ags_log_query,
@@ -324,10 +336,10 @@ def get_ags_log(bgs_loca_id: int = ags_log_query,
              # summary="Export a single borehole in .ags format",
              # description="Export a single borehole in .ags format from AGS data \
              # held by the National Geoscience Data Centre.",
-             include_in_schema=False,
+             include_in_schema=True,
              response_class=StreamingResponse,
-             responses=zip_responses)
-def post_ags_export(bgs_loca_id: int):
+             responses=zip_ags_responses)
+def post_ags_export(bgs_loca_id: int = ags_export_query):
     """
     Export a single borehole in .ags format from AGS data held by the National Geoscience Data Centre.
 
@@ -342,11 +354,14 @@ def post_ags_export(bgs_loca_id: int):
     :raises HTTPException 500: If the borehole exporter returns an error.
     """
     url = BOREHOLE_EXPORT_URL
-    data = {"bgs_loca_id": bgs_loca_id}
-    headers = {"Content-Type": "application/json"}
+    data = str(bgs_loca_id)
+    headers = {"Content-Type": "text/plain",
+               "Accept": "*/*",
+               "Accept-Encoding": "gzip, deflate, br",
+               "Connection": "keep-alive"}
 
     try:
-        response = requests.post(url, json=data, headers=headers, timeout=10)
+        response = requests.post(url, data=data, headers=headers, timeout=10)
     except (Timeout, ConnectionError):
         raise HTTPException(status_code=500,
                             detail="The borehole exporter could not be reached.  Please try again later.")
@@ -362,6 +377,7 @@ def post_ags_export(bgs_loca_id: int):
             raise HTTPException(status_code=500,
                                 detail="The borehole exporter returned an error.")
 
-    response = StreamingResponse(media_type="application/x-zip-compressed")
+    content = response.content
+    response = StreamingResponse(content, media_type="application/x-zip-compressed")
     response.headers["Content-Disposition"] = f"attachment; filename={bgs_loca_id}.zip"
     return response
