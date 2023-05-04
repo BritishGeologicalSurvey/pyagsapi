@@ -11,7 +11,9 @@ var initZoom = 5.5;
 var map = L.map('mapid',
     {
         center: mapCentre, // centre at specified coords
-        zoom: initZoom
+        zoom: initZoom,
+        minZoom: 5,
+        maxZoom: 18
     }
 );
 
