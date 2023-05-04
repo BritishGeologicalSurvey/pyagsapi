@@ -1,7 +1,7 @@
 
-// var control = {};
-// var overlays = {};
-// var baseMaps = {};
+var control = {};
+var overlays = {};
+var baseMaps = {};
 
 var mapCentre = [54.5, -1.5];
 var initZoom = 5.5;
@@ -43,7 +43,7 @@ geologyOfbtn = L.tileLayer.betterWms('http://ogc.bgs.ac.uk/cgi-bin/BGS_Bedrock_a
 /** Add Esri basemap layers to map - this is using the esri-leaflet.js extension 
  * for Leaflet and makes it easier to include Esri functionality in to Leaflet maps: https://esri.github.io/esri-leaflet   */
 var topo = L.esri.basemapLayer("Topographic").addTo(map);
-// var imagery = L.esri.basemapLayer("Imagery").addTo(map);
+var imagery = L.esri.basemapLayer("Imagery");
 
 /** Use the L.tileLayer.betterWms extension to load the AGS wms layer */
 var agsindex = L.tileLayer.wms('https://map.bgs.ac.uk/arcgis/services/AGS/AGS_Export/MapServer/WMSServer?', {
@@ -76,7 +76,7 @@ var agsboreholes = L.featureGroup
 
 agsboreholes.once("ready", function (ev) {
     map.fitBounds(agsboreholes.getBounds());
-}).addTo(map);
+});
 
 
 // (async () => {
@@ -107,44 +107,44 @@ agsboreholes.once("ready", function (ev) {
 //     layer.bindPopup(popupContent);
 // }
 
-// baseMaps["<span>Topographic</span>"] = topo;
-// baseMaps["<span>Imagery</span>"] = imagery;
-// overlays["<span>Geology</span>"] = geologyOfbtn;
-// overlays["<span>AGS Index</span>"] = agsindex;
-// overlays["<span>AGS Details</span>"] = agsboreholes;
+baseMaps["<span>Topographic</span>"] = topo;
+baseMaps["<span>Imagery</span>"] = imagery;
+overlays["<span>Geology</span>"] = geologyOfbtn;
+overlays["<span>AGS Index</span>"] = agsindex;
+overlays["<span>AGS Details</span>"] = agsboreholes;
 
-// control = L.control.layers(baseMaps, overlays, { collapsed: false }).addTo(map);
+control = L.control.layers(baseMaps, overlays, { collapsed: false }).addTo(map);
 
-// // jQuery UI slider for controling the opacity of the wms layer.
-// $opacitySlider = $("#opacitySlider").slider({
-//     slide: function (event, ui) {
-//         geologyOfbtn.setOpacity((ui.value / 100).toFixed(1));
-//     },
-//     min: 0,
-//     max: 100,
-//     step: 10,
-//     value: 50
-// });
+// jQuery UI slider for controling the opacity of the wms layer.
+$opacitySlider = $("#opacitySlider").slider({
+    slide: function (event, ui) {
+        geologyOfbtn.setOpacity((ui.value / 100).toFixed(1));
+    },
+    min: 0,
+    max: 100,
+    step: 10,
+    value: 50
+});
 
-// // diable dragging when entering div 
-// $("#dOpacitySliderBox").on('mouseover', function () {
-//     map.dragging.disable();
-// });
+// diable dragging when entering div 
+$("#dOpacitySliderBox").on('mouseover', function () {
+    map.dragging.disable();
+});
 
-// // Re-enable dragging when leaving div
-// $("#dOpacitySliderBox").on('mouseout', function () {
-//     map.dragging.enable();
-// });
+// Re-enable dragging when leaving div
+$("#dOpacitySliderBox").on('mouseout', function () {
+    map.dragging.enable();
+});
 
-// $("#dOpacitySliderBox").click(false);
+$("#dOpacitySliderBox").click(false);
 
 
-// /** Geocoder search functionality - this is using Esri's location search functionality: 
-//  * https://esri.github.io/esri-leaflet/examples/geocoding-control.html */
-// var searchControl = L.esri.Geocoding.geosearch().addTo(map);
-// var results = L.layerGroup().addTo(map);
+/** Geocoder search functionality - this is using Esri's location search functionality: 
+ * https://esri.github.io/esri-leaflet/examples/geocoding-control.html */
+var searchControl = L.esri.Geocoding.geosearch().addTo(map);
+var results = L.layerGroup().addTo(map);
 
-// searchControl.on('results', function (data) {
-//     results.clearLayers();
-//     // do something with the search results
-// });
+searchControl.on('results', function (data) {
+    results.clearLayers();
+    // do something with the search results
+});
