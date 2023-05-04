@@ -22,7 +22,7 @@ geologyOfbtn = L.tileLayer.betterWms('http://ogc.bgs.ac.uk/cgi-bin/BGS_Bedrock_a
     tiled: true,
     format: 'image/png',
     transparent: true,
-    opacity: 0.7,
+    opacity: 0.5,
     continuousWorld: true,
     zIndex: 1000
 
@@ -68,6 +68,7 @@ var agsboreholes = L.featureGroup
             "<b>Project Contractor: </b>" + properties.proj_cont + "<br>" +
             "<b>Original LOCA ID: </b>" + properties.loca_id + "<br>" +
             "<b>AGS Graphical Log: </b>" + "<a href=" + "https://agsapi.bgs.ac.uk/ags_log/?bgs_loca_id=" + properties.bgs_loca_id + " target=" + "_blank" + ">View</a>" + "<br>" +
+            "<b>AGS Data: </b>" + "<a href=" + "https://agsapi.bgs.ac.uk/ags_export/?bgs_loca_id=" + properties.bgs_loca_id + " target=" + "_blank" + ">Download</a>" + "<br>" +
             "<b>AGS Submission Record (raw data): </b>" + "<a href=" + properties.dad_item_url + " target=" + "_blank" + ">View</a>" + "<br>";
         layer.bindPopup(popupContent);
     },
@@ -76,6 +77,7 @@ var agsboreholes = L.featureGroup
 agsboreholes.once("ready", function (ev) {
     map.fitBounds(agsboreholes.getBounds());
 });
+
 
 // (async () => {
 //     const agsboreholes = await fetch('https://ogcapi.bgs.ac.uk/collections/agsboreholeindex/items?bbox=' + map.getBounds().toBBoxString() + '&limit=100', {
@@ -111,7 +113,7 @@ overlays["<span>Geology</span>"] = geologyOfbtn;
 overlays["<span>AGS Index</span>"] = agsindex;
 overlays["<span>AGS Details</span>"] = agsboreholes;
 
-control = L.control.layers(baseMaps, overlays, { collapsed: true }).addTo(map);
+control = L.control.layers(baseMaps, overlays, { collapsed: false }).addTo(map);
 
 // jQuery UI slider for controling the opacity of the wms layer.
 $opacitySlider = $("#opacitySlider").slider({
@@ -121,7 +123,7 @@ $opacitySlider = $("#opacitySlider").slider({
     min: 0,
     max: 100,
     step: 10,
-    value: 70
+    value: 50
 });
 
 // diable dragging when entering div 
