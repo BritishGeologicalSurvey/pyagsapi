@@ -141,7 +141,7 @@ L.FeatureGroup.OGCAPI = L.GeoJSON.extend({
 				 * Fired whenever the collection metadata has been loaded.
 				 */
 				this.fire("ready");
-				// this._onReady();
+				this._onReady();
 			});
 	},
 
