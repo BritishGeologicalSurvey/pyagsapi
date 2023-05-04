@@ -19,7 +19,7 @@ var map = L.map('mapid',
 
 
 /** Use the L.tileLayer.betterWms extension to load the wms layer */
-geologyOfbtn = L.tileLayer.betterWms('http://ogc.bgs.ac.uk/cgi-bin/BGS_Bedrock_and_Superficial_Geology/wms?', {
+geologyOfbtn = L.tileLayer.betterWms('https://ogc.bgs.ac.uk/cgi-bin/BGS_Bedrock_and_Superficial_Geology/wms?', {
     layers: 'GBR_BGS_625k_BLS,GBR_BGS_625k_SLS',
     tiled: true,
     format: 'image/png',
