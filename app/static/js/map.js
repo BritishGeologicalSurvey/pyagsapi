@@ -76,7 +76,7 @@ var agsboreholes = L.featureGroup
 
 agsboreholes.once("ready", function (ev) {
     map.fitBounds(agsboreholes.getBounds());
-});
+}).addTo(map);
 
 
 // (async () => {
