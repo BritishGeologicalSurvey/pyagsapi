@@ -1,0 +1,41 @@
+#mapid {
+  width: 100%;
+  height: 600px;
+  cursor: crosshair;
+}
+
+#dOpacitySliderBox {
+  z-index: 3000;
+  position: absolute;
+  bottom: 20px;
+  right: 10px;
+  width: 105px;
+  height: 25px;
+  background-color: rgba(255, 255, 255, 0.9);
+  border: 2px solid #aaaaaa;
+  border-radius: 5px;
+  padding: 5px;
+  padding-bottom: 0px;
+  box-shadow: 2px 2px 4px 0 rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+}
+
+.dOpacitySliderLabel {
+  position: absolute;
+  font-size: 10px;
+  bottom: 0px;
+  left: 25px;
+}
+
+.ui-slider {
+  width: 100px;
+  height: 5px;
+  z-index: 1003;
+}
+
+.ui-slider .ui-slider-handle {
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.3);
+  border-radius: 2px;
+  width: 5px;
+  height: 10px;
+}

@@ -6,19 +6,27 @@
 <section id="identification">
     <h1>AGS4 File Utilities Tool and API</h1>
     <br>
-    <p>This tool and associated <a href="/docs/">API</a> allow schema validation, data validation and conversion of your <a href="https://www.ags.org.uk/data-format/">AGS files</a>. Files are not saved or stored by this tool.</p>
-    <h2>Tools</h2>
-    <ul>
+    <p>This tool and associated <a href="/docs/">API</a> allow schema validation, data validation and conversion of your <a href="https://www.ags.org.uk/data-format/">AGS files</a>. Files are not saved or stored by this tool. Also included are links to our other AGS data related services and applications</p>
+    <h2>Tools and Utilities</h2>
+    <ul> 
+        <li><a href="#deposit">AGS Data Submission</a></li>   
         <li><a href="#validator">AGS Schema & Data Validator</a></li>
+        <li><a href="#ags_data">AGS Data Discovery</a></li>
         <li><a href="#converter">File Conversion .ags &#8596; .xlsx</a></li>
-        <li><a href="#ags_log">AGS Log Viewer</a></li>
         <li><a href="#openapi">API Documentation</a></li>
     </ul>
 </section>
 <br>
 <hr>
+<section id="deposit">
+  <br>
+  <h2>AGS Data Submission</h2>
+  <br>
+  <p>Deposit your AGS data with the National Geoscience Data Centre (NGDC) <a href="http://transfer.bgs.ac.uk/ingestion"><b>here</b></a>. Please validate your files prior to submission. For further details please see <a href="https://www.bgs.ac.uk/technologies/geotechnical-data-services/">geotechnical data services.</a></p>
+</section>
+<br>
+<br>
 <section id="validator">
-    <br>
     <h2>AGS4 Schema & Data Validation</h2>
     <br>
     <h3>AGS4 Validation </h3>
@@ -131,52 +139,43 @@
 <br>
 <br>
 <br>
+<section id="ags_data">
+  <h2>AGS Data Discovery</h2>
+  <br>
+  <p>Use the map below to find AGS data, click on the markers to find borehole information, links to graphical logs and the original submitted data.</p>
+  <p><b>The map will show a maximum of 100 markers - zooming may be required to display markers of interest. </b></p>
+  <p><b>If no AGS Submission Record is shown at the link provided there is likely a legacy confidentiality restriction.</b></p>
+  <br>
+  <div id="mapid">
+    <!-- <div id="dOpacitySliderBox">
+        <div id="opacitySlider"></div>
+        <div class="dOpacitySliderLabel">Transparency</div>
+    </div>-->
+</div>
+</section> 
+<br>
+<br>
+<br>
 <section id="converter">
-    <h2>AGS Converter</h2>
-      <div class="tooltip"><p>Convert .ags file(s) to/from .xlsx.</p>
-        <span class="tooltiptext">Which ever format file is submitted, the opposite will be returned e.g. if 5 .ags files and 3 .xlsx files were submitted the result would be 5 .xlsx files and 3 .ags files</span>
-      </div>
-      <br>
-    <br>
-    <form action="/convert/" enctype="multipart/form-data" method="post" id="convertForm">
-      <fieldset>
-        <legend>Sort worksheets in .xlsx file in alphabetical order <strong>(Warning: .ags to .xlsx only. The original group order will be lost)</strong></legend>
-        <input type="radio" id="alpha" name="sort_tables" value="True">
-        <label for="alpha">True</label>
-        <input type="radio" id="default" name="sort_tables" value="False" checked>
-        <label for="default">False</label><br>
-      </fieldset>
-      <br>
-      <fieldset>
-        <legend>Select files <b>(50 Mb Maximum)</b></legend>
-        <input name="files" type="file" multiple>
-        <input type="submit" class="submitBtn" value="Convert" >
-      </fieldset>
-    </form>
-</section>
-<br>
-<br>
-<br>
-<section id="ags_log">
-  <h2>AGS Log Viewer</h2>
-    <p>Submit BGS LOCA ID to view log from NGDC held AGS data. Find BGS LOCA ID on <a href="https://mapapps2.bgs.ac.uk/geoindex/home.html?layer=AGSBoreholes">GeoIndex Web Viewer</a> or by querying the <a href="https://ogcapi.bgs.ac.uk/collections/onshoreboreholeindex/items">BGS OGCAPI-Features Server</a></p>
+  <h2>AGS Converter</h2>
+    <div class="tooltip"><p>Convert .ags file(s) to/from .xlsx.</p>
+      <span class="tooltiptext">Which ever format file is submitted, the opposite will be returned e.g. if 5 .ags files and 3 .xlsx files were submitted the result would be 5 .xlsx files and 3 .ags files</span>
+    </div>
     <br>
   <br>
-  <form action="/ags_log/" method="get" id="logForm">
+  <form action="/convert/" enctype="multipart/form-data" method="post" id="convertForm">
     <fieldset>
-      <legend>Enter BGS LOCA ID</legend>
-      <input type="text" id="bgs_loca_id" name="bgs_loca_id">
-      <br>
-      <br>
-      <fieldset>
-        <legend>Select Response Type</legend>
-        <input type="radio" id="attachment_response" name="response_type" value="attachment" checked>
-        <label for="attachment_response"> Download Attachment</label><br>
-        <input type="radio" id="inline_response" name="response_type" value="inline" checked>
-        <label for="inline_response"> View in Browser</label><br>
-      </fieldset>
-      <br>
-      <input type="submit" class="submitBtn" value="Get Log" >
+      <legend>Sort worksheets in .xlsx file in alphabetical order <strong>(Warning: .ags to .xlsx only. The original group order will be lost)</strong></legend>
+      <input type="radio" id="alpha" name="sort_tables" value="True">
+      <label for="alpha">True</label>
+      <input type="radio" id="default" name="sort_tables" value="False" checked>
+      <label for="default">False</label><br>
+    </fieldset>
+    <br>
+    <fieldset>
+      <legend>Select files <b>(50 Mb Maximum)</b></legend>
+      <input name="files" type="file" multiple>
+      <input type="submit" class="submitBtn" value="Convert" >
     </fieldset>
   </form>
 </section>
