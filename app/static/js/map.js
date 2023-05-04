@@ -67,7 +67,7 @@ var agsboreholes = L.featureGroup
             "<b>Project Engineer: </b>" + properties.proj_eng + "<br>" +
             "<b>Project Contractor: </b>" + properties.proj_cont + "<br>" +
             "<b>Original LOCA ID: </b>" + properties.loca_id + "<br>" +
-            "<b>AGS Graphical Log: </b>" + "<a href=" + "https://agsapi.bgs.ac.uk/ags_log/?bgs_loca_id=" + properties.bgs_loca_id + " target=" + "_blank" + ">View</a>" + "<br>" +
+            "<b>AGS Graphical Log: </b>" + "<a href=" + "https://agsapi.bgs.ac.uk/ags_log/?bgs_loca_id=" + properties.bgs_loca_id + " target=" + "_blank" + ">View</a> / " +"<a href=" + "https://agsapi.bgs.ac.uk/ags_log/?bgs_loca_id=" + properties.bgs_loca_id + "&response_type=attachment" + ">Download</a>" + "<br>" +
             "<b>AGS Data: </b>" + "<a href=" + "https://agsapi.bgs.ac.uk/ags_export/?bgs_loca_id=" + properties.bgs_loca_id + " target=" + "_blank" + ">Download</a>" + "<br>" +
             "<b>AGS Submission Record (raw data): </b>" + "<a href=" + properties.dad_item_url + " target=" + "_blank" + ">View</a>" + "<br>";
         layer.bindPopup(popupContent);

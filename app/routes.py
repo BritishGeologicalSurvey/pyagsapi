@@ -280,9 +280,9 @@ def prepare_validation_response(request, data):
 
 
 @router.get("/ags_log/",
-            # tags=["ags_log"],
-            # summary="Generate Graphical Log",
-            # description="Generate a graphical log (.pdf) from AGS data held by the National Geoscience Data Centre.",
+            tags=["ags_log"],
+            summary="Generate Graphical Log",
+            description="Generate a graphical log (.pdf) from AGS data held by the National Geoscience Data Centre.",
             include_in_schema=True,
             response_class=Response,
             responses=pdf_responses)
@@ -332,10 +332,10 @@ def get_ags_log(bgs_loca_id: int = ags_log_query,
 
 
 @router.post("/ags_export/",
-             # tags=["ags_export"],
-             # summary="Export a single borehole in .ags format",
-             # description="Export a single borehole in .ags format from AGS data \
-             # held by the National Geoscience Data Centre.",
+             tags=["ags_export"],
+             summary="Export a single borehole in .ags format",
+             description="Export a single borehole in .ags format from AGS data \
+             held by the National Geoscience Data Centre.",
              include_in_schema=True,
              response_class=StreamingResponse,
              responses=zip_ags_responses)

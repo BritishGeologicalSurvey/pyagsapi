@@ -13,7 +13,6 @@
         <li><a href="#validator">AGS Schema & Data Validator</a></li>
         <li><a href="#ags_data">AGS Data Discovery</a></li>
         <li><a href="#converter">File Conversion .ags &#8596; .xlsx</a></li>
-        <li><a href="#ags_logs">AGS Graphical Logs</a></li>
         <li><a href="#openapi">API Documentation</a></li>
     </ul>
 </section>
@@ -25,7 +24,6 @@
   <br>
   <p>Deposit your AGS data with the National Geoscience Data Centre (NGDC) <a href="http://transfer.bgs.ac.uk/ingestion"><b>here</b></a>. Please validate your files prior to submission. For further details please see <a href="https://www.bgs.ac.uk/technologies/geotechnical-data-services/">geotechnical data services.</a></p>
 </section>
-<br>
 <br>
 <br>
 <section id="validator">
@@ -145,8 +143,8 @@
   <h2>AGS Data Discovery</h2>
   <br>
   <p>Use the map below to find AGS data, click on the markers to find borehole information, links to graphical logs and the original submitted data.</p>
-  <p><b>The map will show a maximum of 100 markers - zooming may be required for display</b></p>
-  <p><b>If no AGS Submission Record is shown there is likely a legacy confidentiality restriction</b></p>
+  <p><b>The map will show a maximum of 100 markers - zooming may be required to display markers of interest. </b></p>
+  <p><b>If no AGS Submission Record is shown at the link provided there is likely a legacy confidentiality restriction.</b></p>
   <br>
   <div id="mapid">
     <!-- TODO add opacity slider
@@ -181,33 +179,6 @@
       <legend>Select files <b>(50 Mb Maximum)</b></legend>
       <input name="files" type="file" multiple>
       <input type="submit" class="submitBtn" value="Convert" >
-    </fieldset>
-  </form>
-</section>
-<br>
-<br>
-<br>
-<section id="ags_logs"> 
-  <h2>AGS Graphical Logs</h2>
-  <br>
-    <p>Submit BGS LOCA ID to view log from NGDC held AGS data. Find BGS LOCA ID on <a href="https://mapapps2.bgs.ac.uk/geoindex/home.html?layer=AGSBoreholes">GeoIndex Web Viewer</a> or by querying the <a href="https://ogcapi.bgs.ac.uk/collections/onshoreboreholeindex/items">BGS OGCAPI-Features Server</a></p>
-    <br>
-  <br>
-  <form action="/ags_log/" method="get" id="logForm">
-    <fieldset>
-      <legend>Enter BGS LOCA ID</legend>
-      <input type="text" id="bgs_loca_id" name="bgs_loca_id">
-      <br>
-      <br>
-      <fieldset>
-        <legend>Select Response Type</legend>
-        <input type="radio" id="attachment_response" name="response_type" value="attachment" checked>
-        <label for="attachment_response"> Download Attachment</label><br>
-        <input type="radio" id="inline_response" name="response_type" value="inline" checked>
-        <label for="inline_response"> View in Browser</label><br>
-      </fieldset>
-      <br>
-      <input type="submit" class="submitBtn" value="Get Log" >
     </fieldset>
   </form>
 </section>
