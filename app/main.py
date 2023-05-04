@@ -83,7 +83,7 @@ def custom_openapi():
         return app.openapi_schema
     openapi_schema = get_openapi(
         title="pyagsapi - AGS File Utilities Tools and API",
-        version="4.5.2",
+        version="4.5.3",
         description=("The API performs schema validation, data validation and conversion of your AGS files. "
                      "It also exports a graphical log from AGS data held by NGDC. "
                      "Schema validation and conversion uses https://gitlab.com/ags-data-format-wg/ags-python-library"),
