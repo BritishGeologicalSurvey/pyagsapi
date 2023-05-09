@@ -61,7 +61,7 @@ var agsboreholes = L.featureGroup
 .ogcApi("https://ogcapi.bgs.ac.uk/", {
     collection: "agsboreholeindex",
     pane: "overlays",
-    limit: 400,
+    limit: 200,
     onEachFeature: function (feat, layer) {
         var properties = feat.properties;
         var popupContent = "<b>AGS Borehole Information</b><br><hr>" +

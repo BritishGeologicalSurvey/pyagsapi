@@ -40,7 +40,7 @@ L.FeatureGroup.OGCAPI = L.GeoJSON.extend({
 		 * @option limit = 100
 		 * The maximum amount of features to have on the map at any given time.
 		 */
-		limit: 400,
+		limit: 200,
 
 		/**
 		 * @option padding: Number = 0.1
