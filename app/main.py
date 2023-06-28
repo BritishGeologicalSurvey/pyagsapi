@@ -77,6 +77,10 @@ app.mount("/static", StaticFiles(directory="app/static"), name="static")
 async def landing_page(request: Request):
     return templates.TemplateResponse('landing_page.html', {'request': request})
 
+@app.get("/datadiscovery", response_class=HTMLResponse, include_in_schema=False)
+async def datadiscovery(request: Request):
+    return templates.TemplateResponse('datadiscovery.html', {'request': request})
+
 
 def custom_openapi():
     if app.openapi_schema:
