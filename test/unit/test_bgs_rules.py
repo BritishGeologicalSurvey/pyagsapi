@@ -122,20 +122,33 @@ def test_drill_depth_geol_record():
 def test_loca_within_great_britain():
     # Arrange
     filename = TEST_FILE_DIR / 'bgs_rules' / 'loca_within_great_britain.ags'
-    expected = [
-        {'desc': 'NATE / NATN outside Great Britain and Northern Ireland (Bad NATE)',
-         'group': 'LOCA',
-         'line': '2'},
-        {'desc': 'NATE / NATN outside Great Britain and Northern Ireland (Bad NATN)',
-         'group': 'LOCA',
-         'line': '3'},
-        {'desc': 'NATE / NATN outside Great Britain and Northern Ireland (Derry)',  # these coords given in EPSG:27700
-         'group': 'LOCA',
-         'line': '4'},
-        {'desc': 'NATE / NATN in Northern Ireland but LOCA_GREF undefined (Belfast)',
-         'group': 'LOCA',
-         'line': '6'}
-    ]
+    expected = [{'desc': 'NATE / NATN outside UK Offshore EEA or Northern Ireland (Bad NATE)',
+                 'group': 'LOCA',
+                 'line': '2'},
+                {'desc': 'NATE / NATN outside UK Offshore EEA or Northern Ireland (Bad NATN)',
+                 'group': 'LOCA',
+                 'line': '3'},
+                {'desc': 'NATE / NATN outside UK Offshore EEA or Northern Ireland (Paris)',
+                 'group': 'LOCA',
+                 'line': '16'},
+                {'desc': 'NATE / NATN outside Great Britain or Northern Ireland landmass (Bad NATE)',
+                 'group': 'LOCA',
+                 'line': '2'},
+                {'desc': 'NATE / NATN outside Great Britain or Northern Ireland landmass (Bad NATN)',
+                 'group': 'LOCA',
+                 'line': '3'},
+                {'desc': 'NATE / NATN outside Great Britain or Northern Ireland landmass (Derry)',
+                 'group': 'LOCA',
+                 'line': '4'},
+                {'desc': 'NATE / NATN outside Great Britain or Northern Ireland landmass (MorayFirth)',
+                 'group': 'LOCA',
+                 'line': '15'},
+                {'desc': 'NATE / NATN outside Great Britain or Northern Ireland landmass (Paris)',
+                 'group': 'LOCA',
+                 'line': '16'},
+                {'desc': 'NATE / NATN in Northern Ireland but LOCA_GREF undefined (Belfast)',
+                 'group': 'LOCA',
+                 'line': '6'}]
 
     tables, _, _ = load_AGS4_as_numeric(filename)
 

@@ -25,6 +25,7 @@ with open('app/gb_outline.geojson', 'wt') as outfile:
 
 GB_OUTLINE = Path(__file__).parent / 'gb_outline.geojson'
 NI_OUTLINE = Path(__file__).parent / 'ni_outline.geojson'
+UK_EEA_OUTLINE = Path(__file__).parent / 'uk_eea_area_ex_ni.geojson'
 bgs_rules_version = '3.0.0'
 
 
@@ -177,6 +178,8 @@ def check_loca_within_great_britain(tables: dict) -> List[dict]:
     """Location coordinates fall on land within Great Britain."""
     gb_outline = gpd.read_file(GB_OUTLINE).loc[0, 'geometry']
     ni_outline = gpd.read_file(NI_OUTLINE).loc[0, 'geometry']
+    uk_eea_outline_wgs84 = gpd.read_file(UK_EEA_OUTLINE)
+    uk_eea_outline = uk_eea_outline_wgs84.to_crs('EPSG:27700').loc[0, 'geometry']
     errors = []
 
     # Read data into geodataframe
@@ -191,15 +194,23 @@ def check_loca_within_great_britain(tables: dict) -> List[dict]:
     location = gpd.GeoDataFrame(location, geometry='geometry', crs='EPSG:27700')
     location['line_no'] = range(1, len(location) + 1)
 
+    inside_uk_eea_mask = location.intersects(uk_eea_outline)
     inside_gb_mask = location.intersects(gb_outline)
     as_irish_grid = location.to_crs("EPSG:29903")
     inside_ni_mask = as_irish_grid.intersects(ni_outline)
+    outside_uk_eea_and_ni_mask = ~inside_uk_eea_mask & ~inside_ni_mask
     outside_gb_and_ni_mask = ~inside_gb_mask & ~inside_ni_mask
+
+    for loca_id, row in location.loc[outside_uk_eea_and_ni_mask].iterrows():
+        errors.append({
+            'line': f'{row["line_no"]}', 'group': 'LOCA',
+            'desc': f'NATE / NATN outside UK Offshore EEA or Northern Ireland ({loca_id})'
+        })
 
     for loca_id, row in location.loc[outside_gb_and_ni_mask].iterrows():
         errors.append({
             'line': f'{row["line_no"]}', 'group': 'LOCA',
-            'desc': f'NATE / NATN outside Great Britain and Northern Ireland ({loca_id})'
+            'desc': f'NATE / NATN outside Great Britain or Northern Ireland landmass ({loca_id})'
         })
 
     for loca_id, row in location.loc[inside_ni_mask].iterrows():
