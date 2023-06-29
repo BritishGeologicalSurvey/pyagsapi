@@ -432,16 +432,11 @@ def test_get_ags_log(client, response_type, response_type_result):
         response = ac.get(query)
 
     # Assert
-    # Check that the response status code is 200
     assert response.status_code == 200
-    # Check that the response headers include the correct Content-Disposition header
     content_disposition = f'{response_type_result}; filename="{bgs_loca_id}_log.pdf"'
     assert response.headers["Content-Disposition"] == content_disposition
-    # Check that the response media type is "application/pdf"
     assert response.headers["Content-Type"] == "application/pdf"
-    # Check that the response content is not empty
     assert len(response.content) > 0
-    # Check it is a PDF file
     assert response.content.startswith(b'%PDF')
 
 
@@ -460,7 +455,6 @@ def test_get_ags_log_unknown_borehole(client):
         response = ac.get(query)
 
     # Assert
-    # Check that the response status code is 404
     assert response.status_code == 404
     body = response.json()
     assert body['errors'][0]['desc'] == 'Failed to retrieve borehole 0. It may not exist or may be confidential'
@@ -530,19 +524,13 @@ def test_get_ags_export(client, tmp_path):
         response = ac.get(query)
 
     # Assert
-    # Check that the response status code is 200
     assert response.status_code == 200
-    # Check that the response headers include the correct Content-Disposition header
-    content_disposition = f'attachment; filename="{bgs_loca_id}.zip"'
-    assert response.headers["Content-Disposition"] == content_disposition
-    # Check that the response media type is "application/x-zip-compressed"
+    assert response.headers["Content-Disposition"] == f'attachment; filename="{bgs_loca_id}.zip"'
     assert response.headers["Content-Type"] == "application/x-zip-compressed"
-    # Check that the response content is not empty
     assert len(response.content) > 0
-    # Check it is a ZIP file
+
     assert zipfile.is_zipfile(BytesIO(response.content))
     with zipfile.ZipFile(BytesIO(response.content)) as ags_zip:
-        # The filename in the zip is truncated to 16 characters. A better test would be:
         assert ags_file_name in ags_zip.namelist()
         with ags_zip.open(ags_file_name) as ags_file:
             unzipped_file = tmp_path / 'test.ags'
@@ -567,7 +555,6 @@ def test_get_ags_export_unknown_borehole(client):
         response = ac.get(query)
 
     # Assert
-    # Check that the response status code is 404
     assert response.status_code == 404
     body = response.json()
     assert body['errors'][0]['desc'] == 'Failed to retrieve borehole 0. It may not exist or may be confidential'
