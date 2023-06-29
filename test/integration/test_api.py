@@ -1,6 +1,8 @@
 """Tests for API responses."""
+from io import BytesIO
 from pathlib import Path
 import shutil
+import zipfile
 
 from fastapi.testclient import TestClient
 from freezegun import freeze_time
@@ -515,6 +517,99 @@ def test_get_ags_log_generator_error(client, monkeypatch):
     assert response.status_code == 500
     body = response.json()
     assert body['errors'][0]['desc'] == 'The borehole generator returned an error.'
+
+
+def test_get_ags_export(client, monkeypatch):
+    """
+    Confirm that the endpoint can return the expected .zip.
+    """
+    # Arrange
+    # Define the borehole ID to use for the test
+    bgs_loca_id = 20190430093402523419
+    query = f'/ags_export/?bgs_loca_id={bgs_loca_id}'
+
+    # Act
+    with client as ac:
+        response = ac.get(query)
+
+    # Assert
+    # Check that the response status code is 200
+    assert response.status_code == 200
+    # Check that the response headers include the correct Content-Disposition header
+    content_disposition = f'attachment; filename="{bgs_loca_id}.zip"'
+    assert response.headers["Content-Disposition"] == content_disposition
+    # Check that the response media type is "application/x-zip-compressed"
+    assert response.headers["Content-Type"] == "application/x-zip-compressed"
+    # Check that the response content is not empty
+    assert len(response.content) > 0
+    # Check it is a ZIP file
+    assert zipfile.is_zipfile(BytesIO(response.content))
+
+
+def test_get_ags_export_unknown_borehole(client, monkeypatch):
+    """
+    Confirm that the endpoint can return the expected error when an unknown bgs_loca_id is submitted.
+    """
+    # Arrange
+    # Define the borehole ID to use for the test
+    bgs_loca_id = 0
+    query = f'/ags_export/?bgs_loca_id={bgs_loca_id}'
+
+    # Act
+    with client as ac:
+        response = ac.get(query)
+
+    # Assert
+    # Check that the response status code is 404
+    assert response.status_code == 404
+    body = response.json()
+    assert body['errors'][0]['desc'] == 'Failed to retrieve borehole 0. It may not exist or may be confidential'
+
+
+def test_get_ags_exporter_unreachable(client, monkeypatch):
+    # Arrange
+    bgs_loca_id = 0
+    query = f'/ags_export/?bgs_loca_id={bgs_loca_id}'
+    # Patch the Borehole export to be something that cannot be reached
+    monkeypatch.setattr(app_routes, "BOREHOLE_EXPORT_URL", f'http://unreachable.com/{bgs_loca_id}')
+
+    # Act
+    with client as ac:
+        response = ac.get(query)
+
+    # Assert
+    assert response.status_code == 500
+    body = response.json()
+    assert body['errors'][0]['desc'] == 'The borehole exporter could not be reached.  Please try again later.'
+
+
+def test_get_ags_exporter_error(client, monkeypatch):
+    # Arrange
+    bgs_loca_id = 0
+    query = f'/ags_export/?bgs_loca_id={bgs_loca_id}'
+
+    # Patch the requests to return a response that behaves as though the URL had returned a 500 error.
+    class MockResponse:
+        status_code = 500
+
+        def raise_for_status(self):
+            raise requests.exceptions.HTTPError
+
+        monkeypatch.setattr(app_routes.requests, 'get', lambda: MockResponse)
+
+    def mock_get(*args, **kwargs):
+        return MockResponse()
+
+    monkeypatch.setattr(app_routes.requests, 'get', mock_get)
+
+    # Act
+    with client as ac:
+        response = ac.get(query)
+
+    # Assert
+    assert response.status_code == 500
+    body = response.json()
+    assert body['errors'][0]['desc'] == 'The borehole exporter returned an error.'
 
 
 @pytest.fixture(scope="function")
