@@ -2,7 +2,6 @@
 from io import BytesIO
 import os
 from pathlib import Path
-import shutil
 import zipfile
 
 from fastapi.testclient import TestClient
@@ -206,18 +205,17 @@ async def test_convert_good_files(async_client, tmp_path):
     assert response.headers['content-type'] == 'application/x-zip-compressed'
     assert response.headers['content-disposition'] == 'attachment; filename=results.zip'
 
-    zip_file = tmp_path / 'results.zip'
-    unzipped_files = tmp_path / 'results'
-    with open(zip_file, 'wb') as f:
-        f.write(response.content)
-    shutil.unpack_archive(zip_file, unzipped_files, 'zip')
-    assert (unzipped_files / 'conversion.log').is_file()
-    with open(unzipped_files / 'conversion.log', 'rt') as f:
-        log = f.read()
-    for name, expected in GOOD_FILE_DATA:
-        expected_message, expected_new_file_name = expected
-        assert (unzipped_files / expected_new_file_name).is_file()
-        assert expected_message in log
+    assert zipfile.is_zipfile(BytesIO(response.content))
+    with zipfile.ZipFile(BytesIO(response.content)) as ags_zip:
+        assert 'conversion.log' in ags_zip.namelist()
+        with ags_zip.open('conversion.log') as log_file:
+            log = log_file.read().decode()
+        ags_path = zipfile.Path(ags_zip)
+        for name, expected in GOOD_FILE_DATA:
+            expected_message, expected_new_file_name = expected
+            assert expected_new_file_name in ags_zip.namelist()
+            assert (ags_path / expected_new_file_name).is_file()
+            assert expected_message in log
 
 
 @pytest.mark.asyncio
@@ -247,18 +245,16 @@ async def test_convert_sort_tables(async_client, tmp_path, sort_tables):
     assert response.headers['content-type'] == 'application/x-zip-compressed'
     assert response.headers['content-disposition'] == 'attachment; filename=results.zip'
 
-    zip_file = tmp_path / 'results.zip'
-    unzipped_files = tmp_path / 'results'
-    with open(zip_file, 'wb') as f:
-        f.write(response.content)
-    shutil.unpack_archive(zip_file, unzipped_files, 'zip')
-    xl_file = unzipped_files / 'example_ags.xlsx'
-    assert xl_file.is_file()
-    xl = pd.ExcelFile(xl_file)
-    if sort_tables:
-        assert xl.sheet_names == sorted(groups)
-    else:
-        assert xl.sheet_names == groups
+    assert zipfile.is_zipfile(BytesIO(response.content))
+    with zipfile.ZipFile(BytesIO(response.content)) as ags_zip:
+        assert 'example_ags.xlsx' in ags_zip.namelist()
+        assert (zipfile.Path(ags_zip) / 'example_ags.xlsx').is_file()
+        with ags_zip.open('example_ags.xlsx') as xl_file:
+            xl = pd.ExcelFile(xl_file)
+        if sort_tables:
+            assert xl.sheet_names == sorted(groups)
+        else:
+            assert xl.sheet_names == groups
 
 
 @pytest.mark.asyncio
@@ -283,18 +279,16 @@ async def test_convert_bad_files(async_client, tmp_path):
     assert response.headers['content-type'] == 'application/x-zip-compressed'
     assert response.headers['content-disposition'] == 'attachment; filename=results.zip'
 
-    zip_file = tmp_path / 'results.zip'
-    unzipped_files = tmp_path / 'results'
-    with open(zip_file, 'wb') as f:
-        f.write(response.content)
-    shutil.unpack_archive(zip_file, unzipped_files, 'zip')
-    assert (unzipped_files / 'conversion.log').is_file()
-    with open(unzipped_files / 'conversion.log', 'rt') as f:
-        log = f.read()
-    for name, expected in BAD_FILE_DATA:
-        expected_message, expected_file_size = expected
-        assert not (unzipped_files / name).is_file()
-        assert expected_message in log
+    assert zipfile.is_zipfile(BytesIO(response.content))
+    with zipfile.ZipFile(BytesIO(response.content)) as ags_zip:
+        assert 'conversion.log' in ags_zip.namelist()
+        with ags_zip.open('conversion.log') as log_file:
+            log = log_file.read().decode()
+        ags_path = zipfile.Path(ags_zip)
+        for name, expected in BAD_FILE_DATA:
+            expected_message, expected_file_size = expected
+            assert not (ags_path / name).is_file()
+            assert expected_message in log
 
 
 @pytest.mark.asyncio
