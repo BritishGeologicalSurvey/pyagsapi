@@ -15,6 +15,7 @@ import pandas as pd
 from python_ags4 import AGS4
 
 from app.main import app
+from app.checkers import load_AGS4_as_numeric
 import app.routes as app_routes
 from test.fixtures import (BAD_FILE_DATA, DICTIONARIES, FROZEN_TIME,
                            GOOD_FILE_DATA)
@@ -518,13 +519,16 @@ def test_get_ags_log_generator_error(client, monkeypatch):
 
 
 @pytest.mark.skipif(IN_GITHUB_ACTIONS, reason="Upstream URL not avilable from Github Actions")
-def test_get_ags_export(client):
+def test_get_ags_export(client, tmp_path):
     """
     Confirm that the endpoint can return the expected .zip.
     """
     # Arrange
-    # Define the borehole ID to use for the test
+    # Define the borehole and project IDs and zipped AGS file to use for the test
     bgs_loca_id = 20190430093402523419
+    bgs_proj_id = str(bgs_loca_id)[:16]
+    ags_file_name = f'{bgs_proj_id}.ags'
+
     query = f'/ags_export/?bgs_loca_id={bgs_loca_id}'
 
     # Act
@@ -543,6 +547,15 @@ def test_get_ags_export(client):
     assert len(response.content) > 0
     # Check it is a ZIP file
     assert zipfile.is_zipfile(BytesIO(response.content))
+    with zipfile.ZipFile(BytesIO(response.content)) as ags_zip:
+        # The filename in the zip is truncated to 16 characters. A better test would be:
+        assert ags_file_name in ags_zip.namelist()
+        with ags_zip.open(ags_file_name) as ags_file:
+            unzipped_file = tmp_path / 'test.ags'
+            with open(unzipped_file, 'wb') as f:
+                f.write(ags_file.read())
+            tables, _, _ = load_AGS4_as_numeric(unzipped_file)
+            assert tables['PROJ']['BGS_PROJ_ID'][0] == bgs_proj_id
 
 
 @pytest.mark.skipif(IN_GITHUB_ACTIONS, reason="Upstream URL not avilable from Github Actions")
