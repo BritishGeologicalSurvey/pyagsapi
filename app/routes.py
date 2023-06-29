@@ -18,7 +18,7 @@ from app.errors import error_responses, InvalidPayloadError
 from app.schemas import ValidationResponse
 
 BOREHOLE_VIEWER_URL = "https://gwbv.bgs.ac.uk/GWBV/viewborehole?loca_id={bgs_loca_id}"
-BOREHOLE_EXPORT_URL = "https://gwbv.bgs.ac.uk/ags_export/"
+BOREHOLE_EXPORT_URL = "https://gwbv.bgs.ac.uk/ags_export?loca_ids={bgs_loca_id}"
 
 router = APIRouter()
 
@@ -317,15 +317,15 @@ def get_ags_log(bgs_loca_id: int = ags_log_query,
     return Response(response.content, headers=headers, media_type='application/pdf')
 
 
-@router.post("/ags_export/",
+@router.get("/ags_export/",
              tags=["ags_export"],
              summary="Export a single borehole in .ags format",
              description="Export a single borehole in .ags format from AGS data \
              held by the National Geoscience Data Centre.",
              include_in_schema=True,
-             response_class=StreamingResponse,
+             response_class=Response,
              responses=zip_ags_responses)
-def post_ags_export(bgs_loca_id: int = ags_export_query):
+def ags_export(bgs_loca_id: int = ags_export_query):
     """
     Export a single borehole in .ags format from AGS data held by the National Geoscience Data Centre.
     :param bgs_loca_id: The unique identifier of the borehole to export.
@@ -337,15 +337,10 @@ def post_ags_export(bgs_loca_id: int = ags_export_query):
     :raises HTTPException 500: If the borehole exporter returns an error.
     """
 
-    url = BOREHOLE_EXPORT_URL
-    data = str(bgs_loca_id)
-    headers = {"Content-Type": "text/plain",
-               "Accept": "*/*",
-               "Accept-Encoding": "gzip, deflate, br",
-               "Connection": "keep-alive"}
+    url = BOREHOLE_EXPORT_URL.format(bgs_loca_id=bgs_loca_id)
 
     try:
-        response = requests.post(url, data=data, headers=headers, timeout=10)
+        response = requests.get(url, timeout=10)
     except (Timeout, ConnectionError):
         raise HTTPException(status_code=500,
                             detail="The borehole exporter could not be reached.  Please try again later.")
@@ -361,7 +356,7 @@ def post_ags_export(bgs_loca_id: int = ags_export_query):
             raise HTTPException(status_code=500,
                                 detail="The borehole exporter returned an error.")
 
-    content = response.content
-    response = StreamingResponse(content, media_type="application/x-zip-compressed")
-    response.headers["Content-Disposition"] = f"attachment; filename={bgs_loca_id}.zip"
-    return response
+    filename = f"{bgs_loca_id}.zip"
+    headers = {'Content-Disposition': f'attachment; filename="{filename}"'}
+
+    return Response(response.content, headers=headers, media_type='application/x-zip-compressed')
