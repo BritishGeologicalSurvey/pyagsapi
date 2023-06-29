@@ -1,5 +1,6 @@
 """Tests for API responses."""
 from io import BytesIO
+import os
 from pathlib import Path
 import shutil
 import zipfile
@@ -20,6 +21,7 @@ from test.fixtures import (BAD_FILE_DATA, DICTIONARIES, FROZEN_TIME,
 from test.fixtures_json import JSON_RESPONSES
 from test.fixtures_plain_text import PLAIN_TEXT_RESPONSES
 
+IN_GITHUB_ACTIONS = os.getenv("GITHUB_ACTIONS") == "true"
 TEST_FILE_DIR = Path(__file__).parent.parent / 'files'
 
 
@@ -417,7 +419,8 @@ async def test_validate_dictionary_choice(async_client, dictionary, filename, ex
     ('attachment', 'attachment'),
     (None, 'inline')  # Defaults to 'inline'
 ])
-def test_get_ags_log(client, monkeypatch, response_type, response_type_result):
+@pytest.mark.skipif(IN_GITHUB_ACTIONS, reason="Upstream URL not avilable from Github Actions")
+def test_get_ags_log(client, response_type, response_type_result):
     """
     Confirm that the endpoint can return the expected .pdf.
     """
@@ -425,9 +428,6 @@ def test_get_ags_log(client, monkeypatch, response_type, response_type_result):
     # Define the borehole ID to use for the test
     bgs_loca_id = 20190430093402523419
     query = f'/ags_log/?bgs_loca_id={bgs_loca_id}'
-    # Patch the Borehole Viewer to be something that cannot be reached
-    monkeypatch.setattr(app_routes, "BOREHOLE_VIEWER_URL",
-                        'https://webservices.bgs.ac.uk/GWBV/viewborehole?loca_id={bgs_loca_id}')
 
     if response_type:
         query += f'&response_type={response_type}'
@@ -450,7 +450,8 @@ def test_get_ags_log(client, monkeypatch, response_type, response_type_result):
     assert response.content.startswith(b'%PDF')
 
 
-def test_get_ags_log_unknown_borehole(client, monkeypatch):
+@pytest.mark.skipif(IN_GITHUB_ACTIONS, reason="Upstream URL not avilable from Github Actions")
+def test_get_ags_log_unknown_borehole(client):
     """
     Confirm that the endpoint can return the expected error when an unknown bgs_loca_id is submitted.
     """
@@ -458,9 +459,6 @@ def test_get_ags_log_unknown_borehole(client, monkeypatch):
     # Define the borehole ID to use for the test
     bgs_loca_id = 0
     query = f'/ags_log/?bgs_loca_id={bgs_loca_id}'
-    # Patch the Borehole Viewer to be something that cannot be reached
-    monkeypatch.setattr(app_routes, "BOREHOLE_VIEWER_URL",
-                        'https://webservices.bgs.ac.uk/GWBV/viewborehole?loca_id={bgs_loca_id}')
 
     # Act
     with client as ac:
@@ -519,7 +517,8 @@ def test_get_ags_log_generator_error(client, monkeypatch):
     assert body['errors'][0]['desc'] == 'The borehole generator returned an error.'
 
 
-def test_get_ags_export(client, monkeypatch):
+@pytest.mark.skipif(IN_GITHUB_ACTIONS, reason="Upstream URL not avilable from Github Actions")
+def test_get_ags_export(client):
     """
     Confirm that the endpoint can return the expected .zip.
     """
@@ -546,7 +545,8 @@ def test_get_ags_export(client, monkeypatch):
     assert zipfile.is_zipfile(BytesIO(response.content))
 
 
-def test_get_ags_export_unknown_borehole(client, monkeypatch):
+@pytest.mark.skipif(IN_GITHUB_ACTIONS, reason="Upstream URL not avilable from Github Actions")
+def test_get_ags_export_unknown_borehole(client):
     """
     Confirm that the endpoint can return the expected error when an unknown bgs_loca_id is submitted.
     """
