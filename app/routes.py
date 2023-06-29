@@ -40,7 +40,7 @@ pdf_responses['200'] = {
 zip_ags_responses = dict(error_responses)
 zip_ags_responses['200'] = {
     "content": {"application/x-zip-compressed": {}},
-    "description": "Return a zip containing .ags file and metadata .txt file"}    
+    "description": "Return a zip containing .ags file and metadata .txt file"}
 
 
 # Enum for search logic
@@ -146,10 +146,7 @@ async def validate(background_tasks: BackgroundTasks,
                    checkers: List[Checker] = validate_form,
                    fmt: Format = format_form,
                    request: Request = None):
-    if not files[0].filename or not checkers:
-        raise InvalidPayloadError(request)
-
-"""
+    """
     Validate an AGS4 file to the AGS File Format v4.x rules and the NGDC data submission requirements.
     Uses the Official AGS4 Python Library.
     :param background_tasks: Background tasks for deleting temporary directories.
@@ -169,6 +166,10 @@ async def validate(background_tasks: BackgroundTasks,
     :rtype: Union[FileResponse, ValidationResponse]
     :raises InvalidPayloadError: If the payload is missing files or checkers.
     """
+
+    if not files[0].filename or not checkers:
+        raise InvalidPayloadError(request)
+
     checkers = [checker_functions[c] for c in checkers]
 
     tmp_dir = Path(tempfile.mkdtemp())
@@ -200,6 +201,18 @@ async def validate(background_tasks: BackgroundTasks,
 
     return response
 
+
+@router.post("/convert/",
+             tags=["convert"],
+             response_class=StreamingResponse,
+             responses=zip_responses,
+             summary="Convert files between .ags and .xlsx format",
+             description=("Convert files between .ags and .xlsx format. Option to"
+                          " sort worksheets in .xlsx file in alphabetical order."))
+async def convert(background_tasks: BackgroundTasks,
+                  files: List[UploadFile] = conversion_file,
+                  sort_tables: bool = sort_tables_form,
+                  request: Request = None):
     """
     Convert files between .ags and .xlsx format. Option to sort worksheets in .xlsx file in alphabetical order.
     :param background_tasks: A background task that manages file conversion asynchronously.
@@ -216,17 +229,6 @@ async def validate(background_tasks: BackgroundTasks,
     :raises Exception: If the conversion fails or an unexpected error occurs.
     """
 
-@router.post("/convert/",
-             tags=["convert"],
-             response_class=StreamingResponse,
-             responses=zip_responses,
-             summary="Convert files between .ags and .xlsx format",
-             description=("Convert files between .ags and .xlsx format. Option to"
-                          " sort worksheets in .xlsx file in alphabetical order."))
-async def convert(background_tasks: BackgroundTasks,
-                  files: List[UploadFile] = conversion_file,
-                  sort_tables: bool = sort_tables_form,
-                  request: Request = None):
     if not files[0].filename:
         raise InvalidPayloadError(request)
     RESULTS = 'results'
@@ -288,7 +290,8 @@ def get_ags_log(bgs_loca_id: int = ags_log_query,
     :raises HTTPException 500: If the borehole generator could not be reached.
     :raises HTTPException 404: If the specified borehole does not exist or is confidential.
     :raises HTTPException 500: If the borehole generator returns an error.
-    """    
+    """
+
     url = BOREHOLE_VIEWER_URL.format(bgs_loca_id=bgs_loca_id)
 
     try:
@@ -313,6 +316,7 @@ def get_ags_log(bgs_loca_id: int = ags_log_query,
 
     return Response(response.content, headers=headers, media_type='application/pdf')
 
+
 @router.post("/ags_export/",
              tags=["ags_export"],
              summary="Export a single borehole in .ags format",
@@ -332,6 +336,7 @@ def post_ags_export(bgs_loca_id: int = ags_export_query):
     :raises HTTPException 404: If the specified borehole does not exist or is confidential.
     :raises HTTPException 500: If the borehole exporter returns an error.
     """
+
     url = BOREHOLE_EXPORT_URL
     data = str(bgs_loca_id)
     headers = {"Content-Type": "text/plain",
