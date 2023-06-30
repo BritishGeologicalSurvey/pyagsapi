@@ -369,8 +369,7 @@ def ags_export(bgs_loca_id: str = ags_export_query):
             raise HTTPException(status_code=500,
                                 detail="The borehole exporter returned an error.")
 
-    filename = f"{bgs_loca_id}.zip"
-    headers = {'Content-Disposition': f'attachment; filename="{filename}"'}
+    headers = {'Content-Disposition': 'attachment; filename="boreholes.zip"'}
 
     return Response(response.content, headers=headers, media_type='application/x-zip-compressed')
 

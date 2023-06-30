@@ -526,7 +526,7 @@ def test_get_ags_export(client, tmp_path):
 
     # Assert
     assert response.status_code == 200
-    assert response.headers["Content-Disposition"] == f'attachment; filename="{bgs_loca_id}.zip"'
+    assert response.headers["Content-Disposition"] == 'attachment; filename="boreholes.zip"'
     assert response.headers["Content-Type"] == "application/x-zip-compressed"
     assert len(response.content) > 0
 
