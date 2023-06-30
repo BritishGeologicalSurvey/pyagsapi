@@ -289,12 +289,12 @@ def prepare_validation_response(request, data):
             include_in_schema=True,
             response_class=Response,
             responses=pdf_responses)
-def get_ags_log(bgs_loca_id: int = ags_log_query,
+def get_ags_log(bgs_loca_id: str = ags_log_query,
                 response_type: ResponseType = response_type_query):
     """
     Get a graphical log (.pdf) for a single borehole in AGS format from the National Geoscience Data Centre.
     :param bgs_loca_id: The unique identifier of the borehole to generate the log for.
-    :type bgs_loca_id: int
+    :type bgs_loca_id: str
     :param response_type: The type of response to return (e.g. 'attachment' to force download or 'inline' \
     to display in browser).
     :type response_type: ResponseType, optional
@@ -338,11 +338,11 @@ def get_ags_log(bgs_loca_id: int = ags_log_query,
             include_in_schema=True,
             response_class=Response,
             responses=zip_ags_responses)
-def ags_export(bgs_loca_id: int = ags_export_query):
+def ags_export(bgs_loca_id: str = ags_export_query):
     """
     Export a single borehole in .ags format from AGS data held by the National Geoscience Data Centre.
     :param bgs_loca_id: The unique identifier of the borehole to export.
-    :type bgs_loca_id: int
+    :type bgs_loca_id: str
     :return: A response containing a .zip file with the exported borehole data.
     :rtype: Response
     :raises HTTPException 500: If the borehole exporter could not be reached.
@@ -431,10 +431,10 @@ def ags_export_by_polygon(polygon: str = polygon_query):
                             detail="No boreholes found in the given polygon")
     elif collection['numberMatched'] > 10:
         raise HTTPException(status_code=404,
-                            detail="More than 10 boreholes found in the given polygon. "
-                            "Please try with a smaller polygon")
+                            detail=f"More than 10 boreholes ({collection['numberMatched']}) "
+                            "found in the given polygon. Please try with a smaller polygon")
 
-    bgs_loca_ids = ':'.join([f['id'] for f in collection['features']])
+    bgs_loca_ids = ';'.join([f['id'] for f in collection['features']])
     url = BOREHOLE_EXPORT_URL.format(bgs_loca_id=bgs_loca_ids)
 
     try:
