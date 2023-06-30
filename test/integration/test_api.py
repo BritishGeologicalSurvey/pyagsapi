@@ -632,6 +632,52 @@ def test_get_ags_exporter_by_polygon_not_polygon(client, polygon):
     assert body['errors'][0]['desc'] == 'Invalid polygon'
 
 
+def test_get_ags_exporter_by_polygon_ogcapi_unreachable(client, monkeypatch):
+    # Arrange
+    polygon = 'POLYGON((0 0, 0 1, 1 1, 1 0, 0 0))'
+    query = f'/ags_export_by_polygon/?polygon={polygon}'
+    # Patch the Borehole index to be something that cannot be reached
+    monkeypatch.setattr(app_routes, "BOREHOLE_INDEX_URL", f'http://unreachable.com/{query}')
+
+    # Act
+    with client as ac:
+        response = ac.get(query)
+
+    # Assert
+    assert response.status_code == 500
+    body = response.json()
+    assert body['errors'][0]['desc'] == 'The borehole index could not be reached.  Please try again later.'
+
+
+def test_get_ags_exporter_by_polygon_ogcapi_error(client, monkeypatch):
+    # Arrange
+    polygon = 'POLYGON((0 0, 0 1, 1 1, 1 0, 0 0))'
+    query = f'/ags_export_by_polygon/?polygon={polygon}'
+
+    # Patch the requests to return a response that behaves as though the URL had returned a 500 error.
+    class MockResponse:
+        status_code = 500
+
+        def raise_for_status(self):
+            raise requests.exceptions.HTTPError
+
+        monkeypatch.setattr(app_routes.requests, 'get', lambda: MockResponse)
+
+    def mock_get(*args, **kwargs):
+        return MockResponse()
+
+    monkeypatch.setattr(app_routes.requests, 'get', mock_get)
+
+    # Act
+    with client as ac:
+        response = ac.get(query)
+
+    # Assert
+    assert response.status_code == 500
+    body = response.json()
+    assert body['errors'][0]['desc'] == 'The borehole index returned an error.'
+
+
 @pytest.fixture(scope="function")
 def client():
     return TestClient(app)
