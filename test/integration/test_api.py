@@ -614,6 +614,71 @@ def test_get_ags_exporter_error(client, monkeypatch):
     assert body['errors'][0]['desc'] == 'The borehole exporter returned an error.'
 
 
+def test_get_ags_exporter_by_polygon(client):
+    # Arrange
+    # There should be 4 boreholes within 2 projects in this area
+    polygon = 'POLYGON((-3.946 56.063,-3.640 56.063,-3.640 55.966,-3.946 55.966,-3.946 56.063))'
+    query = f'/ags_export_by_polygon/?polygon={polygon}'
+    # Define the borehole and project IDs and zipped AGS file to use for the test
+    bgs_loca_ids = ['20200205093727287903', '20200205093728297906', '20200205093728297908', '20200205093728297910']
+    bgs_proj_ids = {id_[:16] for id_ in bgs_loca_ids}
+    ags_file_names = {f'{id_}.ags' for id_ in bgs_proj_ids}
+    ags_metadata_file_name = 'FILE/BGSFileSet01/BGS_download_metadata.txt'
+
+    # Act
+    with client as ac:
+        response = ac.get(query)
+
+    # Assert
+    assert response.status_code == 200
+    assert response.headers["Content-Disposition"] == 'attachment; filename="boreholes.zip"'
+    assert response.headers["Content-Type"] == "application/x-zip-compressed"
+    assert len(response.content) > 0
+
+    assert zipfile.is_zipfile(BytesIO(response.content))
+    with zipfile.ZipFile(BytesIO(response.content)) as ags_zip:
+        # Check that zip contains the correct files
+        assert ags_file_names | {ags_metadata_file_name} == set(ags_zip.namelist())
+        with ags_zip.open(ags_metadata_file_name) as metadata_file:
+            metadata_text = metadata_file.read().decode()
+            for bgs_loca_id in bgs_loca_ids:
+                assert bgs_loca_id in metadata_text
+            for bgs_proj_id in bgs_proj_ids:
+                assert f'Project : {bgs_proj_id}' in metadata_text
+
+
+def test_get_ags_exporter_by_polygon_too_many_boreholes(client):
+    # Arrange
+    # There should be 28 boreholes in this area
+    polygon = 'POLYGON((-3.946 56.065,-3.640 56.065,-3.640 55.966,-3.946 55.966,-3.946 56.065))'
+    query = f'/ags_export_by_polygon/?polygon={polygon}'
+
+    # Act
+    with client as ac:
+        response = ac.get(query)
+
+    # Assert
+    assert response.status_code == 404
+    body = response.json()
+    assert body['errors'][0]['desc'] == ('More than 10 boreholes (28) found in the given polygon. '
+                                         'Please try with a smaller polygon')
+
+
+def test_get_ags_exporter_by_polygon_no_boreholes(client):
+    # Arrange
+    polygon = 'POLYGON((-3.946 56.061,-3.640 56.061,-3.640 55.966,-3.946 55.966,-3.946 56.061))'
+    query = f'/ags_export_by_polygon/?polygon={polygon}'
+
+    # Act
+    with client as ac:
+        response = ac.get(query)
+
+    # Assert
+    assert response.status_code == 404
+    body = response.json()
+    assert body['errors'][0]['desc'] == 'No boreholes found in the given polygon'
+
+
 @pytest.mark.parametrize('polygon', [
     'NOTPOLYGON((0 0, 0 1, 1 1, 1 0, 0 0))',
     'POLYGON((0 0, 0 1, 1 1, 1 0))'
