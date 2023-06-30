@@ -516,6 +516,7 @@ def test_get_ags_export(client, tmp_path):
     bgs_loca_id = 20190430093402523419
     bgs_proj_id = str(bgs_loca_id)[:16]
     ags_file_name = f'{bgs_proj_id}.ags'
+    ags_metadata_file_name = 'FILE/BGSFileSet01/BGS_download_metadata.txt'
 
     query = f'/ags_export/?bgs_loca_id={bgs_loca_id}'
 
@@ -531,13 +532,20 @@ def test_get_ags_export(client, tmp_path):
 
     assert zipfile.is_zipfile(BytesIO(response.content))
     with zipfile.ZipFile(BytesIO(response.content)) as ags_zip:
-        assert ags_file_name in ags_zip.namelist()
+        # Check that zip contains only the two correct files
+        assert {ags_file_name, ags_metadata_file_name} == set(ags_zip.namelist())
+        # Confirm the AGS file is correct
         with ags_zip.open(ags_file_name) as ags_file:
-            unzipped_file = tmp_path / 'test.ags'
-            with open(unzipped_file, 'wb') as f:
+            unzipped_ags_file = tmp_path / 'test.ags'
+            with open(unzipped_ags_file, 'wb') as f:
                 f.write(ags_file.read())
-            tables, _, _ = load_AGS4_as_numeric(unzipped_file)
+            tables, _, _ = load_AGS4_as_numeric(unzipped_ags_file)
             assert tables['PROJ']['BGS_PROJ_ID'][0] == bgs_proj_id
+        # Confirm the metadata file is correct
+        with ags_zip.open(ags_metadata_file_name) as metadata_file:
+            metadata_text = metadata_file.read().decode()
+            assert f'loca_ids={bgs_loca_id}' in metadata_text
+            assert f'Project : {bgs_proj_id}' in metadata_text
 
 
 @pytest.mark.xfail(IN_GITHUB_ACTIONS, reason="Upstream URL not available from Github Actions")
