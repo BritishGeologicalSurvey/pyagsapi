@@ -435,25 +435,6 @@ def ags_export_by_polygon(polygon: str = polygon_query):
 
     bgs_loca_ids = ';'.join([f['id'] for f in collection['features']])
     url = BOREHOLE_EXPORT_URL.format(bgs_loca_id=bgs_loca_ids)
+    response = ags_export(bgs_loca_ids)
 
-    try:
-        response = requests.get(url, timeout=10)
-    except (Timeout, ConnectionError):
-        raise HTTPException(status_code=500,
-                            detail="The borehole exporter could not be reached.  Please try again later.")
-
-    try:
-        response.raise_for_status()
-    except HTTPError:
-        if response.status_code == 404:
-            raise HTTPException(status_code=404,
-                                detail=f"Failed to retrieve boreholes {bgs_loca_ids}. "
-                                "They may not exist or may be confidential")
-        else:
-            raise HTTPException(status_code=500,
-                                detail="The borehole exporter returned an error.")
-
-    filename = "boreholes.zip"
-    headers = {'Content-Disposition': f'attachment; filename="{filename}"'}
-
-    return Response(response.content, headers=headers, media_type='application/x-zip-compressed')
+    return response
