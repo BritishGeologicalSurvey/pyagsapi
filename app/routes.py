@@ -127,7 +127,7 @@ ags_log_query = Query(
 ags_export_query = Query(
     ...,
     title="BGS LOCA ID",
-    description="BGS LOCA ID",
+    description="A single ID or multiple IDs separated by semicolons",
     example="20190430093402523419",
 )
 
@@ -332,8 +332,8 @@ def get_ags_log(bgs_loca_id: str = ags_log_query,
 
 @router.get("/ags_export/",
             tags=["ags_export"],
-            summary="Export a single borehole in .ags format",
-            description=("Export a single borehole in .ags format from AGS data "
+            summary="Export one or more boreholes in .ags format",
+            description=("Export one or more borehole in .ags format from AGS data "
                          "held by the National Geoscience Data Centre."),
             include_in_schema=True,
             response_class=Response,

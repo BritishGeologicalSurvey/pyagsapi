@@ -507,7 +507,7 @@ def test_get_ags_log_generator_error(client, monkeypatch):
 
 
 @pytest.mark.xfail(IN_GITHUB_ACTIONS, reason="Upstream URL not available from Github Actions")
-def test_get_ags_export(client, tmp_path):
+def test_get_ags_export_single_id(client, tmp_path):
     """
     Confirm that the endpoint can return the expected .zip.
     """
@@ -546,6 +546,45 @@ def test_get_ags_export(client, tmp_path):
             metadata_text = metadata_file.read().decode()
             assert f'loca_ids={bgs_loca_id}' in metadata_text
             assert f'Project : {bgs_proj_id}' in metadata_text
+
+
+@pytest.mark.parametrize('bgs_loca_ids', [
+    ['20200205093728297908', '20200205093728297910'],  # One project
+    ['20200205093727287903', '20200205093728297906'],  # Two projects
+])
+@pytest.mark.xfail(IN_GITHUB_ACTIONS, reason="Upstream URL not available from Github Actions")
+def test_get_ags_export_multiple_ids(client, bgs_loca_ids):
+    """
+    Confirm that the endpoint can return the expected .zip.
+    """
+    # Arrange
+    # Define the borehole and project IDs and zipped AGS file to use for the test
+    bgs_proj_ids = {id_[:16] for id_ in bgs_loca_ids}  # unique ids when truncated to 16 digits
+    ags_file_names = {f'{id_}.ags' for id_ in bgs_proj_ids}
+    ags_metadata_file_name = 'FILE/BGSFileSet01/BGS_download_metadata.txt'
+
+    query = f'/ags_export/?bgs_loca_id={";".join(bgs_loca_ids)}'
+
+    # Act
+    with client as ac:
+        response = ac.get(query)
+
+    # Assert
+    assert response.status_code == 200
+    assert response.headers["Content-Disposition"] == 'attachment; filename="boreholes.zip"'
+    assert response.headers["Content-Type"] == "application/x-zip-compressed"
+    assert len(response.content) > 0
+
+    assert zipfile.is_zipfile(BytesIO(response.content))
+    with zipfile.ZipFile(BytesIO(response.content)) as ags_zip:
+        # Check that zip contains the correct files
+        assert ags_file_names | {ags_metadata_file_name} == set(ags_zip.namelist())
+        with ags_zip.open(ags_metadata_file_name) as metadata_file:
+            metadata_text = metadata_file.read().decode()
+            for bgs_loca_id in bgs_loca_ids:
+                assert bgs_loca_id in metadata_text
+            for bgs_proj_id in bgs_proj_ids:
+                assert f'Project : {bgs_proj_id}' in metadata_text
 
 
 @pytest.mark.xfail(IN_GITHUB_ACTIONS, reason="Upstream URL not available from Github Actions")
