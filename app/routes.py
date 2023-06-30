@@ -10,6 +10,9 @@ from fastapi import APIRouter, BackgroundTasks, File, Form, Query, Request, Uplo
 from fastapi.responses import FileResponse, StreamingResponse
 from fastapi.exceptions import HTTPException
 
+import geopandas as gpd
+import shapely
+
 from requests.exceptions import Timeout, ConnectionError, HTTPError
 
 from app import conversion, validation
@@ -19,6 +22,8 @@ from app.schemas import ValidationResponse
 
 BOREHOLE_VIEWER_URL = "https://gwbv.bgs.ac.uk/GWBV/viewborehole?loca_id={bgs_loca_id}"
 BOREHOLE_EXPORT_URL = "https://gwbv.bgs.ac.uk/ags_export?loca_ids={bgs_loca_id}"
+BOREHOLE_INDEX_URL = ("https://ogcapi.bgs.ac.uk/collections/agsboreholeindex/items?f=json"
+                      "&properties=bgs_loca_id&filter=INTERSECTS(shape,{polygon})&limit=10")
 
 router = APIRouter()
 
@@ -124,6 +129,13 @@ ags_export_query = Query(
     title="BGS LOCA ID",
     description="BGS LOCA ID",
     example="20190430093402523419",
+)
+
+polygon_query = Query(
+    ...,
+    title="POLYGON",
+    description="A polygon expressed in Well Known Text",
+    example="POLYGON((-4.5 56,-4 56,-4 55.5,-4.5 55.5,-4.5 56))",
 )
 
 response_type_query = Query(
@@ -331,8 +343,8 @@ def ags_export(bgs_loca_id: int = ags_export_query):
     Export a single borehole in .ags format from AGS data held by the National Geoscience Data Centre.
     :param bgs_loca_id: The unique identifier of the borehole to export.
     :type bgs_loca_id: int
-    :return: A streaming response containing a .zip file with the exported borehole data.
-    :rtype: StreamingResponse
+    :return: A response containing a .zip file with the exported borehole data.
+    :rtype: Response
     :raises HTTPException 500: If the borehole exporter could not be reached.
     :raises HTTPException 404: If the specified borehole does not exist or is confidential.
     :raises HTTPException 500: If the borehole exporter returns an error.
@@ -358,6 +370,91 @@ def ags_export(bgs_loca_id: int = ags_export_query):
                                 detail="The borehole exporter returned an error.")
 
     filename = f"{bgs_loca_id}.zip"
+    headers = {'Content-Disposition': f'attachment; filename="{filename}"'}
+
+    return Response(response.content, headers=headers, media_type='application/x-zip-compressed')
+
+
+@router.get("/ags_export_by_polygon/",
+            tags=["ags_export_by_polygon"],
+            summary="Export a number of boreholes in .ags format",
+            description=("Export a number of boreholes in .ags format from AGS data "
+                         "held by the National Geoscience Data Centre."),
+            include_in_schema=True,
+            response_class=Response,
+            responses=zip_ags_responses)
+def ags_export_by_polygon(polygon: str = polygon_query):
+    """
+    Export the boreholes in .ags format from AGS data held by the National Geoscience Data Centre,
+    that are bounded by the polygon. If there are more than 10 boreholes return an error
+    :param polygon: A polygon in Well Known Text.
+    :type polygon: str
+    :return: A response containing a .zip file with the exported borehole data.
+    :rtype: Response
+    :raises HTTPException 404: If there are no boreholes or more than 10 boreholes in the polygon.
+    :raises HTTPException 422: If the WEll Known Text is not a POLYGON or is invalid.
+    :raises HTTPException 500: If the borehole index could not be reached.
+    :raises HTTPException 500: If the borehole index returns an error.
+    :raises HTTPException 500: If the borehole exporter could not be reached.
+    :raises HTTPException 500: If the borehole exporter returns an error.
+    """
+
+    # Check that the WKT is a valid POLYGON
+    check_df = gpd.GeoDataFrame([{"type": "zone", "bound": polygon}])
+    try:
+        gpd.GeoSeries.from_wkt(check_df['bound'])
+    except shapely.errors.GEOSException:
+        raise HTTPException(status_code=422,
+                            detail="Invalid polygon")
+
+    url = BOREHOLE_INDEX_URL.format(polygon=polygon)
+
+    try:
+        response = requests.get(url, timeout=10)
+    except (Timeout, ConnectionError):
+        raise HTTPException(status_code=500,
+                            detail="The borehole index could not be reached.  Please try again later.")
+
+    try:
+        response.raise_for_status()
+    except HTTPError:
+        if response.status_code == 404:
+            raise HTTPException(status_code=404,
+                                detail="Failed to retrieve boreholes for the given polygon")
+        else:
+            raise HTTPException(status_code=500,
+                                detail="The borehole index returned an error.")
+
+    collection = response.json()
+    if collection['numberMatched'] == 0:
+        raise HTTPException(status_code=404,
+                            detail="No boreholes found in the given polygon")
+    elif collection['numberMatched'] > 10:
+        raise HTTPException(status_code=404,
+                            detail="More than 10 boreholes found in the given polygon. "
+                            "Please try with a smaller polygon")
+
+    bgs_loca_ids = ':'.join([f['id'] for f in collection['features']])
+    url = BOREHOLE_EXPORT_URL.format(bgs_loca_id=bgs_loca_ids)
+
+    try:
+        response = requests.get(url, timeout=10)
+    except (Timeout, ConnectionError):
+        raise HTTPException(status_code=500,
+                            detail="The borehole exporter could not be reached.  Please try again later.")
+
+    try:
+        response.raise_for_status()
+    except HTTPError:
+        if response.status_code == 404:
+            raise HTTPException(status_code=404,
+                                detail=f"Failed to retrieve boreholes {bgs_loca_ids}. "
+                                "They may not exist or may be confidential")
+        else:
+            raise HTTPException(status_code=500,
+                                detail="The borehole exporter returned an error.")
+
+    filename = "boreholes.zip"
     headers = {'Content-Disposition': f'attachment; filename="{filename}"'}
 
     return Response(response.content, headers=headers, media_type='application/x-zip-compressed')

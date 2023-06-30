@@ -614,6 +614,24 @@ def test_get_ags_exporter_error(client, monkeypatch):
     assert body['errors'][0]['desc'] == 'The borehole exporter returned an error.'
 
 
+@pytest.mark.parametrize('polygon', [
+    'NOTPOLYGON((0 0, 0 1, 1 1, 1 0, 0 0))',
+    'POLYGON((0 0, 0 1, 1 1, 1 0))'
+])
+def test_get_ags_exporter_by_polygon_not_polygon(client, polygon):
+    # Arrange
+    query = f'/ags_export_by_polygon/?polygon={polygon}'
+
+    # Act
+    with client as ac:
+        response = ac.get(query)
+
+    # Assert
+    assert response.status_code == 422
+    body = response.json()
+    assert body['errors'][0]['desc'] == 'Invalid polygon'
+
+
 @pytest.fixture(scope="function")
 def client():
     return TestClient(app)
