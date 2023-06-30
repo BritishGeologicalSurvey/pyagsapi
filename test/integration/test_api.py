@@ -414,7 +414,7 @@ async def test_validate_dictionary_choice(async_client, dictionary, filename, ex
     ('attachment', 'attachment'),
     (None, 'inline')  # Defaults to 'inline'
 ])
-@pytest.mark.skipif(IN_GITHUB_ACTIONS, reason="Upstream URL not avilable from Github Actions")
+@pytest.mark.xfail(IN_GITHUB_ACTIONS, reason="Upstream URL not available from Github Actions")
 def test_get_ags_log(client, response_type, response_type_result):
     """
     Confirm that the endpoint can return the expected .pdf.
@@ -440,7 +440,7 @@ def test_get_ags_log(client, response_type, response_type_result):
     assert response.content.startswith(b'%PDF')
 
 
-@pytest.mark.skipif(IN_GITHUB_ACTIONS, reason="Upstream URL not avilable from Github Actions")
+@pytest.mark.xfail(IN_GITHUB_ACTIONS, reason="Upstream URL not available from Github Actions")
 def test_get_ags_log_unknown_borehole(client):
     """
     Confirm that the endpoint can return the expected error when an unknown bgs_loca_id is submitted.
@@ -506,7 +506,7 @@ def test_get_ags_log_generator_error(client, monkeypatch):
     assert body['errors'][0]['desc'] == 'The borehole generator returned an error.'
 
 
-@pytest.mark.skipif(IN_GITHUB_ACTIONS, reason="Upstream URL not avilable from Github Actions")
+@pytest.mark.xfail(IN_GITHUB_ACTIONS, reason="Upstream URL not available from Github Actions")
 def test_get_ags_export(client, tmp_path):
     """
     Confirm that the endpoint can return the expected .zip.
@@ -540,7 +540,7 @@ def test_get_ags_export(client, tmp_path):
             assert tables['PROJ']['BGS_PROJ_ID'][0] == bgs_proj_id
 
 
-@pytest.mark.skipif(IN_GITHUB_ACTIONS, reason="Upstream URL not avilable from Github Actions")
+@pytest.mark.xfail(IN_GITHUB_ACTIONS, reason="Upstream URL not available from Github Actions")
 def test_get_ags_export_unknown_borehole(client):
     """
     Confirm that the endpoint can return the expected error when an unknown bgs_loca_id is submitted.
