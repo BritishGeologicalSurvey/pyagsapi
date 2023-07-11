@@ -221,6 +221,17 @@ async def validate(background_tasks: BackgroundTasks,
     return response
 
 
+def prepare_validation_response(request, data):
+    """Package the data into a Response schema object"""
+    response_data = {
+        'msg': f'{len(data)} files validated',
+        'type': 'success',
+        'self': str(request.url),
+        'data': data,
+    }
+    return ValidationResponse(**response_data, media_type="application/json")
+
+
 @router.post("/convert/",
              tags=["convert"],
              response_class=StreamingResponse,
@@ -275,17 +286,6 @@ async def convert(background_tasks: BackgroundTasks,
     response = StreamingResponse(zipped_stream, media_type="application/x-zip-compressed")
     response.headers["Content-Disposition"] = f"attachment; filename={RESULTS}.zip"
     return response
-
-
-def prepare_validation_response(request, data):
-    """Package the data into a Response schema object"""
-    response_data = {
-        'msg': f'{len(data)} files validated',
-        'type': 'success',
-        'self': str(request.url),
-        'data': data,
-    }
-    return ValidationResponse(**response_data, media_type="application/json")
 
 
 @router.get("/ags_log/",
