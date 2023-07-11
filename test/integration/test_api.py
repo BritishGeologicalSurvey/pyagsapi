@@ -707,6 +707,28 @@ def test_get_ags_exporter_by_polygon(client):
                 assert f'Project : {bgs_proj_id}' in metadata_text
 
 
+@pytest.mark.parametrize('polygon, count', [
+    ('POLYGON((-3.946 56.061,-3.640 56.061,-3.640 55.966,-3.946 55.966,-3.946 56.061))', 0),
+    ('POLYGON((-3.946 56.063,-3.640 56.063,-3.640 55.966,-3.946 55.966,-3.946 56.063))', 4),
+    ('POLYGON((-3.946 56.065,-3.640 56.065,-3.640 55.966,-3.946 55.966,-3.946 56.065))', 28),
+])
+def test_get_ags_exporter_by_polygon_count_only(client, polygon, count):
+    # Arrange
+    query = f'/ags_export_by_polygon/?polygon={polygon}&count_only=True'
+
+    # Act
+    with client as ac:
+        response = ac.get(query)
+
+    # Assert
+    assert response.status_code == 200
+    body = response.json()
+    assert body['msg'] == 'Borehole count'
+    assert body['type'] == 'success'
+    assert body['self'] is not None
+    assert body['count'] == count
+
+
 def test_get_ags_exporter_by_polygon_too_many_boreholes(client):
     # Arrange
     # There should be 28 boreholes in this area
