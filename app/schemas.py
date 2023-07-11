@@ -72,3 +72,7 @@ class ErrorResponse(MinimalResponse):
 
 class ValidationResponse(MinimalResponse):
     data: List[Union[Validation, bool]] = None
+
+
+class BoreholeCountResponse(MinimalResponse):
+    count: int = Field(..., example=4)

@@ -18,7 +18,7 @@ from requests.exceptions import Timeout, ConnectionError, HTTPError
 from app import conversion, validation
 from app.checkers import check_ags, check_bgs
 from app.errors import error_responses, InvalidPayloadError
-from app.schemas import ValidationResponse
+from app.schemas import ValidationResponse, BoreholeCountResponse
 
 BOREHOLE_VIEWER_URL = "https://gwbv.bgs.ac.uk/GWBV/viewborehole?loca_id={bgs_loca_id}"
 BOREHOLE_EXPORT_URL = "https://gwbv.bgs.ac.uk/ags_export?loca_ids={bgs_loca_id}"
@@ -42,10 +42,11 @@ pdf_responses['200'] = {
     "content": {"application/pdf": {}},
     "description": "Return a graphical log of AGS data in .PDF format"}
 
-zip_ags_responses = dict(error_responses)
-zip_ags_responses['200'] = {
-    "content": {"application/x-zip-compressed": {}},
-    "description": "Return a zip containing .ags file and metadata .txt file"}
+ags_export_responses = dict(error_responses)
+ags_export_responses['200'] = {
+    "content": {"application/x-zip-compressed": {}, "application/json": {}},
+    "description": ("Return a zip containing .ags file and metadata .txt file "
+                    "or a json response containing the borehole ID count")}
 
 
 # Enum for search logic
@@ -136,6 +137,12 @@ polygon_query = Query(
     title="POLYGON",
     description="A polygon expressed in Well Known Text",
     example="POLYGON((-4.5 56,-4 56,-4 55.5,-4.5 55.5,-4.5 56))",
+)
+
+count_only_query = Query(
+    default=False,
+    title='Return count only',
+    description='Return count of found boreholes only',
 )
 
 response_type_query = Query(
@@ -337,7 +344,7 @@ def get_ags_log(bgs_loca_id: str = ags_log_query,
                          "held by the National Geoscience Data Centre."),
             include_in_schema=True,
             response_class=Response,
-            responses=zip_ags_responses)
+            responses=ags_export_responses)
 def ags_export(bgs_loca_id: str = ags_export_query):
     """
     Export a single borehole in .ags format from AGS data held by the National Geoscience Data Centre.
@@ -384,15 +391,23 @@ def ags_export(bgs_loca_id: str = ags_export_query):
             description=("Export a number of boreholes in .ags format from AGS data "
                          "held by the National Geoscience Data Centre."),
             include_in_schema=True,
-            response_class=Response,
-            responses=zip_ags_responses)
-def ags_export_by_polygon(polygon: str = polygon_query):
+            response_model=BoreholeCountResponse,
+            responses=ags_export_responses)
+def ags_export_by_polygon(polygon: str = polygon_query,
+                          count_only: bool = count_only_query,
+                          request: Request = None):
     """
     Export the boreholes in .ags format from AGS data held by the National Geoscience Data Centre,
     that are bounded by the polygon. If there are more than 10 boreholes return an error
     :param polygon: A polygon in Well Known Text.
     :type polygon: str
-    :return: A response containing a .zip file with the exported borehole data.
+    :param count_only: The format to return the validation results in. Options are "text" or "json".
+    :type count_only: int
+    :param request: The request object.
+    :type request: Request
+    :return: A response with the validation results in either plain text or JSON format.
+    :rtype: Union[BoreholeCountResponse, Response]
+    :return: A response containing a count or a .zip file with the exported borehole data.
     :rtype: Response
     :raises HTTPException 404: If there are no boreholes or more than 10 boreholes in the polygon.
     :raises HTTPException 422: If the Well Known Text is not a POLYGON or is invalid.
@@ -430,16 +445,32 @@ def ags_export_by_polygon(polygon: str = polygon_query):
                                 detail="The borehole index returned an error.")
 
     collection = response.json()
-    if collection['numberMatched'] == 0:
-        raise HTTPException(status_code=404,
-                            detail="No boreholes found in the given polygon")
-    elif collection['numberMatched'] > 10:
-        raise HTTPException(status_code=404,
-                            detail=f"More than 10 boreholes ({collection['numberMatched']}) "
-                            "found in the given polygon. Please try with a smaller polygon")
+    count = collection['numberMatched']
 
-    bgs_loca_ids = ';'.join([f['id'] for f in collection['features']])
-    url = BOREHOLE_EXPORT_URL.format(bgs_loca_id=bgs_loca_ids)
-    response = ags_export(bgs_loca_ids)
+    if count_only:
+        response = prepare_count_response(request, count)
+    else:
+        if count == 0:
+            raise HTTPException(status_code=404,
+                                detail="No boreholes found in the given polygon")
+        elif count > 10:
+            raise HTTPException(status_code=404,
+                                detail=f"More than 10 boreholes ({count}) "
+                                "found in the given polygon. Please try with a smaller polygon")
+
+        bgs_loca_ids = ';'.join([f['id'] for f in collection['features']])
+        url = BOREHOLE_EXPORT_URL.format(bgs_loca_id=bgs_loca_ids)
+        response = ags_export(bgs_loca_ids)
 
     return response
+
+
+def prepare_count_response(request, count):
+    """Package the data into a BoreholeCountResponse schema object"""
+    response_data = {
+        'msg': 'Borehole count',
+        'type': 'success',
+        'self': str(request.url),
+        'count': count
+    }
+    return BoreholeCountResponse(**response_data, media_type="application/json")
