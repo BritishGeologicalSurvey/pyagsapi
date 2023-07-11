@@ -674,11 +674,15 @@ def test_get_ags_exporter_error(client, monkeypatch):
 
 
 @pytest.mark.xfail(IN_GITHUB_ACTIONS, reason="Upstream URL not available from Github Actions")
-def test_get_ags_exporter_by_polygon(client):
+@pytest.mark.parametrize('count_only', [None, False])
+def test_get_ags_exporter_by_polygon(client, count_only):
     # Arrange
     # There should be 4 boreholes within 2 projects in this area
     polygon = 'POLYGON((-3.946 56.063,-3.640 56.063,-3.640 55.966,-3.946 55.966,-3.946 56.063))'
+
     query = f'/ags_export_by_polygon/?polygon={polygon}'
+    if count_only is not None:
+        query += '&count_only=False'
     # Define the expected borehole and project IDs and zipped AGS file to use for the test
     bgs_loca_ids = ['20200205093727287903', '20200205093728297906', '20200205093728297908', '20200205093728297910']
     bgs_proj_ids = {id_[:16] for id_ in bgs_loca_ids}  # unique ids when truncated to 16 digits
