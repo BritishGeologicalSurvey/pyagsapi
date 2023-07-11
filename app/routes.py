@@ -300,9 +300,9 @@ def get_ags_log(bgs_loca_id: str = ags_log_query,
     :type response_type: ResponseType, optional
     :return: A response containing a .pdf file with the generated borehole log.
     :rtype: Response
-    :raises HTTPException 500: If the borehole generator could not be reached.
     :raises HTTPException 404: If the specified borehole does not exist or is confidential.
     :raises HTTPException 500: If the borehole generator returns an error.
+    :raises HTTPException 500: If the borehole generator could not be reached.
     """
 
     url = BOREHOLE_VIEWER_URL.format(bgs_loca_id=bgs_loca_id)
@@ -345,10 +345,14 @@ def ags_export(bgs_loca_id: str = ags_export_query):
     :type bgs_loca_id: str
     :return: A response containing a .zip file with the exported borehole data.
     :rtype: Response
-    :raises HTTPException 500: If the borehole exporter could not be reached.
-    :raises HTTPException 404: If the specified borehole does not exist or is confidential.
+    :raises HTTPException 404: If the specified boreholes do not exist or are confidential.
+    :raises HTTPException 422: If more than 10 borehole IDs are supplied.
     :raises HTTPException 500: If the borehole exporter returns an error.
+    :raises HTTPException 500: If the borehole exporter could not be reached.
     """
+
+    if len(bgs_loca_id.split(';')) > 10:
+        raise HTTPException(status_code=422, detail="More than 10 borehole IDs.")
 
     url = BOREHOLE_EXPORT_URL.format(bgs_loca_id=bgs_loca_id)
 
@@ -391,7 +395,7 @@ def ags_export_by_polygon(polygon: str = polygon_query):
     :return: A response containing a .zip file with the exported borehole data.
     :rtype: Response
     :raises HTTPException 404: If there are no boreholes or more than 10 boreholes in the polygon.
-    :raises HTTPException 422: If the WEll Known Text is not a POLYGON or is invalid.
+    :raises HTTPException 422: If the Well Known Text is not a POLYGON or is invalid.
     :raises HTTPException 500: If the borehole index could not be reached.
     :raises HTTPException 500: If the borehole index returns an error.
     :raises HTTPException 500: If the borehole exporter could not be reached.

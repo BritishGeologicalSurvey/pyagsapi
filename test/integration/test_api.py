@@ -607,6 +607,26 @@ def test_get_ags_export_unknown_borehole(client):
     assert body['errors'][0]['desc'] == 'Failed to retrieve borehole 0. It may not exist or may be confidential'
 
 
+def test_get_ags_export_too_many_borehole_ids(client):
+    """
+    Confirm that an error is returned when bgs_loca_id comprises more than 10 IDs.
+    """
+    # Arrange
+    # Define the borehole IDs to use for the test
+    bgs_loca_ids = ['20200205093728297908'] * 11
+    bgs_loca_ids = ';'.join(bgs_loca_ids)
+    query = f'/ags_export/?bgs_loca_id={bgs_loca_ids}'
+
+    # Act
+    with client as ac:
+        response = ac.get(query)
+
+    # Assert
+    assert response.status_code == 422
+    body = response.json()
+    assert body['errors'][0]['desc'] == 'More than 10 borehole IDs.'
+
+
 def test_get_ags_exporter_unreachable(client, monkeypatch):
     # Arrange
     bgs_loca_id = 0
