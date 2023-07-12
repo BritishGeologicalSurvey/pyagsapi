@@ -6,6 +6,7 @@ from app.schemas import Error, ErrorResponse
 
 # Define error responses
 error_responses = {
+    status.HTTP_400_BAD_REQUEST: {"model": ErrorResponse},
     status.HTTP_404_NOT_FOUND: {"model": ErrorResponse},
     status.HTTP_422_UNPROCESSABLE_ENTITY: {"model": ErrorResponse},
     status.HTTP_500_INTERNAL_SERVER_ERROR: {"model": ErrorResponse}
