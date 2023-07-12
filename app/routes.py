@@ -409,7 +409,7 @@ def ags_export_by_polygon(polygon: str = polygon_query,
     :rtype: Union[BoreholeCountResponse, Response]
     :return: A response containing a count or a .zip file with the exported borehole data.
     :rtype: Response
-    :raises HTTPException 404: If there are no boreholes or more than 10 boreholes in the polygon.
+    :raises HTTPException 400: If there are no boreholes or more than 10 boreholes in the polygon.
     :raises HTTPException 422: If the Well Known Text is not a POLYGON or is invalid.
     :raises HTTPException 500: If the borehole index could not be reached.
     :raises HTTPException 500: If the borehole index returns an error.
@@ -451,10 +451,10 @@ def ags_export_by_polygon(polygon: str = polygon_query,
         response = prepare_count_response(request, count)
     else:
         if count == 0:
-            raise HTTPException(status_code=404,
+            raise HTTPException(status_code=400,
                                 detail="No boreholes found in the given polygon")
         elif count > 10:
-            raise HTTPException(status_code=404,
+            raise HTTPException(status_code=400,
                                 detail=f"More than 10 boreholes ({count}) "
                                 "found in the given polygon. Please try with a smaller polygon")
 

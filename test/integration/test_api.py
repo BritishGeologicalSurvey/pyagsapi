@@ -744,7 +744,7 @@ def test_get_ags_exporter_by_polygon_too_many_boreholes(client):
         response = ac.get(query)
 
     # Assert
-    assert response.status_code == 404
+    assert response.status_code == 400
     body = response.json()
     assert body['errors'][0]['desc'] == ('More than 10 boreholes (28) found in the given polygon. '
                                          'Please try with a smaller polygon')
@@ -760,7 +760,7 @@ def test_get_ags_exporter_by_polygon_no_boreholes(client):
         response = ac.get(query)
 
     # Assert
-    assert response.status_code == 404
+    assert response.status_code == 400
     body = response.json()
     assert body['errors'][0]['desc'] == 'No boreholes found in the given polygon'
 
