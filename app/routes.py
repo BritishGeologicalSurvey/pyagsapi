@@ -10,7 +10,6 @@ from fastapi import APIRouter, BackgroundTasks, File, Form, Query, Request, Uplo
 from fastapi.responses import FileResponse, StreamingResponse
 from fastapi.exceptions import HTTPException
 
-import geopandas as gpd
 import shapely
 
 from requests.exceptions import Timeout, ConnectionError, HTTPError
