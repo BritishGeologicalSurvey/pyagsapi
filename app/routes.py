@@ -293,7 +293,7 @@ async def convert(background_tasks: BackgroundTasks,
             summary="Generate Graphical Log",
             description=("Generate a graphical log (.pdf) from AGS data "
                          "held by the National Geoscience Data Centre."),
-            include_in_schema=True,
+            include_in_schema=False,
             response_class=Response,
             responses=pdf_responses)
 def get_ags_log(bgs_loca_id: str = ags_log_query,
@@ -342,7 +342,7 @@ def get_ags_log(bgs_loca_id: str = ags_log_query,
             summary="Export one or more boreholes in .ags format",
             description=("Export one or more borehole in .ags format from AGS data "
                          "held by the National Geoscience Data Centre."),
-            include_in_schema=True,
+            include_in_schema=False,
             response_class=Response,
             responses=ags_export_responses)
 def ags_export(bgs_loca_id: str = ags_export_query):
@@ -390,7 +390,7 @@ def ags_export(bgs_loca_id: str = ags_export_query):
             summary="Export a number of boreholes in .ags format",
             description=("Export a number of boreholes in .ags format from AGS data "
                          "held by the National Geoscience Data Centre."),
-            include_in_schema=True,
+            include_in_schema=False,
             response_model=BoreholeCountResponse,
             responses=ags_export_responses)
 def ags_export_by_polygon(polygon: str = polygon_query,

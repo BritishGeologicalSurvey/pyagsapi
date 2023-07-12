@@ -26,11 +26,17 @@ TEST_FILE_DIR = Path(__file__).parent.parent / 'files'
 
 
 def test_openapi_json(client):
-    """A hello-world type test to confirm testing framework works."""
+    """ Check that the openapi is accessible and it display the correct endpoints """
     response = client.get('/openapi.json')
     assert response.status_code == 200
     assert response.headers['content-type'] == 'application/json'
+    # exposed endpoints
     assert '/validate' in response.text
+    assert '/convert' in response.text
+    # hidden endpoints
+    assert '/ags_log' not in response.text
+    assert '/ags_export' not in response.text
+    assert '/ags_export_by_polygon' not in response.text
 
 
 @pytest.mark.parametrize('filename, expected',
