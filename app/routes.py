@@ -419,9 +419,8 @@ def ags_export_by_polygon(polygon: str = polygon_query,
 
     # Check explicitly that the WKT is a valid POLYGON
     # The BOREHOLE_INDEX_URL API does not return an error for some bad WKT
-    check_df = gpd.GeoDataFrame([{"type": "zone", "bound": polygon}])
     try:
-        gpd.GeoSeries.from_wkt(check_df['bound'])
+        shapely.wkt.loads(polygon)
     except shapely.errors.GEOSException:
         raise HTTPException(status_code=422,
                             detail="Invalid polygon")
