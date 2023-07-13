@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Union
 
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator
 
 from app.bgs_rules import BGS_RULES
 
@@ -29,7 +29,7 @@ class LineError(BaseModel):
     group: str = Field(..., examples=["TRAN"])
     desc: str = Field(..., examples=["Blah blah"])
 
-    @validator('line')
+    @field_validator('line')
     def line_if_string_must_be_hyphen(cls, line):
         if type(line) is str:
             assert line in ['-', ''], f"Unknown non-integer line number: '{line}'"
@@ -47,7 +47,7 @@ class Validation(BaseModel):
     valid: bool = Field(..., examples=['false'])
     additional_metadata: dict = Field(...)
 
-    @validator('errors')
+    @field_validator('errors')
     def errors_keys_must_be_known_rules(cls, errors):
         for key in errors.keys():
             assert key in VALID_KEYS, f"Unknown rule: '{key}'"
