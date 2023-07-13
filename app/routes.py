@@ -121,21 +121,21 @@ ags_log_query = Query(
     ...,
     title="BGS LOCA ID",
     description="BGS LOCA ID",
-    example="20190430093402523419",
+    examples=["20190430093402523419"],
 )
 
 ags_export_query = Query(
     ...,
     title="BGS LOCA ID",
     description="A single ID or multiple IDs separated by semicolons",
-    example="20190430093402523419",
+    examples=["20190430093402523419"],
 )
 
 polygon_query = Query(
     ...,
     title="POLYGON",
     description="A polygon expressed in Well Known Text",
-    example="POLYGON((-4.5 56,-4 56,-4 55.5,-4.5 55.5,-4.5 56))",
+    examples=["POLYGON((-4.5 56,-4 56,-4 55.5,-4.5 55.5,-4.5 56))"],
 )
 
 count_only_query = Query(

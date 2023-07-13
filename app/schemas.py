@@ -25,9 +25,9 @@ VALID_KEYS.append('BGS data validation: Non-numeric coordinate types')
 
 
 class LineError(BaseModel):
-    line: Union[int, str] = Field(..., example="5")
-    group: str = Field(..., example="TRAN")
-    desc: str = Field(..., example="Blah blah")
+    line: Union[int, str] = Field(..., examples=["5"])
+    group: str = Field(..., examples=["TRAN"])
+    desc: str = Field(..., examples=["Blah blah"])
 
     @validator('line')
     def line_if_string_must_be_hyphen(cls, line):
@@ -37,14 +37,14 @@ class LineError(BaseModel):
 
 
 class Validation(BaseModel):
-    filename: str = Field(..., example="example.ags")
-    filesize: int = Field(None, example="1024")
-    checkers: List[str] = Field(None, example=["python_ags4 v0.4.1"])
-    dictionary: str = Field(None, example="Standard_dictionary_v4_1_1.ags")
-    time: datetime = Field(None, example="2021-08-18 09:23:29")
-    message: str = Field(None, example="7 error(s) found in file!")
-    errors: Dict[str, List[LineError]] = Field(..., example="Rule 1a")
-    valid: bool = Field(..., example='false')
+    filename: str = Field(..., examples=["example.ags"])
+    filesize: int = Field(None, examples=["1024"])
+    checkers: List[str] = Field(None, examples=["python_ags4 v0.4.1"])
+    dictionary: str = Field(None, examples=["Standard_dictionary_v4_1_1.ags"])
+    time: datetime = Field(None, examples=["2021-08-18 09:23:29"])
+    message: str = Field(None, examples=["7 error(s) found in file!"])
+    errors: Dict[str, List[LineError]] = Field(..., examples=["Rule 1a"])
+    valid: bool = Field(..., examples=['false'])
     additional_metadata: dict = Field(...)
 
     @validator('errors')
@@ -55,15 +55,15 @@ class Validation(BaseModel):
 
 
 class Error(BaseModel):
-    error: str = Field(..., example="error")
-    propName:  str = Field(None, example="error")
-    desc: str = Field(..., example="Error message")
+    error: str = Field(..., examples=["error"])
+    propName:  str = Field(None, examples=["error"])
+    desc: str = Field(..., examples=["Error message"])
 
 
 class MinimalResponse(BaseModel):
-    msg: str = Field(..., example="Example response")
-    type: str = Field(..., example="success")
-    self: str = Field(..., example="http://example.com/apis/query")
+    msg: str = Field(..., examples=["Example response"])
+    type: str = Field(..., examples=["success"])
+    self: str = Field(..., examples=["http://example.com/apis/query"])
 
 
 class ErrorResponse(MinimalResponse):
@@ -75,4 +75,4 @@ class ValidationResponse(MinimalResponse):
 
 
 class BoreholeCountResponse(MinimalResponse):
-    count: int = Field(..., example=4)
+    count: int = Field(..., examples=[4])
