@@ -1,6 +1,6 @@
 """Tests for schemas."""
 import pytest
-from pydantic.error_wrappers import ValidationError
+from pydantic import ValidationError
 
 from app.schemas import Validation
 from test.fixtures_json import JSON_RESPONSES, BROKEN_JSON_RESPONSES
