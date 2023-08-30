@@ -291,8 +291,7 @@ async def convert(background_tasks: BackgroundTasks,
             tags=["ags_log"],
             summary="Generate Graphical Log",
             description=("Generate a graphical log (.pdf) from AGS data "
-                         "held by the National Geoscience Data Centre."),
-            include_in_schema=False,
+                         "held by the National Geoscience Data Centre."),           
             response_class=Response,
             responses=pdf_responses)
 def get_ags_log(bgs_loca_id: str = ags_log_query,
@@ -341,7 +340,6 @@ def get_ags_log(bgs_loca_id: str = ags_log_query,
             summary="Export one or more boreholes in .ags format",
             description=("Export one or more borehole in .ags format from AGS data "
                          "held by the National Geoscience Data Centre."),
-            include_in_schema=False,
             response_class=Response,
             responses=ags_export_responses)
 def ags_export(bgs_loca_id: str = ags_export_query):
@@ -386,10 +384,10 @@ def ags_export(bgs_loca_id: str = ags_export_query):
 
 @router.get("/ags_export_by_polygon/",
             tags=["ags_export_by_polygon"],
-            summary="Export a number of boreholes in .ags format",
+            summary="Export a number of boreholes in .ags format in a polygon",
             description=("Export a number of boreholes in .ags format from AGS data "
-                         "held by the National Geoscience Data Centre."),
-            include_in_schema=False,
+                         "held by the National Geoscience Data Centre, using a"
+                         " polygon using Well-Known-Text."),
             response_model=BoreholeCountResponse,
             responses=ags_export_responses)
 def ags_export_by_polygon(polygon: str = polygon_query,
