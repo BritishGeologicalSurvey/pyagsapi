@@ -56,7 +56,7 @@ async def test_validate_json(async_client, filename, expected):
         response = await ac.post(
             '/validate/',
             headers={'Content-Type': mp_encoder.content_type},
-            content=mp_encoder.to_string())
+            data=mp_encoder.to_string())
 
     # Assert
     assert response.status_code == 200
@@ -89,7 +89,7 @@ async def test_validate_many_json(async_client):
         response = await ac.post(
             '/validate/',
             headers={'Content-Type': mp_encoder.content_type},
-            content=mp_encoder.to_string())
+            data=mp_encoder.to_string())
 
     # Assert
     assert response.status_code == 200
@@ -120,7 +120,7 @@ async def test_validate_custom_dictionary(async_client, dictionary, expected):
         response = await ac.post(
             '/validate/',
             headers={'Content-Type': mp_encoder.content_type},
-            content=mp_encoder.to_string())
+            data=mp_encoder.to_string())
 
     # Assert
     assert response.status_code == 200
@@ -152,7 +152,7 @@ async def test_validate_text(async_client, filename, expected):
         response = await ac.post(
             '/validate/',
             headers={'Content-Type': mp_encoder.content_type},
-            content=mp_encoder.to_string())
+            data=mp_encoder.to_string())
 
     # Assert
     assert response.status_code == 200
@@ -179,7 +179,7 @@ async def test_validate_many_text(async_client):
         response = await ac.post(
             '/validate/',
             headers={'Content-Type': mp_encoder.content_type},
-            content=mp_encoder.to_string())
+            data=mp_encoder.to_string())
 
     # Assert
     # Just check that API responds and contains each file name
@@ -204,7 +204,7 @@ async def test_convert_good_files(async_client, tmp_path):
         response = await ac.post(
             '/convert/',
             headers={'Content-Type': mp_encoder.content_type},
-            content=mp_encoder.to_string())
+            data=mp_encoder.to_string())
 
     # Assert
     assert response.status_code == 200
@@ -244,7 +244,7 @@ async def test_convert_sort_tables(async_client, tmp_path, sort_tables):
         response = await ac.post(
             '/convert/',
             headers={'Content-Type': mp_encoder.content_type},
-            content=mp_encoder.to_string())
+            data=mp_encoder.to_string())
 
     # Assert
     assert response.status_code == 200
@@ -278,7 +278,7 @@ async def test_convert_bad_files(async_client, tmp_path):
         response = await ac.post(
             '/convert/',
             headers={'Content-Type': mp_encoder.content_type},
-            content=mp_encoder.to_string())
+            data=mp_encoder.to_string())
 
     # Assert
     assert response.status_code == 200
@@ -312,7 +312,7 @@ async def test_validate_bgs_json(async_client):
         response = await ac.post(
             '/validate/',
             headers={'Content-Type': mp_encoder.content_type},
-            content=mp_encoder.to_string())
+            data=mp_encoder.to_string())
 
     # Assert
     assert response.status_code == 200
@@ -342,7 +342,7 @@ async def test_validate_ags_bgs_json(async_client):
         response = await ac.post(
             '/validate/',
             headers={'Content-Type': mp_encoder.content_type},
-            content=mp_encoder.to_string())
+            data=mp_encoder.to_string())
 
     # Assert
     assert response.status_code == 200
@@ -371,7 +371,7 @@ async def test_validate_bgs_text(async_client):
         response = await ac.post(
             '/validate/',
             headers={'Content-Type': mp_encoder.content_type},
-            content=mp_encoder.to_string())
+            data=mp_encoder.to_string())
 
     # Assert
     assert response.status_code == 200
@@ -407,7 +407,7 @@ async def test_validate_dictionary_choice(async_client, dictionary, filename, ex
         response = await ac.post(
             '/validate/',
             headers={'Content-Type': mp_encoder.content_type},
-            content=mp_encoder.to_string())
+            data=mp_encoder.to_string())
 
     # Assert
     assert response.status_code == 200

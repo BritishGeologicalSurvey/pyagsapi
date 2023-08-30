@@ -1,8 +1,9 @@
-ipython
-ipdb
-pytest
-flake8
-httpx
-pytest-asyncio
-requests-toolbelt
-freezegun
+ipython==8.10.0
+ipdb==0.13.11
+pytest==7.2.1
+flake8==6.0.0
+requests==2.28.2
+httpx==0.23.3
+pytest-asyncio==0.20.3
+requests-toolbelt==0.10.1
+freezegun==1.2.2
