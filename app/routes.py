@@ -291,7 +291,7 @@ async def convert(background_tasks: BackgroundTasks,
             tags=["ags_log"],
             summary="Generate Graphical Log",
             description=("Generate a graphical log (.pdf) from AGS data "
-                         "held by the National Geoscience Data Centre."),           
+                         "held by the National Geoscience Data Centre."),
             response_class=Response,
             responses=pdf_responses)
 def get_ags_log(bgs_loca_id: str = ags_log_query,
