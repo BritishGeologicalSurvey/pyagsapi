@@ -386,9 +386,10 @@ def ags_export(bgs_loca_id: str = ags_export_query):
 
 @router.get("/ags_export_by_polygon/",
             tags=["ags_export_by_polygon"],
-            summary="Export a number of boreholes in .ags format",
+            summary="Export a number of boreholes in .ags format in a polygon",
             description=("Export a number of boreholes in .ags format from AGS data "
-                         "held by the National Geoscience Data Centre."),
+                         "held by the National Geoscience Data Centre, using a"
+                         " polygon using Well-Known-Text."),
             include_in_schema=False,
             response_model=BoreholeCountResponse,
             responses=ags_export_responses)
