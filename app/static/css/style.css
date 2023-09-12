@@ -39,3 +39,33 @@
   width: 5px;
   height: 10px;
 }
+
+#extentModal{
+    background-color:rgba(0,0,0,0.7);
+    position:absolute;
+    width:100%;
+    top:0px;
+    left:0px;
+    height:600px;
+    border:1px solid #000000;
+    z-index:9999;
+    margin:0px;
+    text-align:center;
+    padding:20px;
+    }
+
+#extentModal>*{
+    margin:0px 20px;
+    padding:10px 20px;
+    color:#FFFFFF;
+    background-color:rgba(0,0,0,0.7);
+    }
+
+#extentValid>a{
+    color:#FFFFFF;
+    }
+
+#closeModalBtn{
+    padding:3px 5px;
+    float:right;
+    }

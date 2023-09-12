@@ -1,0 +1,89 @@
+@charset "UTF-8";
+
+/*ags-map.css*/
+#agsMap{
+    display:block;
+    margin:10px auto;
+    padding:0px;
+    width:90%;
+    height:600px;
+    }
+
+#agsLeafletMap{
+    display:block;
+    margin:0px;
+    padding:0px;
+    width:100%;
+    height:600px;
+    }
+
+.leaflet-popup-content table{
+    margin:4px;
+    }
+
+.leaflet-popup-content table>tbody>tr>*{
+    padding:2px 4px;
+    }
+
+.leaflet-popup-content table>tbody>tr>th{
+    background-color:#CCC;
+    }
+
+#agsMapLookups{
+    padding:0px;
+    text-align:center;
+    }
+
+#agsMapLookups>article{
+    display:inline-block;
+    width:45%;
+    height:120px;
+    overflow:hidden;
+    }
+
+#agsMapLookups input{
+    padding:4px 8px;
+    }
+
+#agsMapLookups input.lookupBtn{
+    padding:6px 12px;
+    background-color:#246;
+    color:#FFFFFF;
+    border-radius:5px;
+    border:none;
+    box-shadow: 2px 2px 4px #444;
+    opacity:0.8;
+    cursor:pointer;
+    }
+
+#agsMapLookups input.lookupBtn:hover{
+    box-shadow: 1px 1px 2px #222;
+    opacity:1;
+    }
+
+#agsMapLookups input.lookupBtn:disabled{
+    background-color:#CCC;
+    color:#444;
+    opacity:0.5;
+    box-shadow: 2px 2px 4px #FFF;
+    }
+
+#extentStatusMsg{
+    display:inline-block;
+    border:1px solid #CCC;
+    padding:4px 8px;
+    }
+
+#drawIcon{
+    display:inline-block;
+    border:1px solid #CCC;
+    padding:0px;
+    margin:0px;
+    background-image: url("../js/Leaflet/draw/images/spritesheet.svg");
+    background-image: linear-gradient(transparent, transparent), url('../js/Leaflet/draw/images/spritesheet.svg');
+    background-repeat: no-repeat;
+    background-size:200px 20px;
+    background-position: -40px 0px;
+    width:20px;
+    height:20px;
+    }

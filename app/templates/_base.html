@@ -2,8 +2,8 @@
 <html lang="en">
   <head>
     <title>AGS File Utilities Tool and API</title>
-	<meta name="description" content="This tool and associated API allow AGS schema validation, AGS data validation and conversion of your AGS files. The tool is supporting the development of new national data store of standardised AGS data of the subsurface that can be consulted and accessed to support decision making processes in industry and project planning. " />
-	<meta name="keywords" content="BRITISH,GEOLOGY,EARTH,SCIENCE,GEOLOGICAL,SURVEY,GEOSCIENCE,OPEN, AGS, depositing, geotechnical, data, ac, validator, ags validator" />
+    <meta name="description" content="This tool and associated API allow AGS schema validation, AGS data validation and conversion of your AGS files. The tool is supporting the development of new national data store of standardised AGS data of the subsurface that can be consulted and accessed to support decision making processes in industry and project planning. " />
+    <meta name="keywords" content="BRITISH,GEOLOGY,EARTH,SCIENCE,GEOLOGICAL,SURVEY,GEOSCIENCE,OPEN, AGS, depositing, geotechnical, data, ac, validator, ags validator" />
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -15,32 +15,27 @@
     <link rel="stylesheet" id="bgs-fonts-css" href="https://use.typekit.net/mvn4zqf.css?ver=1.0.2" type="text/css" media="all" />
     <link rel="stylesheet" href="//resources.bgs.ac.uk/webapps/resources/css/main.css">
     <link rel="stylesheet" href="//resources.bgs.ac.uk/webapps/resources/css/content.css">
-	<link rel="stylesheet" href="//agsapi.bgs.ac.uk/static/css/tooltip.css">
-	<link rel="stylesheet" href="/static/css/htmlView.css">
+    <link rel="stylesheet" href="../static/css/tooltip.css">
+    <link rel="stylesheet" href="../static/css/htmlView.css">
 
     <script type="text/javascript" src="//resources.bgs.ac.uk/webapps/resources/js/jquery.min.js"></script>
     <script type="text/javascript" src="//resources.bgs.ac.uk/webapps/resources/js/main.js"></script>
-    <script type="text/javascript" src="/static/js/htmlView.js"></script>
+    <script type="text/javascript" src="../static/js/htmlView.js"></script>
 
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.css"
-        integrity="sha256-p6xU9YulB7E2Ic62/PX+h59ayb3PBJ0WFTEQxq0EjHw=" crossorigin="anonymous" />
-    <link rel="stylesheet" href="/static/js/leaflet/leaflet.css" />
-    <link rel="stylesheet" href="/static/css/style.css" />
-    <link rel="stylesheet" href="/static/js/leaflet/esri/esri-leaflet-geocoder.css">
-	<link rel="stylesheet" href="https://unpkg.com/@geoman-io/leaflet-geoman-free@2.13.0/dist/leaflet-geoman.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.css" integrity="sha256-p6xU9YulB7E2Ic62/PX+h59ayb3PBJ0WFTEQxq0EjHw=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="../static/js/leaflet/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css" integrity="sha512-gc3xjCmIy673V6MyOAZhIW93xhM9ei1I+gLbmFjUHIjocENRsLX/QUE1htk5q1XV2D/iie/VQ8DXI6Vu8bexvQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="../static/css/style.css" />
 
-    <script src="/static/js/jquery/jquery-3.3.1.min.js"></script>
+    <script src="../static/js/jquery/jquery-3.3.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js"></script>
-    <script src="/static/js/leaflet/leaflet-src.js"></script>
-	<script src="https://unpkg.com/@geoman-io/leaflet-geoman-free@2.13.0/dist/leaflet-geoman.min.js"></script>  
-    <script src="/static/js/leaflet/esri/esri-leaflet.js"></script>
-    <script src="/static/js/leaflet/esri/esri-leaflet-geocoder.js"></script>
-    <script src="/static/js/L.TileLayer.BetterWMS.js"></script>
-	<script src="/static/js/Leaflet.FeatureGroup.OGCAPI.js"></script>
+    <script src="../static/js/leaflet/leaflet-src.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js" integrity="sha512-ozq8xQKq6urvuU6jNgkfqAmT7jKN2XumbrX1JiB3TnF7tI48DPI4Gy1GXKD/V3EExgAs1V+pRO7vwtS1LHg0Gw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="../static/js/leaflet/esri/esri-leaflet.js"></script>
+    <script src="../static/js/L.TileLayer.BetterWMS.js"></script>
+    <script src="../static/js/Leaflet.FeatureGroup.OGCAPI.js"></script>
+    <script src="../static/js/map.js"></script>
 
-    <!--[if lt IE 9]>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
-    <![endif]-->
 	<style>
 .collapsible {
   background-color: #cec4a9;
@@ -416,6 +411,18 @@
       <div>
             Powered by <a title="pyagsapi" href="https://github.com/BritishGeologicalSurvey/pyagsapi">pyagsapi 4.6</a>. pyagsapi was created by and is maintained by the <a href="https://www.bgs.ac.uk/">British Geological Survey</a> and  is distributed under the <a title="license" href="https://github.com/BritishGeologicalSurvey/pyagsapi/blob/main/LICENSE">LGPL v3.0 licence</a>, code is available on <a title="github" href="https://github.com/BritishGeologicalSurvey/pyagsapi">GitHub</a>. <a title="agspython" href="https://github.com/BritishGeologicalSurvey/pyagsapi">pyagsapi</a> uses the <a href="https://gitlab.com/ags-data-format-wg/ags-python-library.">Official AGS Python Library</a>.
         </div>
+
+		<div id="extentModal">
+            <p>&nbsp;<input type="button" id="closeModalBtn" value="&#x2716;" /></p>
+            <h2>Selected extent</h2>
+            <p>Area <strong id="polyArea"></strong></p>
+            <p>Boreholes <strong id="boreCount">(loading ...)</strong></p>
+            <p class="extentMsg" id="extentEmpty">No boreholes found - please try a different area</p>
+            <p class="extentMsg" id="extentOver">Too many boreholes to download (maximum 10) - please select a smaller area</p>
+            <p class="extentMsg" id="extentValid"><a href="#">Download ZIP of selected boreholes</a></p>
+            <p>&nbsp;</p>
+        </div>
+
     </main>
     <footer>
         <section class="ukri">
@@ -467,6 +474,5 @@
 	});
 	}
 	</script>
-	<script src="/static/js/map.js"></script>
   </body>
 </html>
