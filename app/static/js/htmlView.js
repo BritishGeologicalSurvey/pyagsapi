@@ -27,6 +27,7 @@ agsHtml.injectResultPopup=function(){
 
 agsHtml.hideResultPopup=function(){
     $("#resultPopup").hide();
+    if(agsMap && agsMap.positionExtentModal){agsMap.positionExtentModal();};
     return true;
     };
 
@@ -160,6 +161,7 @@ agsHtml.parseValidationResponse=function(jData){
         agsHtml.displayFileResult(fileResult);
         };
     $("#resultPopup").show();
+    if(agsMap && agsMap.positionExtentModal){agsMap.positionExtentModal();};
     return true;
     };
 

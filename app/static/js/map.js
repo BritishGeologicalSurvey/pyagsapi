@@ -217,14 +217,20 @@ agsMap.drawing.enableDrawing=function(){
     };
 
 agsMap.showExtentModal=function(polyData){
-    var mapOffset=$("#mapid").offset();
-    var mapWidth=$("#mapid").width();
     $("#polyArea").html(polyData.area + "m²");
     $("#polyCount").html("(loading ...)");
     $("#extentModal>p.extentMsg").hide();
     $("#extentValid>a").attr("href","#");
     agsMap.checkExtent(polyData.wkt);
-    $("#extentModal").css("width",mapWidth + "px").css("left",mapOffset.left + "px").css("top",mapOffset.top + "px").show();
+    agsMap.positionExtentModal();
+    $("#extentModal").show();
+    return true;
+    };
+
+agsMap.positionExtentModal=function(){
+    var mapOffset=$("#mapid").offset();
+    var mapWidth=$("#mapid").width();
+    $("#extentModal").css("width",mapWidth + "px").css("left",mapOffset.left + "px").css("top",mapOffset.top + "px");
     return true;
     };
 
