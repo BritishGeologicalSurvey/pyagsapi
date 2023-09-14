@@ -139,7 +139,7 @@ agsMap.drawing.addControl=function(){
     agsMap.map.lMap.on(L.Draw.Event.CREATED, function(evt){
         var layer=evt.layer;
         var polyData=agsMap.drawing.getPolygonData(layer);
-        var xhtml="Area: " + polyData.area + "m²<br /><input type='button' value='check for boreholes' class='checkPolyBtn' />";
+        var xhtml="Area: " + polyData.area + "<br /><input type='button' value='check for boreholes' class='checkPolyBtn' />";
         agsMap.polyData=polyData;
         agsMap.showExtentModal(polyData);
         agsMap.map.lyrs.drawings.addLayer(layer);
@@ -163,7 +163,7 @@ agsMap.drawing.addControl=function(){
         var layerId=Object.getOwnPropertyNames(evt.layers._layers)[0];
         var layer=evt.layers._layers[layerId];
         var polyData=agsMap.drawing.getPolygonData(layer);
-        var xhtml="Area: " + polyData.area + "m²<br /><input type='button' value='check for boreholes' class='checkPolyBtn' />";
+        var xhtml="Area: " + polyData.area + "<br /><input type='button' value='check for boreholes' class='checkPolyBtn' />";
         agsMap.polyData=polyData;
         agsMap.showExtentModal(polyData);
         layer.bindPopup(xhtml);
@@ -217,7 +217,7 @@ agsMap.drawing.enableDrawing=function(){
     };
 
 agsMap.showExtentModal=function(polyData){
-    $("#polyArea").html(polyData.area + "m²");
+    $("#polyArea").html(polyData.area);
     $("#polyCount").html("(loading ...)");
     $("#extentModal>p.extentMsg").hide();
     $("#extentValid>a").attr("href","#");
@@ -236,7 +236,7 @@ agsMap.positionExtentModal=function(){
 
 // AREA CALCULATION ===========================================================
 agsMap.calcPolygonArea=function(coords){
-    var area=(L.GeometryUtil.geodesicArea(coords) * 0.001).toFixed(2);
+    var area=L.GeometryUtil.readableArea(L.GeometryUtil.geodesicArea(coords),true);
     return area;
     };
 
