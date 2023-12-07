@@ -15,7 +15,6 @@
 ![GitHub last commit](https://img.shields.io/github/last-commit/BritishGeologicalSurvey/pyagsapi?style=for-the-badge)
 ![GitHub contributors](https://img.shields.io/github/contributors/BritishGeologicalSurvey/pyagsapi?style=for-the-badge)
 
-
 A HTTP API for the [AGS Python library](https://gitlab.com/ags-data-format-wg/ags-python-library).
 
 It can:
@@ -28,6 +27,8 @@ It can:
 It is built on the FastAPI framework, using the official FastAPI Docker image.
 
 The core Python API provides the functionality to validate and convert AGS geotechnical data. From here, standard Python web frameworks like Uvicorn and Starlette provide the web API/wrapper atop the core Python API.
+
+BGS Deployed Instance available at: [https://agsapi.bgs.ac.uk/](https://agsapi.bgs.ac.uk/)
 
 ## Quick start
 

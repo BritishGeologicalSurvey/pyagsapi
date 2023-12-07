@@ -13,6 +13,8 @@ It is built on the FastAPI framework, using the official FastAPI Docker image.
 
 The core Python API provides the functionality to validate and convert AGS geotechnical data. From here, standard Python web frameworks like Uvicorn and Starlette provide the web API/wrapper atop the core Python API.
 
+BGS Deployed Instance available at: [https://agsapi.bgs.ac.uk/](https://agsapi.bgs.ac.uk/)
+
 ## Quick start
 
 ### Docker
