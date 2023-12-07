@@ -1,0 +1,50 @@
+site_name: Official documentation - pyagsapi
+repo_url: https://github.com/BritishGeologicalSurvey/pyagsapi
+
+theme:
+  name: "material"
+  palette:
+  - media: "(prefers-color-scheme)"
+    toggle:
+      icon: material/brightness-auto
+      name: Switch to light mode
+  - media: "(prefers-color-scheme: light)"
+    scheme: default
+    primary: teal
+    accent: purple
+    toggle:
+      icon: material/weather-sunny
+      name: Switch to dark mode
+  - media: "(prefers-color-scheme: dark)"
+    scheme: slate
+    primary: black
+    accent: lime
+    toggle:
+      icon: material/weather-night
+      name: Switch to system preference
+  features:
+    - navigation.expand
+    - content.code.copy
+
+plugins:
+- search:
+- mkdocstrings:
+    handlers:
+      python: 
+        paths: []
+        options:
+          docstring_style: numpy
+          members_order: source
+          filters: ["!^_"]
+          docstring_section_style: table
+
+nav:
+  - Introduction: index.md
+  - Code:
+    - main.py: main.md
+    - validation.py: validation.md
+    - bgs_rules.py: bgs_rules.md
+    - routes.py: routes.md
+    - conversion.py: conversion.md
+    - checkers.py: checkers.md
+    - errors.py: errors.md
