@@ -93,6 +93,20 @@ pytest -vs test
 
 The test environment is configured so that adding `--pdb` to the test command will start an IPython debugger session in the event of test failure.
 
+### Updating dependencies
+
+We are using [pip-tools](https://pip-tools.readthedocs.io/en/stable/) to create a pinned list of all dependencies from the ones that we need to specify.
+
+To refresh the dependency list, update `requirements.in` and `requirements-dev.in` then run the following:
+
+```bash
+pip-compile -o requirements.txt requirements.in
+pip-compile -o requirements_dev.txt requirements_dev.in
+```
+
+The updated requirements files must be edited to remove reference to the Nexus mirror before they can then be committed.
+
+
 ### GUI Customisation
 
 To ammend the GUI HTML we recommend running via `Docker` using your own `Dockerfile` like the below to `COPY` in your own templates.
@@ -108,7 +122,7 @@ COPY content/templates /app/app/templates
 
 Containers for the application are hosted in the GitHub Container Registry
 
-Every push to `Main` branch commits builds `pyagsapi:latest`.
+Every push to `main` branch commits builds `pyagsapi:latest`.
 
 Push Tagged Releases with `^v?[0-9]+[.][0-9]+([.][0-9])?` (v* == v2.0) builds `pyagsapi:2.0` (the "v" gets dropped for the tag).
 
@@ -116,7 +130,7 @@ You can also push release candidates using the format `/^v?[0-9]+[.][0-9]+([.][0
 
 ## Example Files
 
-Files in [https://github.com/BritishGeologicalSurvey/pyagsapi/tree/main/test/files/real](https://github.com/BritishGeologicalSurvey/pyagsapi/tree/main/test/files/real) are a random collection of real AGS files which have been submitted to the BGS and are available under OGL, we have included them here as example files for testing pyagsapi.
+Files in [https://github.com/BritishGeologicalSurvey/pyagsapi/tree/main/test/files/real](https://github.com/BritishGeologicalSurvey/pyagsapi/tree/main/test/files/real) are a collection of real AGS files which have been submitted to the BGS and are available under OGL, we have included them here as example files for testing pyagsapi.
 
 ## Licence
 

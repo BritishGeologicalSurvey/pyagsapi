@@ -1,0 +1,9 @@
+ipython
+ipdb
+pytest
+flake8
+requests
+httpx
+pytest-asyncio
+requests-toolbelt
+freezegun

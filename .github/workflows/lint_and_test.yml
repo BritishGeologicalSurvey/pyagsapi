@@ -23,6 +23,12 @@ jobs:
         python-version: 3.11
         architecture: x64
 
+    - name: Ensure Nexus mirror configuration is not committed
+      run: |
+        # Grep checks for Nexus mirror in the index-url parameter,
+        # the ! negates the grep exit code, which would be 0 if URL was present
+        ! grep -E '.*index-url.*nexus.*' requirements*.txt
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
