@@ -43,29 +43,37 @@ JSON_RESPONSES = {
         'dictionary': 'Standard_dictionary_v4_1_1.ags',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
         'message': '37 error(s) found in file!',
-        'errors': {'AGS Format Rule 1': [{'desc': "Has Non-ASCII character(s) (assuming that file encoding is 'utf-8') and/or "
-                                          "a byte-order-mark (BOM).",
+        'errors': {'AGS Format Rule 1': [{'desc': "Has Non-ASCII character(s) "
+                                          "(assuming that file encoding is 'utf-8') "
+                                          "and/or a byte-order-mark (BOM).",
                                           'group': '',
                                           'line': 1},
-                                         {'desc': "Has Non-ASCII character(s) (assuming that file encoding is 'utf-8').",
+                                         {'desc': "Has Non-ASCII character(s) "
+                                          "(assuming that file encoding is 'utf-8').",
                                           'group': '',
                                           'line': 2},
-                                         {'desc': "Has Non-ASCII character(s) (assuming that file encoding is 'utf-8').",
+                                         {'desc': "Has Non-ASCII character(s) "
+                                          "(assuming that file encoding is 'utf-8').",
                                           'group': '',
                                           'line': 3},
-                                         {'desc': "Has Non-ASCII character(s) (assuming that file encoding is 'utf-8').",
+                                         {'desc': "Has Non-ASCII character(s) "
+                                          "(assuming that file encoding is 'utf-8').",
                                           'group': '',
                                           'line': 4},
-                                         {'desc': "Has Non-ASCII character(s) (assuming that file encoding is 'utf-8').",
+                                         {'desc': "Has Non-ASCII character(s) "
+                                          "(assuming that file encoding is 'utf-8').",
                                           'group': '',
                                           'line': 5},
-                                         {'desc': "Has Non-ASCII character(s) (assuming that file encoding is 'utf-8').",
+                                         {'desc': "Has Non-ASCII character(s) "
+                                          "(assuming that file encoding is 'utf-8').",
                                           'group': '',
                                           'line': 6},
-                                         {'desc': "Has Non-ASCII character(s) (assuming that file encoding is 'utf-8').",
+                                         {'desc': "Has Non-ASCII character(s) "
+                                          "(assuming that file encoding is 'utf-8').",
                                           'group': '',
                                           'line': 7},
-                                         {'desc': "Has Non-ASCII character(s) (assuming that file encoding is 'utf-8').",
+                                         {'desc': "Has Non-ASCII character(s) "
+                                          "(assuming that file encoding is 'utf-8').",
                                           'group': '',
                                           'line': 8}],
                     'AGS Format Rule 13': [{'desc': 'PROJ group not found.',
@@ -185,7 +193,8 @@ JSON_RESPONSES = {
                                 "encoding as it is the most widely used encoding compatible with Unicode. The user "
                                 "can override this default if the file encoding is different but, it is highly "
                                 "recommended that the 'utf-8' encoding be used when creating AGS4 files. (Hint: "
-                                "If not 'utf-8', then the encoding is most likely to be 'windows-1252' aka 'cp1252')"}]},
+                                "If not 'utf-8', then the encoding is most likely to be 'windows-1252' "
+                                "aka 'cp1252')"}]},
         'valid': False,
         'additional_metadata': {}
     },
@@ -212,8 +221,9 @@ JSON_RESPONSES = {
         'dictionary': 'Standard_dictionary_v4_1_1.ags',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
         'message': '95 error(s) found in file!',
-        'errors': {'AGS Format Rule 1': [{'desc': "Has Non-ASCII character(s) (assuming that file encoding is 'utf-8') and/or "
-                                          "a byte-order-mark (BOM).",
+        'errors': {'AGS Format Rule 1': [{'desc': "Has Non-ASCII character(s) "
+                                          "(assuming that file encoding is 'utf-8') "
+                                          "and/or a byte-order-mark (BOM).",
                                           'group': '',
                                           'line': 1}],
                    'AGS Format Rule 2a': [{'desc': 'Is not terminated by <CR> and '
@@ -596,8 +606,9 @@ JSON_RESPONSES = {
                                 "If not 'utf-8', then the encoding is most likely to be 'windows-1252' aka 'cp1252')"},
                                {'line': '',
                                 'group': '',
-                                'desc': 'This file seems to be encoded with a byte-order-mark (BOM). It is highly '
-                                'recommended that the file be saved without BOM encoding to avoid issues with other software.'}]},
+                                'desc': 'This file seems to be encoded with a byte-order-mark (BOM). '
+                                'It is highly recommended that the file be saved without BOM encoding '
+                                'to avoid issues with other software.'}]},
         'valid': False,
         'additional_metadata': {}
     },

@@ -19,14 +19,16 @@ AGS_FILE_DATA = {
 
 @pytest.mark.parametrize('filename, expected_rules', [
     ('example_ags.ags', set()),
-    ('random_binary.ags', {'General', 'AGS Format Rule 1', 'AGS Format Rule 2a', 'AGS Format Rule 3', 'AGS Format Rule 5',
-                           'AGS Format Rule 13', 'AGS Format Rule 14', 'AGS Format Rule 15', 'AGS Format Rule 17'}),
+    ('random_binary.ags', {'General', 'AGS Format Rule 1', 'AGS Format Rule 2a', 'AGS Format Rule 3',
+                           'AGS Format Rule 5', 'AGS Format Rule 13', 'AGS Format Rule 14', 'AGS Format Rule 15',
+                           'AGS Format Rule 17'}),
     ('nonsense.AGS', {'AGS Format Rule 2a', 'AGS Format Rule 3', 'AGS Format Rule 5', 'AGS Format Rule 13',
                       'AGS Format Rule 14', 'AGS Format Rule 15', 'AGS Format Rule 17'}),
     ('empty.ags', {'AGS Format Rule 13', 'AGS Format Rule 14', 'AGS Format Rule 15', 'AGS Format Rule 17'}),
     ('real/A3040_03.ags', {'AGS Format Rule 3'}),
     ('real/43370.ags', {'General', 'AGS Format Rule 2a', 'AGS Format Rule 1'}),
-    ('real/JohnStPrimarySchool.ags', {'AGS Format Rule 3', 'AGS Format Rule 5', 'AGS Format Rule ?', 'AGS Format Rule 4', 'AGS Format Rule 2a'}),
+    ('real/JohnStPrimarySchool.ags', {'AGS Format Rule 3', 'AGS Format Rule 5', 'AGS Format Rule ?',
+                                      'AGS Format Rule 4', 'AGS Format Rule 2a'}),
     ('real/19684.ags', {'AGS Format Rule 3'}),
     ('real/E52A4379 (2).ags', {'AGS Format Rule 3'}),
 ])

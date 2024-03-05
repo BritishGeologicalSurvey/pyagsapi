@@ -10,7 +10,7 @@ from app.validation import _prepare_response_metadata
 logger = logging.getLogger(__name__)
 
 
-def convert(filename: Path, results_dir: Path, sorting_strategy: Optional[str]=None) -> Tuple[Optional[Path], dict]:
+def convert(filename: Path, results_dir: Path, sorting_strategy: Optional[str] = None) -> Tuple[Optional[Path], dict]:
     """
     Convert filename between .ags and .xlsx.  Write output to file in
     results_dir and return path alongside job status data in dictionary."""
