@@ -4,7 +4,7 @@ JSON_RESPONSES = {
     'example_ags.ags': {
         'filename': 'example_ags.ags',
         'filesize': 4039,
-        'checkers': ['python_ags4 v0.4.1'],
+        'checkers': ['python_ags4 v0.5.0'],
         'dictionary': 'Standard_dictionary_v4_1_1.ags',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
         'message': 'All checks passed!',
@@ -15,7 +15,7 @@ JSON_RESPONSES = {
     'nonsense.AGS': {
         'filename': 'nonsense.AGS',
         'filesize': 9,
-        'checkers': ['python_ags4 v0.4.1'],
+        'checkers': ['python_ags4 v0.5.0'],
         'dictionary': 'Standard_dictionary_v4_1_1.ags',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
         'message': '7 error(s) found in file!',
@@ -39,7 +39,7 @@ JSON_RESPONSES = {
     'random_binary.ags': {
         'filename': 'random_binary.ags',
         'filesize': 1024,
-        'checkers': ['python_ags4 v0.4.1'],
+        'checkers': ['python_ags4 v0.5.0'],
         'dictionary': 'Standard_dictionary_v4_1_1.ags',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
         'message': '36 error(s) found in file!',
@@ -182,7 +182,7 @@ JSON_RESPONSES = {
     'real/CG014058_F.ags': {
         'filename': 'CG014058_F.ags',
         'filesize': 50574,
-        'checkers': ['python_ags4 v0.4.1'],
+        'checkers': ['python_ags4 v0.5.0'],
         'dictionary': 'Standard_dictionary_v4_1_1.ags',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
         'message': '1 error(s) found in file!',
@@ -198,7 +198,7 @@ JSON_RESPONSES = {
     'real/Blackburn Southern Bypass.ags': {
         'filename': 'Blackburn Southern Bypass.ags',
         'filesize': 6566,
-        'checkers': ['python_ags4 v0.4.1'],
+        'checkers': ['python_ags4 v0.5.0'],
         'dictionary': 'Standard_dictionary_v4_1_1.ags',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
         'message': '95 error(s) found in file!',
@@ -592,7 +592,7 @@ JSON_RESPONSES = {
     'real/A3040_03.ags': {
         'filename': 'A3040_03.ags',
         'filesize': 264526,
-        'checkers': ['python_ags4 v0.4.1'],
+        'checkers': ['python_ags4 v0.5.0'],
         'dictionary': 'Standard_dictionary_v4_1_1.ags',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
         'message': '1 error(s) found in file!',
@@ -625,7 +625,7 @@ BROKEN_JSON_RESPONSES = [
     {
         'filename': 'nonsense.AGS',
         'filesize': 9,
-        'checkers': ['python_ags4 v0.4.1'],
+        'checkers': ['python_ags4 v0.5.0'],
         'dictionary': 'Standard_dictionary_v4_1_1.ags',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
         'message': '7 error(s) found in file!',
@@ -640,7 +640,7 @@ BROKEN_JSON_RESPONSES = [
     {
         'filename': 'nonsense.AGS',
         'filesize': 9,
-        'checkers': ['python_ags4 v0.4.1'],
+        'checkers': ['python_ags4 v0.5.0'],
         'dictionary': 'Standard_dictionary_v4_1_1.ags',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
         'message': '7 error(s) found in file!',

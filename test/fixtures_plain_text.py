@@ -7,7 +7,7 @@ example_ags.ags: All checks passed!
 # Metadata
 
 File size: 4039 bytes
-Checkers: ['python_ags4 v0.4.1']
+Checkers: ['python_ags4 v0.5.0']
 Dictionary: Standard_dictionary_v4_1_1.ags
 Time: 2021-08-23 14:25:43+00:00
 
@@ -21,7 +21,7 @@ nonsense.AGS: 7 error(s) found in file!
 # Metadata
 
 File size: 9 bytes
-Checkers: ['python_ags4 v0.4.1']
+Checkers: ['python_ags4 v0.5.0']
 Dictionary: Standard_dictionary_v4_1_1.ags
 Time: 2021-08-23 14:25:43+00:00
 
@@ -65,7 +65,7 @@ random_binary.ags: 36 error(s) found in file!
 # Metadata
 
 File size: 1024 bytes
-Checkers: ['python_ags4 v0.4.1']
+Checkers: ['python_ags4 v0.5.0']
 Dictionary: Standard_dictionary_v4_1_1.ags
 Time: 2021-08-23 14:25:43+00:00
 
@@ -141,7 +141,7 @@ Blackburn Southern Bypass.ags: 95 error(s) found in file!
 # Metadata
 
 File size: 6566 bytes
-Checkers: ['python_ags4 v0.4.1']
+Checkers: ['python_ags4 v0.5.0']
 Dictionary: Standard_dictionary_v4_1_1.ags
 Time: 2021-08-23 14:25:43+00:00
 
