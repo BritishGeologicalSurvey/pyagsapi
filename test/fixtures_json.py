@@ -42,7 +42,7 @@ JSON_RESPONSES = {
         'checkers': ['python_ags4 v0.5.0'],
         'dictionary': 'Standard_dictionary_v4_1_1.ags',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
-        'message': '36 error(s) found in file!',
+        'message': '37 error(s) found in file!',
         'errors': {'AGS Format Rule 1': [{'desc': "Has Non-ASCII character(s) (assuming that file encoding is 'utf-8') and/or "
                                           "a byte-order-mark (BOM).",
                                           'group': '',
@@ -175,7 +175,17 @@ JSON_RESPONSES = {
                                           {'desc': 'Contains fields that are not '
                                                    'enclosed in double quotes.',
                                            'group': '',
-                                           'line': 8}]},
+                                           'line': 8}],
+                   'General': [{'line': '',
+                                'group': '',
+                                'desc': "AGS4 Rule 1 is interpreted as allowing both standard ASCII characters "
+                                "(Unicode code points 0-127) and extended ASCII characters (Unicode code points "
+                                "160-255). Please beware that extended ASCII characters differ based on the "
+                                "encoding used when the file was created. The validator defaults to 'utf-8' "
+                                "encoding as it is the most widely used encoding compatible with Unicode. The user "
+                                "can override this default if the file encoding is different but, it is highly "
+                                "recommended that the 'utf-8' encoding be used when creating AGS4 files. (Hint: "
+                                "If not 'utf-8', then the encoding is most likely to be 'windows-1252' aka 'cp1252')"}]},
         'valid': False,
         'additional_metadata': {}
     },
