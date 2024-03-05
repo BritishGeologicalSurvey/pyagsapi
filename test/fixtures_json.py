@@ -584,11 +584,6 @@ JSON_RESPONSES = {
                                           'enclosed in double quotes.',
                                           'group': '',
                                           'line': 1}],
-                   'AGS Format Rule 7': [{'desc': 'Headings not in order starting '
-                                          'from LOCA_CHKG. Expected order: '
-                                          '...LOCA_ORID|LOCA_ORJO|LOCA_ORCO|LOCA_CHKG|LOCA_APPG|LOCA_PDEP',
-                                          'group': 'LOCA',
-                                          'line': 86}],
                    'General': [{'line': '',
                                 'group': '',
                                 'desc': "AGS4 Rule 1 is interpreted as allowing both standard ASCII characters "
