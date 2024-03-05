@@ -261,6 +261,9 @@ async def convert(background_tasks: BackgroundTasks,
     if not files[0].filename:
         raise InvalidPayloadError(request)
     RESULTS = 'results'
+    sorting_strategy = None
+    if sort_tables:
+        sorting_strategy = 'alphabetical'
     tmp_dir = Path(tempfile.mkdtemp())
     results_dir = tmp_dir / RESULTS
     results_dir.mkdir()
@@ -271,7 +274,7 @@ async def convert(background_tasks: BackgroundTasks,
             contents = await file.read()
             local_file = tmp_dir / file.filename
             local_file.write_bytes(contents)
-            converted, result = conversion.convert(local_file, results_dir, sort_tables=sort_tables)
+            converted, result = conversion.convert(local_file, results_dir, sorting_strategy=sorting_strategy)
             log = validation.to_plain_text(result)
             f.write(log)
             f.write('\n' + '=' * 80 + '\n')
