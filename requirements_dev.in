@@ -1,6 +1,6 @@
 ipython
 ipdb
-pytest
+pytest==8.0.2  # 8.1.0 contains breaking changes
 flake8
 requests
 httpx
