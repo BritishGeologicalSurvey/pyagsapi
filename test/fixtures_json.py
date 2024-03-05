@@ -3,7 +3,7 @@ import datetime as dt
 JSON_RESPONSES = {
     'example_ags.ags': {
         'filename': 'example_ags.ags',
-        'filesize': 4039,
+        'filesize': 4105,
         'checkers': ['python_ags4 v0.5.0'],
         'dictionary': 'Standard_dictionary_v4_1_1.ags',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
