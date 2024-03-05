@@ -579,13 +579,20 @@ JSON_RESPONSES = {
                                           '...LOCA_ORID|LOCA_ORJO|LOCA_ORCO|LOCA_CHKG|LOCA_APPG|LOCA_PDEP',
                                           'group': 'LOCA',
                                           'line': 86}],
-                   'General': [{'desc': 'This file seems to be encoded with a '
-                                'byte-order-mark (BOM). It is highly '
-                                'recommended that the file be saved without '
-                                'BOM encoding to avoid issues with other '
-                                'sofware.',
+                   'General': [{'line': '',
                                 'group': '',
-                                'line': ''}]},
+                                'desc': "AGS4 Rule 1 is interpreted as allowing both standard ASCII characters "
+                                "(Unicode code points 0-127) and extended ASCII characters (Unicode code points "
+                                "160-255). Please beware that extended ASCII characters differ based on the "
+                                "encoding used when the file was created. The validator defaults to 'utf-8' "
+                                "encoding as it is the most widely used encoding compatible with Unicode. The user "
+                                "can override this default if the file encoding is different but, it is highly "
+                                "recommended that the 'utf-8' encoding be used when creating AGS4 files. (Hint: "
+                                "If not 'utf-8', then the encoding is most likely to be 'windows-1252' aka 'cp1252')"},
+                               {'line': '',
+                                'group': '',
+                                'desc': 'This file seems to be encoded with a byte-order-mark (BOM). It is highly '
+                                'recommended that the file be saved without BOM encoding to avoid issues with other software.'}]},
         'valid': False,
         'additional_metadata': {}
     },
