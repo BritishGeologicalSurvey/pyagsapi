@@ -6,7 +6,7 @@ from pathlib import Path
 from geojson_pydantic import FeatureCollection
 import pytest
 
-from app.borehole_map import extract_geojson
+from app.borehole_map import extract_geojson, concantenate_feature_collections
 
 TEST_FILE_DIR = Path(__file__).parent.parent / 'files'
 
@@ -49,6 +49,29 @@ def test_extract_geojson_bad_files(ags_filepath, expected_error):
     # Act and assert
     with pytest.raises(ValueError, match=expected_error):
         extract_geojson(ags_filepath)
+
+
+def test_concatenate_feature_collections():
+    # Arrange
+    ashfield = extract_geojson(TEST_FILE_DIR / 'real' /
+                               'Ashfield Area C Development.ags')
+    servern = extract_geojson(TEST_FILE_DIR / 'real' /
+                              'Mount Severn- Environment Agency.ags')
+    wells_relief = extract_geojson(TEST_FILE_DIR / 'real' /
+                                   'wells relief bh.ags')
+    site_list = [ashfield, servern, wells_relief]
+    total_features = sum(len(collection['features'])
+                         for collection in site_list)
+
+    # Act
+    result = concantenate_feature_collections(site_list)
+
+    # Assert
+    # Creation of FeatureCollection ensures correct fields exist
+    feature_collection = FeatureCollection(**result)
+    assert isinstance(feature_collection, FeatureCollection)
+
+    assert len(feature_collection) == total_features
 
 
 """
