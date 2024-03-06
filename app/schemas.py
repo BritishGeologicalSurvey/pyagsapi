@@ -8,13 +8,13 @@ from app.bgs_rules import BGS_RULES
 VALID_KEYS = [
     # AGS schema rules
     'AGS Format Rule 1', 'AGS Format Rule 2', 'AGS Format Rule 2a', 'AGS Format Rule 2b',
-    'AGS Format Rule 2c', 'AGS Format Rule 3', 'AGS Format Rule 4a', 'AGS Format Rule 4b',
+    'AGS Format Rule 2c', 'AGS Format Rule 3', 'AGS Format Rule 4', 'AGS Format Rule 4a', 'AGS Format Rule 4b',
     'AGS Format Rule 5', 'AGS Format Rule 6', 'AGS Format Rule 7', 'AGS Format Rule 8',
     'AGS Format Rule 9', 'AGS Format Rule 10a', 'AGS Format Rule 10b', 'AGS Format Rule 10c',
     'AGS Format Rule 11a', 'AGS Format Rule 11b', 'AGS Format Rule 11c', 'AGS Format Rule 12',
     'AGS Format Rule 13', 'AGS Format Rule 14', 'AGS Format Rule 15', 'AGS Format Rule 16',
     'AGS Format Rule 17', 'AGS Format Rule 18', 'AGS Format Rule 19', 'AGS Format Rule 19a',
-    'AGS Format Rule 19b', 'AGS Format Rule 20', 'General',
+    'AGS Format Rule 19b', 'AGS Format Rule 20', 'AGS Format Rule ?', 'General',
     # Warnings and FYIs
     'Warning (Related to Rule 16)', 'FYI (Related to Rule 1)',
     # Errors
