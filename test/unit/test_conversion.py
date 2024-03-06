@@ -30,8 +30,8 @@ def test_convert(tmp_path, filename, expected):
     assert re.search(expected_message, response['message'])
 
 
-@pytest.mark.parametrize('sort_tables', [True, False, None])
-def test_convert_sort_tables(tmp_path, sort_tables):
+@pytest.mark.parametrize('sorting_strategy', ['alphabetical', None])
+def test_convert_sort_tables(tmp_path, sorting_strategy):
     # Arrange
     filename = Path(__file__).parent.parent / 'files' / 'example_ags.ags'
     tables, headings = AGS4.AGS4_to_dataframe(filename)
@@ -41,8 +41,8 @@ def test_convert_sort_tables(tmp_path, sort_tables):
         results_dir.mkdir()
 
     # Act
-    if sort_tables is not None:
-        converted_file, response = convert(filename, results_dir, sort_tables=sort_tables)
+    if sorting_strategy is not None:
+        converted_file, response = convert(filename, results_dir, sorting_strategy=sorting_strategy)
     else:
         converted_file, response = convert(filename, results_dir)
 
@@ -51,7 +51,7 @@ def test_convert_sort_tables(tmp_path, sort_tables):
     assert response['filename'] == filename.name
 
     xl = pd.ExcelFile(converted_file)
-    if sort_tables:
+    if sorting_strategy == 'alphabetical':
         assert xl.sheet_names == sorted(groups)
     else:
         assert xl.sheet_names == groups

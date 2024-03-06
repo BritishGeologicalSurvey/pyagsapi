@@ -47,6 +47,9 @@ def check_ags(filename: Path, standard_AGS4_dictionary: Optional[str] = None) ->
         errors = {'File read error': [{'line': '-', 'group': '', 'desc': description}]}
         dictionary = ''
 
+    # Discard unecessary summary from errors dictionary
+    errors.pop('Summary of data', None)
+
     return dict(checker=f'python_ags4 v{python_ags4.__version__}',
                 errors=errors, dictionary=dictionary)
 

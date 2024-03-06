@@ -6,8 +6,8 @@ example_ags.ags: All checks passed!
 
 # Metadata
 
-File size: 4039 bytes
-Checkers: ['python_ags4 v0.4.1']
+File size: 4105 bytes
+Checkers: ['python_ags4 v0.5.0']
 Dictionary: Standard_dictionary_v4_1_1.ags
 Time: 2021-08-23 14:25:43+00:00
 
@@ -21,7 +21,7 @@ nonsense.AGS: 7 error(s) found in file!
 # Metadata
 
 File size: 9 bytes
-Checkers: ['python_ags4 v0.4.1']
+Checkers: ['python_ags4 v0.5.0']
 Dictionary: Standard_dictionary_v4_1_1.ags
 Time: 2021-08-23 14:25:43+00:00
 
@@ -42,30 +42,30 @@ Line: 1 - Contains fields that are not enclosed in double quotes.
 
 ## AGS Format Rule 13
 
-Group: PROJ - PROJ table not found.
+Group: PROJ - PROJ group not found.
 
 ## AGS Format Rule 14
 
-Group: TRAN - TRAN table not found.
+Group: TRAN - TRAN group not found.
 
 ## AGS Format Rule 15
 
-Group: UNIT - UNIT table not found.
+Group: UNIT - UNIT group not found.
 
 ## AGS Format Rule 17
 
-Group: TYPE - TYPE table not found.
+Group: TYPE - TYPE group not found.
 
 ================================================================================
 """,
     'random_binary.ags': """
 ================================================================================
-random_binary.ags: 36 error(s) found in file!
+random_binary.ags: 37 error(s) found in file!
 
 # Metadata
 
 File size: 1024 bytes
-Checkers: ['python_ags4 v0.4.1']
+Checkers: ['python_ags4 v0.5.0']
 Dictionary: Standard_dictionary_v4_1_1.ags
 Time: 2021-08-23 14:25:43+00:00
 
@@ -74,30 +74,30 @@ Time: 2021-08-23 14:25:43+00:00
 
 ## AGS Format Rule 1
 
-Line: 1 - Has Non-ASCII character(s) and/or a byte-order-mark (BOM).
-Line: 2 - Has Non-ASCII character(s).
-Line: 3 - Has Non-ASCII character(s).
-Line: 4 - Has Non-ASCII character(s).
-Line: 5 - Has Non-ASCII character(s).
-Line: 6 - Has Non-ASCII character(s).
-Line: 7 - Has Non-ASCII character(s).
-Line: 8 - Has Non-ASCII character(s).
+Line: 1 - Has Non-ASCII character(s) (assuming that file encoding is 'utf-8') and/or a byte-order-mark (BOM).
+Line: 2 - Has Non-ASCII character(s) (assuming that file encoding is 'utf-8').
+Line: 3 - Has Non-ASCII character(s) (assuming that file encoding is 'utf-8').
+Line: 4 - Has Non-ASCII character(s) (assuming that file encoding is 'utf-8').
+Line: 5 - Has Non-ASCII character(s) (assuming that file encoding is 'utf-8').
+Line: 6 - Has Non-ASCII character(s) (assuming that file encoding is 'utf-8').
+Line: 7 - Has Non-ASCII character(s) (assuming that file encoding is 'utf-8').
+Line: 8 - Has Non-ASCII character(s) (assuming that file encoding is 'utf-8').
 
 ## AGS Format Rule 13
 
-Group: PROJ - PROJ table not found.
+Group: PROJ - PROJ group not found.
 
 ## AGS Format Rule 14
 
-Group: TRAN - TRAN table not found.
+Group: TRAN - TRAN group not found.
 
 ## AGS Format Rule 15
 
-Group: UNIT - UNIT table not found.
+Group: UNIT - UNIT group not found.
 
 ## AGS Format Rule 17
 
-Group: TYPE - TYPE table not found.
+Group: TYPE - TYPE group not found.
 
 ## AGS Format Rule 2a
 
@@ -132,6 +132,10 @@ Line: 6 - Contains fields that are not enclosed in double quotes.
 Line: 7 - Contains fields that are not enclosed in double quotes.
 Line: 8 - Contains fields that are not enclosed in double quotes.
 
+## General
+
+Line:  - AGS4 Rule 1 is interpreted as allowing both standard ASCII characters (Unicode code points 0-127) and extended ASCII characters (Unicode code points 160-255). Please beware that extended ASCII characters differ based on the encoding used when the file was created. The validator defaults to 'utf-8' encoding as it is the most widely used encoding compatible with Unicode. The user can override this default if the file encoding is different but, it is highly recommended that the 'utf-8' encoding be used when creating AGS4 files. (Hint: If not 'utf-8', then the encoding is most likely to be 'windows-1252' aka 'cp1252')
+
 ================================================================================
 """,
     'real/Blackburn Southern Bypass.ags': """
@@ -141,7 +145,7 @@ Blackburn Southern Bypass.ags: 95 error(s) found in file!
 # Metadata
 
 File size: 6566 bytes
-Checkers: ['python_ags4 v0.4.1']
+Checkers: ['python_ags4 v0.5.0']
 Dictionary: Standard_dictionary_v4_1_1.ags
 Time: 2021-08-23 14:25:43+00:00
 
@@ -150,7 +154,7 @@ Time: 2021-08-23 14:25:43+00:00
 
 ## AGS Format Rule 1
 
-Line: 1 - Has Non-ASCII character(s) and/or a byte-order-mark (BOM).
+Line: 1 - Has Non-ASCII character(s) (assuming that file encoding is 'utf-8') and/or a byte-order-mark (BOM).
 
 ## AGS Format Rule 2a
 
@@ -253,13 +257,10 @@ Line: 1 - Does not start with a valid data descriptor.
 
 Line: 1 - Contains fields that are not enclosed in double quotes.
 
-## AGS Format Rule 7
-
-Line: 86 - Headings not in order starting from LOCA_CHKG. Expected order: ...LOCA_ORID|LOCA_ORJO|LOCA_ORCO|LOCA_CHKG|LOCA_APPG|LOCA_PDEP
-
 ## General
 
-Line:  - This file seems to be encoded with a byte-order-mark (BOM). It is highly recommended that the file be saved without BOM encoding to avoid issues with other sofware.
+Line:  - AGS4 Rule 1 is interpreted as allowing both standard ASCII characters (Unicode code points 0-127) and extended ASCII characters (Unicode code points 160-255). Please beware that extended ASCII characters differ based on the encoding used when the file was created. The validator defaults to 'utf-8' encoding as it is the most widely used encoding compatible with Unicode. The user can override this default if the file encoding is different but, it is highly recommended that the 'utf-8' encoding be used when creating AGS4 files. (Hint: If not 'utf-8', then the encoding is most likely to be 'windows-1252' aka 'cp1252')
+Line:  - This file seems to be encoded with a byte-order-mark (BOM). It is highly recommended that the file be saved without BOM encoding to avoid issues with other software.
 
 ================================================================================
 """

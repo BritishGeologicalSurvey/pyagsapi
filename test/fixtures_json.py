@@ -3,8 +3,8 @@ import datetime as dt
 JSON_RESPONSES = {
     'example_ags.ags': {
         'filename': 'example_ags.ags',
-        'filesize': 4039,
-        'checkers': ['python_ags4 v0.4.1'],
+        'filesize': 4105,
+        'checkers': ['python_ags4 v0.5.0'],
         'dictionary': 'Standard_dictionary_v4_1_1.ags',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
         'message': 'All checks passed!',
@@ -15,7 +15,7 @@ JSON_RESPONSES = {
     'nonsense.AGS': {
         'filename': 'nonsense.AGS',
         'filesize': 9,
-        'checkers': ['python_ags4 v0.4.1'],
+        'checkers': ['python_ags4 v0.5.0'],
         'dictionary': 'Standard_dictionary_v4_1_1.ags',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
         'message': '7 error(s) found in file!',
@@ -29,55 +29,63 @@ JSON_RESPONSES = {
             'AGS Format Rule 5': [{'line': 1,
                                    'group': '',
                                    'desc': 'Contains fields that are not enclosed in double quotes.'}],
-            'AGS Format Rule 13': [{'line': '-', 'group': 'PROJ', 'desc': 'PROJ table not found.'}],
-            'AGS Format Rule 14': [{'line': '-', 'group': 'TRAN', 'desc': 'TRAN table not found.'}],
-            'AGS Format Rule 15': [{'line': '-', 'group': 'UNIT', 'desc': 'UNIT table not found.'}],
-            'AGS Format Rule 17': [{'line': '-', 'group': 'TYPE', 'desc': 'TYPE table not found.'}]},
+            'AGS Format Rule 13': [{'line': '-', 'group': 'PROJ', 'desc': 'PROJ group not found.'}],
+            'AGS Format Rule 14': [{'line': '-', 'group': 'TRAN', 'desc': 'TRAN group not found.'}],
+            'AGS Format Rule 15': [{'line': '-', 'group': 'UNIT', 'desc': 'UNIT group not found.'}],
+            'AGS Format Rule 17': [{'line': '-', 'group': 'TYPE', 'desc': 'TYPE group not found.'}]},
         'valid': False,
         'additional_metadata': {}
     },
     'random_binary.ags': {
         'filename': 'random_binary.ags',
         'filesize': 1024,
-        'checkers': ['python_ags4 v0.4.1'],
+        'checkers': ['python_ags4 v0.5.0'],
         'dictionary': 'Standard_dictionary_v4_1_1.ags',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
-        'message': '36 error(s) found in file!',
-        'errors': {'AGS Format Rule 1': [{'desc': 'Has Non-ASCII character(s) and/or '
-                                          'a byte-order-mark (BOM).',
+        'message': '37 error(s) found in file!',
+        'errors': {'AGS Format Rule 1': [{'desc': "Has Non-ASCII character(s) "
+                                          "(assuming that file encoding is 'utf-8') "
+                                          "and/or a byte-order-mark (BOM).",
                                           'group': '',
                                           'line': 1},
-                                         {'desc': 'Has Non-ASCII character(s).',
+                                         {'desc': "Has Non-ASCII character(s) "
+                                          "(assuming that file encoding is 'utf-8').",
                                           'group': '',
                                           'line': 2},
-                                         {'desc': 'Has Non-ASCII character(s).',
+                                         {'desc': "Has Non-ASCII character(s) "
+                                          "(assuming that file encoding is 'utf-8').",
                                           'group': '',
                                           'line': 3},
-                                         {'desc': 'Has Non-ASCII character(s).',
+                                         {'desc': "Has Non-ASCII character(s) "
+                                          "(assuming that file encoding is 'utf-8').",
                                           'group': '',
                                           'line': 4},
-                                         {'desc': 'Has Non-ASCII character(s).',
+                                         {'desc': "Has Non-ASCII character(s) "
+                                          "(assuming that file encoding is 'utf-8').",
                                           'group': '',
                                           'line': 5},
-                                         {'desc': 'Has Non-ASCII character(s).',
+                                         {'desc': "Has Non-ASCII character(s) "
+                                          "(assuming that file encoding is 'utf-8').",
                                           'group': '',
                                           'line': 6},
-                                         {'desc': 'Has Non-ASCII character(s).',
+                                         {'desc': "Has Non-ASCII character(s) "
+                                          "(assuming that file encoding is 'utf-8').",
                                           'group': '',
                                           'line': 7},
-                                         {'desc': 'Has Non-ASCII character(s).',
+                                         {'desc': "Has Non-ASCII character(s) "
+                                          "(assuming that file encoding is 'utf-8').",
                                           'group': '',
                                           'line': 8}],
-                    'AGS Format Rule 13': [{'desc': 'PROJ table not found.',
+                    'AGS Format Rule 13': [{'desc': 'PROJ group not found.',
                                             'group': 'PROJ',
                                             'line': '-'}],
-                    'AGS Format Rule 14': [{'desc': 'TRAN table not found.',
+                    'AGS Format Rule 14': [{'desc': 'TRAN group not found.',
                                             'group': 'TRAN',
                                             'line': '-'}],
-                    'AGS Format Rule 15': [{'desc': 'UNIT table not found.',
+                    'AGS Format Rule 15': [{'desc': 'UNIT group not found.',
                                             'group': 'UNIT',
                                             'line': '-'}],
-                    'AGS Format Rule 17': [{'desc': 'TYPE table not found.',
+                    'AGS Format Rule 17': [{'desc': 'TYPE group not found.',
                                             'group': 'TYPE',
                                             'line': '-'}],
                     'AGS Format Rule 2a': [{'desc': 'Is not terminated by <CR> and '
@@ -175,14 +183,25 @@ JSON_RESPONSES = {
                                           {'desc': 'Contains fields that are not '
                                                    'enclosed in double quotes.',
                                            'group': '',
-                                           'line': 8}]},
+                                           'line': 8}],
+                   'General': [{'line': '',
+                                'group': '',
+                                'desc': "AGS4 Rule 1 is interpreted as allowing both standard ASCII characters "
+                                "(Unicode code points 0-127) and extended ASCII characters (Unicode code points "
+                                "160-255). Please beware that extended ASCII characters differ based on the "
+                                "encoding used when the file was created. The validator defaults to 'utf-8' "
+                                "encoding as it is the most widely used encoding compatible with Unicode. The user "
+                                "can override this default if the file encoding is different but, it is highly "
+                                "recommended that the 'utf-8' encoding be used when creating AGS4 files. (Hint: "
+                                "If not 'utf-8', then the encoding is most likely to be 'windows-1252' "
+                                "aka 'cp1252')"}]},
         'valid': False,
         'additional_metadata': {}
     },
     'real/CG014058_F.ags': {
         'filename': 'CG014058_F.ags',
         'filesize': 50574,
-        'checkers': ['python_ags4 v0.4.1'],
+        'checkers': ['python_ags4 v0.5.0'],
         'dictionary': 'Standard_dictionary_v4_1_1.ags',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
         'message': '1 error(s) found in file!',
@@ -198,12 +217,13 @@ JSON_RESPONSES = {
     'real/Blackburn Southern Bypass.ags': {
         'filename': 'Blackburn Southern Bypass.ags',
         'filesize': 6566,
-        'checkers': ['python_ags4 v0.4.1'],
+        'checkers': ['python_ags4 v0.5.0'],
         'dictionary': 'Standard_dictionary_v4_1_1.ags',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
         'message': '95 error(s) found in file!',
-        'errors': {'AGS Format Rule 1': [{'desc': 'Has Non-ASCII character(s) and/or '
-                                          'a byte-order-mark (BOM).',
+        'errors': {'AGS Format Rule 1': [{'desc': "Has Non-ASCII character(s) "
+                                          "(assuming that file encoding is 'utf-8') "
+                                          "and/or a byte-order-mark (BOM).",
                                           'group': '',
                                           'line': 1}],
                    'AGS Format Rule 2a': [{'desc': 'Is not terminated by <CR> and '
@@ -574,25 +594,28 @@ JSON_RESPONSES = {
                                           'enclosed in double quotes.',
                                           'group': '',
                                           'line': 1}],
-                   'AGS Format Rule 7': [{'desc': 'Headings not in order starting '
-                                          'from LOCA_CHKG. Expected order: '
-                                          '...LOCA_ORID|LOCA_ORJO|LOCA_ORCO|LOCA_CHKG|LOCA_APPG|LOCA_PDEP',
-                                          'group': 'LOCA',
-                                          'line': 86}],
-                   'General': [{'desc': 'This file seems to be encoded with a '
-                                'byte-order-mark (BOM). It is highly '
-                                'recommended that the file be saved without '
-                                'BOM encoding to avoid issues with other '
-                                'sofware.',
+                   'General': [{'line': '',
                                 'group': '',
-                                'line': ''}]},
+                                'desc': "AGS4 Rule 1 is interpreted as allowing both standard ASCII characters "
+                                "(Unicode code points 0-127) and extended ASCII characters (Unicode code points "
+                                "160-255). Please beware that extended ASCII characters differ based on the "
+                                "encoding used when the file was created. The validator defaults to 'utf-8' "
+                                "encoding as it is the most widely used encoding compatible with Unicode. The user "
+                                "can override this default if the file encoding is different but, it is highly "
+                                "recommended that the 'utf-8' encoding be used when creating AGS4 files. (Hint: "
+                                "If not 'utf-8', then the encoding is most likely to be 'windows-1252' aka 'cp1252')"},
+                               {'line': '',
+                                'group': '',
+                                'desc': 'This file seems to be encoded with a byte-order-mark (BOM). '
+                                'It is highly recommended that the file be saved without BOM encoding '
+                                'to avoid issues with other software.'}]},
         'valid': False,
         'additional_metadata': {}
     },
     'real/A3040_03.ags': {
         'filename': 'A3040_03.ags',
         'filesize': 264526,
-        'checkers': ['python_ags4 v0.4.1'],
+        'checkers': ['python_ags4 v0.5.0'],
         'dictionary': 'Standard_dictionary_v4_1_1.ags',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
         'message': '1 error(s) found in file!',
@@ -625,7 +648,7 @@ BROKEN_JSON_RESPONSES = [
     {
         'filename': 'nonsense.AGS',
         'filesize': 9,
-        'checkers': ['python_ags4 v0.4.1'],
+        'checkers': ['python_ags4 v0.5.0'],
         'dictionary': 'Standard_dictionary_v4_1_1.ags',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
         'message': '7 error(s) found in file!',
@@ -640,7 +663,7 @@ BROKEN_JSON_RESPONSES = [
     {
         'filename': 'nonsense.AGS',
         'filesize': 9,
-        'checkers': ['python_ags4 v0.4.1'],
+        'checkers': ['python_ags4 v0.5.0'],
         'dictionary': 'Standard_dictionary_v4_1_1.ags',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
         'message': '7 error(s) found in file!',
