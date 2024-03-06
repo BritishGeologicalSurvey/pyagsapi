@@ -12,11 +12,11 @@ BAD_FILE_DATA = [
     ('empty.ags', ('No valid AGS4 data found in input file.', 0)),
     ('dummy.xlsx', ("ERROR: Conversion failed", 4787)),
     ('random_binary.ags', ('No valid AGS4 data found in input file.', 1024)),
-    ('real/A3040_03.ags', ("ERROR: File contains duplicate headers", 264526)),
+    ('real/AGS3/A3040_03.ags', ("ERROR: File contains duplicate headers", 264526)),
     ('extension_is.bad', ("ERROR: extension_is.bad is not .ags or .xlsx format", 0)),
     ('real/JohnStPrimarySchool.ags', ("Line 27 does not have the same number of entries "
                                       "as the HEADING row in GEOL.", 12430)),
-    ('real/19684.ags', ("No valid AGS4 data found in input file.", 12542))
+    ('real/AGS3/19684.ags', ("No valid AGS4 data found in input file.", 12542))
 ]
 
 DICTIONARIES = {
