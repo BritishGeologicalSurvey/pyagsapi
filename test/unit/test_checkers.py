@@ -25,12 +25,12 @@ AGS_FILE_DATA = {
     ('nonsense.AGS', {'AGS Format Rule 2a', 'AGS Format Rule 3', 'AGS Format Rule 5', 'AGS Format Rule 13',
                       'AGS Format Rule 14', 'AGS Format Rule 15', 'AGS Format Rule 17'}),
     ('empty.ags', {'AGS Format Rule 13', 'AGS Format Rule 14', 'AGS Format Rule 15', 'AGS Format Rule 17'}),
-    ('real/A3040_03.ags', {'AGS Format Rule 3'}),
+    ('real/AGS3/A3040_03.ags', {'AGS Format Rule 3'}),
     ('real/43370.ags', {'General', 'AGS Format Rule 2a', 'AGS Format Rule 1'}),
     ('real/JohnStPrimarySchool.ags', {'AGS Format Rule 3', 'AGS Format Rule 5', 'AGS Format Rule ?',
                                       'AGS Format Rule 4', 'AGS Format Rule 2a'}),
-    ('real/19684.ags', {'AGS Format Rule 3'}),
-    ('real/E52A4379 (2).ags', {'AGS Format Rule 3'}),
+    ('real/AGS3/19684.ags', {'AGS Format Rule 3'}),
+    ('real/AGS3/E52A4379 (2).ags', {'AGS Format Rule 3'}),
 ])
 def test_check_ags(filename, expected_rules):
     """Check that broken rules are returned and exceptions handled correctly."""
@@ -63,7 +63,7 @@ def test_check_ags(filename, expected_rules):
      ['BGS data validation: Non-numeric coordinate types', 'BGS data validation: Spatial Referencing'], None),
     ('real/A112794-16 Glenally_Road_Factual_FINAL.ags',
      ['BGS data validation: Spatial Referencing', 'BGS data validation: LOCA within Great Britain'], None),
-    ('real/A3040_03.ags',
+    ('real/AGS3/A3040_03.ags',
      ['File read error'], 'ERROR: File contains duplicate headers'),
     ('real/43370.ags',  # File has no errors
      [], None),
