@@ -184,15 +184,10 @@ def check_loca_within_great_britain(tables: dict) -> List[dict]:
 
     # Read data into geodataframe
     try:
-        location = tables['LOCA'].set_index('LOCA_ID')
-        location['geometry'] = list(zip(location['LOCA_NATE'], location['LOCA_NATN']))
+        location = create_location_gpd(tables)
     except KeyError:
         # LOCA not present, already checked in earlier rule
         return errors
-
-    location['geometry'] = location['geometry'].apply(Point)
-    location = gpd.GeoDataFrame(location, geometry='geometry', crs='EPSG:27700')
-    location['line_no'] = range(1, len(location) + 1)
 
     inside_uk_eea_mask = location.intersects(uk_eea_outline)
     inside_gb_mask = location.intersects(gb_outline)
@@ -223,6 +218,16 @@ def check_loca_within_great_britain(tables: dict) -> List[dict]:
             })
 
     return errors
+
+
+def create_location_gpd(tables: dict[pd.DataFrame]) -> gpd.GeoDataFrame:
+    location: pd.DataFrame = tables['LOCA'].set_index('LOCA_ID')
+    location['geometry'] = list(zip(location['LOCA_NATE'], location['LOCA_NATN']))
+    location['geometry'] = location['geometry'].apply(Point)
+    location = gpd.GeoDataFrame(location, geometry='geometry', crs='EPSG:27700')
+    location['line_no'] = range(1, len(location) + 1)
+
+    return location
 
 
 def check_locx_is_not_duplicate_of_other_column(tables: dict) -> List[dict]:

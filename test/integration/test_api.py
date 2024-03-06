@@ -14,7 +14,7 @@ import pandas as pd
 from python_ags4 import AGS4
 
 from app.main import app
-from app.checkers import load_AGS4_as_numeric
+from app.checkers import load_ags4_as_numeric
 import app.routes as app_routes
 from test.fixtures import (BAD_FILE_DATA, DICTIONARIES, FROZEN_TIME,
                            GOOD_FILE_DATA)
@@ -545,7 +545,7 @@ def test_get_ags_export_single_id(client, tmp_path):
             unzipped_ags_file = tmp_path / 'test.ags'
             with open(unzipped_ags_file, 'wb') as f:
                 f.write(ags_file.read())
-            tables, _, _ = load_AGS4_as_numeric(unzipped_ags_file)
+            tables, _, _ = load_ags4_as_numeric(unzipped_ags_file)
             assert tables['PROJ']['BGS_PROJ_ID'][0] == bgs_proj_id
         # Confirm the metadata file is correct
         with ags_zip.open(ags_metadata_file_name) as metadata_file:
