@@ -31,22 +31,27 @@ def extract_geojson(filepath: Path) -> dict:
     try:
         location: gpd.GeoDataFrame = create_location_gpd(tables)
     except KeyError:
-        msg = f"LOCA group missing from {filepath}"
+        msg = f"ERROR: LOCA group missing from {filepath}"
         raise ValueError(msg)
     
     # Add project columns and drop unwanted columns
     try:
         project: pd.DataFrame = tables['PROJ']
     except KeyError:
-        msg = f"PROJ group missing from {filepath}"
+        msg = f"ERROR: PROJ group missing from {filepath}"
         raise ValueError(msg)
 
     for column in project.columns:
         if column.startswith('PROJ_'):
+            # We assume that each file contains just one project
             location[column] = project.loc[0, column]
 
-    location['PROJ_FILE_FSET'] = project.loc[0, 'FILE_FSET']
-    location.rename(columns={'FILE_FSET': 'LOCA_FILE_FSET'}, inplace=True)
+    try:
+        location['PROJ_FILE_FSET'] = project.loc[0, 'FILE_FSET']
+        location.rename(columns={'FILE_FSET': 'LOCA_FILE_FSET'}, inplace=True)
+    except KeyError:
+        logger.debug("No FILE_FSET for either/both PROJ and LOCA groups for %s",
+                     filepath)
     del location['HEADING']
 
     # Create new ID from project and location IDs
