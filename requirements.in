@@ -5,6 +5,7 @@ aiofiles
 colorlog
 geopandas
 numpy
+geojson-pydantic
 pyproj
 python-ags4==0.5.0
 requests
