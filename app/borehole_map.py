@@ -34,7 +34,7 @@ def extract_geojson(filepath: Path) -> dict:
         msg = f"LOCA group missing from {filepath}"
         raise ValueError(msg)
     
-    # Add project columns
+    # Add project columns and drop unwanted columns
     try:
         project: pd.DataFrame = tables['PROJ']
     except KeyError:
@@ -44,6 +44,10 @@ def extract_geojson(filepath: Path) -> dict:
     for column in project.columns:
         if column.startswith('PROJ_'):
             location[column] = project.loc[0, column]
+
+    location['PROJ_FILE_FSET'] = project.loc[0, 'FILE_FSET']
+    location.rename(columns={'FILE_FSET': 'LOCA_FILE_FSET'}, inplace=True)
+    del location['HEADING']
 
     # Create new ID from project and location IDs
     location.reset_index(inplace=True)

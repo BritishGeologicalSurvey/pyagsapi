@@ -25,6 +25,8 @@ def test_extract_geojson_example_ags():
     feature = feature_collection[0]
     assert feature.properties['PROJ_ID'] == '121415'
     assert feature.properties['LOCA_ID'] == '327-16A'
+    assert 'LOCA_FILE_FSET' in feature.properties
+    assert 'PROJ_FILE_FSET' in feature.properties
     assert feature.id == '121415.327-16A'
     lon, lat = feature.geometry.coordinates
     assert -180 <= lon <= 180
