@@ -30,7 +30,7 @@
     <h2>AGS4 Schema & Data Validation</h2>
     <br>
     <h3>AGS4 Validation </h3>
-      <p>Performs validation using the <a href="https://gitlab.com/ags-data-format-wg/ags-python-library.">Official AGS Python Library</a> <strong>version 0.4.1</strong>, this implements checks of the rules as written in the <strong>AGS data format standard v4.x.</strong></p>
+      <p>Performs validation using the <a href="https://gitlab.com/ags-data-format-wg/ags-python-library.">Official AGS Python Library</a> <strong>version 0.5.0</strong>, this implements checks of the rules as written in the <strong>AGS data format standard v4.x.</strong></p>
       <p style="color:red">If you're using AGS Data Format Standard v3.x use our legacy <a href="https://webapps.bgs.ac.uk/data/ags/validation/index.cfm">AGS Validator</a></p>
     <br>
     <h3>BGS Data Validation</h3>
@@ -165,11 +165,15 @@
   <br>
   <form action="/convert/" enctype="multipart/form-data" method="post" id="convertForm">
     <fieldset>
-      <legend>Sort worksheets in .xlsx file in alphabetical order <strong>(Warning: .ags to .xlsx only. The original group order will be lost)</strong></legend>
-      <input type="radio" id="alpha" name="sort_tables" value="True">
-      <label for="alpha">True</label>
-      <input type="radio" id="default" name="sort_tables" value="False" checked>
-      <label for="default">False</label><br>
+      <legend>Sort worksheets in .xlsx file using sorting strategy<strong>(Warning: .ags to .xlsx only. The original group order will be lost)</strong></legend>
+      <input type="radio" id="dictionary" name="sort_tables" value="dictionary">
+      <label for="dictionary">Dictionary</label>
+      <input type="radio" id="alphabetical" name="sort_tables" value="alphabetical">
+      <label for="alphabetical">Alphabetical</label>
+      <input type="radio" id="hierarchical" name="sort_tables" value="hierarchical">
+      <label for="hierarchical">Hierarchical</label>
+      <input type="radio" id="default" name="sort_tables" value="Maintain Order" checked>
+      <label for="default">None (Maintain Input File Order)</label><br>
     </fieldset>
     <br>
     <fieldset>
