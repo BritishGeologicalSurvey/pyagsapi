@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 def extract_geojson(filepath: Path) -> dict:
     """
     Read an AGS4 file and extract geojson represenation of LOCA table and
-    metadata. 
+    metadata.
     """
     logger.info("Extracting geojson from  %s", filepath.name)
 
@@ -35,7 +35,7 @@ def extract_geojson(filepath: Path) -> dict:
     except KeyError:
         msg = f"ERROR: LOCA group missing from {filepath}"
         raise ValueError(msg)
-    
+
     # Add project columns and drop unwanted columns
     try:
         project: pd.DataFrame = tables['PROJ']
@@ -63,7 +63,7 @@ def extract_geojson(filepath: Path) -> dict:
 
     # Reproject to WGS84
     location = location.to_crs('EPSG:4326')
-    
+
     # Return dict representation of geojson
     return json.loads(location.to_json())
 
