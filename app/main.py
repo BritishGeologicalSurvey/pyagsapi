@@ -112,7 +112,7 @@ app.openapi = custom_openapi
 
 @app.middleware("http")
 async def log_requests(request: Request, call_next):
-    if not request.client.host.startswith('10.'):
+    if request.client and not request.client.host.startswith('10.'):
         logger = logging.getLogger('request')
         logger.info(f"called by {request.client.host}")
         req_id = shortuuid.ShortUUID().random(length=8)
@@ -122,7 +122,7 @@ async def log_requests(request: Request, call_next):
 
     response = await call_next(request)
 
-    if not request.client.host.startswith('10.'):
+    if request.client and not request.client.host.startswith('10.'):
         call_time = int((time.time() - start_time) * 1000)
         logger.info(f"Request: id: {req_id} status: {response.status_code}, time: {call_time} ms")
         logger.debug(f"Request: id: {req_id} response headers: {response.headers}")
