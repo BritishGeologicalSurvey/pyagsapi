@@ -110,7 +110,7 @@ conversion_file = File(
 )
 
 sort_tables_form = Form(
-    default=False,
+    default='default',
     title='Sort worksheets',
     description=('Sort the worksheets into alphabetical order '
                  'or leave in the order found in the AGS file. '
@@ -240,7 +240,7 @@ def prepare_validation_response(request, data):
                           " sort worksheets in .xlsx file in alphabetical order."))
 async def convert(background_tasks: BackgroundTasks,
                   files: List[UploadFile] = conversion_file,
-                  sort_tables: bool = sort_tables_form,
+                  sort_tables: str = sort_tables_form,
                   request: Request = None):
     """
     Convert files between .ags and .xlsx format. Option to sort worksheets in .xlsx file in alphabetical order.
@@ -258,12 +258,11 @@ async def convert(background_tasks: BackgroundTasks,
     :raises Exception: If the conversion fails or an unexpected error occurs.
     """
 
+    if sort_tables == 'default':
+        sort_tables = None
     if not files[0].filename:
         raise InvalidPayloadError(request)
     RESULTS = 'results'
-    sorting_strategy = None
-    if sort_tables:
-        sorting_strategy = 'alphabetical'
     tmp_dir = Path(tempfile.mkdtemp())
     results_dir = tmp_dir / RESULTS
     results_dir.mkdir()
@@ -274,7 +273,7 @@ async def convert(background_tasks: BackgroundTasks,
             contents = await file.read()
             local_file = tmp_dir / file.filename
             local_file.write_bytes(contents)
-            converted, result = conversion.convert(local_file, results_dir, sorting_strategy=sorting_strategy)
+            converted, result = conversion.convert(local_file, results_dir, sorting_strategy=sort_tables)
             log = validation.to_plain_text(result)
             f.write(log)
             f.write('\n' + '=' * 80 + '\n')

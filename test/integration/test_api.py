@@ -225,7 +225,7 @@ async def test_convert_good_files(async_client, tmp_path):
 
 
 @pytest.mark.asyncio
-@pytest.mark.parametrize('sort_tables', [True, False, None])
+@pytest.mark.parametrize('sort_tables', ['alphabetical', 'default'])
 async def test_convert_sort_tables(async_client, tmp_path, sort_tables):
     # Arrange
     fields = []
@@ -257,7 +257,7 @@ async def test_convert_sort_tables(async_client, tmp_path, sort_tables):
         assert (zipfile.Path(ags_zip) / 'example_ags.xlsx').is_file()
         with ags_zip.open('example_ags.xlsx') as xl_file:
             xl = pd.ExcelFile(xl_file)
-        if sort_tables:
+        if sort_tables == 'alphabetical':
             assert xl.sheet_names == sorted(groups)
         else:
             assert xl.sheet_names == groups
