@@ -69,7 +69,7 @@ def test_check_ags(filename, expected_rules):
      [], None),
     ('real/JohnStPrimarySchool.ags',
      ['File read error'], 'Line 27 does not have the same number of entries as the HEADING row in GEOL.'),
-    ('real/19684.ags',
+    ('real/AGS3/19684.ags',
      ['BGS data validation: Required Groups', 'BGS data validation: Required BGS Groups'], None),
     # This file crashes because it asks for user input
     # ('real/E52A4379 (2).ags', {}),
