@@ -198,7 +198,7 @@ JSON_RESPONSES = {
         'valid': False,
         'additional_metadata': {}
     },
-    'real/CG014058_F.ags': {
+    'real/AGS3/CG014058_F.ags': {
         'filename': 'CG014058_F.ags',
         'filesize': 50574,
         'checkers': ['python_ags4 v0.5.0'],
@@ -612,7 +612,7 @@ JSON_RESPONSES = {
         'valid': False,
         'additional_metadata': {}
     },
-    'real/A3040_03.ags': {
+    'real/AGS3/A3040_03.ags': {
         'filename': 'A3040_03.ags',
         'filesize': 264526,
         'checkers': ['python_ags4 v0.5.0'],
