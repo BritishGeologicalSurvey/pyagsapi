@@ -89,7 +89,8 @@ format_form = Form(
 geometry_form = Form(
     default=False,
     title='GeoJSON Option',
-    description='GeoJSON: True or False',
+    description=('Return GeoJSON if possible, otherwise return an error message '
+                 ' Option: True or False'),
 )
 
 dictionary_form = Form(
@@ -186,7 +187,7 @@ async def validate(background_tasks: BackgroundTasks,
 
     :param fmt: The format to return the validation results in. Options are "text" or "json".
     :type fmt: Format
-    :param return_geometry: Include geoJSON in validation response. Options are True or False.
+    :param return_geometry: Include GeoJSON in validation response. Options are True or False.
     :type return_geometry: bool
     :param request: The request object.
     :type request: Request
