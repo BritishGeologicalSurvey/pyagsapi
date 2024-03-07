@@ -41,14 +41,17 @@ def test_openapi_json(client):
 
 @pytest.mark.parametrize('filename, expected',
                          [item for item in JSON_RESPONSES.items()])
+@pytest.mark.parametrize('return_geometry', [False, None])
 @pytest.mark.asyncio
-async def test_validate_json(async_client, filename, expected):
+async def test_validate_json(async_client, filename, expected, return_geometry):
     # Arrange
     filename = TEST_FILE_DIR / filename
     file = ('files', (filename.name, open(filename, 'rb'), 'text/plain'))
     fields = []
     fields.append(file)
     fields.append(('checkers', 'ags'))
+    if return_geometry is not None:
+        fields.append(('return_geometry', str(return_geometry)))
     mp_encoder = MultipartEncoder(fields=fields)
 
     # Act
@@ -69,6 +72,8 @@ async def test_validate_json(async_client, filename, expected):
     assert len(body['data']) == 1
     assert set(body['data'][0]) == set(expected.keys())
     assert body['data'][0]['filename'] == expected['filename']
+    assert body['data'][0]['geojson'] == expected['geojson']
+    assert body['data'][0]['geojson_error'] == expected['geojson_error']
 
 
 @pytest.mark.parametrize('filename, expected',
@@ -81,7 +86,7 @@ async def test_geojson_response(async_client, filename, expected):
     fields = []
     fields.append(file)
     fields.append(('checkers', 'ags'))
-    fields.append(('return_geometry', 'true'))
+    fields.append(('return_geometry', str(True)))
     mp_encoder = MultipartEncoder(fields=fields)
 
     # Act
@@ -102,6 +107,8 @@ async def test_geojson_response(async_client, filename, expected):
     assert len(body['data']) == 1
     assert set(body['data'][0]) == set(expected.keys())
     assert body['data'][0]['filename'] == expected['filename']
+    assert body['data'][0]['geojson'] == expected['geojson']
+    assert body['data'][0]['geojson_error'] == expected['geojson_error']
 
 
 @pytest.mark.asyncio
