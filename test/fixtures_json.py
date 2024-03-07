@@ -755,10 +755,10 @@ GEOJSON_RESPONSES = {
         'errors': {},
         'valid': True,
         'additional_metadata': {},
-        'geojson':{
+        'geojson': {
             'features': [{
                 'geometry': {
-                    'coordinates':[-0.22760675836552394, 51.491649521233036],
+                    'coordinates': [-0.22760675836552394, 51.491649521233036],
                     'type': 'Point'},
                 'id': '121415.327-16A',
                 'properties': {
