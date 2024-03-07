@@ -15,6 +15,7 @@ import shapely
 from requests.exceptions import Timeout, ConnectionError, HTTPError
 
 from app import conversion, validation
+from app.borehole_map import extract_geojson
 from app.checkers import check_ags, check_bgs
 from app.errors import error_responses, InvalidPayloadError
 from app.schemas import ValidationResponse, BoreholeCountResponse
@@ -83,6 +84,12 @@ format_form = Form(
     default=Format.JSON,
     title='Response Format',
     description='Response format: json or text',
+)
+
+geometry_form = Form(
+    default=False,
+    title='GeoJSON Option',
+    description='GeoJSON: True or False',
 )
 
 dictionary_form = Form(
@@ -163,6 +170,7 @@ async def validate(background_tasks: BackgroundTasks,
                    std_dictionary: Dictionary = dictionary_form,
                    checkers: List[Checker] = validate_form,
                    fmt: Format = format_form,
+                   return_geometry: bool = geometry_form,
                    request: Request = None):
     """
     Validate an AGS4 file to the AGS File Format v4.x rules and the NGDC data submission requirements.
@@ -178,6 +186,8 @@ async def validate(background_tasks: BackgroundTasks,
 
     :param fmt: The format to return the validation results in. Options are "text" or "json".
     :type fmt: Format
+    :param return_geometry: Include geoJSON in validation response. Options are True or False.
+    :type return_geometry: bool
     :param request: The request object.
     :type request: Request
     :return: A response with the validation results in either plain text or JSON format.
@@ -203,6 +213,13 @@ async def validate(background_tasks: BackgroundTasks,
         local_ags_file.write_bytes(contents)
         result = validation.validate(
             local_ags_file, checkers=checkers, standard_AGS4_dictionary=dictionary)
+        if return_geometry:
+            try:
+                geojson = extract_geojson(local_ags_file)
+                result['geojson'] = geojson
+            except ValueError as ve:
+                result['geojson'] = {}
+                result['geojson_error'] = str(ve)
         data.append(result)
 
     if fmt == Format.TEXT:
