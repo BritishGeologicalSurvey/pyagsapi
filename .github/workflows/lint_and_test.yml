@@ -15,12 +15,12 @@ jobs:
 
     steps:
     - name: Checkout source repository
-      uses: actions/checkout@v3.3.0
+      uses: actions/checkout@v4
 
     - name: Setup Python
-      uses: actions/setup-python@v4.5.0
+      uses: actions/setup-python@v5
       with:
-        python-version: 3.11
+        python-version: 3.12
         architecture: x64
 
     - name: Ensure Nexus mirror configuration is not committed
