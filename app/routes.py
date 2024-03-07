@@ -69,6 +69,14 @@ class Checker(StrEnum):
     bgs = "bgs"
 
 
+# Enum for sorting strategy logic
+class SortingStrategy(StrEnum):
+    default = "default"
+    alphabetical = "alphabetical"
+    hierarchy = "hierarchy"
+    dictionary = "dictionary"
+
+
 # Enum for pdf response type logic
 class ResponseType(StrEnum):
     attachment = "attachment"
@@ -118,10 +126,10 @@ conversion_file = File(
 )
 
 sort_tables_form = Form(
-    default='default',
+    default=SortingStrategy.default,
     title='Sort worksheets',
-    description=('Sort the worksheets into alphabetical order '
-                 'or leave in the order found in the AGS file. '
+    description=('Sort the worksheets into alphabetical, hierarchical '
+                 'dictionary or default order, that found in the AGS file. '
                  'This option is ignored when converting to AGS.'),
 )
 
@@ -276,7 +284,7 @@ async def convert(background_tasks: BackgroundTasks,
     :raises Exception: If the conversion fails or an unexpected error occurs.
     """
 
-    if sort_tables == 'default':
+    if sort_tables == SortingStrategy.default:
         sort_tables = None
     if not files[0].filename:
         raise InvalidPayloadError(request)
