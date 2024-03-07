@@ -12,6 +12,91 @@ JSON_RESPONSES = {
         'valid': True,
         'additional_metadata': {}
     },
+    'example_broken_ags.ags': {
+        "filename": "example_broken_ags.ags",
+        "filesize": 4111,
+        "checkers": ["python_ags4 v0.5.0"],
+        'dictionary': 'Standard_dictionary_v4_1_1.ags',
+        'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
+        "message": "13 error(s) found in file!",
+        "errors": {
+            "AGS Format Rule 4": [
+                {
+                    "line": 31,
+                    "group": "TYPE",
+                    "desc": "Number of fields does not match the HEADING row."
+                },
+                {
+                    "line": 34,
+                    "group": "TYPE",
+                    "desc": "Number of fields does not match the HEADING row."
+                },
+                {
+                    "line": 36,
+                    "group": "TYPE",
+                    "desc": "Number of fields does not match the HEADING row."
+                }
+            ],
+            "AGS Format Rule 5": [
+                {
+                    "line": 31,
+                    "group": "",
+                    "desc": "Contains fields that are not enclosed in double quotes."
+                },
+                {
+                    "line": 32,
+                    "group": "",
+                    "desc": "Contains fields that are not enclosed in double quotes."
+                },
+                {
+                    "line": 34,
+                    "group": "",
+                    "desc": "Contains fields that are not enclosed in double quotes."
+                },
+                {
+                    "line": 35,
+                    "group": "",
+                    "desc": "Contains fields that are not enclosed in double quotes."
+                },
+                {
+                    "line": 36,
+                    "group": "",
+                    "desc": "Contains fields that are not enclosed in double quotes."
+                },
+                {
+                    "line": 37,
+                    "group": "",
+                    "desc": "Contains fields that are not enclosed in double quotes."
+                }
+            ],
+            "AGS Format Rule 3": [
+                {
+                    "line": 32,
+                    "group": "",
+                    "desc": "Does not start with a valid data descriptor."
+                },
+                {
+                    "line": 35,
+                    "group": "",
+                    "desc": "Does not start with a valid data descriptor."
+                },
+                {
+                    "line": 37,
+                    "group": "",
+                    "desc": "Does not start with a valid data descriptor."
+                }
+            ],
+            "AGS Format Rule ?": [
+                {
+                    "line": "-",
+                    "group": "",
+                    "desc": "Line 31 does not have the same number of entries as the HEADING row in TYPE."
+                }
+            ],
+        },
+        "valid": False,
+        'additional_metadata': {}
+    },
     'nonsense.AGS': {
         'filename': 'nonsense.AGS',
         'filesize': 9,

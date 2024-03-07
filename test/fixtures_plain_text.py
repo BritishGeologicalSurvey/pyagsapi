@@ -14,6 +14,47 @@ Time: 2021-08-23 14:25:43+00:00
 
 ================================================================================
 """,
+    'example_broken_ags.ags': """
+================================================================================
+example_broken_ags.ags: 13 error(s) found in file!
+
+# Metadata
+
+File size: 4111 bytes
+Checkers: ['python_ags4 v0.5.0']
+Dictionary: Standard_dictionary_v4_1_1.ags
+Time: 2021-08-23 14:25:43+00:00
+
+
+# Errors
+
+## AGS Format Rule 4
+
+Line: 31 - Number of fields does not match the HEADING row.
+Line: 34 - Number of fields does not match the HEADING row.
+Line: 36 - Number of fields does not match the HEADING row.
+
+## AGS Format Rule 5
+
+Line: 31 - Contains fields that are not enclosed in double quotes.
+Line: 32 - Contains fields that are not enclosed in double quotes.
+Line: 34 - Contains fields that are not enclosed in double quotes.
+Line: 35 - Contains fields that are not enclosed in double quotes.
+Line: 36 - Contains fields that are not enclosed in double quotes.
+Line: 37 - Contains fields that are not enclosed in double quotes.
+
+## AGS Format Rule 3
+
+Line: 32 - Does not start with a valid data descriptor.
+Line: 35 - Does not start with a valid data descriptor.
+Line: 37 - Does not start with a valid data descriptor.
+
+## AGS Format Rule ?
+
+Group:  - Line 31 does not have the same number of entries as the HEADING row in TYPE.
+
+================================================================================
+""",
     'nonsense.AGS': """
 ================================================================================
 nonsense.AGS: 7 error(s) found in file!
