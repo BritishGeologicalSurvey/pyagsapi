@@ -168,14 +168,14 @@
   <form action="/convert/" enctype="multipart/form-data" method="post" id="convertForm">
     <fieldset>
       <legend>Sort worksheets in .xlsx file using a sorting strategy <strong>(Warning: .ags to .xlsx only. The original group order will be lost)</strong></legend>
+      <input type="radio" id="default" name="sort_tables" value="default" checked="checked">
+      <label for="default">None (Maintain Input File Order)</label><br>
       <input type="radio" id="dictionary" name="sort_tables" value="dictionary">
       <label for="dictionary">File Dictionary</label>
       <input type="radio" id="alphabetical" name="sort_tables" value="alphabetical">
       <label for="alphabetical">Alphabetical</label>
       <input type="radio" id="hierarchical" name="sort_tables" value="hierarchical">
       <label for="hierarchical">AGS Standard Hierarchy</label>
-      <input type="radio" id="default" name="sort_tables" value="default" checked>
-      <label for="default">None (Maintain Input File Order)</label><br>
     </fieldset>
     <br>
     <fieldset>
