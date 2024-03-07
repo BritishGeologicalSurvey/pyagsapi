@@ -127,6 +127,8 @@
           <label for="text">Plain Text</label>
           <input type="radio" id="json" name="fmt" value="json">
           <label for="json">JSON</label><br>
+          <input type="checkbox" id="return_geometry" name="return_geometry" value="true" checked>
+          <label for="bgs_validate">If HTML show LOCA features on a map / If JSON include GeoJSON</label><br>
       </fieldset>
         <br>
       <fieldset>
@@ -165,13 +167,13 @@
   <br>
   <form action="/convert/" enctype="multipart/form-data" method="post" id="convertForm">
     <fieldset>
-      <legend>Sort worksheets in .xlsx file using sorting strategy<strong>(Warning: .ags to .xlsx only. The original group order will be lost)</strong></legend>
+      <legend>Sort worksheets in .xlsx file using a sorting strategy <strong>(Warning: .ags to .xlsx only. The original group order will be lost)</strong></legend>
       <input type="radio" id="dictionary" name="sort_tables" value="dictionary">
-      <label for="dictionary">Dictionary</label>
+      <label for="dictionary">File Dictionary</label>
       <input type="radio" id="alphabetical" name="sort_tables" value="alphabetical">
       <label for="alphabetical">Alphabetical</label>
       <input type="radio" id="hierarchical" name="sort_tables" value="hierarchical">
-      <label for="hierarchical">Hierarchical</label>
+      <label for="hierarchical">AGS Standard Hierarchy</label>
       <input type="radio" id="default" name="sort_tables" value="default" checked>
       <label for="default">None (Maintain Input File Order)</label><br>
     </fieldset>
