@@ -36,13 +36,13 @@ def test_extract_geojson_example_ags():
 
 
 @pytest.mark.parametrize('ags_filepath, expected_error',  [
-    (TEST_FILE_DIR / 'real' / 'Cowlairs park.ags',
+    (TEST_FILE_DIR / 'real' / 'AGS3' / 'Cowlairs park.ags',
      'ERROR: File contains duplicate headers'),
-    (TEST_FILE_DIR / 'real' / 'A4106.ags',
+    (TEST_FILE_DIR / 'real' / 'AGS3' / 'A4106.ags',
      'ERROR: LOCA group missing from '),
     (TEST_FILE_DIR / 'real' / 'A487 Pont ar Dyfi Improvement.ags',
      'Line 106 does not have the same number of entries as the HEADING row in GEOL.'),
-    (TEST_FILE_DIR / 'real' / 'PE131061.ags',
+    (TEST_FILE_DIR / 'real' / 'AGS3' / 'PE131061.ags',
      'ERROR: File cannot be read, please use AGS checker to confirm format errors'),
 ])
 def test_extract_geojson_bad_files(ags_filepath, expected_error):
