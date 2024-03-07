@@ -10,7 +10,9 @@ JSON_RESPONSES = {
         'message': 'All checks passed!',
         'errors': {},
         'valid': True,
-        'additional_metadata': {}
+        'additional_metadata': {},
+        'geojson': {},
+        'geojson_error': None
     },
     'example_broken_ags.ags': {
         "filename": "example_broken_ags.ags",
@@ -95,7 +97,9 @@ JSON_RESPONSES = {
             ],
         },
         "valid": False,
-        'additional_metadata': {}
+        'additional_metadata': {},
+        'geojson': {},
+        'geojson_error': None
     },
     'nonsense.AGS': {
         'filename': 'nonsense.AGS',
@@ -119,7 +123,9 @@ JSON_RESPONSES = {
             'AGS Format Rule 15': [{'line': '-', 'group': 'UNIT', 'desc': 'UNIT group not found.'}],
             'AGS Format Rule 17': [{'line': '-', 'group': 'TYPE', 'desc': 'TYPE group not found.'}]},
         'valid': False,
-        'additional_metadata': {}
+        'additional_metadata': {},
+        'geojson': {},
+        'geojson_error': None
     },
     'random_binary.ags': {
         'filename': 'random_binary.ags',
@@ -281,7 +287,9 @@ JSON_RESPONSES = {
                                 "If not 'utf-8', then the encoding is most likely to be 'windows-1252' "
                                 "aka 'cp1252')"}]},
         'valid': False,
-        'additional_metadata': {}
+        'additional_metadata': {},
+        'geojson': {},
+        'geojson_error': None
     },
     'real/AGS3/CG014058_F.ags': {
         'filename': 'CG014058_F.ags',
@@ -297,7 +305,9 @@ JSON_RESPONSES = {
                                           'group': '',
                                           'line': 1}]},
         'valid': False,
-        'additional_metadata': {}
+        'additional_metadata': {},
+        'geojson': {},
+        'geojson_error': None
     },
     'real/Blackburn Southern Bypass.ags': {
         'filename': 'Blackburn Southern Bypass.ags',
@@ -695,7 +705,9 @@ JSON_RESPONSES = {
                                 'It is highly recommended that the file be saved without BOM encoding '
                                 'to avoid issues with other software.'}]},
         'valid': False,
-        'additional_metadata': {}
+        'additional_metadata': {},
+        'geojson': {},
+        'geojson_error': None
     },
     'real/AGS3/A3040_03.ags': {
         'filename': 'A3040_03.ags',
@@ -712,7 +724,9 @@ JSON_RESPONSES = {
                                           'line': 1}]},
 
         'valid': False,
-        'additional_metadata': {}
+        'additional_metadata': {},
+        'geojson': {},
+        'geojson_error': None
     },
     'extension_is.bad': {
         'filename': 'extension_is.bad',
@@ -724,7 +738,9 @@ JSON_RESPONSES = {
         'errors': {'File read error': [
             {'line': '-', 'group': '', 'desc': 'extension_is.bad is not an .ags file'}]},
         'valid': False,
-        'additional_metadata': {}
+        'additional_metadata': {},
+        'geojson': {},
+        'geojson_error': None
     },
 }
 
@@ -743,7 +759,9 @@ BROKEN_JSON_RESPONSES = [
                                     'desc': ''}],
         },
         'valid': False,
-        'additional_metadata': {}
+        'additional_metadata': {},
+        'geojson': {},
+        'geojson_error': None
     },
     {
         'filename': 'nonsense.AGS',
@@ -758,6 +776,8 @@ BROKEN_JSON_RESPONSES = [
                                    'desc': ''}],
         },
         'valid': False,
-        'additional_metadata': {}
+        'additional_metadata': {},
+        'geojson': {},
+        'geojson_error': None
     },
 ]
