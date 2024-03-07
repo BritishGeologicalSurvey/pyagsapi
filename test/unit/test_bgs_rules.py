@@ -4,7 +4,7 @@ from pathlib import Path
 import pytest
 
 from app.bgs_rules import BGS_RULES
-from app.checkers import load_AGS4_as_numeric
+from app.checkers import load_ags4_as_numeric
 from test.fixtures import BGS_RULES_ERRORS
 
 TEST_FILE_DIR = Path(__file__).parent.parent / 'files'
@@ -16,7 +16,7 @@ def test_required_groups():
     expected = {'line': '-',
                 'group': '',
                 'desc': 'Required groups not present: ABBR, TYPE, UNIT, (LOCA or HOLE)'}
-    tables, _, _ = load_AGS4_as_numeric(filename)
+    tables, _, _ = load_ags4_as_numeric(filename)
 
     errors = BGS_RULES['BGS data validation: Required Groups'](tables)
 
@@ -29,7 +29,7 @@ def test_required_bgs_groups():
     expected = {'line': '-',
                 'group': '',
                 'desc': 'Required BGS groups not present: GEOL'}
-    tables, _, _ = load_AGS4_as_numeric(filename)
+    tables, _, _ = load_ags4_as_numeric(filename)
 
     errors = BGS_RULES['BGS data validation: Required BGS Groups'](tables)
 
@@ -42,7 +42,7 @@ def test_spatial_referencing():
     expected = {'line': '-',
                 'group': 'LOCA',
                 'desc': 'Spatial referencing system not in LOCA_GREF, LOCA_LREF or LOCA_LLZ!'}
-    tables, _, _ = load_AGS4_as_numeric(filename)
+    tables, _, _ = load_ags4_as_numeric(filename)
 
     errors = BGS_RULES['BGS data validation: Spatial Referencing'](tables)
 
@@ -60,7 +60,7 @@ def test_eastings_northings_present():
          'group': 'LOCA',
          'desc': 'LOCA_NATN contains zeros or null values'}
     ]
-    tables, _, _ = load_AGS4_as_numeric(filename)
+    tables, _, _ = load_ags4_as_numeric(filename)
 
     errors = BGS_RULES['BGS data validation: Eastings/Northings Present'](tables)
 
@@ -78,7 +78,7 @@ def test_eastings_northings_range():
          'group': 'LOCA',
          'desc': 'LOCA_NATN values outside 100,000 to 1,400,000 range'},
     ]
-    tables, _, _ = load_AGS4_as_numeric(filename)
+    tables, _, _ = load_ags4_as_numeric(filename)
 
     errors = BGS_RULES['BGS data validation: Eastings/Northings Range'](tables)
 
@@ -96,7 +96,7 @@ def test_drill_depth_present():
          'group': 'HDPH',
          'desc': 'HDPH_BASE contains zero or null values'},
     ]
-    tables, _, _ = load_AGS4_as_numeric(filename)
+    tables, _, _ = load_ags4_as_numeric(filename)
 
     errors = BGS_RULES['BGS data validation: Drill Depth Present'](tables)
 
@@ -112,7 +112,7 @@ def test_drill_depth_geol_record():
         {'line': '-', 'group': 'HDPH',
          'desc': "GEOL LOCA_IDs not in HDPH group ({'BH109'})"},
     ]
-    tables, _, _ = load_AGS4_as_numeric(filename)
+    tables, _, _ = load_ags4_as_numeric(filename)
 
     errors = BGS_RULES['BGS data validation: Drill Depth GEOL Record'](tables)
 
@@ -150,7 +150,7 @@ def test_loca_within_great_britain():
                  'group': 'LOCA',
                  'line': '6'}]
 
-    tables, _, _ = load_AGS4_as_numeric(filename)
+    tables, _, _ = load_ags4_as_numeric(filename)
 
     errors = BGS_RULES['BGS data validation: LOCA within Great Britain'](tables)
 
@@ -168,7 +168,7 @@ def test_loca_locx_is_not_duplicate_of_other_column():
          'group': 'LOCA',
          'line': '-'},
     ]
-    tables, _, _ = load_AGS4_as_numeric(filename)
+    tables, _, _ = load_ags4_as_numeric(filename)
 
     errors = BGS_RULES['BGS data validation: LOCA_LOCX is not duplicate of other column'](tables)
 
@@ -186,7 +186,7 @@ def test_loca_references_are_valid():
          'group': 'SAMP',
          'line': '-'},
     ]
-    tables, _, _ = load_AGS4_as_numeric(filename)
+    tables, _, _ = load_ags4_as_numeric(filename)
 
     errors = BGS_RULES['BGS data validation: LOCA_ID references'](tables)
 
@@ -202,7 +202,7 @@ def test_non_numeric_coord_types():
          "line": "-"}
     ]}
 
-    _, _, errors = load_AGS4_as_numeric(filename)
+    _, _, errors = load_ags4_as_numeric(filename)
 
     assert errors == expected
 
@@ -216,7 +216,7 @@ def test_non_numeric_coord_types():
 def test_sample_referential_integrity(filename, expected):
     # Arrange
     filename = TEST_FILE_DIR / 'bgs_rules' / filename
-    tables, _, _ = load_AGS4_as_numeric(filename)
+    tables, _, _ = load_ags4_as_numeric(filename)
 
     errors = BGS_RULES['BGS data validation: Sample Referencing'](tables)
 

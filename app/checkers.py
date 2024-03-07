@@ -61,26 +61,15 @@ def check_bgs(filename: Path, **kwargs) -> dict:
     """
     logger.info("Checking %s against BGS rules.", filename.name)
     errors = {}
-    error_message = None
+    load_error = None
     bgs_metadata = {}
 
-    try:
-        # Try to load and convert the file.  Coordinate type errors replace
-        # empty dictionary from outer scope
-        tables, headers, errors = load_AGS4_as_numeric(filename)
-    except UnboundLocalError:
-        # This error is thrown in response to a bug in the upstream code,
-        # which in turn is only triggered if the AGS file has duplicate
-        # headers.
-        error_message = "ERROR: File contains duplicate headers"
-    except AGS4.AGS4Error as err:
-        error_message = str(err)
-    except IndexError:
-        error_message = "ERROR: File cannot be read, please use AGS checker to confirm format errors"
+    tables, load_error, ags4_errors = load_tables_reporting_errors(filename)
 
-    if error_message:
-        errors['File read error'] = [{'line': '-', 'group': '', 'desc': error_message}]
+    if load_error:
+        errors['File read error'] = [{'line': '-', 'group': '', 'desc': load_error}]
     else:
+        errors.update(ags4_errors)
         # Get additional metadata
         bgs_metadata = generate_bgs_metadata(tables)
 
@@ -94,6 +83,28 @@ def check_bgs(filename: Path, **kwargs) -> dict:
     return dict(checker=f'bgs_rules v{bgs_rules_version}',
                 errors=errors,
                 additional_metadata=bgs_metadata)
+
+
+def load_tables_reporting_errors(filename):
+    tables = None
+    ags4_errors = {}
+
+    try:
+        # Try to load and convert the file.  Coordinate type errors replace
+        # empty dictionary from outer scope
+        tables, _, ags4_errors = load_ags4_as_numeric(filename)
+        load_error = None
+    except UnboundLocalError:
+        # This error is thrown in response to a bug in the upstream code,
+        # which in turn is only triggered if the AGS file has duplicate
+        # headers.
+        load_error = "ERROR: File contains duplicate headers"
+    except AGS4.AGS4Error as err:
+        load_error = str(err)
+    except IndexError:
+        load_error = "ERROR: File cannot be read, please use AGS checker to confirm format errors"
+
+    return tables, load_error, ags4_errors
 
 
 def generate_bgs_metadata(tables: Dict[str, pd.DataFrame]) -> dict:
@@ -119,7 +130,7 @@ def generate_bgs_metadata(tables: Dict[str, pd.DataFrame]) -> dict:
     return bgs_metadata
 
 
-def load_AGS4_as_numeric(filename: Path) -> Tuple[dict, dict, List[dict]]:
+def load_ags4_as_numeric(filename: Path) -> Tuple[dict, dict, List[dict]]:
     """Read AGS4 file and convert to numeric data types."""
     tables, headings = AGS4.AGS4_to_dataframe(filename)
 
