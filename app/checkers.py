@@ -43,11 +43,11 @@ def check_ags(filename: Path, standard_AGS4_dictionary: Optional[str] = None) ->
         errors = {'File read error': [{'line': line_no, 'group': '', 'desc': description}]}
         dictionary = ''
 
-    # Discard unecessary summary from errors dictionary
-    errors.pop('Summary of data', None)
+    # Use summary from errors dictionary is available
+    summary = errors.pop('Summary of data', [])
 
     return dict(checker=f'python_ags4 v{python_ags4.__version__}',
-                errors=errors, dictionary=dictionary)
+                errors=errors, dictionary=dictionary, summary=summary)
 
 
 def check_bgs(filename: Path, **kwargs) -> dict:
