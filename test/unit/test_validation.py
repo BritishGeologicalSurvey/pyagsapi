@@ -164,8 +164,8 @@ def test_validate_custom_dictionary_bad_file():
 
 
 @pytest.mark.parametrize('filename', [
-    'example_ags.ags', 'nonsense.AGS', 'random_binary.ags',
-    'real/Blackburn Southern Bypass.ags'])
+    'example_ags.ags', 'example_broken_ags.ags', 'nonsense.AGS',
+    'random_binary.ags', 'real/Blackburn Southern Bypass.ags'])
 def test_to_plain_text(filename):
     # Arrange
     response = JSON_RESPONSES[filename]

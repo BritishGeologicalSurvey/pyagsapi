@@ -42,10 +42,6 @@ def check_ags(filename: Path, standard_AGS4_dictionary: Optional[str] = None) ->
         description = f"UnicodeDecodeError: {err.reason}"
         errors = {'File read error': [{'line': line_no, 'group': '', 'desc': description}]}
         dictionary = ''
-    except AGS4.AGS4Error as err:
-        description = f"AGS4Error: {err}"
-        errors = {'File read error': [{'line': '-', 'group': '', 'desc': description}]}
-        dictionary = ''
 
     # Discard unecessary summary from errors dictionary
     errors.pop('Summary of data', None)
