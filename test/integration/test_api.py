@@ -18,7 +18,7 @@ from app.checkers import load_ags4_as_numeric
 import app.routes as app_routes
 from test.fixtures import (BAD_FILE_DATA, DICTIONARIES, FROZEN_TIME,
                            GOOD_FILE_DATA)
-from test.fixtures_json import JSON_RESPONSES
+from test.fixtures_json import JSON_RESPONSES, GEOJSON_RESPONSES
 from test.fixtures_plain_text import PLAIN_TEXT_RESPONSES
 
 IN_GITHUB_ACTIONS = os.getenv("GITHUB_ACTIONS") == "true"
@@ -49,6 +49,39 @@ async def test_validate_json(async_client, filename, expected):
     fields = []
     fields.append(file)
     fields.append(('checkers', 'ags'))
+    mp_encoder = MultipartEncoder(fields=fields)
+
+    # Act
+    async with async_client as ac:
+        response = await ac.post(
+            '/validate/',
+            headers={'Content-Type': mp_encoder.content_type},
+            data=mp_encoder.to_string())
+
+    # Assert
+    assert response.status_code == 200
+    assert response.headers['content-type'] == 'application/json'
+    body = response.json()
+    assert set(body.keys()) == {'msg', 'type', 'self', 'data'}
+    assert body['msg'] is not None
+    assert body['type'] == 'success'
+    assert body['self'] is not None
+    assert len(body['data']) == 1
+    assert set(body['data'][0]) == set(expected.keys())
+    assert body['data'][0]['filename'] == expected['filename']
+
+
+@pytest.mark.parametrize('filename, expected',
+                         [item for item in GEOJSON_RESPONSES.items()])
+@pytest.mark.asyncio
+async def test_geojson_response(async_client, filename, expected):
+    # Arrange
+    filename = TEST_FILE_DIR / filename
+    file = ('files', (filename.name, open(filename, 'rb'), 'text/plain'))
+    fields = []
+    fields.append(file)
+    fields.append(('checkers', 'ags'))
+    fields.append(('return_geometry', 'true'))
     mp_encoder = MultipartEncoder(fields=fields)
 
     # Act
