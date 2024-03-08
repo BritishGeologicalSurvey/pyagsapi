@@ -10,7 +10,10 @@ JSON_RESPONSES = {
         'message': 'All checks passed!',
         'errors': {},
         'valid': True,
-        'additional_metadata': {}
+        'summary': [],
+        'additional_metadata': {},
+        'geojson': {},
+        'geojson_error': None
     },
     'example_broken_ags.ags': {
         "filename": "example_broken_ags.ags",
@@ -95,7 +98,10 @@ JSON_RESPONSES = {
             ],
         },
         "valid": False,
-        'additional_metadata': {}
+        'summary': [],
+        'additional_metadata': {},
+        'geojson': {},
+        'geojson_error': None
     },
     'nonsense.AGS': {
         'filename': 'nonsense.AGS',
@@ -119,7 +125,10 @@ JSON_RESPONSES = {
             'AGS Format Rule 15': [{'line': '-', 'group': 'UNIT', 'desc': 'UNIT group not found.'}],
             'AGS Format Rule 17': [{'line': '-', 'group': 'TYPE', 'desc': 'TYPE group not found.'}]},
         'valid': False,
-        'additional_metadata': {}
+        'summary': [],
+        'additional_metadata': {},
+        'geojson': {},
+        'geojson_error': None
     },
     'random_binary.ags': {
         'filename': 'random_binary.ags',
@@ -281,7 +290,10 @@ JSON_RESPONSES = {
                                 "If not 'utf-8', then the encoding is most likely to be 'windows-1252' "
                                 "aka 'cp1252')"}]},
         'valid': False,
-        'additional_metadata': {}
+        'summary': [],
+        'additional_metadata': {},
+        'geojson': {},
+        'geojson_error': None
     },
     'real/AGS3/CG014058_F.ags': {
         'filename': 'CG014058_F.ags',
@@ -297,7 +309,10 @@ JSON_RESPONSES = {
                                           'group': '',
                                           'line': 1}]},
         'valid': False,
-        'additional_metadata': {}
+        'summary': [],
+        'additional_metadata': {},
+        'geojson': {},
+        'geojson_error': None
     },
     'real/Blackburn Southern Bypass.ags': {
         'filename': 'Blackburn Southern Bypass.ags',
@@ -695,7 +710,10 @@ JSON_RESPONSES = {
                                 'It is highly recommended that the file be saved without BOM encoding '
                                 'to avoid issues with other software.'}]},
         'valid': False,
-        'additional_metadata': {}
+        'summary': [],
+        'additional_metadata': {},
+        'geojson': {},
+        'geojson_error': None
     },
     'real/AGS3/A3040_03.ags': {
         'filename': 'A3040_03.ags',
@@ -712,7 +730,10 @@ JSON_RESPONSES = {
                                           'line': 1}]},
 
         'valid': False,
-        'additional_metadata': {}
+        'summary': [],
+        'additional_metadata': {},
+        'geojson': {},
+        'geojson_error': None
     },
     'extension_is.bad': {
         'filename': 'extension_is.bad',
@@ -724,8 +745,171 @@ JSON_RESPONSES = {
         'errors': {'File read error': [
             {'line': '-', 'group': '', 'desc': 'extension_is.bad is not an .ags file'}]},
         'valid': False,
-        'additional_metadata': {}
+        'summary': [],
+        'additional_metadata': {},
+        'geojson': {},
+        'geojson_error': None
     },
+}
+
+GEOJSON_RESPONSES = {
+    'example_ags.ags': {
+        'filename': 'example_ags.ags',
+        'filesize': 4105,
+        'checkers': ['python_ags4 v0.5.0'],
+        'dictionary': 'Standard_dictionary_v4_1_1.ags',
+        'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
+        'message': 'All checks passed!',
+        'errors': {},
+        'valid': True,
+        'summary': [],
+        'additional_metadata': {},
+        'geojson': {
+            'features': [{
+                'geometry': {
+                    'coordinates': [-0.22760675836552394, 51.491649521233036],
+                    'type': 'Point'},
+                'id': '121415.327-16A',
+                'properties': {
+                    'LOCA_ALID': '',
+                    'LOCA_CLST': '',
+                    'LOCA_CNGE': '',
+                    'LOCA_DATM': '',
+                    'LOCA_ELAT': '',
+                    'LOCA_ELON': '',
+                    'LOCA_ENDD': '',
+                    'LOCA_ETRV': None,
+                    'LOCA_FDEP': None,
+                    'LOCA_FILE_FSET': '',
+                    'LOCA_GL': None,
+                    'LOCA_GREF': '',
+                    'LOCA_ID': '327-16A',
+                    'LOCA_LAT': '',
+                    'LOCA_LETT': '',
+                    'LOCA_LLZ': '',
+                    'LOCA_LOCA': '',
+                    'LOCA_LOCM': '',
+                    'LOCA_LOCX': None,
+                    'LOCA_LOCY': None,
+                    'LOCA_LOCZ': None,
+                    'LOCA_LON': '',
+                    'LOCA_LREF': '',
+                    'LOCA_LTRV': None,
+                    'LOCA_NATE': 523145.0,
+                    'LOCA_NATN': 178456.12,
+                    'LOCA_NTRV': None,
+                    'LOCA_OFFS': None,
+                    'LOCA_PURP': '',
+                    'LOCA_REM': '',
+                    'LOCA_STAR': '',
+                    'LOCA_STAT': '',
+                    'LOCA_TERM': '',
+                    'LOCA_TRAN': '',
+                    'LOCA_TYPE': '',
+                    'LOCA_XTRL': None,
+                    'LOCA_YTRL': None,
+                    'LOCA_ZTRL': None,
+                    'PROJ_CLNT': 'ACME Enterprises',
+                    'PROJ_CONT': 'ACME Drilling Ltd',
+                    'PROJ_ENG': '',
+                    'PROJ_FILE_FSET': '',
+                    'PROJ_ID': '121415',
+                    'PROJ_LOC': 'Anytown',
+                    'PROJ_MEMO': '',
+                    'PROJ_NAME': 'ACME Gas Works Redevelopment',
+                    'line_no': 1},
+                'type': 'Feature'}],
+            'type': 'FeatureCollection'},
+        'geojson_error': None
+    },
+    'example_broken_ags.ags': {
+        "filename": "example_broken_ags.ags",
+        "filesize": 4111,
+        "checkers": ["python_ags4 v0.5.0"],
+        'dictionary': 'Standard_dictionary_v4_1_1.ags',
+        'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
+        "message": "13 error(s) found in file!",
+        "errors": {
+            "AGS Format Rule 4": [
+                {
+                    "line": 31,
+                    "group": "TYPE",
+                    "desc": "Number of fields does not match the HEADING row."
+                },
+                {
+                    "line": 34,
+                    "group": "TYPE",
+                    "desc": "Number of fields does not match the HEADING row."
+                },
+                {
+                    "line": 36,
+                    "group": "TYPE",
+                    "desc": "Number of fields does not match the HEADING row."
+                }
+            ],
+            "AGS Format Rule 5": [
+                {
+                    "line": 31,
+                    "group": "",
+                    "desc": "Contains fields that are not enclosed in double quotes."
+                },
+                {
+                    "line": 32,
+                    "group": "",
+                    "desc": "Contains fields that are not enclosed in double quotes."
+                },
+                {
+                    "line": 34,
+                    "group": "",
+                    "desc": "Contains fields that are not enclosed in double quotes."
+                },
+                {
+                    "line": 35,
+                    "group": "",
+                    "desc": "Contains fields that are not enclosed in double quotes."
+                },
+                {
+                    "line": 36,
+                    "group": "",
+                    "desc": "Contains fields that are not enclosed in double quotes."
+                },
+                {
+                    "line": 37,
+                    "group": "",
+                    "desc": "Contains fields that are not enclosed in double quotes."
+                }
+            ],
+            "AGS Format Rule 3": [
+                {
+                    "line": 32,
+                    "group": "",
+                    "desc": "Does not start with a valid data descriptor."
+                },
+                {
+                    "line": 35,
+                    "group": "",
+                    "desc": "Does not start with a valid data descriptor."
+                },
+                {
+                    "line": 37,
+                    "group": "",
+                    "desc": "Does not start with a valid data descriptor."
+                }
+            ],
+            "AGS Format Rule ?": [
+                {
+                    "line": "-",
+                    "group": "",
+                    "desc": "Line 31 does not have the same number of entries as the HEADING row in TYPE."
+                }
+            ],
+        },
+        "valid": False,
+        'summary': [],
+        'additional_metadata': {},
+        'geojson': {},
+        'geojson_error': 'Line 31 does not have the same number of entries as the HEADING row in TYPE.'
+    }
 }
 
 # These response values break the schema
@@ -743,7 +927,10 @@ BROKEN_JSON_RESPONSES = [
                                     'desc': ''}],
         },
         'valid': False,
-        'additional_metadata': {}
+        'summary': [],
+        'additional_metadata': {},
+        'geojson': {},
+        'geojson_error': None
     },
     {
         'filename': 'nonsense.AGS',
@@ -758,6 +945,9 @@ BROKEN_JSON_RESPONSES = [
                                    'desc': ''}],
         },
         'valid': False,
-        'additional_metadata': {}
+        'summary': [],
+        'additional_metadata': {},
+        'geojson': {},
+        'geojson_error': None
     },
 ]

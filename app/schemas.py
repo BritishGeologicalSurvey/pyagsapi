@@ -47,7 +47,10 @@ class Validation(BaseModel):
     message: str = Field(None, example="7 error(s) found in file!")
     errors: Dict[str, List[LineError]] = Field(..., example="Rule 1a")
     valid: bool = Field(..., example='false')
+    summary: List[dict] = list()
     additional_metadata: dict = Field(...)
+    geojson: dict = dict()
+    geojson_error: str = None
 
     @validator('errors')
     def errors_keys_must_be_known_rules(cls, errors):

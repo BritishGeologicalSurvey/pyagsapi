@@ -47,6 +47,8 @@ def validate(filename: Path,
 
     all_errors = {}
     all_checkers = []
+    bgs_additional_metadata = {}
+    ags_summary = []
     # Don't process if file is not .ags format
     if filename.suffix.lower() != '.ags':
         all_errors.update(
@@ -57,18 +59,31 @@ def validate(filename: Path,
         # Run checkers to extract errors and other metadata
         for checker in checkers:
             # result is a dictionary with 'errors', 'checker' and other keys
-            result = checker(filename, standard_AGS4_dictionary=dictionary_file)
+            result: dict = checker(filename, standard_AGS4_dictionary=dictionary_file)
+
             # Pull 'errors' out to add to running total
             all_errors.update(result.pop('errors'))
             all_checkers.append(result.pop('checker'))
-            # Handle additional metadata
+
+            # Extract checker-dependent additional metadata
             try:
-                response['additional_metadata'].update(result.pop('additional_metadata'))
+                bgs_additional_metadata = result.pop('additional_metadata')
             except KeyError:
-                # No additional metadata
                 pass
+
+            try:
+                ags_summary = result.pop('summary')
+            except KeyError:
+                pass
+
             # Add remaining keys to response
             response.update(result)
+
+    # We only want one checker-dependent metadata; use BGS if available.
+    if bgs_additional_metadata:
+        response['additional_metadata'] = bgs_additional_metadata
+    else:
+        response['summary'] = ags_summary
 
     error_count = len(reduce(lambda total, current: total + current, all_errors.values(), []))
     if error_count > 0:

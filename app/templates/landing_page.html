@@ -123,11 +123,19 @@
         <br>
       <fieldset>
           <legend>Select response format:</legend>
-          <input type="radio" id="text" name="fmt" value="text">
-          <label for="text">Plain Text</label>
           <input type="radio" id="json" name="fmt" value="json">
-          <label for="json">JSON</label><br>
+          <label for="json">JSON</label>
+          <input type="radio" id="text" name="fmt" value="text">
+          <label for="text">Plain Text</label><br>
       </fieldset>
+        <br>
+        <fieldset>
+          <legend>If HTML show LOCA features on a map / If JSON include GeoJSON</legend>
+          <input type="radio" id="return_geometry" name="return_geometry" value="true" checked="checked">
+          <label for="true">Yes</label>
+          <input type="radio" id="return_geometry" name="return_geometry" value="false">
+          <label for="false">No</label><br>
+      </fieldset>  
         <br>
       <fieldset>
           <legend>Select .ags / .AGS file(s) for validation (v4.x only) <b>(50 Mb Maximum)</b></legend>
@@ -165,15 +173,15 @@
   <br>
   <form action="/convert/" enctype="multipart/form-data" method="post" id="convertForm">
     <fieldset>
-      <legend>Sort worksheets in .xlsx file using sorting strategy<strong>(Warning: .ags to .xlsx only. The original group order will be lost)</strong></legend>
-      <input type="radio" id="dictionary" name="sort_tables" value="dictionary">
-      <label for="dictionary">Dictionary</label>
-      <input type="radio" id="alphabetical" name="sort_tables" value="alphabetical">
-      <label for="alphabetical">Alphabetical</label>
-      <input type="radio" id="hierarchical" name="sort_tables" value="hierarchical">
-      <label for="hierarchical">Hierarchical</label>
-      <input type="radio" id="default" name="sort_tables" value="default" checked>
+      <legend>Sort worksheets in .xlsx file using a sorting strategy <strong>(Warning: .ags to .xlsx only. The original group order will be lost)</strong></legend>
+      <input type="radio" id="default" name="sort_tables" value="default" checked="checked">
       <label for="default">None (Maintain Input File Order)</label><br>
+      <input type="radio" id="dictionary" name="sort_tables" value="dictionary">
+      <label for="dictionary">File Dictionary</label><br>
+      <input type="radio" id="alphabetical" name="sort_tables" value="alphabetical">
+      <label for="alphabetical">Alphabetical</label><br>
+      <input type="radio" id="hierarchical" name="sort_tables" value="hierarchical">
+      <label for="hierarchical">AGS Standard Hierarchy</label><br>
     </fieldset>
     <br>
     <fieldset>

@@ -15,12 +15,32 @@ TEST_FILE_DIR = Path(__file__).parent.parent / 'files'
 
 def mock_check_ags(filename, standard_AGS4_dictionary=None):
     return dict(checker='ags', dictionary='some_dict',
-                errors={})
+                errors={},
+                summary=[{'desc': '7 groups identified in file: PROJ ABBR TRAN TYPE UNIT '
+                          'LOCA SAMP',
+                          'group': '',
+                          'line': ''},
+                         {'desc': '1 data row(s) in LOCA group', 'group': '', 'line': ''},
+                         {'desc': 'Optional DICT group present? False',
+                          'group': '',
+                          'line': ''},
+                         {'desc': 'Optional FILE group present? False',
+                          'group': '',
+                          'line': ''}]
+                )
 
 
 def mock_check_bgs(filename, **kwargs):
     return dict(checker='bgs',
-                errors={'BGS': [{}]})
+                errors={'BGS': [{}]},
+                additional_metadata={
+                    'bgs_all_groups': '7 groups identified in file: '
+                    'PROJ ABBR TRAN TYPE UNIT LOCA SAMP',
+                    'bgs_dict': 'Optional DICT group present: False',
+                    'bgs_file': 'Optional FILE group present: False',
+                    'bgs_loca_rows': '1 data rows in LOCA group',
+                    'bgs_projects': '1 projects found: 121415 (ACME Gas Works Redevelopment)'
+                })
 
 
 @freeze_time(FROZEN_TIME)
@@ -36,6 +56,17 @@ def test_validate_default_checker():
         'filesize': 0,
         'message': 'All checks passed!',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
+        'summary': [{'desc': '7 groups identified in file: PROJ ABBR TRAN TYPE UNIT '
+                     'LOCA SAMP',
+                     'group': '',
+                     'line': ''},
+                    {'desc': '1 data row(s) in LOCA group', 'group': '', 'line': ''},
+                    {'desc': 'Optional DICT group present? False',
+                     'group': '',
+                     'line': ''},
+                    {'desc': 'Optional FILE group present? False',
+                     'group': '',
+                     'line': ''}],
         'valid': True,
         'additional_metadata': {}}
 
@@ -60,7 +91,14 @@ def test_validate_bgs_checker():
         'message': '1 error(s) found in file!',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
         'valid': False,
-        'additional_metadata': {}}
+        'additional_metadata': {'bgs_all_groups': '7 groups identified in file: PROJ '
+                                'ABBR TRAN TYPE UNIT LOCA SAMP',
+                                'bgs_dict': 'Optional DICT group present: False',
+                                'bgs_file': 'Optional FILE group present: False',
+                                'bgs_loca_rows': '1 data rows in LOCA group',
+                                'bgs_projects': '1 projects found: 121415 (ACME Gas '
+                                'Works Redevelopment)'}
+    }
 
     # Act
     response = validation.validate(filename, checkers=[mock_check_bgs])
@@ -83,7 +121,14 @@ def test_validate_both_checkers():
         'message': '1 error(s) found in file!',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
         'valid': False,
-        'additional_metadata': {}}
+        'additional_metadata': {
+            'bgs_all_groups': '7 groups identified in file: '
+            'PROJ ABBR TRAN TYPE UNIT LOCA SAMP',
+            'bgs_dict': 'Optional DICT group present: False',
+            'bgs_file': 'Optional FILE group present: False',
+            'bgs_loca_rows': '1 data rows in LOCA group',
+            'bgs_projects': '1 projects found: 121415 (ACME Gas Works Redevelopment)'
+        }}
 
     # Act
     response = validation.validate(filename, checkers=[mock_check_bgs, mock_check_ags])
@@ -106,6 +151,7 @@ def test_validate_non_ags():
         'message': '1 error(s) found in file!',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
         'valid': False,
+        'summary': [],
         'additional_metadata': {}}
 
     # Act

@@ -22,7 +22,7 @@ def extract_geojson(filepath: Path) -> dict:
     Read an AGS4 file and extract geojson represenation of LOCA table and
     metadata.
     """
-    logger.info("Extracting geojson from  %s", filepath.name)
+    logger.info("Extracting geojson from %s", filepath.name)
 
     # Read data file
     tables, load_error, _ = load_tables_reporting_errors(filepath)
