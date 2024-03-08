@@ -1,6 +1,7 @@
 import tempfile
 import shutil
 import requests
+import os
 
 from enum import StrEnum
 from pathlib import Path
@@ -23,6 +24,9 @@ BOREHOLE_VIEWER_URL = "https://gwbv.bgs.ac.uk/GWBV/viewborehole?loca_id={bgs_loc
 BOREHOLE_EXPORT_URL = "https://gwbv.bgs.ac.uk/ags_export?loca_ids={bgs_loca_id}"
 BOREHOLE_INDEX_URL = ("https://ogcapi.bgs.ac.uk/collections/agsboreholeindex/items?f=json"
                       "&properties=bgs_loca_id&filter=INTERSECTS(shape,{polygon})&limit=10")
+
+# Get AGS_API_ENV, defaults to DEVELOP if not set or not recognised.
+AGS_API_ENV = os.getenv("AGS_API_ENV", "DEVELOP").upper()
 
 router = APIRouter()
 
@@ -225,7 +229,7 @@ def prepare_validation_response(request, data):
     response_data = {
         'msg': f'{len(data)} files validated',
         'type': 'success',
-        'self': str(request.url),
+        'self': get_request_url(request),
         'data': data,
     }
     return ValidationResponse(**response_data, media_type="application/json")
@@ -471,7 +475,16 @@ def prepare_count_response(request, count):
     response_data = {
         'msg': 'Borehole count',
         'type': 'success',
-        'self': str(request.url),
+        'self': get_request_url(request),
         'count': count
     }
     return BoreholeCountResponse(**response_data, media_type="application/json")
+
+
+def get_request_url(request):
+    """ External calls need https to be returned, so check environment."""
+    request_url = str(request.url)
+    if AGS_API_ENV == 'PRODUCTION' and request_url.startswith('http:'):
+        request_url = request_url.replace('http:', 'https:')
+
+    return request_url

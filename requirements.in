@@ -11,9 +11,9 @@ python-ags4==0.5.0
 requests
 shortuuid
 # These libraries are already in FastAPI container but need updated
-fastapi==0.88.0
+fastapi==0.110.0
 h11==0.14.0
 pydantic==1.10.14
 python-multipart==0.0.9
-starlette==0.22.0
+starlette==0.36.3
 uvicorn==0.20.0
