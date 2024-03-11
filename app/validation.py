@@ -47,8 +47,7 @@ def validate(filename: Path,
 
     all_errors = {}
     all_checkers = []
-    bgs_additional_metadata = {}
-    ags_summary = []
+    additional_metadata_responses = {'bgs': {}, 'ags': {}}
     # Don't process if file is not .ags format
     if filename.suffix.lower() != '.ags':
         all_errors.update(
@@ -61,29 +60,25 @@ def validate(filename: Path,
             # result is a dictionary with 'errors', 'checker' and other keys
             result: dict = checker(filename, standard_AGS4_dictionary=dictionary_file)
 
-            # Pull 'errors' out to add to running total
+            # Extract 'common' data
             all_errors.update(result.pop('errors'))
-            all_checkers.append(result.pop('checker'))
+            current_checker = result.pop('checker')
+            all_checkers.append(current_checker)
 
-            # Extract checker-dependent additional metadata
-            try:
-                bgs_additional_metadata = result.pop('additional_metadata')
-            except KeyError:
-                pass
-
-            try:
-                ags_summary = result.pop('summary')
-            except KeyError:
-                pass
+            additional_metadata = result.pop('additional_metadata')
+            if current_checker.startswith('bgs_rules'):
+                additional_metadata_responses['bgs'] = additional_metadata
+            else:
+                additional_metadata_responses['ags'] = additional_metadata
 
             # Add remaining keys to response
             response.update(result)
 
-    # We only want one checker-dependent metadata; use BGS if available.
-    if bgs_additional_metadata:
-        response['additional_metadata'] = bgs_additional_metadata
+    # Use BGS metadata where available, as it contains more data
+    if additional_metadata_responses['bgs']:
+        response['additional_metadata'] = additional_metadata_responses['bgs']
     else:
-        response['summary'] = ags_summary
+        response['additional_metadata'] = additional_metadata_responses['ags']
 
     error_count = len(reduce(lambda total, current: total + current, all_errors.values(), []))
     if error_count > 0:

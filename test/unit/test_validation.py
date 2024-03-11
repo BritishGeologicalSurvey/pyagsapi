@@ -14,24 +14,20 @@ TEST_FILE_DIR = Path(__file__).parent.parent / 'files'
 
 
 def mock_check_ags(filename, standard_AGS4_dictionary=None):
-    return dict(checker='ags', dictionary='some_dict',
+    return dict(checker='python_ags4 v123', dictionary='some_dict',
                 errors={},
-                summary=[{'desc': '7 groups identified in file: PROJ ABBR TRAN TYPE UNIT '
-                          'LOCA SAMP',
-                          'group': '',
-                          'line': ''},
-                         {'desc': '1 data row(s) in LOCA group', 'group': '', 'line': ''},
-                         {'desc': 'Optional DICT group present? False',
-                          'group': '',
-                          'line': ''},
-                         {'desc': 'Optional FILE group present? False',
-                          'group': '',
-                          'line': ''}]
-                )
+                additional_metadata={
+                    'bgs_all_groups': '7 groups identified in file: '
+                    'PROJ ABBR TRAN TYPE UNIT LOCA SAMP',
+                    'bgs_dict': 'Optional DICT group present: False',
+                    'bgs_file': 'Optional FILE group present: False',
+                    'bgs_loca_rows': '1 data row(s) in LOCA group',
+                    'bgs_projects': None
+                })
 
 
 def mock_check_bgs(filename, **kwargs):
-    return dict(checker='bgs',
+    return dict(checker='bgs_rules v123',
                 errors={'BGS': [{}]},
                 additional_metadata={
                     'bgs_all_groups': '7 groups identified in file: '
@@ -49,26 +45,22 @@ def test_validate_default_checker():
     # Arrange
     filename = TEST_FILE_DIR / 'does_not_matter.ags'
     expected = {
-        'checkers': ['ags'],
+        'checkers': ['python_ags4 v123'],
         'dictionary': 'some_dict',
         'errors': {},
         'filename': filename.name,
         'filesize': 0,
         'message': 'All checks passed!',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
-        'summary': [{'desc': '7 groups identified in file: PROJ ABBR TRAN TYPE UNIT '
-                     'LOCA SAMP',
-                     'group': '',
-                     'line': ''},
-                    {'desc': '1 data row(s) in LOCA group', 'group': '', 'line': ''},
-                    {'desc': 'Optional DICT group present? False',
-                     'group': '',
-                     'line': ''},
-                    {'desc': 'Optional FILE group present? False',
-                     'group': '',
-                     'line': ''}],
         'valid': True,
-        'additional_metadata': {}}
+        'additional_metadata': {
+            'bgs_all_groups': '7 groups identified in file: '
+            'PROJ ABBR TRAN TYPE UNIT LOCA SAMP',
+            'bgs_dict': 'Optional DICT group present: False',
+            'bgs_file': 'Optional FILE group present: False',
+            'bgs_loca_rows': '1 data row(s) in LOCA group',
+            'bgs_projects': None
+        }}
 
     # Act
     response = validation.validate(filename, checkers=[mock_check_ags])
@@ -83,7 +75,7 @@ def test_validate_bgs_checker():
     # Arrange
     filename = TEST_FILE_DIR / 'does_not_matter.ags'
     expected = {
-        'checkers': ['bgs'],
+        'checkers': ['bgs_rules v123'],
         'dictionary': '',
         'errors': {'BGS': [{}]},
         'filename': filename.name,
@@ -113,7 +105,7 @@ def test_validate_both_checkers():
     # Arrange
     filename = TEST_FILE_DIR / 'does_not_matter.ags'
     expected = {
-        'checkers': ['bgs', 'ags'],
+        'checkers': ['bgs_rules v123', 'python_ags4 v123'],
         'dictionary': 'some_dict',
         'errors': {'BGS': [{}]},
         'filename': filename.name,
@@ -151,8 +143,8 @@ def test_validate_non_ags():
         'message': '1 error(s) found in file!',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
         'valid': False,
-        'summary': [],
-        'additional_metadata': {}}
+        'additional_metadata': {}
+    }
 
     # Act
     response = validation.validate(filename)

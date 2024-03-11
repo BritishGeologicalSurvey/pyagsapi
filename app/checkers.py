@@ -52,6 +52,9 @@ def check_ags(filename: Path, standard_AGS4_dictionary: Optional[str] = None) ->
 
 
 def convert_to_additional_metadata(summary: list[dict]) -> dict:
+    if not summary:
+        return {}
+
     descriptions = [item['desc'].replace('group present?', 'group present:')
                     for item in summary]
 

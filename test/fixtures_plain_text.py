@@ -11,7 +11,11 @@ Checkers: ['python_ags4 v0.5.0']
 Dictionary: Standard_dictionary_v4_1_1.ags
 Time: 2021-08-23 14:25:43+00:00
 
-
+7 groups identified in file: PROJ ABBR TRAN TYPE UNIT LOCA SAMP
+Optional DICT group present: False
+Optional FILE group present: False
+1 data row(s) in LOCA group
+None
 ================================================================================
 """,
     'example_broken_ags.ags': """
@@ -66,6 +70,10 @@ Checkers: ['python_ags4 v0.5.0']
 Dictionary: Standard_dictionary_v4_1_1.ags
 Time: 2021-08-23 14:25:43+00:00
 
+0 groups identified in file: 
+Optional DICT group present: False
+Optional FILE group present: False
+None
 
 # Errors
 
@@ -110,6 +118,10 @@ Checkers: ['python_ags4 v0.5.0']
 Dictionary: Standard_dictionary_v4_1_1.ags
 Time: 2021-08-23 14:25:43+00:00
 
+0 groups identified in file: 
+Optional DICT group present: False
+Optional FILE group present: False
+None
 
 # Errors
 
