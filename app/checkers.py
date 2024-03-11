@@ -43,11 +43,30 @@ def check_ags(filename: Path, standard_AGS4_dictionary: Optional[str] = None) ->
         errors = {'File read error': [{'line': line_no, 'group': '', 'desc': description}]}
         dictionary = ''
 
-    # Use summary from errors dictionary is available
     summary = errors.pop('Summary of data', [])
+    additional_metadata = convert_to_additional_metadata(summary)
 
     return dict(checker=f'python_ags4 v{python_ags4.__version__}',
-                errors=errors, dictionary=dictionary, summary=summary)
+                errors=errors, dictionary=dictionary,
+                additional_metadata=additional_metadata)
+
+
+def convert_to_additional_metadata(summary: list[dict]) -> dict:
+    descriptions = [item['desc'].replace('group present?', 'group present:')
+                    for item in summary]
+
+    additional_metadata = {'bgs_projects': None}
+    for text in descriptions:
+        if 'groups identified in file' in text:
+            additional_metadata["bgs_all_groups"] = text
+        elif 'DICT' in text:
+            additional_metadata["bgs_dict"] = text
+        elif 'FILE' in text:
+            additional_metadata["bgs_file"] = text
+        elif 'LOCA' in text:
+            additional_metadata["bgs_loca_rows"] = text
+
+    return additional_metadata
 
 
 def check_bgs(filename: Path, **kwargs) -> dict:

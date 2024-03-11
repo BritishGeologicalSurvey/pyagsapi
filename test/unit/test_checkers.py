@@ -116,13 +116,22 @@ def test_check_bgs(filename, expected_rules, file_read_message):
         'bgs_loca_rows': '2 data row(s) in LOCA group',
         'bgs_projects': '1 projects found: 7500/75 (Southwark)'}),
 ])
-def test_check_bgs_additional_metadata(filename, expected_metadata):
-    """Check addtional metadata is added correctly."""
+def test_check_additional_metadata(filename, expected_metadata):
+    """
+    Check addtional metadata is added correctly.  The AGS results don't
+    contain as much data as the BGS results.
+    """
     # Arrange
     filename = TEST_FILE_DIR / filename
 
     # Act
-    result = check_bgs(filename)
+    result_bgs = check_bgs(filename)['additional_metadata']
+    result_ags = check_ags(filename)['additional_metadata']
 
     # Assert
-    assert result['additional_metadata'] == expected_metadata
+    assert result_bgs == expected_metadata
+
+    # AGS metadata should match BGS metadata, apart from "bgs_projects"
+    assert result_ags.pop('bgs_projects') is None
+    for key in result_ags:
+        assert result_ags[key] == expected_metadata[key]
