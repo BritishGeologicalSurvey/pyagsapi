@@ -10,8 +10,12 @@ JSON_RESPONSES = {
         'message': 'All checks passed!',
         'errors': {},
         'valid': True,
-        'summary': [],
-        'additional_metadata': {},
+        'additional_metadata': {'bgs_all_groups': '7 groups identified in file: PROJ '
+                                'ABBR TRAN TYPE UNIT LOCA SAMP',
+                                'bgs_dict': 'Optional DICT group present: False',
+                                'bgs_file': 'Optional FILE group present: False',
+                                'bgs_loca_rows': '1 data row(s) in LOCA group',
+                                'bgs_projects': None},
         'geojson': {},
         'geojson_error': None
     },
@@ -98,7 +102,6 @@ JSON_RESPONSES = {
             ],
         },
         "valid": False,
-        'summary': [],
         'additional_metadata': {},
         'geojson': {},
         'geojson_error': None
@@ -125,8 +128,10 @@ JSON_RESPONSES = {
             'AGS Format Rule 15': [{'line': '-', 'group': 'UNIT', 'desc': 'UNIT group not found.'}],
             'AGS Format Rule 17': [{'line': '-', 'group': 'TYPE', 'desc': 'TYPE group not found.'}]},
         'valid': False,
-        'summary': [],
-        'additional_metadata': {},
+        'additional_metadata': {'bgs_all_groups': '0 groups identified in file: ',
+                                'bgs_dict': 'Optional DICT group present: False',
+                                'bgs_file': 'Optional FILE group present: False',
+                                'bgs_projects': None},
         'geojson': {},
         'geojson_error': None
     },
@@ -290,8 +295,10 @@ JSON_RESPONSES = {
                                 "If not 'utf-8', then the encoding is most likely to be 'windows-1252' "
                                 "aka 'cp1252')"}]},
         'valid': False,
-        'summary': [],
-        'additional_metadata': {},
+        'additional_metadata': {'bgs_all_groups': '0 groups identified in file: ',
+                                'bgs_dict': 'Optional DICT group present: False',
+                                'bgs_file': 'Optional FILE group present: False',
+                                'bgs_projects': None},
         'geojson': {},
         'geojson_error': None
     },
@@ -309,7 +316,6 @@ JSON_RESPONSES = {
                                           'group': '',
                                           'line': 1}]},
         'valid': False,
-        'summary': [],
         'additional_metadata': {},
         'geojson': {},
         'geojson_error': None
@@ -710,7 +716,6 @@ JSON_RESPONSES = {
                                 'It is highly recommended that the file be saved without BOM encoding '
                                 'to avoid issues with other software.'}]},
         'valid': False,
-        'summary': [],
         'additional_metadata': {},
         'geojson': {},
         'geojson_error': None
@@ -730,7 +735,6 @@ JSON_RESPONSES = {
                                           'line': 1}]},
 
         'valid': False,
-        'summary': [],
         'additional_metadata': {},
         'geojson': {},
         'geojson_error': None
@@ -745,7 +749,6 @@ JSON_RESPONSES = {
         'errors': {'File read error': [
             {'line': '-', 'group': '', 'desc': 'extension_is.bad is not an .ags file'}]},
         'valid': False,
-        'summary': [],
         'additional_metadata': {},
         'geojson': {},
         'geojson_error': None
@@ -762,7 +765,6 @@ GEOJSON_RESPONSES = {
         'message': 'All checks passed!',
         'errors': {},
         'valid': True,
-        'summary': [],
         'additional_metadata': {},
         'geojson': {
             'features': [{
@@ -905,7 +907,6 @@ GEOJSON_RESPONSES = {
             ],
         },
         "valid": False,
-        'summary': [],
         'additional_metadata': {},
         'geojson': {},
         'geojson_error': 'Line 31 does not have the same number of entries as the HEADING row in TYPE.'
@@ -927,7 +928,6 @@ BROKEN_JSON_RESPONSES = [
                                     'desc': ''}],
         },
         'valid': False,
-        'summary': [],
         'additional_metadata': {},
         'geojson': {},
         'geojson_error': None
@@ -945,7 +945,6 @@ BROKEN_JSON_RESPONSES = [
                                    'desc': ''}],
         },
         'valid': False,
-        'summary': [],
         'additional_metadata': {},
         'geojson': {},
         'geojson_error': None
