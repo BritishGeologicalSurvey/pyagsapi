@@ -97,7 +97,7 @@ def test_check_bgs(filename, expected_rules, file_read_message):
         'bgs_all_groups': '0 groups identified in file: ',
         'bgs_dict': 'Optional DICT group present: False',
         'bgs_file': 'Optional FILE group present: False',
-        'bgs_loca_rows': '0 data rows in LOCA group',
+        'bgs_loca_rows': '0 data row(s) in LOCA group',
         'bgs_projects': '0 projects found: '
     }),
     ('example_ags.ags', {
@@ -105,7 +105,7 @@ def test_check_bgs(filename, expected_rules, file_read_message):
                           'PROJ ABBR TRAN TYPE UNIT LOCA SAMP',
         'bgs_dict': 'Optional DICT group present: False',
         'bgs_file': 'Optional FILE group present: False',
-        'bgs_loca_rows': '1 data rows in LOCA group',
+        'bgs_loca_rows': '1 data row(s) in LOCA group',
         'bgs_projects': '1 projects found: 121415 (ACME Gas Works Redevelopment)'
     }),
     ('real/Southwark.ags', {
@@ -113,7 +113,7 @@ def test_check_bgs(filename, expected_rules, file_read_message):
                           'PROJ ABBR DICT TRAN TYPE UNIT CHIS GEOL ISPT LOCA SAMP WSTG',
         'bgs_dict': 'Optional DICT group present: True',
         'bgs_file': 'Optional FILE group present: False',
-        'bgs_loca_rows': '2 data rows in LOCA group',
+        'bgs_loca_rows': '2 data row(s) in LOCA group',
         'bgs_projects': '1 projects found: 7500/75 (Southwark)'}),
 ])
 def test_check_bgs_additional_metadata(filename, expected_metadata):

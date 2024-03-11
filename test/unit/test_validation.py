@@ -38,7 +38,7 @@ def mock_check_bgs(filename, **kwargs):
                     'PROJ ABBR TRAN TYPE UNIT LOCA SAMP',
                     'bgs_dict': 'Optional DICT group present: False',
                     'bgs_file': 'Optional FILE group present: False',
-                    'bgs_loca_rows': '1 data rows in LOCA group',
+                    'bgs_loca_rows': '1 data row(s) in LOCA group',
                     'bgs_projects': '1 projects found: 121415 (ACME Gas Works Redevelopment)'
                 })
 
@@ -95,7 +95,7 @@ def test_validate_bgs_checker():
                                 'ABBR TRAN TYPE UNIT LOCA SAMP',
                                 'bgs_dict': 'Optional DICT group present: False',
                                 'bgs_file': 'Optional FILE group present: False',
-                                'bgs_loca_rows': '1 data rows in LOCA group',
+                                'bgs_loca_rows': '1 data row(s) in LOCA group',
                                 'bgs_projects': '1 projects found: 121415 (ACME Gas '
                                 'Works Redevelopment)'}
     }
@@ -126,7 +126,7 @@ def test_validate_both_checkers():
             'PROJ ABBR TRAN TYPE UNIT LOCA SAMP',
             'bgs_dict': 'Optional DICT group present: False',
             'bgs_file': 'Optional FILE group present: False',
-            'bgs_loca_rows': '1 data rows in LOCA group',
+            'bgs_loca_rows': '1 data row(s) in LOCA group',
             'bgs_projects': '1 projects found: 121415 (ACME Gas Works Redevelopment)'
         }}
 

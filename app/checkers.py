@@ -120,7 +120,7 @@ def generate_bgs_metadata(tables: Dict[str, pd.DataFrame]) -> dict:
         'bgs_all_groups': f'{len(groups)} groups identified in file: {" ".join(groups)}',
         'bgs_file': f'Optional FILE group present: {"FILE" in groups}',
         'bgs_dict': f'Optional DICT group present: {"DICT" in groups}',
-        'bgs_loca_rows': f'{loca_rows} data rows in LOCA group',
+        'bgs_loca_rows': f'{loca_rows} data row(s) in LOCA group',
         'bgs_projects': f'{len(projects)} projects found: {"; ".join(projects)}',
     }
     return bgs_metadata
