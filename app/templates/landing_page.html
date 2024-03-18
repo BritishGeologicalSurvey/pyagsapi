@@ -175,13 +175,13 @@
     <fieldset>
       <legend>Sort worksheets in .xlsx file using a sorting strategy <strong>(Warning: .ags to .xlsx only. The original group order will be lost)</strong></legend>
       <input type="radio" id="default" name="sort_tables" value="default" checked="checked">
-      <label for="default">None (Maintain Input File Order)</label><br>
-      <input type="radio" id="dictionary" name="sort_tables" value="dictionary">
-      <label for="dictionary">File Dictionary</label><br>
+      <label for="default" class="tooltip">None<span class="tooltiptext">Maintains Input File Order</span></label><br>
       <input type="radio" id="alphabetical" name="sort_tables" value="alphabetical">
-      <label for="alphabetical">Alphabetical</label><br>
+      <label for="alphabetical" class="tooltip">Alphabetical<span class="tooltiptext">Group Names</span></label><br>
+      <input type="radio" id="dictionary" name="sort_tables" value="dictionary">
+      <label for="dictionary" class="tooltip">Dictionary<span class="tooltiptext">Standard dictionary defined in TRAN_AGS is used to sort standard groups and the custom dictionary is used for user-defined groups. User-defined groups will appear after standard groups</span></label><br>
       <input type="radio" id="hierarchical" name="sort_tables" value="hierarchical">
-      <label for="hierarchical">AGS Standard Hierarchy</label><br>
+      <label for="hierarchical" class="tooltip">AGS Standard Hierarchy<span class="tooltiptext">Order as follows: 11 groups outside the PROJ hierarchy appear first. 10 of these are described in Section 3.1 of the standard with the addition of LBST as it is the child of LBSG. Groups under PROJ appear next. Groups which don't belong to either of the previous categories appear last</span></label><br>
     </fieldset>
     <br>
     <fieldset>
