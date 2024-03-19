@@ -2,12 +2,12 @@
 /* Styling for HTML validation result viewer plugin */
 
 #resultPopup{
-    display:block;
+	display:block;
     border:1px solid #CCCCCC;
     background-color:#FAFAFA;
-    margin:5px;
+	margin:5px;
     padding:0px;
-    }
+	}
 
 /* close button */
 #resultPopup>h2>input{

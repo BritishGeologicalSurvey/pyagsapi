@@ -193,6 +193,8 @@ agsHtml.parseValidationError=function(xhr){
 
 agsHtml.parseValidationResponse=function(jData){
     // validation success - show results
+    console.log("agsHtml.parseValidationResponse");
+    console.log(jData);
     var i=0;
     var fileResult={};
     $("#res_Summary").html(jData.msg);
@@ -210,6 +212,9 @@ agsHtml.parseValidationResponse=function(jData){
     };
 
 agsHtml.displayFileResult=function(fileResult,ix){
+    console.log("agsHtml.displayFileResult");
+    console.log(fileResult);
+    console.log(ix);
     var xhtml="";
     var i=0;
     var errGroups=[];
@@ -281,12 +286,14 @@ agsHtml.displayFileResult=function(fileResult,ix){
     agsHtml.resetValidationMap();
 
     if(fileResult.geojson && fileResult.geojson.type){
+        console.log("GOT GeoJSON");
         // show GeoJSON if returned + pass through filename for popup
         agsHtml.showOnValidationMap(fileResult.geojson,fileResult.filename,ix);
         // enable download button
         $("#downloadGeoJSONBtn").prop("disabled",false);
         }
     else{
+        console.log("NO GeoJSON");
         // otherwise hide validation map + disable download button
         agsHtml.hideValidationMap();
         $("#downloadGeoJSONBtn").prop("disabled",true);
@@ -295,9 +302,7 @@ agsHtml.displayFileResult=function(fileResult,ix){
     return true;
     };
 
-
 agsHtml.setupCollapsibles=function(){
-    console.log("agsHtml.setupCollapsibles");
     var coll = document.getElementsByClassName("collapsible");
     var i;
     for (i = 0; i < coll.length; i++){
@@ -325,11 +330,13 @@ agsHtml.showOnValidationMap=function(geoJSON,ix){
     };
 
 agsHtml.resetValidationMap=function(){
+    console.log("agsHtml.resetValidationMap");
     vMap.resetValidationMap();
     return true;
     };
 
 agsHtml.hideValidationMap=function(){
+    console.log("agsHtml.hideValidationMap");
     vMap.hideValidationMap();
     return true;
     };

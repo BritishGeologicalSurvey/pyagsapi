@@ -12,6 +12,7 @@ vMap.map={
     };
 
 vMap.setupValidationMap=function(){
+    console.log("vMap.setupValidationMap");
     var baseLayers={};
     var overlays={};
     var mapOpts={
@@ -36,6 +37,10 @@ vMap.setupValidationMap=function(){
     };
 
 vMap.showOnValidationMap=function(geoJSON,fileName,ix){
+    console.log("vMap.showOnValidationMap");
+    console.log(geoJSON);
+    console.log(fileName);
+    console.log(ix);
     // show GeoJSON features on map - add popups and tooltips
     L.geoJSON(geoJSON,{
         "pointToLayer":function(feature,latlng){
@@ -50,6 +55,7 @@ vMap.showOnValidationMap=function(geoJSON,fileName,ix){
     };
 
 vMap.fitValidationMap=function(){
+    console.log("vMap.fitValidationMap");
     // fit bounds of validation GeoJSON layer(s)
     vMap.map.lMap.fitBounds(vMap.map.lyrs.GeoJSON.getBounds());
     return true;
@@ -92,6 +98,7 @@ vMap.pointToLayer=function(feature,latlng,ix){
     };
 
 vMap.resetValidationMap=function(){
+    console.log("vMap.resetValidationMap");
     // force map redraw when showing map and clear out any existing layers
     vMap.map.lyrs.GeoJSON.clearLayers();
     vMap.map.lMap.invalidateSize();
