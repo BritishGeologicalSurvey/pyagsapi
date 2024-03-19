@@ -140,4 +140,3 @@ Copyright: © BGS / UKRI 2021
 Contains data supplied by Natural Environment Research Council.
 
 Contains public sector information licensed under the Open Government Licence v3.0
-
