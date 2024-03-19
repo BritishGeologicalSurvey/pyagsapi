@@ -12,16 +12,24 @@ agsHtml.injectHtmlOpt=function(){
 
 agsHtml.injectResultPopup=function(){
     var xhtml='';
+    // generate HTML
     xhtml=xhtml + '<div id="resultPopup">';
     xhtml=xhtml + '<h2>Validation results <input type="button" class="closeResPopopBtn" value="close" /></h2>';
+    xhtml=xhtml + '<p id="res_LoadMsg"><span class="rotate">&#x274D;</span> Validating file(s) ... please wait ...</p>';
     xhtml=xhtml + '<p id="res_Summary"></p>';
-    // xhtml=xhtml + '<h2>Results for <span id="fileCount">-</span> file(s)</h2>';
     xhtml=xhtml + '<div id="res_Files"></div>';
+    xhtml=xhtml + '<div id="res_MapFrame"><div id="res_Map"></div></div>';
+    xhtml=xhtml + '<p id="res_Download"><input type="button" id="downloadGeoJSONBtn" value="Download GeoJSON" disabled="disabled" /></p>';
     xhtml=xhtml + '</div>';
-    $("#validator").after(xhtml);
+    // add to #validator section
+    $("#validator").append(xhtml);
+    // hide for now
     agsHtml.hideResultPopup();
     $("#validator input:submit").prop("disabled",true);
-    $("#converter input:submit").prop("disabled",true);
+    $("#converter input:submit").prop("disabled",true);
+    $("#downloadGeoJSONBtn").prop("disabled",true);
+    // setup validation map
+    agsHtml.setupValidationMap();
     return true;
     };
 
@@ -37,6 +45,30 @@ agsHtml.injectEvents=function(){
     $("#convertForm").on("change","input:file",agsHtml.convertFileChange);
     $("main").on("click","input.closeResPopopBtn",agsHtml.hideResultPopup);
     $("main").on("click","ul.fileResErrors>li",agsHtml.toggleErrorGroup);
+    $("#identification").on("click","li",agsHtml.tabClick);
+    $("main").on("click","#downloadGeoJSONBtn",agsHtml.downloadBtnClick);
+    return true;
+    };
+
+agsHtml.downloadBtnClick=function(evt){
+    // interface to fn in "merge-ags-validation-geojson.js"
+    mavg.downloadMergedGeoJSON();
+    return true;
+    };
+
+agsHtml.tabClick=function(evt){
+    evt.preventDefault();
+    var li=$(evt.target).closest("li");
+    var a=li.children("a");
+    if(!li.hasClass("open")){
+        $("#identification>ul>li").removeClass("open");
+        li.addClass("open");
+        $("main>div.container>div.row>div>section.tabbed").hide();
+        $(a.attr("href")).show();
+        if(a.attr("href") === "#validator"){
+            vMap.resetValidationMap();
+            };
+        };
     return true;
     };
 
@@ -115,6 +147,12 @@ agsHtml.formSubmit=function(evt){
         if(checkedRadios.val() === "html"){
             evt.preventDefault();
             $("#validator>form>fieldset:eq(2) input:submit").prop("disabled",true);
+            // clear any previous validation results
+            $("#res_Files").html("");
+            $("#res_Summary").html("");
+            $("#res_Download").hide();
+            vMap.hideValidationMap();
+            // submit form
             agsHtml.formSubmitForHTML();
             };
         }
@@ -128,6 +166,8 @@ agsHtml.formSubmit=function(evt){
 agsHtml.formSubmitForHTML=function(){
     var apiUrl=$("#validator>form").attr("action");
     var formData=new FormData(document.getElementById("validateForm"));
+    $("#res_LoadMsg").show();
+    $("#resultPopup").show();
     formData.set("fmt","json");
     $.ajax({
         "type":"POST",
@@ -143,6 +183,7 @@ agsHtml.formSubmitForHTML=function(){
     };
 
 agsHtml.parseValidationError=function(xhr){
+    // validation error
     console.log("agsHtml.parseValidationError");
     console.log(xhr);
     alert("Sorry, there was an error calling the Validation API.");
@@ -151,21 +192,24 @@ agsHtml.parseValidationError=function(xhr){
     };
 
 agsHtml.parseValidationResponse=function(jData){
+    // validation success - show results
     var i=0;
     var fileResult={};
     $("#res_Summary").html(jData.msg);
-    // $("#fileCount").html(jData.data.length);
+    // clear any previous results
     $("#res_Files").html("");
     for(i=0;i < jData.data.length;i++){
         fileResult=jData.data[i];
-        agsHtml.displayFileResult(fileResult);
+        agsHtml.displayFileResult(fileResult,i);
         };
+    $("#res_LoadMsg").hide();
+    $("#res_Download").show();
     $("#resultPopup").show();
     if(agsMap && agsMap.positionExtentModal){agsMap.positionExtentModal();};
     return true;
     };
 
-agsHtml.displayFileResult=function(fileResult){
+agsHtml.displayFileResult=function(fileResult,ix){
     var xhtml="";
     var i=0;
     var errGroups=[];
@@ -192,7 +236,7 @@ agsHtml.displayFileResult=function(fileResult){
         xhtml=xhtml + "<ul class='fileResSummary'>";
 
         if(summaries.length === 0){
-            xhtml=xhtml + "<li>No summary generated due to errors reading file (see below)</li>";
+            xhtml=xhtml + "<li>No summary generated due to errors reading file (see below) or BGS validation not selected (required for summary)</li>";
             };
 
         if(fileResult.additional_metadata.bgs_all_groups){
@@ -232,14 +276,70 @@ agsHtml.displayFileResult=function(fileResult){
         xhtml=xhtml + "</ul>";
         };
     xhtml=xhtml + "</article>";
+
+    // clear any old data from validation map
+    agsHtml.resetValidationMap();
+
+    if(fileResult.geojson && fileResult.geojson.type){
+        // show GeoJSON if returned + pass through filename for popup
+        agsHtml.showOnValidationMap(fileResult.geojson,fileResult.filename,ix);
+        // enable download button
+        $("#downloadGeoJSONBtn").prop("disabled",false);
+        }
+    else{
+        // otherwise hide validation map + disable download button
+        agsHtml.hideValidationMap();
+        $("#downloadGeoJSONBtn").prop("disabled",true);
+        };
     $("#res_Files").append(xhtml);
     return true;
     };
 
+
+agsHtml.setupCollapsibles=function(){
+    console.log("agsHtml.setupCollapsibles");
+    var coll = document.getElementsByClassName("collapsible");
+    var i;
+    for (i = 0; i < coll.length; i++){
+        coll[i].addEventListener("click",function(){
+            this.classList.toggle("active");
+            var content = this.nextElementSibling;
+            if(content.style.maxHeight){content.style.maxHeight = null;}
+            else{content.style.maxHeight = content.scrollHeight + "px";}
+        });
+        };
+    return true;
+    };
+
+// interfaces to vMap (validation-map.js)
+agsHtml.setupValidationMap=function(){
+    console.log("agsHtml.setupValidationMap");
+    vMap.setupValidationMap();
+    return true;
+    };
+
+agsHtml.showOnValidationMap=function(geoJSON,ix){
+    console.log("agsHtml.showOnValidationMap");
+    vMap.showOnValidationMap(geoJSON,ix);
+    return true;
+    };
+
+agsHtml.resetValidationMap=function(){
+    vMap.resetValidationMap();
+    return true;
+    };
+
+agsHtml.hideValidationMap=function(){
+    vMap.hideValidationMap();
+    return true;
+    };
+
+// init
 agsHtml.init=function(){
     agsHtml.injectEvents();
     agsHtml.injectHtmlOpt();
     agsHtml.injectResultPopup();
+    agsHtml.setupCollapsibles();
     return true;
     };
 
