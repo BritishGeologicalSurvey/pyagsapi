@@ -106,7 +106,6 @@ pip-compile -o requirements_dev.txt requirements_dev.in
 
 The updated requirements files must be edited to remove reference to the Nexus mirror before they can then be committed.
 
-
 ### GUI Customisation
 
 To ammend the GUI HTML we recommend running via `Docker` using your own `Dockerfile` like the below to `COPY` in your own templates.
