@@ -201,8 +201,9 @@ agsHtml.parseValidationResponse=function(jData){
 
     $("#res_Summary").html(jData.msg);
 
-    // clear any previous results
+    // clear any previous results and data from validation map
     $("#res_Files").html("");
+    agsHtml.resetValidationMap();
 
     for(i=0;i < jData.data.length;i++){
         fileResult=jData.data[i];
@@ -302,9 +303,6 @@ agsHtml.displayFileResult=function(fileResult,ix){
         };
     xhtml=xhtml + "</article>";
 
-    // clear any old data from validation map
-    agsHtml.resetValidationMap();
-
     if(fileResult.geojson && fileResult.geojson.type){
         console.log("GOT GeoJSON for file #" + ix);
         // show GeoJSON if returned + pass through filename for popup + file index for colour
@@ -338,9 +336,9 @@ agsHtml.setupValidationMap=function(){
     return true;
     };
 
-agsHtml.showOnValidationMap=function(geoJSON,ix){
-    console.log("agsHtml.showOnValidationMap");
-    vMap.showOnValidationMap(geoJSON,ix);
+agsHtml.showOnValidationMap=function(geoJSON,fileName,ix){
+    console.log("agsHtml.showOnValidationMap " + ix);
+    vMap.showOnValidationMap(geoJSON,fileName,ix);
     return true;
     };
 
