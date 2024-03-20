@@ -56,6 +56,8 @@ vMap.showOnValidationMap=function(geoJSON,fileName,ix){
 
 vMap.fitValidationMap=function(){
     console.log("vMap.fitValidationMap");
+    // force map redraw
+    vMap.map.lMap.invalidateSize();
     // fit bounds of validation GeoJSON layer(s)
     vMap.map.lMap.fitBounds(vMap.map.lyrs.GeoJSON.getBounds());
     return true;

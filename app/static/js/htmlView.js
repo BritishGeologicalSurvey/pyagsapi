@@ -330,29 +330,10 @@ agsHtml.setupCollapsibles=function(){
     };
 
 // interfaces to vMap (validation-map.js)
-agsHtml.setupValidationMap=function(){
-    console.log("agsHtml.setupValidationMap");
-    vMap.setupValidationMap();
-    return true;
-    };
-
-agsHtml.showOnValidationMap=function(geoJSON,fileName,ix){
-    console.log("agsHtml.showOnValidationMap " + ix);
-    vMap.showOnValidationMap(geoJSON,fileName,ix);
-    return true;
-    };
-
-agsHtml.resetValidationMap=function(){
-    console.log("agsHtml.resetValidationMap");
-    vMap.resetValidationMap();
-    return true;
-    };
-
-agsHtml.hideValidationMap=function(){
-    console.log("agsHtml.hideValidationMap");
-    vMap.hideValidationMap();
-    return true;
-    };
+agsHtml.setupValidationMap=function(){ vMap.setupValidationMap(); return true; };
+agsHtml.showOnValidationMap=function(geoJSON,fileName,ix){ vMap.showOnValidationMap(geoJSON,fileName,ix); return true; };
+agsHtml.resetValidationMap=function(){ vMap.resetValidationMap(); return true; };
+agsHtml.hideValidationMap=function(){ vMap.hideValidationMap(); return true; };
 
 // init
 agsHtml.init=function(){
