@@ -197,13 +197,33 @@ agsHtml.parseValidationResponse=function(jData){
     console.log(jData);
     var i=0;
     var fileResult={};
+    var gotGeoJSON=false;
+
     $("#res_Summary").html(jData.msg);
+
     // clear any previous results
     $("#res_Files").html("");
+
     for(i=0;i < jData.data.length;i++){
         fileResult=jData.data[i];
         agsHtml.displayFileResult(fileResult,i);
+        // check for GeoJSON
+        if(fileResult.geojson && fileResult.geojson.type){gotGeoJSON=true;};
         };
+
+    // check if any of the files returned GeoJSON
+    if(gotGeoJSON){
+        // enable download button + fit map to bounds
+        $("#downloadGeoJSONBtn").prop("disabled",false);
+        mavg.mergeGeoJSON(jData);
+        vMap.fitValidationMap();
+        }
+     else{
+        // if no files have GeoJSON then hide validation map + disable download button
+        agsHtml.hideValidationMap();
+        $("#downloadGeoJSONBtn").prop("disabled",true);
+        };
+
     $("#res_LoadMsg").hide();
     $("#res_Download").show();
     $("#resultPopup").show();
@@ -241,7 +261,7 @@ agsHtml.displayFileResult=function(fileResult,ix){
         xhtml=xhtml + "<ul class='fileResSummary'>";
 
         if(summaries.length === 0){
-            xhtml=xhtml + "<li>No summary generated due to errors reading file (see below)</li>";
+            xhtml=xhtml + "<li>No summary generated due to errors reading file (see below) or BGS validation not selected (required for summary)</li>";
             };
 
         if(fileResult.additional_metadata.bgs_all_groups){
@@ -286,17 +306,12 @@ agsHtml.displayFileResult=function(fileResult,ix){
     agsHtml.resetValidationMap();
 
     if(fileResult.geojson && fileResult.geojson.type){
-        console.log("GOT GeoJSON");
-        // show GeoJSON if returned + pass through filename for popup
+        console.log("GOT GeoJSON for file #" + ix);
+        // show GeoJSON if returned + pass through filename for popup + file index for colour
         agsHtml.showOnValidationMap(fileResult.geojson,fileResult.filename,ix);
-        // enable download button
-        $("#downloadGeoJSONBtn").prop("disabled",false);
         }
     else{
-        console.log("NO GeoJSON");
-        // otherwise hide validation map + disable download button
-        agsHtml.hideValidationMap();
-        $("#downloadGeoJSONBtn").prop("disabled",true);
+        console.log("NO GeoJSON for file #" + ix);
         };
     $("#res_Files").append(xhtml);
     return true;
