@@ -1,7 +1,7 @@
 // validation-map.js
 var vMap={};
 
-vMap.colours=['#a6cee3','#1f78b4','#b2df8a','#33a02c','#fb9a99','#e31a1c','#fdbf6f','#ff7f00','#cab2d6','#6a3d9a','#ffff99','#b15928'];
+vMap.colours=["#d9351a", "#ffc730", "#144d59", "#2c6954", "#ed9310", "#8c213f", "#102432", "#a64f1b", "#18382e", "#661510", "#b31515", "#4a0932"];
 
 vMap.map={
     "basemaps":{},
