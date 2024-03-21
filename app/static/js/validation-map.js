@@ -93,7 +93,7 @@ vMap.pointToLayer=function(feature,latlng,ix){
         "weight":1,
         "opacity":1,
         "fillOpacity":0.7,
-        "stroke":false
+        "stroke":true
         };
     var marker=L.circleMarker(latlng,markerOpts);
     return marker;
