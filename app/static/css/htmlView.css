@@ -105,3 +105,25 @@ span.popupContent>strong{color:#000;}
     from {transform: rotate(0deg);}
     to {transform: rotate(359deg);}
     }
+
+/* Validation map key and symbols */
+
+p.mapKey{
+    border: 1px solid #CCC;
+    margin: 1px;
+    }
+
+span.symbol {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    overflow: hidden;
+    border-radius: 50%;
+    margin: 0px;
+    padding: 0px;
+    }
+
+h3>span.symbol{
+    padding: 0px;
+    border:1px solid #FFF;
+    }

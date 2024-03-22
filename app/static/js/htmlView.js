@@ -241,13 +241,15 @@ agsHtml.displayFileResult=function(fileResult,ix){
     var errGroups=[];
     var errGroup="";
     var summaries=[];
+    var pointColour=vMap.colours[ix % vMap.colours.length];
 
     xhtml=xhtml + "<article>";
 
-    if(fileResult.valid){xhtml=xhtml + "<h3 class='valid'><strong>" + fileResult.filename + "</strong> <em>" + fileResult.message + "</em></h3>";
+    if(fileResult.valid){
+        xhtml=xhtml + "<h3 class='valid'><span style='background-color:" + pointColour + ";' class='symbol'>&nbsp;</span> <strong>" + fileResult.filename + "</strong> <em>" + fileResult.message + "</em></h3>";
         }
     else{
-        xhtml=xhtml + "<h3 class='invalid'><strong>" + fileResult.filename + "</strong> <em>" + fileResult.message + "</em></h3>";
+        xhtml=xhtml + "<h3 class='invalid'><span style='background-color:" + pointColour + ";' class='symbol'>&nbsp;</span> <strong>" + fileResult.filename + "</strong> <em>" + fileResult.message + "</em></h3>";
         };
     xhtml=xhtml + "<p><label>File Size</label> <strong>" + fileResult.filesize + " bytes</strong></p>";
     xhtml=xhtml + "<p><label>Checker(s)</label> <strong>" + fileResult.checkers.join(", ") + "</strong></p>";

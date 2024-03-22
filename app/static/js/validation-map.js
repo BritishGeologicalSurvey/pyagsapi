@@ -41,6 +41,11 @@ vMap.showOnValidationMap=function(geoJSON,fileName,ix){
     console.log(geoJSON);
     console.log(fileName);
     console.log(ix);
+
+    var pointColour=vMap.colours[ix % vMap.colours.length];
+    var xhtml="<p class='mapKey'><span class='symbol' style='background-color:" + pointColour + ";'>" + pointColour + "</span> " + fileName + "</p>";
+    $("#res_Files").append(xhtml);
+
     // show GeoJSON features on map - add popups and tooltips
     L.geoJSON(geoJSON,{
         "pointToLayer":function(feature,latlng){
@@ -88,7 +93,7 @@ vMap.pointToLayer=function(feature,latlng,ix){
     var markerOpts={
         "id":feature.properties.LOCA_ID,
         "radius":6,
-        "fillColor":vMap.colours[ix],
+        "fillColor":vMap.colours[ix % vMap.colours.length],
         "color":"#000",
         "weight":1,
         "opacity":1,
