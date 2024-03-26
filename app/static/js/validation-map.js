@@ -43,7 +43,7 @@ vMap.showOnValidationMap=function(geoJSON,fileName,ix){
     console.log(ix);
 
     var pointColour=vMap.colours[ix % vMap.colours.length];
-    var xhtml="<p class='mapKey'><span class='symbol' style='background-color:" + pointColour + ";'>" + pointColour + "</span> " + fileName + "</p>";
+    var xhtml="<p class='mapKey'><span class='symbol' style='background-color:" + pointColour + ";'>&nbsp;</span> " + fileName + "</p>";
     $("#res_Files").append(xhtml);
 
     // show GeoJSON features on map - add popups and tooltips
