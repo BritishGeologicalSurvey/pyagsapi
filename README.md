@@ -21,6 +21,7 @@ It can:
 
 - Validate AGS files to v4.x of the AGS data format standard
 - Validate AGS files for submission to the [National Geoscience Data Center (NGDC)](http://transfer.bgs.ac.uk/ingestion)
+- Extract geojson from submitted files and plot on a map
 - Convert between AGS format files and spreadsheet files `.ags` <-> `.xlsx`
 - Download PDF logs of existing files within the National Geoscience Data Centre
 
