@@ -2,33 +2,30 @@
 {% block title %}Home{% endblock %}
 {% block body %}
 
-<br/>
+
 <section id="identification">
     <h1>AGS4 File Utilities Tool and API</h1>
-    <br>
     <p>This tool and associated <a href="/docs/">API</a> allow schema validation, data validation and conversion of your <a href="https://www.ags.org.uk/data-format/">AGS files</a>. Files are not saved or stored by this tool. Also included are links to our other AGS data related services and applications</p>
-    <h2>Tools and Utilities</h2>
-    <ul> 
-        <li><a href="#deposit">AGS Data Submission</a></li>   
-        <li><a href="#validator">AGS Schema & Data Validator</a></li>
-        <li><a href="#ags_data">AGS Data Discovery</a></li>
-        <li><a href="#converter">File Conversion .ags &#8596; .xlsx</a></li>
+    <ul>
+        <li class="open"><a href="#ags_data">Data Discovery</a></li>
+        <li><a href="#validator">Schema & Data Validator</a></li>
+        <li><a href="#deposit">Data Submission</a></li>
+        <li><a href="#converter">File Conversion</a></li>
         <li><a href="#openapi">API Documentation</a></li>
     </ul>
 </section>
-<br>
-<hr>
-<section id="deposit">
+
+<section id="deposit" class="tabbed">
   <br>
   <h2>AGS Data Submission</h2>
   <br>
-  <p>Deposit your AGS data with the National Geoscience Data Centre (NGDC) <a href="http://transfer.bgs.ac.uk/ingestion"><b>here</b></a>. Please validate your files prior to submission. For further details please see <a href="https://www.bgs.ac.uk/technologies/geotechnical-data-services/">geotechnical data services.</a></p>
+  <p>Deposit your AGS data with the National Geoscience Data Centre (NGDC) <a href="http://transfer.bgs.ac.uk/ingestion"><b>here</b></a>.</p>
+  <p>Please validate your files prior to submission. For further details please see <a href="https://www.bgs.ac.uk/technologies/geotechnical-data-services/">geotechnical data services.</a></p>
+  <br>
+  <br>
 </section>
-<br>
-<br>
-<section id="validator">
-    <h2>AGS4 Schema & Data Validation</h2>
-    <br>
+
+<section id="validator" class="tabbed">
     <h3>AGS4 Validation </h3>
       <p>Performs validation using the <a href="https://gitlab.com/ags-data-format-wg/ags-python-library.">Official AGS Python Library</a> <strong>version 0.5.0</strong>, this implements checks of the rules as written in the <strong>AGS data format standard v4.x.</strong></p>
       <p style="color:red">If you're using AGS Data Format Standard v3.x use our legacy <a href="https://webapps.bgs.ac.uk/data/ags/validation/index.cfm">AGS Validator</a></p>
@@ -131,11 +128,11 @@
         <br>
         <fieldset>
           <legend>If HTML show LOCA features on a map / If JSON include GeoJSON</legend>
-          <input type="radio" id="return_geometry" name="return_geometry" value="true" checked="checked">
-          <label for="true">Yes</label>
-          <input type="radio" id="return_geometry" name="return_geometry" value="false">
-          <label for="false">No</label><br>
-      </fieldset>  
+          <input type="radio" id="return_geometry_true" name="return_geometry" value="true" checked="checked">
+          <label for="return_geometry_true">Yes</label>
+          <input type="radio" id="return_geometry_false" name="return_geometry" value="false">
+          <label for="return_geometry_false">No</label><br>
+      </fieldset>
         <br>
       <fieldset>
           <legend>Select .ags / .AGS file(s) for validation (v4.x only) <b>(50 Mb Maximum)</b></legend>
@@ -144,13 +141,10 @@
       </fieldset>
     </form>
 </section>
-<br>
-<br>
-<br>
-<section id="ags_data">
-  <h2>AGS Data Discovery</h2>
-  <br>
+
+<section id="ags_data" class="tabbed">
   <p>Use the map below to find AGS data, click on the markers to find borehole information, links to graphical logs, <a href="https://www.bgs.ac.uk/technologies/geotechnical-data-services/ags-download-service/">.ags data download from the NGDC AGS database,</a> and the original submitted AGS data.</p>
+  <div id="mapid"></div>
   <p><b>The map will show a maximum of 100 AGS markers - users may need to pan/zoom to display markers of interest. </b></p>
   <p><b>If no AGS Submission Record is shown at the link provided there is likely a legacy confidentiality restriction.</b></p>
   <br>
@@ -158,16 +152,13 @@
     <ul>
       <li>Selecting 10 boreholes from 10 different PROJ ID, then 10 .ags files will be supplied.</li>
       <li>Selecting 10 boreholes from a single PROJ ID then only one .ags file will be supplied.</li>
-    </ul> 
-  <div id="mapid"></div>
+    </ul>
 </section>
-<br>
-<br>
-<br>
-<section id="converter">
+
+<section id="converter" class="tabbed">
   <h2>AGS Converter</h2>
-    <div class="tooltip"><p>Convert .ags file(s) to/from .xlsx.</p>
-      <span class="tooltiptext">Which ever format file is submitted, the opposite will be returned e.g. if 5 .ags files and 3 .xlsx files were submitted the result would be 5 .xlsx files and 3 .ags files</span>
+    <div class="toltip"><p>Convert .ags file(s) to/from .xlsx.</p>
+      <span class="tootiptext">Which ever format file is submitted, the opposite will be returned e.g. if 5 .ags files and 3 .xlsx files were submitted the result would be 5 .xlsx files and 3 .ags files</span>
     </div>
     <br>
   <br>
@@ -175,13 +166,13 @@
     <fieldset>
       <legend>Sort worksheets in .xlsx file using a sorting strategy <strong>(Warning: .ags to .xlsx only. The original group order will be lost)</strong></legend>
       <input type="radio" id="default" name="sort_tables" value="default" checked="checked">
-      <label for="default">None (Maintain Input File Order)</label><br>
-      <input type="radio" id="dictionary" name="sort_tables" value="dictionary">
-      <label for="dictionary">File Dictionary</label><br>
+      <label for="default" class="tooltip">None<span class="tooltiptext">Maintains Input File Order</span></label><br>
       <input type="radio" id="alphabetical" name="sort_tables" value="alphabetical">
-      <label for="alphabetical">Alphabetical</label><br>
+      <label for="alphabetical" class="tooltip">Alphabetical<span class="tooltiptext">Group Names</span></label><br>
+      <input type="radio" id="dictionary" name="sort_tables" value="dictionary">
+      <label for="dictionary" class="tooltip">Dictionary<span class="tooltiptext">Standard dictionary defined in TRAN_AGS is used to sort standard groups and the custom dictionary is used for user-defined groups. User-defined groups will appear after standard groups</span></label><br>
       <input type="radio" id="hierarchical" name="sort_tables" value="hierarchical">
-      <label for="hierarchical">AGS Standard Hierarchy</label><br>
+      <label for="hierarchical" class="tooltip">AGS Standard Hierarchy<span class="tooltiptext">Order as follows: 11 groups outside the PROJ hierarchy appear first. 10 of these are described in Section 3.1 of the standard with the addition of LBST as it is the child of LBSG. Groups under PROJ appear next. Groups which don't belong to either of the previous categories appear last</span></label><br>
     </fieldset>
     <br>
     <fieldset>
@@ -191,11 +182,9 @@
     </fieldset>
   </form>
 </section>
-<br>
-<br>
-<br>
-<section id="openapi">
-      <h2>API Definition</h2>
+
+<section id="openapi" class="tabbed">
+      <h2>API Documentation and definition</h2>
       <p><a href="/docs/">Documentation (Swagger UI)</a></p>
       <p><a href="/openapi.json/">OpenAPI Document</a></p>
       <p><a href="/redoc/">ReDoc</a></p>

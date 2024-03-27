@@ -33,10 +33,9 @@ def test_openapi_json(client):
     # exposed endpoints
     assert '/validate' in response.text
     assert '/convert' in response.text
-    # hidden endpoints
-    assert '/ags_log' not in response.text
-    assert '/ags_export' not in response.text
-    assert '/ags_export_by_polygon' not in response.text
+    assert '/ags_log' in response.text
+    assert '/ags_export' in response.text
+    assert '/ags_export_by_polygon' in response.text
 
 
 @pytest.mark.parametrize('filename, expected',

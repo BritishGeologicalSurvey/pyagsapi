@@ -21,17 +21,17 @@
     font-size: 90%;
     cursor:pointer;
     box-shadow: 2px 2px 4px #444;
-    }	
+    }
 #resultPopup>h2>input:hover{
     border: 1px solid #000;
     background-color: #444;
     color: #FFF;
     box-shadow: 1px 1px 2px #222;
-    }   
-  
+    }
+
 input.submitBtn{color:rgb(0,48,66);}
 input.submitBtn:disabled{opacity:0.5;color:#888;}
-  
+
 #resultPopup>p{
     padding: 4px 8px;
     margin: 0px;
@@ -41,7 +41,7 @@ input.submitBtn:disabled{opacity:0.5;color:#888;}
     margin:5px;
     background-color: #FFFFFF;
     }
-#res_Files>article>h3{color:#FFF;}    
+#res_Files>article>h3{color:#FFF;}
 #res_Files>article>h3.valid{background-color:#080;}
 #res_Files>article>h3.invalid{background-color:#900;color:#FFF;}
 #res_Files>article>h3>*{display:inline-block;padding: 2px 4px;}
@@ -69,3 +69,61 @@ input.submitBtn:disabled{opacity:0.5;color:#888;}
 #res_Files>article>ul.fileResErrors>li>ul{display:none;}
 #res_Files>article>ul.fileResErrors>li>ul>li>span{color:#800000;}
 
+/* Validation map container */
+#res_Map{height:400px;}
+
+/* Validation map marker popups */
+span.popupContent{}
+span.popupContent>h4{border-bottom:1px solid #000000;margin:0em;}
+span.popupContent>label{color:#444;}
+span.popupContent>strong{color:#000;}
+
+#resultPopup>p#res_LoadMsg{
+    color:#FFF;
+    background-color:#97875B;
+    margin:10px;
+    padding:2px 5px;
+    border-radius:5px;
+    font-size:120%;
+    }
+
+#res_LoadMsg>span{
+    font-weight:bold;
+    display:inline-block;
+    width:24px;
+    height:24px;
+    padding:2px;
+    margin:2px;
+    color:#97875B;
+    background-color:#FFF;
+    border-radius:50%;
+    }
+
+.rotate{animation: rotation 2s linear infinite;}
+
+@keyframes rotation{
+    from {transform: rotate(0deg);}
+    to {transform: rotate(359deg);}
+    }
+
+/* Validation map key and symbols */
+
+p.mapKey{
+    border: 1px solid #CCC;
+    margin: 1px;
+    }
+
+span.symbol {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    overflow: hidden;
+    border-radius: 50%;
+    margin: 0px;
+    padding: 0px;
+    }
+
+h3>span.symbol{
+    padding: 0px;
+    border:1px solid #FFF;
+    }

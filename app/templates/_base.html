@@ -15,74 +15,30 @@
     <link rel="stylesheet" id="bgs-fonts-css" href="https://use.typekit.net/mvn4zqf.css?ver=1.0.2" type="text/css" media="all" />
     <link rel="stylesheet" href="//resources.bgs.ac.uk/webapps/resources/css/main.css">
     <link rel="stylesheet" href="//resources.bgs.ac.uk/webapps/resources/css/content.css">
-    <link rel="stylesheet" href="../static/css/tooltip.css">
     <link rel="stylesheet" href="../static/css/htmlView.css">
+    <link rel="stylesheet" href="../static/css/tooltip.css">
 
-    <script type="text/javascript" src="//resources.bgs.ac.uk/webapps/resources/js/jquery.min.js"></script>
+    <script type="text/javascript" src="../static/js/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="//resources.bgs.ac.uk/webapps/resources/js/main.js"></script>
     <script type="text/javascript" src="../static/js/htmlView.js"></script>
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.css" integrity="sha256-p6xU9YulB7E2Ic62/PX+h59ayb3PBJ0WFTEQxq0EjHw=" crossorigin="anonymous" />
     <link rel="stylesheet" href="../static/js/leaflet/leaflet.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css" integrity="sha512-gc3xjCmIy673V6MyOAZhIW93xhM9ei1I+gLbmFjUHIjocENRsLX/QUE1htk5q1XV2D/iie/VQ8DXI6Vu8bexvQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="../static/css/style.css" />
 
-    <script src="../static/js/jquery/jquery-3.3.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js"></script>
-    <script src="../static/js/leaflet/leaflet-src.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js" integrity="sha512-ozq8xQKq6urvuU6jNgkfqAmT7jKN2XumbrX1JiB3TnF7tI48DPI4Gy1GXKD/V3EExgAs1V+pRO7vwtS1LHg0Gw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="../static/js/leaflet/esri/esri-leaflet.js"></script>
-    <script src="../static/js/L.TileLayer.BetterWMS.js"></script>
-    <script src="../static/js/Leaflet.FeatureGroup.OGCAPI.js"></script>
-    <script src="../static/js/map.js"></script>
+    <script type="text/javascript" src="../static/js/leaflet/leaflet.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js" integrity="sha512-ozq8xQKq6urvuU6jNgkfqAmT7jKN2XumbrX1JiB3TnF7tI48DPI4Gy1GXKD/V3EExgAs1V+pRO7vwtS1LHg0Gw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script type="text/javascript" src="../static/js/leaflet/esri/esri-leaflet.js"></script>
+    <script type="text/javascript" src="../static/js/L.TileLayer.BetterWMS.js"></script>
+    <script type="text/javascript" src="../static/js/Leaflet.FeatureGroup.OGCAPI.js"></script>
+    <script type="text/javascript" src="../static/js/map.js"></script>
+    <script type="text/javascript" src="../static/js/validation-map.js"></script>
+    <script type="text/javascript" src="../static/js/merge-ags-validation-geojson.js"></script>
 
-	<style>
-.collapsible {
-  background-color: #cec4a9;
-  color: black;
-  cursor: pointer;
-  padding: 18px;
-  width: 100%;
-  border: none;
-  text-align: left;
-  outline: none;
-  font-size: 15px;
-}
-
-.active, .collapsible:hover {
-  background-color: #97875B;
-}
-
-.collapsible:after {
-  content: '\002B';
-  color: black;
-  font-weight: bold;
-  float: right;
-  margin-left: 5px;
-}
-
-.active:after {
-  content: "\2212";
-}
-
-.content {
-  padding: 0 18px;
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.2s ease-out;
-  background-color: #edf3f4;
-}
-
-#map {
-			width:600px;
-			height: 500px;
-		}
-
-</style>
   </head>
   <body>
     <header>
-		<div id="mobileMenu">mobileMenu</div>
+		<div id="mobileMenu">&nbsp;</div>
 		<section class="topnav">
 			<article>
 				<a href="https://www.bgs.ac.uk/hosted-websites/">Hosted sites</a>
@@ -95,7 +51,7 @@
 				<a href="https://www.bgs.ac.uk/"><img src="//resources.bgs.ac.uk/webapps/resources/images/BGS-Logo-Pos-RGB.svg" class="logo-initial" alt="British Geological Survey Logo"></a>
 			</article>
 			<article class="nav">
-				<img src="//resources.bgs.ac.uk/webapps/resources/images/menu-bars.svg" class="menubars" align="right" />
+                <!-- <img src="//resources.bgs.ac.uk/webapps/resources/images/menu-bars.svg" class="menubars" align="right" /> -->
 				<p class="About"><a href="#About">About BGS</a></p>
 				<p class="Research"><a href="#Research">Research</a></p>
 				<p class="Data"><a href="#Data">Data</a></p>
@@ -107,7 +63,7 @@
 
 		<!--<section class="breadcrumbs"
 			<article>
-				#include file="breadCrumbs.htm"
+				include file="breadCrumbs.htm"
 			</article>
 		</section>-->
 	</header>
@@ -397,20 +353,18 @@
 		</ul>
 	</nav>
     <main>
-    <div class="container">
-      <div class="row">
-        <div>
-          <br/>
-          {% block body %}
-          {% endblock %}
+
+        <div class="container">
+          <div class="row">
+            <div>
+                <br/>
+                {% block body %}
+                {% endblock %}
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-		<hr>
-		<br>
-      <div>
-            Powered by <a title="pyagsapi" href="https://github.com/BritishGeologicalSurvey/pyagsapi">pyagsapi 5.0</a>. pyagsapi was created by and is maintained by the <a href="https://www.bgs.ac.uk/">British Geological Survey</a> and  is distributed under the <a title="license" href="https://github.com/BritishGeologicalSurvey/pyagsapi/blob/main/LICENSE">LGPL v3.0 licence</a>, code is available on <a title="github" href="https://github.com/BritishGeologicalSurvey/pyagsapi">GitHub</a>. <a title="agspython" href="https://github.com/BritishGeologicalSurvey/pyagsapi">pyagsapi</a> uses the <a href="https://gitlab.com/ags-data-format-wg/ags-python-library.">Official AGS Python Library v0.5.0</a>.
-        </div>
+
+        <div>Powered by <a title="pyagsapi" href="https://github.com/BritishGeologicalSurvey/pyagsapi">pyagsapi 5.0</a>. pyagsapi was created by and is maintained by the <a href="https://www.bgs.ac.uk/">British Geological Survey</a> and  is distributed under the <a title="license" href="https://github.com/BritishGeologicalSurvey/pyagsapi/blob/main/LICENSE">LGPL v3.0 licence</a>, code is available on <a title="github" href="https://github.com/BritishGeologicalSurvey/pyagsapi">GitHub</a>. <a title="agspython" href="https://github.com/BritishGeologicalSurvey/pyagsapi">pyagsapi</a> uses the <a href="https://gitlab.com/ags-data-format-wg/ags-python-library.">Official AGS Python Library v0.5.0</a>.</div>
 
 		<div id="extentModal">
             <p>&nbsp;<input type="button" id="closeModalBtn" value="&#x2716;" /></p>
@@ -422,7 +376,6 @@
             <p class="extentMsg" id="extentValid"><a href="#">Download ZIP of selected boreholes</a></p>
             <p>&nbsp;</p>
         </div>
-
     </main>
     <footer>
         <section class="ukri">
@@ -458,21 +411,5 @@
     </footer>
     {% block extrafoot %}
     {% endblock %}
-	<script>
-	var coll = document.getElementsByClassName("collapsible");
-	var i;
-
-	for (i = 0; i < coll.length; i++) {
-	coll[i].addEventListener("click", function() {
-		this.classList.toggle("active");
-		var content = this.nextElementSibling;
-		if (content.style.maxHeight){
-		content.style.maxHeight = null;
-		} else {
-		content.style.maxHeight = content.scrollHeight + "px";
-		}
-	});
-	}
-	</script>
   </body>
 </html>
