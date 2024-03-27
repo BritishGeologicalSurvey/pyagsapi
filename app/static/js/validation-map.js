@@ -1,7 +1,7 @@
 // validation-map.js
 var vMap={};
 
-vMap.colours=["#d9351a", "#ffc730", "#144d59", "#2c6954", "#ed9310", "#8c213f", "#102432", "#a64f1b", "#18382e", "#661510", "#b31515", "#4a0932"];
+vMap.colours=["#d9351a", "#ffc730", "#1d63ec", "#e65bae", "#144d59", "#bf00ff", "#ed9310", "#2c6954", "#8c213f", "#102432", "#a64f1b", "#18382e", "#661510", "#b31515", "#4a0932"];
 
 vMap.map={
     "basemaps":{},
@@ -44,7 +44,7 @@ vMap.showOnValidationMap=function(geoJSON,fileName,ix){
 
     var pointColour=vMap.colours[ix % vMap.colours.length];
     var xhtml="<p class='mapKey'><span class='symbol' style='background-color:" + pointColour + ";'>&nbsp;</span> " + fileName + "</p>";
-    $("#res_Files").append(xhtml);
+    $("#res_MapFrame").append(xhtml);
 
     // show GeoJSON features on map - add popups and tooltips
     L.geoJSON(geoJSON,{
