@@ -44,7 +44,7 @@ vMap.showOnValidationMap=function(geoJSON,fileName,ix){
 
     var pointColour=vMap.colours[ix % vMap.colours.length];
     var xhtml="<p class='mapKey'><span class='symbol' style='background-color:" + pointColour + ";'>&nbsp;</span> " + fileName + "</p>";
-    $("#res_Files").prepend(xhtml);
+    $("#res_MapFrame").append(xhtml);
 
     // show GeoJSON features on map - add popups and tooltips
     L.geoJSON(geoJSON,{
