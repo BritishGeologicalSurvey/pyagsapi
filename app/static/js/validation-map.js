@@ -97,7 +97,7 @@ vMap.pointToLayer=function(feature,latlng,ix){
         "color":"#000",
         "weight":1,
         "opacity":1,
-        "fillOpacity":0.7,
+        "fillOpacity":0.9,
         "stroke":true
         };
     var marker=L.circleMarker(latlng,markerOpts);
