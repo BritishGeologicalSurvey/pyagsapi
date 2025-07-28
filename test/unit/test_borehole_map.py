@@ -22,9 +22,9 @@ def test_extract_geojson_example_ags():
     # Creation of FeatureCollection ensures correct fields exist
     feature_collection = FeatureCollection(**result)
     assert isinstance(feature_collection, FeatureCollection)
-    assert len(feature_collection) == 1
+    assert len(feature_collection.features) == 1
 
-    feature = feature_collection[0]
+    feature = feature_collection.features[0]
     assert feature.properties['PROJ_ID'] == '121415'
     assert feature.properties['LOCA_ID'] == '327-16A'
     assert 'LOCA_FILE_FSET' in feature.properties
@@ -71,7 +71,7 @@ def test_concatenate_feature_collections():
     feature_collection = FeatureCollection(**result)
     assert isinstance(feature_collection, FeatureCollection)
 
-    assert len(feature_collection) == total_features
+    assert len(feature_collection.features) == total_features
 
 
 """
