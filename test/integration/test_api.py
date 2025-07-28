@@ -658,7 +658,7 @@ def test_get_ags_export_too_many_borehole_ids(client):
     """
     # Arrange
     # Define the borehole IDs to use for the test
-    bgs_loca_ids = ['20200205093728297908'] * 11
+    bgs_loca_ids = ['20200205093728297908'] * (app_routes.BOREHOLE_EXPORT_LIMIT + 1)
     bgs_loca_ids = ';'.join(bgs_loca_ids)
     query = f'/ags_export/?bgs_loca_id={bgs_loca_ids}'
 
@@ -669,7 +669,7 @@ def test_get_ags_export_too_many_borehole_ids(client):
     # Assert
     assert response.status_code == 422
     body = response.json()
-    assert body['errors'][0]['desc'] == 'More than 10 borehole IDs.'
+    assert body['errors'][0]['desc'] == f'More than {app_routes.BOREHOLE_EXPORT_LIMIT} borehole IDs.'
 
 
 def test_get_ags_exporter_unreachable(client, monkeypatch):
@@ -781,7 +781,7 @@ def test_get_ags_exporter_by_polygon_count_only(client, polygon, count):
 def test_get_ags_exporter_by_polygon_too_many_boreholes(client):
     # Arrange
     # There should be 28 boreholes in this area
-    polygon = 'POLYGON((-3.946 56.065,-3.640 56.065,-3.640 55.966,-3.946 55.966,-3.946 56.065))'
+    polygon = 'POLYGON((-3.109 55.895,-3.109 55.906,-3.077 55.906,-3.077 55.895,-3.109 55.895))'
     query = f'/ags_export_by_polygon/?polygon={polygon}'
 
     # Act
@@ -789,10 +789,11 @@ def test_get_ags_exporter_by_polygon_too_many_boreholes(client):
         response = ac.get(query)
 
     # Assert
-    assert response.status_code == 400
+    assert response.status_code == 422
     body = response.json()
-    assert body['errors'][0]['desc'] == ('More than 10 boreholes (28) found in the given polygon. '
-                                         'Please try with a smaller polygon')
+    assert body['errors'][0]['desc'].startswith('More than 50 boreholes (')
+    assert body['errors'][0]['desc'].endswith(') found in the given polygon. Please try with a smaller polygon')
+    assert int(body['errors'][0]['desc'].replace(')', '(').split('(')[1]) > app_routes.BOREHOLE_EXPORT_LIMIT
 
 
 def test_get_ags_exporter_by_polygon_no_boreholes(client):
@@ -805,7 +806,7 @@ def test_get_ags_exporter_by_polygon_no_boreholes(client):
         response = ac.get(query)
 
     # Assert
-    assert response.status_code == 400
+    assert response.status_code == 422
     body = response.json()
     assert body['errors'][0]['desc'] == 'No boreholes found in the given polygon'
 

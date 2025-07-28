@@ -21,6 +21,7 @@ from app.checkers import check_ags, check_bgs
 from app.errors import error_responses, InvalidPayloadError
 from app.schemas import ValidationResponse, BoreholeCountResponse
 
+BOREHOLE_EXPORT_LIMIT = 50
 BOREHOLE_VIEWER_URL = "https://gwbv.bgs.ac.uk/GWBV/viewborehole?loca_id={bgs_loca_id}"
 BOREHOLE_EXPORT_URL = "https://gwbv.bgs.ac.uk/ags_export?loca_ids={bgs_loca_id}"
 BOREHOLE_INDEX_URL = ("https://ogcapi.bgs.ac.uk/collections/agsboreholeindex/items?f=json"
@@ -383,13 +384,13 @@ def ags_export(bgs_loca_id: str = ags_export_query):
     :return: A response containing a .zip file with the exported borehole data.
     :rtype: Response
     :raises HTTPException 404: If the specified boreholes do not exist or are confidential.
-    :raises HTTPException 422: If more than 10 borehole IDs are supplied.
+    :raises HTTPException 422: If more than BOREHOLE_EXPORT_LIMIT borehole IDs are supplied.
     :raises HTTPException 500: If the borehole exporter returns an error.
     :raises HTTPException 500: If the borehole exporter could not be reached.
     """
 
-    if len(bgs_loca_id.split(';')) > 10:
-        raise HTTPException(status_code=422, detail="More than 10 borehole IDs.")
+    if len(bgs_loca_id.split(';')) > BOREHOLE_EXPORT_LIMIT:
+        raise HTTPException(status_code=422, detail=f"More than {BOREHOLE_EXPORT_LIMIT} borehole IDs.")
 
     url = BOREHOLE_EXPORT_URL.format(bgs_loca_id=bgs_loca_id)
 
@@ -428,7 +429,7 @@ def ags_export_by_polygon(polygon: str = polygon_query,
                           request: Request = None):
     """
     Export the boreholes in .ags format from AGS data held by the National Geoscience Data Centre,
-    that are bounded by the polygon. If there are more than 10 boreholes return an error
+    that are bounded by the polygon. If there are more than 50 boreholes return an error
     :param polygon: A polygon in Well Known Text.
     :type polygon: str
     :param count_only: The format to return the validation results in. Options are "text" or "json".
@@ -439,7 +440,7 @@ def ags_export_by_polygon(polygon: str = polygon_query,
     :rtype: Union[BoreholeCountResponse, Response]
     :return: A response containing a count or a .zip file with the exported borehole data.
     :rtype: Response
-    :raises HTTPException 400: If there are no boreholes or more than 10 boreholes in the polygon.
+    :raises HTTPException 422: If there are no boreholes or more than BOREHOLE_EXPORT_LIMIT boreholes in the polygon.
     :raises HTTPException 422: If the Well Known Text is not a POLYGON or is invalid.
     :raises HTTPException 500: If the borehole index could not be reached.
     :raises HTTPException 500: If the borehole index returns an error.
@@ -480,11 +481,11 @@ def ags_export_by_polygon(polygon: str = polygon_query,
         response = prepare_count_response(request, count)
     else:
         if count == 0:
-            raise HTTPException(status_code=400,
+            raise HTTPException(status_code=422,
                                 detail="No boreholes found in the given polygon")
-        elif count > 10:
-            raise HTTPException(status_code=400,
-                                detail=f"More than 10 boreholes ({count}) "
+        elif count > BOREHOLE_EXPORT_LIMIT:
+            raise HTTPException(status_code=422,
+                                detail=f"More than {BOREHOLE_EXPORT_LIMIT} boreholes ({count}) "
                                 "found in the given polygon. Please try with a smaller polygon")
 
         bgs_loca_ids = ';'.join([f['id'] for f in collection['features']])
