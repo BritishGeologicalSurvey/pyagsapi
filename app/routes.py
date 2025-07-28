@@ -65,6 +65,7 @@ class Dictionary(StrEnum):
     v4_0_4 = "v4_0_4"
     v4_1 = "v4_1"
     v4_1_1 = "v4_1_1"
+    None_Given = ''
 
 
 # Enum for checker logic
@@ -106,13 +107,13 @@ geometry_form = Form(
 )
 
 dictionary_form = Form(
-    default=None,
+    default=Dictionary.None_Given,
     title='Validation Dictionary',
     description='Version of AGS dictionary to validate against',
 )
 
 validate_form = Form(
-    default=None,
+    default=[Checker.ags],
     title='Validation Options',
     description='If set validate against AGS schema',
 )
