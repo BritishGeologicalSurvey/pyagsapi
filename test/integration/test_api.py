@@ -7,7 +7,7 @@ import zipfile
 from fastapi.testclient import TestClient
 from freezegun import freeze_time
 import pytest
-from httpx import AsyncClient
+from httpx import ASGITransport, AsyncClient
 import requests
 from requests_toolbelt.multipart.encoder import MultipartEncoder
 import pandas as pd
@@ -881,4 +881,4 @@ def client():
 
 @pytest.fixture(scope="function")
 def async_client():
-    return AsyncClient(app=app, base_url="http://test")
+    return AsyncClient(transport=ASGITransport(app=app), base_url="http://test")
