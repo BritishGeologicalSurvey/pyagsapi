@@ -25,12 +25,12 @@ AGS_FILE_DATA = {
     ('nonsense.AGS', {'AGS Format Rule 2a', 'AGS Format Rule 3', 'AGS Format Rule 5', 'AGS Format Rule 13',
                       'AGS Format Rule 14', 'AGS Format Rule 15', 'AGS Format Rule 17'}),
     ('empty.ags', {'AGS Format Rule 13', 'AGS Format Rule 14', 'AGS Format Rule 15', 'AGS Format Rule 17'}),
-    ('real/AGS3/A3040_03.ags', {'AGS Format Rule 3'}),
+    ('real/AGS3/A3040_03.ags', {'AGS Format Rule 3', 'Validator Process Error'}),
     ('real/43370.ags', {'General', 'AGS Format Rule 2a', 'AGS Format Rule 1'}),
-    ('real/JohnStPrimarySchool.ags', {'AGS Format Rule 3', 'AGS Format Rule 5', 'AGS Format Rule ?',
-                                      'AGS Format Rule 4', 'AGS Format Rule 2a'}),
-    ('real/AGS3/19684.ags', {'AGS Format Rule 3'}),
-    ('real/AGS3/E52A4379 (2).ags', {'AGS Format Rule 3'}),
+    ('real/JohnStPrimarySchool.ags', {'General', 'AGS Format Rule 3', 'AGS Format Rule 5',
+                                      'AGS Format Rule 4', 'AGS Format Rule 2a', 'Validator Process Error'}),
+    ('real/AGS3/19684.ags', {'AGS Format Rule 3', 'Validator Process Error'}),
+    ('real/AGS3/E52A4379 (2).ags', {'AGS Format Rule 3', 'Validator Process Error'}),
 ])
 def test_check_ags(filename, expected_rules):
     """Check that broken rules are returned and exceptions handled correctly."""
