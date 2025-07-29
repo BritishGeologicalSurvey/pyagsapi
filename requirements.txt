@@ -159,7 +159,7 @@ pyparsing==3.2.3
     # via matplotlib
 pyproj==3.7.1
     # via geopandas
-python-ags4==0.5.0
+python-ags4==1.1.0
     # via -r requirements.in
 python-dateutil==2.9.0.post0
     # via

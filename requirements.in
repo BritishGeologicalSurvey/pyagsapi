@@ -5,7 +5,7 @@ colorlog
 geopandas[all]
 numpy
 geojson-pydantic
-python-ags4==0.5.0
+python-ags4==1.1.0
 requests
 shortuuid
 fastapi[standard]
