@@ -20,7 +20,7 @@ None
 """,
     'example_broken_ags.ags': """
 ================================================================================
-example_broken_ags.ags: 13 error(s) found in file!
+example_broken_ags.ags: 14 error(s) found in file!
 
 # Metadata
 
@@ -53,7 +53,11 @@ Line: 32 - Does not start with a valid data descriptor.
 Line: 35 - Does not start with a valid data descriptor.
 Line: 37 - Does not start with a valid data descriptor.
 
-## AGS Format Rule ?
+## General
+
+Group:  - Could not complete validation. Please fix listed errors and try again.
+
+## Validator Process Error
 
 Group:  - Line 31 does not have the same number of entries as the HEADING row in TYPE.
 
