@@ -217,8 +217,10 @@ async def validate(background_tasks: BackgroundTasks,
 
     tmp_dir = Path(tempfile.mkdtemp())
     background_tasks.add_task(shutil.rmtree, tmp_dir)
-    dictionary = None
-    if std_dictionary:
+
+    if std_dictionary == Dictionary.None_Given:
+        dictionary = None
+    else:
         dictionary = f'Standard_dictionary_{std_dictionary}.ags'
 
     data = []
@@ -305,7 +307,7 @@ async def convert(background_tasks: BackgroundTasks,
             contents = await file.read()
             local_file = tmp_dir / file.filename
             local_file.write_bytes(contents)
-            converted, result = conversion.convert(local_file, results_dir, sorting_strategy=sort_tables)
+            _, result = conversion.convert(local_file, results_dir, sorting_strategy=sort_tables)
             log = validation.to_plain_text(result)
             f.write(log)
             f.write('\n' + '=' * 80 + '\n')
