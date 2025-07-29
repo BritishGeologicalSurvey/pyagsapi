@@ -49,7 +49,7 @@ class Validation(BaseModel):
     valid: bool = Field(..., example='false')
     additional_metadata: dict = Field(...)
     geojson: dict = dict()
-    geojson_error: str = None
+    geojson_error: str | None = None
 
     @validator('errors')
     def errors_keys_must_be_known_rules(cls, errors):
@@ -71,11 +71,11 @@ class MinimalResponse(BaseModel):
 
 
 class ErrorResponse(MinimalResponse):
-    errors: List[Error] = None
+    errors: List[Error] | None = None
 
 
 class ValidationResponse(MinimalResponse):
-    data: List[Union[Validation, bool]] = None
+    data: List[Union[Validation, bool]] | None = None
 
 
 class BoreholeCountResponse(MinimalResponse):
