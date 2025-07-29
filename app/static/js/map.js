@@ -262,11 +262,11 @@ agsMap.checkExtent=function(wkt){
 
 agsMap.parseExtent=function(jData){
     var apiUrl=jData.self.replace("&count_only=True","")
-	// detect production environment and ensure https link is built
-	if (apiUrl.includes("bgs.ac.uk")) {
+    // detect production environment and ensure https link is built
+    if (apiUrl.includes("bgs.ac.uk")) {
         apiUrl = apiUrl.replace('http://','https://');
     }
-	if(jData.type === "success"){
+    if(jData.type === "success"){
         if(jData.count === 0){
             // no bores
             $("#boreCount").html("none found");
