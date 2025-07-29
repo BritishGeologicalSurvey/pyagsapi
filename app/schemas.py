@@ -14,7 +14,7 @@ VALID_KEYS = [
     'AGS Format Rule 11a', 'AGS Format Rule 11b', 'AGS Format Rule 11c', 'AGS Format Rule 12',
     'AGS Format Rule 13', 'AGS Format Rule 14', 'AGS Format Rule 15', 'AGS Format Rule 16',
     'AGS Format Rule 17', 'AGS Format Rule 18', 'AGS Format Rule 19', 'AGS Format Rule 19a',
-    'AGS Format Rule 19b', 'AGS Format Rule 20', 'AGS Format Rule ?', 'General',
+    'AGS Format Rule 19b', 'AGS Format Rule 20', 'General', 'Validator Process Error',
     # Warnings and FYIs
     'Warning (Related to Rule 16)', 'FYI (Related to Rule 1)',
     # Errors
