@@ -261,7 +261,7 @@ agsMap.checkExtent=function(wkt){
     };
 
 agsMap.parseExtent=function(jData){
-    var apiUrl=jData.self.replace("&count_only=True","")
+    var apiUrl=jData.self.replace("&count_only=True","");
     // detect production environment and ensure https link is built
     if (apiUrl.includes("bgs.ac.uk")) {
         apiUrl = apiUrl.replace('http://','https://');
