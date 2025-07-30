@@ -11,7 +11,8 @@ on:
     types:
       - completed 
     branches:
-      - main  
+      - main
+      - 157-https-zip-link
   release:
     types:
       - released    
