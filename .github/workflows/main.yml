@@ -6,11 +6,12 @@
 name: Build and Push Container
 
 on:
-  # Temporary change to make the container build from the branch
-  # This should be reverted once branch is merged.
-  push:
+  workflow_run:
+    workflows: [Lint & Test Python package]
+    types:
+      - completed 
     branches:
-      - 157-https-zip-link
+      - main  
   release:
     types:
       - released    
