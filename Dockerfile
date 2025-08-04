@@ -1,11 +1,12 @@
-FROM python:3.13.5-alpine3.22
+FROM python:3.13.5-slim
 
-## Install python-ags4
-COPY requirements.txt .
-RUN pip install -r requirements.txt
+WORKDIR /code
 
-RUN rm -rf /app/*
-COPY ./app /app/app
+COPY ./requirements.txt /code/requirements.txt
+
+RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
+
+COPY ./app /code/app
 
 EXPOSE 80
-CMD [ "fastapi", "run", "app/main.py", "--port", "80" ]
+CMD ["fastapi", "run", "app/main.py", "--port", "80"]
