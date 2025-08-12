@@ -3,7 +3,6 @@ The validate function calls checkers to validate files and combines the
 results in the requested format.
 """
 import datetime as dt
-from functools import reduce
 import logging
 from pathlib import Path
 from typing import Optional, Callable, List
@@ -47,9 +46,11 @@ def validate(filename: Path,
 
     all_errors = {}
     all_checkers = []
+    error_count = warnings_count = fyi_count = 0
     additional_metadata_responses = {'bgs': {}, 'ags': {}}
     # Don't process if file is not .ags format
     if filename.suffix.lower() != '.ags':
+        error_count = 1
         all_errors.update(
             {'File read error': [
                 {'line': '-', 'group': '', 'desc': f'{filename.name} is not an .ags file'}
@@ -71,6 +72,10 @@ def validate(filename: Path,
             else:
                 additional_metadata_responses['ags'] = additional_metadata
 
+            error_count += result['error_count']
+            warnings_count += result['warnings_count']
+            fyi_count += result['fyi_count']
+
             # Add remaining keys to response
             response.update(result)
 
@@ -80,7 +85,6 @@ def validate(filename: Path,
     else:
         response['additional_metadata'] = additional_metadata_responses['ags']
 
-    error_count = len(reduce(lambda total, current: total + current, all_errors.values(), []))
     if error_count > 0:
         message = f'{error_count} error(s) found in file!'
         valid = False
@@ -88,7 +92,13 @@ def validate(filename: Path,
         message = 'All checks passed!'
         valid = True
 
-    response.update(errors=all_errors, message=message, valid=valid, checkers=all_checkers)
+    if warnings_count > 0:
+        message += f'\n{warnings_count} warnings(s) found in file.'
+    if fyi_count > 0:
+        message += f'\n{fyi_count} FYI(s) found in file.'
+
+    response.update(errors=all_errors, message=message, valid=valid, checkers=all_checkers,
+                    error_count=error_count, warnings_count=warnings_count, fyi_count=fyi_count)
 
     return response
 

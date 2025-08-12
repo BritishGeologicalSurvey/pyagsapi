@@ -28,6 +28,8 @@ def check_ags(filename: Path, standard_AGS4_dictionary: Optional[str] = None) ->
     try:
         errors = AGS4.check_file(filename,
                                  standard_AGS4_dictionary=standard_AGS4_dictionary)
+        error_count, warnings_count, fyi_count = AGS4.count_errors(errors)
+
         try:
             metadata = errors.pop('Metadata')  # This also removes it from returned errors
             dictionary = [d['desc'] for d in metadata
@@ -48,7 +50,8 @@ def check_ags(filename: Path, standard_AGS4_dictionary: Optional[str] = None) ->
 
     return dict(checker=f'python_ags4 v{python_ags4.__version__}',
                 errors=errors, dictionary=dictionary,
-                additional_metadata=additional_metadata)
+                error_count=error_count, warnings_count=warnings_count,
+                fyi_count=fyi_count, additional_metadata=additional_metadata)
 
 
 def convert_to_additional_metadata(summary: list[dict]) -> dict:
@@ -92,14 +95,17 @@ def check_bgs(filename: Path, **kwargs) -> dict:
         bgs_metadata = generate_bgs_metadata(tables)
 
         # Apply checks
+        error_count = 0
         for rule, func in BGS_RULES.items():
             logger.info("Checking against %s", rule)
             result = func(tables)
             if result:
                 errors[rule] = result
+                error_count += 1
 
     return dict(checker=f'bgs_rules v{bgs_rules_version}',
-                errors=errors,
+                errors=errors, error_count=error_count,
+                warnings_count=0, fyi_count=0,
                 additional_metadata=bgs_metadata)
 
 
