@@ -23,7 +23,8 @@ def mock_check_ags(filename, standard_AGS4_dictionary=None):
                     'bgs_file': 'Optional FILE group present: False',
                     'bgs_loca_rows': '1 data row(s) in LOCA group',
                     'bgs_projects': None
-                })
+                },
+                error_count=0, warnings_count=0, fyi_count=0)
 
 
 def mock_check_bgs(filename, **kwargs):
@@ -36,7 +37,8 @@ def mock_check_bgs(filename, **kwargs):
                     'bgs_file': 'Optional FILE group present: False',
                     'bgs_loca_rows': '1 data row(s) in LOCA group',
                     'bgs_projects': '1 projects found: 121415 (ACME Gas Works Redevelopment)'
-                })
+                },
+                error_count=1, warnings_count=0, fyi_count=0)
 
 
 @freeze_time(FROZEN_TIME)
@@ -60,7 +62,11 @@ def test_validate_default_checker():
             'bgs_file': 'Optional FILE group present: False',
             'bgs_loca_rows': '1 data row(s) in LOCA group',
             'bgs_projects': None
-        }}
+        },
+        'error_count': 0,
+        'warnings_count': 0,
+        'fyi_count': 0
+    }
 
     # Act
     response = validation.validate(filename, checkers=[mock_check_ags])
@@ -89,7 +95,10 @@ def test_validate_bgs_checker():
                                 'bgs_file': 'Optional FILE group present: False',
                                 'bgs_loca_rows': '1 data row(s) in LOCA group',
                                 'bgs_projects': '1 projects found: 121415 (ACME Gas '
-                                'Works Redevelopment)'}
+                                'Works Redevelopment)'},
+        'error_count': 1,
+        'warnings_count': 0,
+        'fyi_count': 0
     }
 
     # Act
@@ -120,7 +129,11 @@ def test_validate_both_checkers():
             'bgs_file': 'Optional FILE group present: False',
             'bgs_loca_rows': '1 data row(s) in LOCA group',
             'bgs_projects': '1 projects found: 121415 (ACME Gas Works Redevelopment)'
-        }}
+        },
+        'error_count': 1,
+        'warnings_count': 0,
+        'fyi_count': 0
+    }
 
     # Act
     response = validation.validate(filename, checkers=[mock_check_bgs, mock_check_ags])
@@ -143,7 +156,10 @@ def test_validate_non_ags():
         'message': '1 error(s) found in file!',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
         'valid': False,
-        'additional_metadata': {}
+        'additional_metadata': {},
+        'error_count': 1,
+        'warnings_count': 0,
+        'fyi_count': 0
     }
 
     # Act
