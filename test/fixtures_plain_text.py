@@ -20,7 +20,7 @@ None
 """,
     'example_broken_ags.ags': """
 ================================================================================
-example_broken_ags.ags: 14 error(s) found in file!
+example_broken_ags.ags: 13 error(s) found in file!
 
 # Metadata
 
@@ -113,7 +113,7 @@ Group: TYPE - TYPE group not found.
 """,
     'random_binary.ags': """
 ================================================================================
-random_binary.ags: 37 error(s) found in file!
+random_binary.ags: 36 error(s) found in file!
 
 # Metadata
 
@@ -197,7 +197,7 @@ Line:  - AGS4 Rule 1 is interpreted as allowing both standard ASCII characters (
 """,
     'real/Blackburn Southern Bypass.ags': """
 ================================================================================
-Blackburn Southern Bypass.ags: 95 error(s) found in file!
+Blackburn Southern Bypass.ags: 93 error(s) found in file!
 
 # Metadata
 

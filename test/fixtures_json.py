@@ -25,7 +25,7 @@ JSON_RESPONSES = {
         "checkers": ["python_ags4 v1.1.0"],
         'dictionary': 'Standard_dictionary_v4_1_1.ags',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
-        "message": "14 error(s) found in file!",
+        "message": "13 error(s) found in file!",
         "errors": {
             "AGS Format Rule 4": [
                 {
@@ -148,7 +148,7 @@ JSON_RESPONSES = {
         'checkers': ['python_ags4 v1.1.0'],
         'dictionary': 'Standard_dictionary_v4_1_1.ags',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
-        'message': '37 error(s) found in file!',
+        'message': '36 error(s) found in file!',
         'errors': {'AGS Format Rule 1': [{'desc': "Has Non-ASCII character(s) "
                                           "(assuming that file encoding is 'utf-8') "
                                           "and/or a byte-order-mark (BOM).",
@@ -337,7 +337,7 @@ JSON_RESPONSES = {
         'checkers': ['python_ags4 v1.1.0'],
         'dictionary': 'Standard_dictionary_v4_1_1.ags',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
-        'message': '95 error(s) found in file!',
+        'message': '93 error(s) found in file!',
         'errors': {'AGS Format Rule 1': [{'desc': "Has Non-ASCII character(s) "
                                           "(assuming that file encoding is 'utf-8') "
                                           "and/or a byte-order-mark (BOM).",
