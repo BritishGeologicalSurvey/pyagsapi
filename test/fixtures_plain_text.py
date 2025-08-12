@@ -2,11 +2,11 @@
 PLAIN_TEXT_RESPONSES = {
     'example_ags.ags': """
 ================================================================================
-example_ags.ags: No errors found!
+example_ags.ags: No errors found! 1 FYI(s) found in file.
 
 # Metadata
 
-File size: 4105 bytes
+File size: 4072 bytes
 Checkers: ['python_ags4 v1.1.0']
 Dictionary: Standard_dictionary_v4_1_1.ags
 Time: 2021-08-23 14:25:43+00:00

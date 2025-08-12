@@ -3,12 +3,22 @@ import datetime as dt
 JSON_RESPONSES = {
     'example_ags.ags': {
         'filename': 'example_ags.ags',
-        'filesize': 4105,
+        'filesize': 4072,
         'checkers': ['python_ags4 v1.1.0'],
         'dictionary': 'Standard_dictionary_v4_1_1.ags',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
-        'message': 'No errors found!',
-        'errors': {},
+        'message': 'No errors found! 1 FYI(s) found in file.',
+        'errors': {
+            'FYI (Related to Rule 16)': [
+                {
+                    'desc': 'DICT_TYPE: Description of abbreviation "GROUP" is "Group" but it '
+                    'should be "Flag to indicate definition is a GROUP" according to '
+                    'the standard abbreviations list.',
+                    'group': 'ABBR',
+                    'line': 11,
+                },
+            ],
+        },
         'valid': True,
         'additional_metadata': {'bgs_all_groups': '7 groups identified in file: PROJ '
                                 'ABBR TRAN TYPE UNIT LOCA SAMP',
