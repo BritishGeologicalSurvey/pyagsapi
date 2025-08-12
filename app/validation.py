@@ -89,13 +89,13 @@ def validate(filename: Path,
         message = f'{error_count} error(s) found in file!'
         valid = False
     else:
-        message = 'All checks passed!'
+        message = 'No errors found!'
         valid = True
 
     if warnings_count > 0:
-        message += f'\n{warnings_count} warnings(s) found in file.'
+        message += f' {warnings_count} warnings(s) found in file.'
     if fyi_count > 0:
-        message += f'\n{fyi_count} FYI(s) found in file.'
+        message += f' {fyi_count} FYI(s) found in file.'
 
     response.update(errors=all_errors, message=message, valid=valid, checkers=all_checkers,
                     error_count=error_count, warnings_count=warnings_count, fyi_count=fyi_count)

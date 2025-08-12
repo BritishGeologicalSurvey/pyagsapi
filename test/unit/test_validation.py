@@ -52,7 +52,7 @@ def test_validate_default_checker():
         'errors': {},
         'filename': filename.name,
         'filesize': 0,
-        'message': 'All checks passed!',
+        'message': 'No errors found!',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
         'valid': True,
         'additional_metadata': {

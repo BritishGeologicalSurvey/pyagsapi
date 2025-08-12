@@ -2,7 +2,7 @@
 PLAIN_TEXT_RESPONSES = {
     'example_ags.ags': """
 ================================================================================
-example_ags.ags: All checks passed!
+example_ags.ags: No errors found!
 
 # Metadata
 
