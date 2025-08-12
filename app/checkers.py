@@ -43,6 +43,8 @@ def check_ags(filename: Path, standard_AGS4_dictionary: Optional[str] = None) ->
         line_no = len(err.object[:err.end].split(b'\n'))
         description = f"UnicodeDecodeError: {err.reason}"
         errors = {'File read error': [{'line': line_no, 'group': '', 'desc': description}]}
+        error_count = 1
+        warnings_count = fyi_count = 0
         dictionary = ''
 
     summary = errors.pop('Summary of data', [])
@@ -89,6 +91,7 @@ def check_bgs(filename: Path, **kwargs) -> dict:
 
     if load_error:
         errors['File read error'] = [{'line': '-', 'group': '', 'desc': load_error}]
+        error_count = 1
     else:
         errors.update(ags4_errors)
         # Get additional metadata
