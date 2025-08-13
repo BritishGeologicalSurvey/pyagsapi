@@ -31,7 +31,7 @@ JSON_RESPONSES = {
     },
     'example_broken_ags.ags': {
         "filename": "example_broken_ags.ags",
-        "filesize": 4111,
+        "filesize": 4078,
         "checkers": ["python_ags4 v1.1.0"],
         'dictionary': 'Standard_dictionary_v4_1_1.ags',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
@@ -778,7 +778,571 @@ JSON_RESPONSES = {
         'geojson': {},
         'geojson_error': None
     },
+    'real/Fenham Barracks - Newcastle upon Tyne.ags': {
+        "filename": "Fenham Barracks - Newcastle upon Tyne.ags",
+        "filesize": 8561,
+        "checkers": [
+            "python_ags4 v1.1.0"
+        ],
+        "dictionary": "Standard_dictionary_v4_1_1.ags",
+        "time": dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
+        "message": "98 error(s) found in file! 5 FYI(s) found in file.",
+        "errors": {
+            "AGS Format Rule 2a": [
+                {
+                    "line": 1,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 2,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 3,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 4,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 5,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 6,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 7,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 8,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 9,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 10,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 11,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 12,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 13,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 14,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 15,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 16,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 17,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 18,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 19,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 20,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 21,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 22,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 23,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 24,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 25,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 26,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 27,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 28,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 29,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 30,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 31,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 32,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 33,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 34,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 35,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 36,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 37,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 38,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 39,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 40,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 41,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 42,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 43,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 44,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 45,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 46,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 47,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 48,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 49,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 50,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 51,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 52,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 53,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 54,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 55,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 56,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 57,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 58,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 59,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 60,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 61,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 62,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 63,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 64,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 65,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 66,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 67,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 68,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 69,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 70,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 71,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 72,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 73,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 74,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 75,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 76,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 77,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 78,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 79,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 80,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 81,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 82,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 83,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 84,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 85,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 86,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                },
+                {
+                    "line": 87,
+                    "group": "",
+                    "desc": "Is not terminated by <CR> and <LF> characters."
+                }
+            ],
+            "AGS Format Rule 14": [
+                {
+                    "line": 45,
+                    "group": "TRAN",
+                    "desc": "There should not be more than one DATA row in the TRAN group."
+                },
+                {
+                    "line": 46,
+                    "group": "TRAN",
+                    "desc": "There should not be more than one DATA row in the TRAN group."
+                }
+            ],
+            "AGS Format Rule 7": [
+                {
+                    "line": 2,
+                    "group": "PROJ",
+                    "desc": "Order of headings could not be checked as one or more fields "
+                    "were not found in either the DICT group or the standard dictionary. "
+                    "Check error log under AGS Format Rule 9."
+                },
+                {
+                    "line": 8,
+                    "group": "LOCA",
+                    "desc": "Headings not in order starting from LOCA_FDEP. Expected order: "
+                    "...LOCA_ID|LOCA_NATE|LOCA_NATN|LOCA_GL|LOCA_REM|LOCA_FDEP"
+                },
+                {
+                    "line": 17,
+                    "group": "GEOL",
+                    "desc": "Headings not in order starting from GEOL_BASE. Expected order: "
+                    "...GEOL_TOP|GEOL_BASE|GEOL_DESC|GEOL_LEG|GEOL_GEO2"
+                }
+            ],
+            "AGS Format Rule 9": [
+                {
+                    "line": 2,
+                    "group": "PROJ",
+                    "desc": "PROJ_AGS not found in DICT group or the standard AGS4 dictionary."
+                }
+            ],
+            "AGS Format Rule 10a": [
+                {
+                    "line": 44,
+                    "group": "TRAN",
+                    "desc": "Duplicate key field combination: DATA|1"
+                },
+                {
+                    "line": 45,
+                    "group": "TRAN",
+                    "desc": "Duplicate key field combination: DATA|1"
+                },
+                {
+                    "line": 46,
+                    "group": "TRAN",
+                    "desc": "Duplicate key field combination: DATA|1"
+                }
+            ],
+            "AGS Format Rule 10b": [
+                {
+                    "line": 58,
+                    "group": "UNIT",
+                    "desc": "Empty REQUIRED fields: DATA|??UNIT_UNIT??|??UNIT_DESC??"
+                }
+            ],
+            "AGS Format Rule 18": [
+                {
+                    "line": "-",
+                    "group": "DICT",
+                    "desc": "DICT group not found. See error log under AGS Format Rule 9 for a "
+                    "list of non-standard headings that need to be defined in a DICT group."
+                }
+            ],
+            "FYI (Related to Rule 16)": [
+                {
+                    "line": 67,
+                    "group": "ABBR",
+                    "desc": "GEOL_LEG: Description of abbreviation \"102\" is \"102\" but it should be "
+                    "\"MADE GROUND\" according to the standard abbreviations list."
+                },
+                {
+                    "line": 68,
+                    "group": "ABBR",
+                    "desc": "GEOL_LEG: Description of abbreviation \"202\" is \"202\" but it should be "
+                    "\"Silty CLAY\" according to the standard abbreviations list."
+                },
+                {
+                    "line": 69,
+                    "group": "ABBR",
+                    "desc": "GEOL_LEG: Description of abbreviation \"203\" is \"203\" but it should be "
+                    "\"Sandy CLAY\" according to the standard abbreviations list."
+                },
+                {
+                    "line": 70,
+                    "group": "ABBR",
+                    "desc": "GEOL_LEG: Description of abbreviation \"207\" is \"207\" but it should be "
+                    "\"Silty sandy CLAY\" according to the standard abbreviations list."
+                },
+                {
+                    "line": 71,
+                    "group": "ABBR",
+                    "desc": "GEOL_LEG: Description of abbreviation \"803\" is \"803\" but it should be "
+                    "\"SANDSTONE\" according to the standard abbreviations list."
+                }
+            ]
+        },
+        "valid": False,
+        "additional_metadata": {
+            "bgs_projects": None,
+            "bgs_all_groups": "7 groups identified in file: PROJ LOCA GEOL TRAN TYPE UNIT ABBR",
+            "bgs_loca_rows": "4 data row(s) in LOCA group",
+            "bgs_dict": "Optional DICT group present: False",
+            "bgs_file": "Optional FILE group present: False"
+        },
+        'geojson': {},
+        'geojson_error': None
+    }
 }
+
 
 GEOJSON_RESPONSES = {
     'example_ags.ags': {

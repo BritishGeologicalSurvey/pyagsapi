@@ -24,7 +24,7 @@ example_broken_ags.ags: 13 error(s) found in file!
 
 # Metadata
 
-File size: 4111 bytes
+File size: 4078 bytes
 Checkers: ['python_ags4 v1.1.0']
 Dictionary: Standard_dictionary_v4_1_1.ags
 Time: 2021-08-23 14:25:43+00:00
