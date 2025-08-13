@@ -4,7 +4,7 @@ JSON_RESPONSES = {
     'example_ags.ags': {
         'filename': 'example_ags.ags',
         'filesize': 4105,
-        'checkers': ['python_ags4 v0.5.0'],
+        'checkers': ['python_ags4 v1.1.0'],
         'dictionary': 'Standard_dictionary_v4_1_1.ags',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
         'message': 'All checks passed!',
@@ -22,10 +22,10 @@ JSON_RESPONSES = {
     'example_broken_ags.ags': {
         "filename": "example_broken_ags.ags",
         "filesize": 4111,
-        "checkers": ["python_ags4 v0.5.0"],
+        "checkers": ["python_ags4 v1.1.0"],
         'dictionary': 'Standard_dictionary_v4_1_1.ags',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
-        "message": "13 error(s) found in file!",
+        "message": "14 error(s) found in file!",
         "errors": {
             "AGS Format Rule 4": [
                 {
@@ -93,7 +93,14 @@ JSON_RESPONSES = {
                     "desc": "Does not start with a valid data descriptor."
                 }
             ],
-            "AGS Format Rule ?": [
+            'General': [
+                {
+                    'desc': 'Could not complete validation. Please fix listed errors and try again.',
+                    'group': '',
+                    'line': '-',
+                },
+            ],
+            'Validator Process Error': [
                 {
                     "line": "-",
                     "group": "",
@@ -109,7 +116,7 @@ JSON_RESPONSES = {
     'nonsense.AGS': {
         'filename': 'nonsense.AGS',
         'filesize': 9,
-        'checkers': ['python_ags4 v0.5.0'],
+        'checkers': ['python_ags4 v1.1.0'],
         'dictionary': 'Standard_dictionary_v4_1_1.ags',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
         'message': '7 error(s) found in file!',
@@ -138,7 +145,7 @@ JSON_RESPONSES = {
     'random_binary.ags': {
         'filename': 'random_binary.ags',
         'filesize': 1024,
-        'checkers': ['python_ags4 v0.5.0'],
+        'checkers': ['python_ags4 v1.1.0'],
         'dictionary': 'Standard_dictionary_v4_1_1.ags',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
         'message': '37 error(s) found in file!',
@@ -305,16 +312,20 @@ JSON_RESPONSES = {
     'real/AGS3/CG014058_F.ags': {
         'filename': 'CG014058_F.ags',
         'filesize': 50574,
-        'checkers': ['python_ags4 v0.5.0'],
+        'checkers': ['python_ags4 v1.1.0'],
         'dictionary': 'Standard_dictionary_v4_1_1.ags',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
-        'message': '1 error(s) found in file!',
+        'message': '2 error(s) found in file!',
         'errors': {'AGS Format Rule 3': [{'desc': 'Line starts with "**PROJ" instead '
                                           'of a valid data descriptor. This '
                                           'indicates that file is in the AGS3 '
                                           'format which is not supported.',
                                           'group': '',
-                                          'line': 1}]},
+                                          'line': 1}],
+                   'Validator Process Error': [{'desc': 'Validation terminated due to suspected '
+                                                'AGS3 file. Please fix errors and try again.',
+                                                'group': '',
+                                                'line': '-'}]},
         'valid': False,
         'additional_metadata': {},
         'geojson': {},
@@ -323,7 +334,7 @@ JSON_RESPONSES = {
     'real/Blackburn Southern Bypass.ags': {
         'filename': 'Blackburn Southern Bypass.ags',
         'filesize': 6566,
-        'checkers': ['python_ags4 v0.5.0'],
+        'checkers': ['python_ags4 v1.1.0'],
         'dictionary': 'Standard_dictionary_v4_1_1.ags',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
         'message': '95 error(s) found in file!',
@@ -723,16 +734,20 @@ JSON_RESPONSES = {
     'real/AGS3/A3040_03.ags': {
         'filename': 'A3040_03.ags',
         'filesize': 264526,
-        'checkers': ['python_ags4 v0.5.0'],
+        'checkers': ['python_ags4 v1.1.0'],
         'dictionary': 'Standard_dictionary_v4_1_1.ags',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
-        'message': '1 error(s) found in file!',
+        'message': '2 error(s) found in file!',
         'errors': {'AGS Format Rule 3': [{'desc': 'Line starts with "**PROJ" instead '
                                           'of a valid data descriptor. This '
                                           'indicates that file is in the AGS3 '
                                           'format which is not supported.',
                                           'group': '',
-                                          'line': 1}]},
+                                          'line': 1}],
+                   'Validator Process Error': [{'desc': 'Validation terminated due to suspected '
+                                                'AGS3 file. Please fix errors and try again.',
+                                                'group': '',
+                                                'line': '-'}]},
 
         'valid': False,
         'additional_metadata': {},
@@ -759,7 +774,7 @@ GEOJSON_RESPONSES = {
     'example_ags.ags': {
         'filename': 'example_ags.ags',
         'filesize': 4105,
-        'checkers': ['python_ags4 v0.5.0'],
+        'checkers': ['python_ags4 v1.1.0'],
         'dictionary': 'Standard_dictionary_v4_1_1.ags',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
         'message': 'All checks passed!',
@@ -827,7 +842,7 @@ GEOJSON_RESPONSES = {
     'example_broken_ags.ags': {
         "filename": "example_broken_ags.ags",
         "filesize": 4111,
-        "checkers": ["python_ags4 v0.5.0"],
+        "checkers": ["python_ags4 v1.1.0"],
         'dictionary': 'Standard_dictionary_v4_1_1.ags',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
         "message": "13 error(s) found in file!",
@@ -898,7 +913,14 @@ GEOJSON_RESPONSES = {
                     "desc": "Does not start with a valid data descriptor."
                 }
             ],
-            "AGS Format Rule ?": [
+            'General': [
+                {
+                    'desc': 'Could not complete validation. Please fix listed errors and try again.',
+                    'group': '',
+                    'line': '-',
+                },
+            ],
+            'Validator Process Error': [
                 {
                     "line": "-",
                     "group": "",
@@ -918,7 +940,7 @@ BROKEN_JSON_RESPONSES = [
     {
         'filename': 'nonsense.AGS',
         'filesize': 9,
-        'checkers': ['python_ags4 v0.5.0'],
+        'checkers': ['python_ags4 v1.1.0'],
         'dictionary': 'Standard_dictionary_v4_1_1.ags',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
         'message': '7 error(s) found in file!',
@@ -935,7 +957,7 @@ BROKEN_JSON_RESPONSES = [
     {
         'filename': 'nonsense.AGS',
         'filesize': 9,
-        'checkers': ['python_ags4 v0.5.0'],
+        'checkers': ['python_ags4 v1.1.0'],
         'dictionary': 'Standard_dictionary_v4_1_1.ags',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
         'message': '7 error(s) found in file!',

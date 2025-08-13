@@ -7,7 +7,7 @@ example_ags.ags: All checks passed!
 # Metadata
 
 File size: 4105 bytes
-Checkers: ['python_ags4 v0.5.0']
+Checkers: ['python_ags4 v1.1.0']
 Dictionary: Standard_dictionary_v4_1_1.ags
 Time: 2021-08-23 14:25:43+00:00
 
@@ -20,12 +20,12 @@ None
 """,
     'example_broken_ags.ags': """
 ================================================================================
-example_broken_ags.ags: 13 error(s) found in file!
+example_broken_ags.ags: 14 error(s) found in file!
 
 # Metadata
 
 File size: 4111 bytes
-Checkers: ['python_ags4 v0.5.0']
+Checkers: ['python_ags4 v1.1.0']
 Dictionary: Standard_dictionary_v4_1_1.ags
 Time: 2021-08-23 14:25:43+00:00
 
@@ -53,7 +53,11 @@ Line: 32 - Does not start with a valid data descriptor.
 Line: 35 - Does not start with a valid data descriptor.
 Line: 37 - Does not start with a valid data descriptor.
 
-## AGS Format Rule ?
+## General
+
+Group:  - Could not complete validation. Please fix listed errors and try again.
+
+## Validator Process Error
 
 Group:  - Line 31 does not have the same number of entries as the HEADING row in TYPE.
 
@@ -66,7 +70,7 @@ nonsense.AGS: 7 error(s) found in file!
 # Metadata
 
 File size: 9 bytes
-Checkers: ['python_ags4 v0.5.0']
+Checkers: ['python_ags4 v1.1.0']
 Dictionary: Standard_dictionary_v4_1_1.ags
 Time: 2021-08-23 14:25:43+00:00
 
@@ -114,7 +118,7 @@ random_binary.ags: 37 error(s) found in file!
 # Metadata
 
 File size: 1024 bytes
-Checkers: ['python_ags4 v0.5.0']
+Checkers: ['python_ags4 v1.1.0']
 Dictionary: Standard_dictionary_v4_1_1.ags
 Time: 2021-08-23 14:25:43+00:00
 
@@ -198,7 +202,7 @@ Blackburn Southern Bypass.ags: 95 error(s) found in file!
 # Metadata
 
 File size: 6566 bytes
-Checkers: ['python_ags4 v0.5.0']
+Checkers: ['python_ags4 v1.1.0']
 Dictionary: Standard_dictionary_v4_1_1.ags
 Time: 2021-08-23 14:25:43+00:00
 
