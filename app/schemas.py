@@ -53,6 +53,7 @@ class Validation(BaseModel):
     additional_metadata: dict = Field(...)
     geojson: dict = dict()
     geojson_error: str | None = None
+    # Counts for errors, warnings and FYI are not yet returned
 
     @validator('errors')
     def errors_keys_must_be_known_rules(cls, errors):
