@@ -53,12 +53,36 @@ def test_eastings_northings_present():
     # Arrange
     filename = TEST_FILE_DIR / 'bgs_rules' / 'eastings_northings_present.ags'
     expected = [
-        {'line': '-',
-         'group': 'LOCA',
-         'desc': 'LOCA_NATE contains zeros or null values'},
-        {'line': '-',
-         'group': 'LOCA',
-         'desc': 'LOCA_NATN contains zeros or null values'}
+        {
+            'desc': 'LOCA_NATE / LOCA_NATN contains zeros or null values (Null)',
+            'group': 'LOCA',
+            'line': 1,
+        },
+        {
+            'desc': 'LOCA_NATE / LOCA_NATN contains zeros or null values (Zero)',
+            'group': 'LOCA',
+            'line': 2,
+        },
+        {
+            'desc': 'LOCA_NATE / LOCA_NATN contains zeros or null values (Null-e)',
+            'group': 'LOCA',
+            'line': 3,
+        },
+        {
+            'desc': 'LOCA_NATE / LOCA_NATN contains zeros or null values (Zero-e)',
+            'group': 'LOCA',
+            'line': 4,
+        },
+        {
+            'desc': 'LOCA_NATE / LOCA_NATN contains zeros or null values (Null-n)',
+            'group': 'LOCA',
+            'line': 5,
+        },
+        {
+            'desc': 'LOCA_NATE / LOCA_NATN contains zeros or null values (Zero-n)',
+            'group': 'LOCA',
+            'line': 6,
+        },
     ]
     tables, _, _ = load_ags4_as_numeric(filename)
 
