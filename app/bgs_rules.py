@@ -198,13 +198,13 @@ def check_loca_within_great_britain(tables: dict) -> List[dict]:
 
     for loca_id, row in location.loc[outside_uk_eea_and_ni_mask].iterrows():
         errors.append({
-            'line': f'{row["line_no"]}', 'group': 'LOCA',
+            'line': row["line_no"], 'group': 'LOCA',
             'desc': f'NATE / NATN outside UK Offshore EEA or Onshore Northern Ireland boundary ({loca_id})'
         })
 
     for loca_id, row in location.loc[outside_gb_and_ni_mask].iterrows():
         errors.append({
-            'line': f'{row["line_no"]}', 'group': 'LOCA',
+            'line': row["line_no"], 'group': 'LOCA',
             'desc': f'NATE / NATN outside Onshore Great Britain or Northern Ireland boundaries ({loca_id})'
         })
 
@@ -213,7 +213,7 @@ def check_loca_within_great_britain(tables: dict) -> List[dict]:
             continue
         else:
             errors.append({
-                'line': f'{row["line_no"]}', 'group': 'LOCA',
+                'line': row["line_no"], 'group': 'LOCA',
                 'desc': f'NATE / NATN in Northern Ireland but LOCA_GREF undefined ({loca_id})'
             })
 
