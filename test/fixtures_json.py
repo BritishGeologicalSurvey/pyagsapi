@@ -7,7 +7,7 @@ JSON_RESPONSES = {
         'checkers': ['python_ags4 v1.1.0'],
         'dictionary': 'Standard_dictionary_v4_1_1.ags',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
-        'message': 'No errors found! 1 FYI(s) found in file.',
+        'message': 'No errors found! 2 FYI(s) found in file.',
         'errors': {
             'FYI (Related to Rule 16)': [
                 {
@@ -16,6 +16,15 @@ JSON_RESPONSES = {
                     'the standard abbreviations list.',
                     'group': 'ABBR',
                     'line': 11,
+                },
+            ],
+            'FYI': [
+                {
+                    'desc': "'1.1' in TRAN_AGS is not a recognized AGS4 version. Therefore, "
+                    'v4.1.1 of the standard dictionary will be used for validation '
+                    'unless a different version is specified in the validator input.',
+                    'group': 'TRAN',
+                    'line': 21,
                 },
             ],
         },
@@ -28,7 +37,7 @@ JSON_RESPONSES = {
                                 'bgs_projects': None},
         'error_count': 0,
         'warnings_count': 0,
-        'fyi_count': 1,
+        'fyi_count': 2,
         'geojson': {},
         'geojson_error': None
     },

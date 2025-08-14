@@ -18,7 +18,7 @@
 "HEADING","TRAN_ISNO","TRAN_DATE","TRAN_PROD","TRAN_STAT","TRAN_DESC","TRAN_AGS","TRAN_RECV","TRAN_DLIM","TRAN_RCON","TRAN_REM","FILE_FSET"
 "UNIT","","yyyy-mm-dd","","","","","","","","",""
 "TYPE","X","DT","X","X","X","X","X","X","X","X","X"
-"DATA","1","2021-01-18","ACME Drilling Ltd","Preliminary","Draft Logs only","4.1","ACME Consulting","|","+","",""
+"DATA","1","2021-01-18","ACME Drilling Ltd","Preliminary","Draft Logs only","1.1","ACME Consulting","|","+","",""
 
 "GROUP","TYPE"
 "HEADING","TYPE_TYPE","TYPE_DESC","FILE_FSET"

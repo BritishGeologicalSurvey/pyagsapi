@@ -2,7 +2,7 @@
 PLAIN_TEXT_RESPONSES = {
     'example_ags.ags': """
 ================================================================================
-example_ags.ags: No errors found! 1 FYI(s) found in file.
+example_ags.ags: No errors found! 2 FYI(s) found in file.
 
 # Metadata
 

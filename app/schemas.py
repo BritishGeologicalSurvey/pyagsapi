@@ -19,7 +19,7 @@ VALID_KEYS = [
     'File read error',
     # Warnings - None
     # FYIs
-    'FYI (Related to Rule 1)', 'FYI (Related to Rule 16)',
+    'FYI (Related to Rule 1)', 'FYI (Related to Rule 16)', 'FYI',
     # Neither errors, warmnings nor FYIs
     'General',
 ]
