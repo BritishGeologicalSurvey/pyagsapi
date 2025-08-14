@@ -44,7 +44,7 @@ class LineError(BaseModel):
 class Validation(BaseModel):
     filename: str = Field(..., example="example.ags")
     filesize: int = Field(None, example="1024")
-    checkers: List[str] = Field(None, example=["python_ags4 v0.4.1"])
+    checkers: List[str] = Field(None, example=["python_ags4 v1.1.0"])
     dictionary: str = Field(None, example="Standard_dictionary_v4_1_1.ags")
     time: datetime = Field(None, example="2021-08-18 09:23:29")
     message: str = Field(None, example="7 error(s) found in file!")
