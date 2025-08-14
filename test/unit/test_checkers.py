@@ -19,7 +19,7 @@ AGS_FILE_DATA = {
 
 @pytest.mark.parametrize('filename, expected_rules', [
     ('example_ags.ags', set()),
-    ('example_fyis_ags.ags', {'FYI (Related to Rule 16)', 'FYI'}),
+    ('example_fyis_ags.ags', {'FYI (Related to Rule 1)', 'FYI (Related to Rule 16)', 'FYI'}),
     ('random_binary.ags', {'General', 'AGS Format Rule 1', 'AGS Format Rule 2a', 'AGS Format Rule 3',
                            'AGS Format Rule 5', 'AGS Format Rule 13', 'AGS Format Rule 14', 'AGS Format Rule 15',
                            'AGS Format Rule 17'}),

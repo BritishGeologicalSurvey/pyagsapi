@@ -24,12 +24,19 @@ JSON_RESPONSES = {
     },
     'example_fyis_ags.ags': {
         'filename': 'example_fyis_ags.ags',
-        'filesize': 4072,
+        'filesize': 4075,
         'checkers': ['python_ags4 v1.1.0'],
         'dictionary': 'Standard_dictionary_v4_1_1.ags',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
-        'message': 'No errors found! 2 FYI(s) found in file.',
+        'message': 'No errors found! 3 FYI(s) found in file.',
         'errors': {
+            'FYI (Related to Rule 1)': [
+                {
+                    'desc': 'Has extended ASCII character(s).',
+                    'group': '',
+                    'line': 21,
+                },
+            ],
             'FYI (Related to Rule 16)': [
                 {
                     'desc': 'DICT_TYPE: Description of abbreviation "GROUP" is "Group" but it '
