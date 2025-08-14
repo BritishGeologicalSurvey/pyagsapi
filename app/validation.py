@@ -97,7 +97,6 @@ def validate(filename: Path,
     if fyi_count > 0:
         message += f' {fyi_count} FYI(s) found in file.'
 
-    # The counts are added here for completeness but are not yet in the schema model
     response.update(errors=all_errors, message=message, valid=valid, checkers=all_checkers,
                     error_count=error_count, warnings_count=warnings_count, fyi_count=fyi_count)
 

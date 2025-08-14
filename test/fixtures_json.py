@@ -26,6 +26,9 @@ JSON_RESPONSES = {
                                 'bgs_file': 'Optional FILE group present: False',
                                 'bgs_loca_rows': '1 data row(s) in LOCA group',
                                 'bgs_projects': None},
+        'error_count': 0,
+        'warnings_count': 0,
+        'fyi_count': 1,
         'geojson': {},
         'geojson_error': None
     },
@@ -120,6 +123,9 @@ JSON_RESPONSES = {
         },
         "valid": False,
         'additional_metadata': {},
+        'error_count': 13,
+        'warnings_count': 0,
+        'fyi_count': 0,
         'geojson': {},
         'geojson_error': None
     },
@@ -149,6 +155,9 @@ JSON_RESPONSES = {
                                 'bgs_dict': 'Optional DICT group present: False',
                                 'bgs_file': 'Optional FILE group present: False',
                                 'bgs_projects': None},
+        'error_count': 7,
+        'warnings_count': 0,
+        'fyi_count': 0,
         'geojson': {},
         'geojson_error': None
     },
@@ -316,6 +325,9 @@ JSON_RESPONSES = {
                                 'bgs_dict': 'Optional DICT group present: False',
                                 'bgs_file': 'Optional FILE group present: False',
                                 'bgs_projects': None},
+        'error_count': 36,
+        'warnings_count': 0,
+        'fyi_count': 0,
         'geojson': {},
         'geojson_error': None
     },
@@ -338,6 +350,9 @@ JSON_RESPONSES = {
                                                 'line': '-'}]},
         'valid': False,
         'additional_metadata': {},
+        'error_count': 2,
+        'warnings_count': 0,
+        'fyi_count': 0,
         'geojson': {},
         'geojson_error': None
     },
@@ -738,6 +753,9 @@ JSON_RESPONSES = {
                                 'to avoid issues with other software.'}]},
         'valid': False,
         'additional_metadata': {},
+        'error_count': 93,
+        'warnings_count': 0,
+        'fyi_count': 0,
         'geojson': {},
         'geojson_error': None
     },
@@ -761,6 +779,9 @@ JSON_RESPONSES = {
 
         'valid': False,
         'additional_metadata': {},
+        'error_count': 2,
+        'warnings_count': 0,
+        'fyi_count': 0,
         'geojson': {},
         'geojson_error': None
     },
@@ -775,6 +796,9 @@ JSON_RESPONSES = {
             {'line': '-', 'group': '', 'desc': 'extension_is.bad is not an .ags file'}]},
         'valid': False,
         'additional_metadata': {},
+        'error_count': 1,
+        'warnings_count': 0,
+        'fyi_count': 0,
         'geojson': {},
         'geojson_error': None
     },
@@ -1338,6 +1362,9 @@ JSON_RESPONSES = {
             "bgs_dict": "Optional DICT group present: False",
             "bgs_file": "Optional FILE group present: False"
         },
+        'error_count': 98,
+        'warnings_count': 0,
+        'fyi_count': 5,
         'geojson': {},
         'geojson_error': None
     }
@@ -1351,10 +1378,13 @@ GEOJSON_RESPONSES = {
         'checkers': ['python_ags4 v1.1.0'],
         'dictionary': 'Standard_dictionary_v4_1_1.ags',
         'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
-        'message': 'No errors found!',
+        'message': 'No errors found! 1 FYI(s) found in file.',
         'errors': {},
         'valid': True,
         'additional_metadata': {},
+        'error_count': 0,
+        'warnings_count': 0,
+        'fyi_count': 1,
         'geojson': {
             'features': [{
                 'geometry': {
@@ -1504,6 +1534,9 @@ GEOJSON_RESPONSES = {
         },
         "valid": False,
         'additional_metadata': {},
+        'error_count': 13,
+        'warnings_count': 0,
+        'fyi_count': 0,
         'geojson': {},
         'geojson_error': 'Line 31 does not have the same number of entries as the HEADING row in TYPE.'
     }
@@ -1525,6 +1558,9 @@ BROKEN_JSON_RESPONSES = [
         },
         'valid': False,
         'additional_metadata': {},
+        'error_count': 7,
+        'warnings_count': 0,
+        'fyi_count': 0,
         'geojson': {},
         'geojson_error': None
     },
@@ -1542,6 +1578,9 @@ BROKEN_JSON_RESPONSES = [
         },
         'valid': False,
         'additional_metadata': {},
+        'error_count': 7,
+        'warnings_count': 0,
+        'fyi_count': 0,
         'geojson': {},
         'geojson_error': None
     },

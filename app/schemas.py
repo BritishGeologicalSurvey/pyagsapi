@@ -51,9 +51,11 @@ class Validation(BaseModel):
     errors: Dict[str, List[LineError]] = Field(..., example="Rule 1a")
     valid: bool = Field(..., example='false')
     additional_metadata: dict = Field(...)
+    error_count: int = Field(None, example="50")
+    warnings_count: int = Field(None, example="0")
+    fyi_count: int = Field(None, example="5")
     geojson: dict = dict()
     geojson_error: str | None = None
-    # Counts for errors, warnings and FYI are not yet returned
 
     @validator('errors')
     def errors_keys_must_be_known_rules(cls, errors):
