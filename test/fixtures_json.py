@@ -3,6 +3,27 @@ import datetime as dt
 JSON_RESPONSES = {
     'example_ags.ags': {
         'filename': 'example_ags.ags',
+        'filesize': 4105,
+        'checkers': ['python_ags4 v1.1.0'],
+        'dictionary': 'Standard_dictionary_v4_1_1.ags',
+        'time': dt.datetime(2021, 8, 23, 14, 25, 43, tzinfo=dt.timezone.utc),
+        'message': 'No errors found!',
+        'errors': {},
+        'valid': True,
+        'additional_metadata': {'bgs_all_groups': '7 groups identified in file: PROJ '
+                                'ABBR TRAN TYPE UNIT LOCA SAMP',
+                                'bgs_dict': 'Optional DICT group present: False',
+                                'bgs_file': 'Optional FILE group present: False',
+                                'bgs_loca_rows': '1 data row(s) in LOCA group',
+                                'bgs_projects': None},
+        'error_count': 0,
+        'warnings_count': 0,
+        'fyi_count': 0,
+        'geojson': {},
+        'geojson_error': None
+    },
+    'example_fyis_ags.ags': {
+        'filename': 'example_fyis_ags.ags',
         'filesize': 4072,
         'checkers': ['python_ags4 v1.1.0'],
         'dictionary': 'Standard_dictionary_v4_1_1.ags',

@@ -18,7 +18,8 @@ AGS_FILE_DATA = {
 
 
 @pytest.mark.parametrize('filename, expected_rules', [
-    ('example_ags.ags', {'FYI (Related to Rule 16)'}),
+    ('example_ags.ags', set()),
+    ('example_fyis_ags.ags', {'FYI (Related to Rule 16)', 'FYI'}),
     ('random_binary.ags', {'General', 'AGS Format Rule 1', 'AGS Format Rule 2a', 'AGS Format Rule 3',
                            'AGS Format Rule 5', 'AGS Format Rule 13', 'AGS Format Rule 14', 'AGS Format Rule 15',
                            'AGS Format Rule 17'}),
@@ -48,6 +49,8 @@ def test_check_ags(filename, expected_rules):
 
 @pytest.mark.parametrize('filename, expected_rules, file_read_message', [
     ('example_ags.ags',
+     ['BGS data validation: Required BGS Groups', 'BGS data validation: Spatial Referencing'], None),
+    ('example_fyis_ags.ags',
      ['BGS data validation: Required BGS Groups', 'BGS data validation: Spatial Referencing'], None),
     ('random_binary.ags',
      ['BGS data validation: Required Groups', 'BGS data validation: Required BGS Groups'], None),
