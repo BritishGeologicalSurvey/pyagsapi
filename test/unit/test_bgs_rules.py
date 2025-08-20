@@ -41,7 +41,7 @@ def test_spatial_referencing():
     filename = TEST_FILE_DIR / 'bgs_rules' / 'spatial_referencing.ags'
     expected = {'line': '-',
                 'group': 'LOCA',
-                'desc': 'Spatial referencing system not in LOCA_GREF, LOCA_LREF or LOCA_LLZ!'}
+                'desc': 'Spatial referencing system not in LOCA_GREF, LOCA_LREF or LOCA_LLZ'}
     tables, _, _ = load_ags4_as_numeric(filename)
 
     errors = BGS_RULES['BGS data validation: Spatial Referencing'](tables)

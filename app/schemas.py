@@ -14,11 +14,14 @@ VALID_KEYS = [
     'AGS Format Rule 11a', 'AGS Format Rule 11b', 'AGS Format Rule 11c', 'AGS Format Rule 12',
     'AGS Format Rule 13', 'AGS Format Rule 14', 'AGS Format Rule 15', 'AGS Format Rule 16',
     'AGS Format Rule 17', 'AGS Format Rule 18', 'AGS Format Rule 19', 'AGS Format Rule 19a',
-    'AGS Format Rule 19b', 'AGS Format Rule 20', 'General', 'Validator Process Error',
-    # Warnings and FYIs
-    'Warning (Related to Rule 16)', 'FYI (Related to Rule 1)',
-    # Errors
-    'File read error'
+    'AGS Format Rule 19b', 'AGS Format Rule 20', 'Validator Process Error',
+    # Other errors
+    'File read error',
+    # Warnings - None
+    # FYIs
+    'FYI (Related to Rule 1)', 'FYI (Related to Rule 16)', 'FYI',
+    # Neither errors, warmnings nor FYIs
+    'General',
 ]
 # Add BGS data rules
 VALID_KEYS.extend(list(BGS_RULES.keys()))
@@ -41,13 +44,16 @@ class LineError(BaseModel):
 class Validation(BaseModel):
     filename: str = Field(..., example="example.ags")
     filesize: int = Field(None, example="1024")
-    checkers: List[str] = Field(None, example=["python_ags4 v0.4.1"])
+    checkers: List[str] = Field(None, example=["python_ags4 v1.1.0"])
     dictionary: str = Field(None, example="Standard_dictionary_v4_1_1.ags")
     time: datetime = Field(None, example="2021-08-18 09:23:29")
     message: str = Field(None, example="7 error(s) found in file!")
     errors: Dict[str, List[LineError]] = Field(..., example="Rule 1a")
     valid: bool = Field(..., example='false')
     additional_metadata: dict = Field(...)
+    error_count: int = Field(None, example="50")
+    warnings_count: int = Field(None, example="0")
+    fyi_count: int = Field(None, example="5")
     geojson: dict = dict()
     geojson_error: str | None = None
 

@@ -2,7 +2,7 @@
 PLAIN_TEXT_RESPONSES = {
     'example_ags.ags': """
 ================================================================================
-example_ags.ags: All checks passed!
+example_ags.ags: No errors found!
 
 # Metadata
 
@@ -18,13 +18,31 @@ Optional FILE group present: False
 None
 ================================================================================
 """,
-    'example_broken_ags.ags': """
+   'example_fyis_ags.ags': """
 ================================================================================
-example_broken_ags.ags: 14 error(s) found in file!
+example_fyis_ags.ags: No errors found! 2 FYI(s) found in file.
 
 # Metadata
 
-File size: 4111 bytes
+File size: 4072 bytes
+Checkers: ['python_ags4 v1.1.0']
+Dictionary: Standard_dictionary_v4_1_1.ags
+Time: 2021-08-23 14:25:43+00:00
+
+7 groups identified in file: PROJ ABBR TRAN TYPE UNIT LOCA SAMP
+Optional DICT group present: False
+Optional FILE group present: False
+1 data row(s) in LOCA group
+None
+================================================================================
+""",
+    'example_broken_ags.ags': """
+================================================================================
+example_broken_ags.ags: 13 error(s) found in file!
+
+# Metadata
+
+File size: 4078 bytes
 Checkers: ['python_ags4 v1.1.0']
 Dictionary: Standard_dictionary_v4_1_1.ags
 Time: 2021-08-23 14:25:43+00:00
@@ -113,7 +131,7 @@ Group: TYPE - TYPE group not found.
 """,
     'random_binary.ags': """
 ================================================================================
-random_binary.ags: 37 error(s) found in file!
+random_binary.ags: 36 error(s) found in file!
 
 # Metadata
 
@@ -197,7 +215,7 @@ Line:  - AGS4 Rule 1 is interpreted as allowing both standard ASCII characters (
 """,
     'real/Blackburn Southern Bypass.ags': """
 ================================================================================
-Blackburn Southern Bypass.ags: 95 error(s) found in file!
+Blackburn Southern Bypass.ags: 93 error(s) found in file!
 
 # Metadata
 

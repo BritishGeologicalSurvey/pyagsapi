@@ -80,7 +80,7 @@ def check_spatial_referencing_system(tables: dict) -> List[dict]:
             except KeyError:
                 pass
         if not ref_found:
-            desc = 'Spatial referencing system not in LOCA_GREF, LOCA_LREF or LOCA_LLZ!'
+            desc = 'Spatial referencing system not in LOCA_GREF, LOCA_LREF or LOCA_LLZ'
             errors.append({'line': '-', 'group': 'LOCA', 'desc': desc})
     except KeyError:
         # LOCA not present, already checked in earlier rule
