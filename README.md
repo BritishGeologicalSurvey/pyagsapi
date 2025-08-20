@@ -57,7 +57,7 @@ This will ensure that all references to `self` in responses, and all Swagger and
 
 ### From Source
 
-pyagsapi runs on Python >= 3.11.
+pyagsapi targets Python >= 3.13.
 
 ```bash
 python -m venv pyagsapi
