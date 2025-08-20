@@ -92,19 +92,21 @@ def check_spatial_referencing_system(tables: dict) -> List[dict]:
 def check_eastings_northings_present(tables: dict) -> List[dict]:
     """Eastings and Northings columns are populated"""
     errors = []
+
+    # Read data into geodataframe
     try:
-        location = tables['LOCA']
-        if any(location['LOCA_NATE'].isna()) or any(location['LOCA_NATE'] == 0):
-            errors.append(
-                {'line': '-', 'group': 'LOCA',
-                 'desc': 'LOCA_NATE contains zeros or null values'})
-        if any(location['LOCA_NATN'].isna()) or any(location['LOCA_NATN'] == 0):
-            errors.append(
-                {'line': '-', 'group': 'LOCA',
-                 'desc': 'LOCA_NATN contains zeros or null values'})
+        location = create_location_gpd(tables)
     except KeyError:
         # LOCA not present, already checked in earlier rule
-        pass
+        return errors
+
+    for loca_id, row in location.iterrows():
+        if (pd.isna(row['LOCA_NATE']) or pd.isna(row['LOCA_NATN'])
+                or row['LOCA_NATE'] == 0 or row['LOCA_NATN'] == 0):
+            errors.append({
+                'line': row["line_no"], 'group': 'LOCA',
+                'desc': f'LOCA_NATE / LOCA_NATN contains zeros or null values ({loca_id})'
+            })
 
     return errors
 
@@ -197,23 +199,27 @@ def check_loca_within_great_britain(tables: dict) -> List[dict]:
     outside_gb_and_ni_mask = ~inside_gb_mask & ~inside_ni_mask
 
     for loca_id, row in location.loc[outside_uk_eea_and_ni_mask].iterrows():
-        errors.append({
-            'line': f'{row["line_no"]}', 'group': 'LOCA',
-            'desc': f'NATE / NATN outside UK Offshore EEA or Onshore Northern Ireland boundary ({loca_id})'
-        })
+        if not (pd.isna(row['LOCA_NATE']) or pd.isna(row['LOCA_NATN'])
+                or row['LOCA_NATE'] == 0 or row['LOCA_NATN'] == 0):
+            errors.append({
+                'line': row["line_no"], 'group': 'LOCA',
+                'desc': f'NATE / NATN outside UK Offshore EEA or Onshore Northern Ireland boundary ({loca_id})'
+            })
 
     for loca_id, row in location.loc[outside_gb_and_ni_mask].iterrows():
-        errors.append({
-            'line': f'{row["line_no"]}', 'group': 'LOCA',
-            'desc': f'NATE / NATN outside Onshore Great Britain or Northern Ireland boundaries ({loca_id})'
-        })
+        if not (pd.isna(row['LOCA_NATE']) or pd.isna(row['LOCA_NATN'])
+                or row['LOCA_NATE'] == 0 or row['LOCA_NATN'] == 0):
+            errors.append({
+                'line': row["line_no"], 'group': 'LOCA',
+                'desc': f'NATE / NATN outside Onshore Great Britain or Northern Ireland boundaries ({loca_id})'
+            })
 
     for loca_id, row in location.loc[inside_ni_mask].iterrows():
         if row['LOCA_GREF']:
             continue
         else:
             errors.append({
-                'line': f'{row["line_no"]}', 'group': 'LOCA',
+                'line': row["line_no"], 'group': 'LOCA',
                 'desc': f'NATE / NATN in Northern Ireland but LOCA_GREF undefined ({loca_id})'
             })
 

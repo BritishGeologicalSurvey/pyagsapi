@@ -53,12 +53,36 @@ def test_eastings_northings_present():
     # Arrange
     filename = TEST_FILE_DIR / 'bgs_rules' / 'eastings_northings_present.ags'
     expected = [
-        {'line': '-',
-         'group': 'LOCA',
-         'desc': 'LOCA_NATE contains zeros or null values'},
-        {'line': '-',
-         'group': 'LOCA',
-         'desc': 'LOCA_NATN contains zeros or null values'}
+        {
+            'desc': 'LOCA_NATE / LOCA_NATN contains zeros or null values (Null)',
+            'group': 'LOCA',
+            'line': 1,
+        },
+        {
+            'desc': 'LOCA_NATE / LOCA_NATN contains zeros or null values (Zero)',
+            'group': 'LOCA',
+            'line': 2,
+        },
+        {
+            'desc': 'LOCA_NATE / LOCA_NATN contains zeros or null values (Null-e)',
+            'group': 'LOCA',
+            'line': 3,
+        },
+        {
+            'desc': 'LOCA_NATE / LOCA_NATN contains zeros or null values (Zero-e)',
+            'group': 'LOCA',
+            'line': 4,
+        },
+        {
+            'desc': 'LOCA_NATE / LOCA_NATN contains zeros or null values (Null-n)',
+            'group': 'LOCA',
+            'line': 5,
+        },
+        {
+            'desc': 'LOCA_NATE / LOCA_NATN contains zeros or null values (Zero-n)',
+            'group': 'LOCA',
+            'line': 6,
+        },
     ]
     tables, _, _ = load_ags4_as_numeric(filename)
 
@@ -124,31 +148,31 @@ def test_loca_within_great_britain():
     filename = TEST_FILE_DIR / 'bgs_rules' / 'loca_within_great_britain.ags'
     expected = [{'desc': 'NATE / NATN outside UK Offshore EEA or Onshore Northern Ireland boundary (Bad NATE)',
                  'group': 'LOCA',
-                 'line': '2'},
+                 'line': 2},
                 {'desc': 'NATE / NATN outside UK Offshore EEA or Onshore Northern Ireland boundary (Bad NATN)',
                  'group': 'LOCA',
-                 'line': '3'},
+                 'line': 3},
                 {'desc': 'NATE / NATN outside UK Offshore EEA or Onshore Northern Ireland boundary (Paris)',
                  'group': 'LOCA',
-                 'line': '16'},
+                 'line': 16},
                 {'desc': 'NATE / NATN outside Onshore Great Britain or Northern Ireland boundaries (Bad NATE)',
                  'group': 'LOCA',
-                 'line': '2'},
+                 'line': 2},
                 {'desc': 'NATE / NATN outside Onshore Great Britain or Northern Ireland boundaries (Bad NATN)',
                  'group': 'LOCA',
-                 'line': '3'},
+                 'line': 3},
                 {'desc': 'NATE / NATN outside Onshore Great Britain or Northern Ireland boundaries (Derry)',
                  'group': 'LOCA',
-                 'line': '4'},
+                 'line': 4},
                 {'desc': 'NATE / NATN outside Onshore Great Britain or Northern Ireland boundaries (MorayFirth)',
                  'group': 'LOCA',
-                 'line': '15'},
+                 'line': 15},
                 {'desc': 'NATE / NATN outside Onshore Great Britain or Northern Ireland boundaries (Paris)',
                  'group': 'LOCA',
-                 'line': '16'},
+                 'line': 16},
                 {'desc': 'NATE / NATN in Northern Ireland but LOCA_GREF undefined (Belfast)',
                  'group': 'LOCA',
-                 'line': '6'}]
+                 'line': 6}]
 
     tables, _, _ = load_ags4_as_numeric(filename)
 
