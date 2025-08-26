@@ -19,7 +19,7 @@ from app import conversion, validation
 from app.borehole_map import extract_geojson
 from app.checkers import check_ags, check_bgs
 from app.errors import error_responses, InvalidPayloadError
-from app.schemas import ValidationResponse, BoreholeCountResponse
+from app.model.schema import ValidationResponse, BoreholeCountResponse
 
 BOREHOLE_EXPORT_LIMIT = 50
 BOREHOLE_VIEWER_URL = "https://gwbv.bgs.ac.uk/GWBV/viewborehole?loca_id={bgs_loca_id}"

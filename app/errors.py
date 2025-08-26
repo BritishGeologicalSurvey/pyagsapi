@@ -1,7 +1,7 @@
 from fastapi import status
 from starlette.requests import Request
 
-from app.schemas import Error, ErrorResponse
+from app.model.schema import Error, ErrorResponse
 
 
 # Define error responses
