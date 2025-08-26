@@ -15,7 +15,7 @@ from starlette.requests import Request
 from starlette.responses import JSONResponse
 from fastapi.openapi.utils import get_openapi
 
-from app import routes
+from app.routes import routes
 from app.errors import HTTPExceptionResponse, InvalidPayloadError
 
 

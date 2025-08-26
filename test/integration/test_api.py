@@ -15,7 +15,7 @@ from python_ags4 import AGS4
 
 from app.main import app
 from app.checkers import load_ags4_as_numeric
-import app.routes as app_routes
+import app.routes.routes as app_routes
 from test.fixtures import (BAD_FILE_DATA, DICTIONARIES, FROZEN_TIME,
                            GOOD_FILE_DATA)
 from test.fixtures_json import JSON_RESPONSES, GEOJSON_RESPONSES
