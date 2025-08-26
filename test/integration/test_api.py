@@ -15,9 +15,7 @@ from python_ags4 import AGS4
 
 from app.main import app
 from app.checkers import load_ags4_as_numeric
-import app.routes.routes as app_routes
-import app.routes.ags_log as ags_log_route
-import app.routes.ags_export as ags_export_route
+from app.routes import ags_log, ags_export, ags_export_by_polygon
 from test.fixtures import (BAD_FILE_DATA, DICTIONARIES, FROZEN_TIME,
                            GOOD_FILE_DATA)
 from test.fixtures_json import JSON_RESPONSES, GEOJSON_RESPONSES
@@ -516,7 +514,7 @@ def test_get_ags_log_generator_unreachable(client, monkeypatch):
     bgs_loca_id = 0
     query = f'/ags_log/?bgs_loca_id={bgs_loca_id}'
     # Patch the Borehole Viewer to be something that cannot be reached
-    monkeypatch.setattr(ags_log_route, "BOREHOLE_VIEWER_URL", f'http://unreachable.com/{bgs_loca_id}')
+    monkeypatch.setattr(ags_log, "BOREHOLE_VIEWER_URL", f'http://unreachable.com/{query}')
 
     # Act
     with client as ac:
@@ -540,12 +538,12 @@ def test_get_ags_log_generator_error(client, monkeypatch):
         def raise_for_status(self):
             raise requests.exceptions.HTTPError
 
-        monkeypatch.setattr(ags_log_route.requests, 'get', lambda: MockResponse)
+        monkeypatch.setattr(ags_log.requests, 'get', lambda: MockResponse)
 
     def mock_get(*args, **kwargs):
         return MockResponse()
 
-    monkeypatch.setattr(ags_log_route.requests, 'get', mock_get)
+    monkeypatch.setattr(ags_log.requests, 'get', mock_get)
 
     # Act
     with client as ac:
@@ -664,7 +662,7 @@ def test_get_ags_export_too_many_borehole_ids(client):
     """
     # Arrange
     # Define the borehole IDs to use for the test
-    bgs_loca_ids = ['20200205093728297908'] * (app_routes.BOREHOLE_EXPORT_LIMIT + 1)
+    bgs_loca_ids = ['20200205093728297908'] * (ags_export.BOREHOLE_EXPORT_LIMIT + 1)
     bgs_loca_ids = ';'.join(bgs_loca_ids)
     query = f'/ags_export/?bgs_loca_id={bgs_loca_ids}'
 
@@ -675,7 +673,7 @@ def test_get_ags_export_too_many_borehole_ids(client):
     # Assert
     assert response.status_code == 422
     body = response.json()
-    assert body['errors'][0]['desc'] == f'More than {ags_export_route.BOREHOLE_EXPORT_LIMIT} borehole IDs.'
+    assert body['errors'][0]['desc'] == f'More than {ags_export.BOREHOLE_EXPORT_LIMIT} borehole IDs.'
 
 
 def test_get_ags_exporter_unreachable(client, monkeypatch):
@@ -683,7 +681,7 @@ def test_get_ags_exporter_unreachable(client, monkeypatch):
     bgs_loca_id = 0
     query = f'/ags_export/?bgs_loca_id={bgs_loca_id}'
     # Patch the Borehole export to be something that cannot be reached
-    monkeypatch.setattr(ags_export_route, "BOREHOLE_EXPORT_URL", f'http://unreachable.com/{bgs_loca_id}')
+    monkeypatch.setattr(ags_export, "BOREHOLE_EXPORT_URL", f'http://unreachable.com/{query}')
 
     # Act
     with client as ac:
@@ -707,12 +705,12 @@ def test_get_ags_exporter_error(client, monkeypatch):
         def raise_for_status(self):
             raise requests.exceptions.HTTPError
 
-        monkeypatch.setattr(ags_export_route.requests, 'get', lambda: MockResponse)
+        monkeypatch.setattr(ags_export.requests, 'get', lambda: MockResponse)
 
     def mock_get(*args, **kwargs):
         return MockResponse()
 
-    monkeypatch.setattr(ags_export_route.requests, 'get', mock_get)
+    monkeypatch.setattr(ags_export.requests, 'get', mock_get)
 
     # Act
     with client as ac:
@@ -797,9 +795,9 @@ def test_get_ags_exporter_by_polygon_too_many_boreholes(client):
     # Assert
     assert response.status_code == 422
     body = response.json()
-    assert body['errors'][0]['desc'].startswith(f'More than {app_routes.BOREHOLE_EXPORT_LIMIT} boreholes (')
+    assert body['errors'][0]['desc'].startswith(f'More than {ags_export_by_polygon.BOREHOLE_EXPORT_LIMIT} boreholes (')
     assert body['errors'][0]['desc'].endswith(') found in the given polygon. Please try with a smaller polygon')
-    assert int(body['errors'][0]['desc'].replace(')', '(').split('(')[1]) > app_routes.BOREHOLE_EXPORT_LIMIT
+    assert int(body['errors'][0]['desc'].replace(')', '(').split('(')[1]) > ags_export_by_polygon.BOREHOLE_EXPORT_LIMIT
 
 
 def test_get_ags_exporter_by_polygon_no_boreholes(client):
@@ -840,7 +838,7 @@ def test_get_ags_exporter_by_polygon_ogcapi_unreachable(client, monkeypatch):
     polygon = 'POLYGON((0 0, 0 1, 1 1, 1 0, 0 0))'
     query = f'/ags_export_by_polygon/?polygon={polygon}'
     # Patch the Borehole index to be something that cannot be reached
-    monkeypatch.setattr(app_routes, "BOREHOLE_INDEX_URL", f'http://unreachable.com/{query}')
+    monkeypatch.setattr(ags_export_by_polygon, "BOREHOLE_INDEX_URL", f'http://unreachable.com/{query}')
 
     # Act
     with client as ac:
@@ -864,12 +862,12 @@ def test_get_ags_exporter_by_polygon_ogcapi_error(client, monkeypatch):
         def raise_for_status(self):
             raise requests.exceptions.HTTPError
 
-        monkeypatch.setattr(app_routes.requests, 'get', lambda: MockResponse)
+        monkeypatch.setattr(ags_export_by_polygon.requests, 'get', lambda: MockResponse)
 
     def mock_get(*args, **kwargs):
         return MockResponse()
 
-    monkeypatch.setattr(app_routes.requests, 'get', mock_get)
+    monkeypatch.setattr(ags_export_by_polygon.requests, 'get', mock_get)
 
     # Act
     with client as ac:

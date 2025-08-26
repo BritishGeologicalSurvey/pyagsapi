@@ -5,45 +5,11 @@ from fastapi.exceptions import HTTPException
 
 from requests.exceptions import Timeout, ConnectionError, HTTPError
 
-from app.checkers import check_ags, check_bgs
-from app.errors import error_responses
-from app.model.schema import Checker, ResponseType
+from app.model.schema import ResponseType
 from app.model.queries import ags_log_query, response_type_query
-
-BOREHOLE_EXPORT_LIMIT = 50
-BOREHOLE_VIEWER_URL = "https://gwbv.bgs.ac.uk/GWBV/viewborehole?loca_id={bgs_loca_id}"
-BOREHOLE_EXPORT_URL = "https://gwbv.bgs.ac.uk/ags_export?loca_ids={bgs_loca_id}"
-BOREHOLE_INDEX_URL = ("https://ogcapi.bgs.ac.uk/collections/agsboreholeindex/items?f=json"
-                      "&properties=bgs_loca_id&filter=INTERSECTS(shape,{polygon})&limit=10")
+from . utils import pdf_responses, BOREHOLE_VIEWER_URL
 
 router = APIRouter()
-
-log_responses = dict(error_responses)
-log_responses['200'] = {
-    "content": {"application/json": {}, "text/plain": {}},
-    "description": "Return a log in json or text"}
-
-zip_responses = dict(error_responses)
-zip_responses['200'] = {
-    "content": {"application/x-zip-compressed": {}},
-    "description": "Return a zip containing successfully converted files and log file"}
-
-pdf_responses = dict(error_responses)
-pdf_responses['200'] = {
-    "content": {"application/pdf": {}},
-    "description": "Return a graphical log of AGS data in .PDF format"}
-
-ags_export_responses = dict(error_responses)
-ags_export_responses['200'] = {
-    "content": {"application/x-zip-compressed": {}, "application/json": {}},
-    "description": ("Return a zip containing .ags file and metadata .txt file "
-                    "or a json response containing the borehole ID count")}
-
-
-checker_functions = {
-    Checker.ags: check_ags,
-    Checker.bgs: check_bgs,
-}
 
 
 @router.get("/ags_log/",
