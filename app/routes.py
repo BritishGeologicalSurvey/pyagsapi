@@ -3,7 +3,6 @@ import shutil
 import requests
 import os
 
-from enum import StrEnum
 from pathlib import Path
 from typing import List
 
@@ -19,7 +18,8 @@ from app import conversion, validation
 from app.borehole_map import extract_geojson
 from app.checkers import check_ags, check_bgs
 from app.errors import error_responses, InvalidPayloadError
-from app.model.schema import ValidationResponse, BoreholeCountResponse
+from app.model.schema import (Checker, Format, Dictionary, SortingStrategy, ResponseType,
+                              ValidationResponse, BoreholeCountResponse)
 
 BOREHOLE_EXPORT_LIMIT = 50
 BOREHOLE_VIEWER_URL = "https://gwbv.bgs.ac.uk/GWBV/viewborehole?loca_id={bgs_loca_id}"
@@ -52,41 +52,6 @@ ags_export_responses['200'] = {
     "content": {"application/x-zip-compressed": {}, "application/json": {}},
     "description": ("Return a zip containing .ags file and metadata .txt file "
                     "or a json response containing the borehole ID count")}
-
-
-# Enum for search logic
-class Format(StrEnum):
-    TEXT = "text"
-    JSON = "json"
-
-
-# Enum for search logic
-class Dictionary(StrEnum):
-    v4_0_3 = "v4_0_3"
-    v4_0_4 = "v4_0_4"
-    v4_1 = "v4_1"
-    v4_1_1 = "v4_1_1"
-    None_Given = ''
-
-
-# Enum for checker logic
-class Checker(StrEnum):
-    ags = "ags"
-    bgs = "bgs"
-
-
-# Enum for sorting strategy logic
-class SortingStrategy(StrEnum):
-    default = "default"
-    alphabetical = "alphabetical"
-    hierarchy = "hierarchy"
-    dictionary = "dictionary"
-
-
-# Enum for pdf response type logic
-class ResponseType(StrEnum):
-    attachment = "attachment"
-    inline = "inline"
 
 
 checker_functions = {

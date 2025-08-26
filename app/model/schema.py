@@ -1,4 +1,5 @@
 from datetime import datetime
+from enum import StrEnum
 from typing import Dict, List, Union
 
 from pydantic import BaseModel, Field, validator
@@ -27,6 +28,41 @@ VALID_KEYS = [
 VALID_KEYS.extend(list(BGS_RULES.keys()))
 # BGS rule that is handled outside of the rule functions
 VALID_KEYS.append('BGS data validation: Non-numeric coordinate types')
+
+
+# Enum for search logic
+class Format(StrEnum):
+    TEXT = "text"
+    JSON = "json"
+
+
+# Enum for search logic
+class Dictionary(StrEnum):
+    v4_0_3 = "v4_0_3"
+    v4_0_4 = "v4_0_4"
+    v4_1 = "v4_1"
+    v4_1_1 = "v4_1_1"
+    None_Given = ''
+
+
+# Enum for checker logic
+class Checker(StrEnum):
+    ags = "ags"
+    bgs = "bgs"
+
+
+# Enum for sorting strategy logic
+class SortingStrategy(StrEnum):
+    default = "default"
+    alphabetical = "alphabetical"
+    hierarchy = "hierarchy"
+    dictionary = "dictionary"
+
+
+# Enum for pdf response type logic
+class ResponseType(StrEnum):
+    attachment = "attachment"
+    inline = "inline"
 
 
 class LineError(BaseModel):
