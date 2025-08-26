@@ -16,6 +16,7 @@ from python_ags4 import AGS4
 from app.main import app
 from app.checkers import load_ags4_as_numeric
 import app.routes.routes as app_routes
+import app.routes.ags_log as ags_log_route
 from test.fixtures import (BAD_FILE_DATA, DICTIONARIES, FROZEN_TIME,
                            GOOD_FILE_DATA)
 from test.fixtures_json import JSON_RESPONSES, GEOJSON_RESPONSES
@@ -514,7 +515,7 @@ def test_get_ags_log_generator_unreachable(client, monkeypatch):
     bgs_loca_id = 0
     query = f'/ags_log/?bgs_loca_id={bgs_loca_id}'
     # Patch the Borehole Viewer to be something that cannot be reached
-    monkeypatch.setattr(app_routes, "BOREHOLE_VIEWER_URL", f'http://unreachable.com/{bgs_loca_id}')
+    monkeypatch.setattr(ags_log_route, "BOREHOLE_VIEWER_URL", f'http://unreachable.com/{bgs_loca_id}')
 
     # Act
     with client as ac:
@@ -538,12 +539,12 @@ def test_get_ags_log_generator_error(client, monkeypatch):
         def raise_for_status(self):
             raise requests.exceptions.HTTPError
 
-        monkeypatch.setattr(app_routes.requests, 'get', lambda: MockResponse)
+        monkeypatch.setattr(ags_log_route.requests, 'get', lambda: MockResponse)
 
     def mock_get(*args, **kwargs):
         return MockResponse()
 
-    monkeypatch.setattr(app_routes.requests, 'get', mock_get)
+    monkeypatch.setattr(ags_log_route.requests, 'get', mock_get)
 
     # Act
     with client as ac:
