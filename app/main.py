@@ -15,7 +15,7 @@ from starlette.requests import Request
 from starlette.responses import JSONResponse
 from fastapi.openapi.utils import get_openapi
 
-from app.routes import routes, validate
+from app.routes import routes, validate, convert
 from app.errors import HTTPExceptionResponse, InvalidPayloadError
 
 
@@ -69,6 +69,7 @@ setup_logging()
 # Add routes
 app.include_router(routes.router)
 app.include_router(validate.router)
+app.include_router(convert.router)
 
 templates = Jinja2Templates(directory="app/templates")
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
