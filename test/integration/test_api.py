@@ -17,6 +17,7 @@ from app.main import app
 from app.checkers import load_ags4_as_numeric
 import app.routes.routes as app_routes
 import app.routes.ags_log as ags_log_route
+import app.routes.ags_export as ags_export_route
 from test.fixtures import (BAD_FILE_DATA, DICTIONARIES, FROZEN_TIME,
                            GOOD_FILE_DATA)
 from test.fixtures_json import JSON_RESPONSES, GEOJSON_RESPONSES
@@ -674,7 +675,7 @@ def test_get_ags_export_too_many_borehole_ids(client):
     # Assert
     assert response.status_code == 422
     body = response.json()
-    assert body['errors'][0]['desc'] == f'More than {app_routes.BOREHOLE_EXPORT_LIMIT} borehole IDs.'
+    assert body['errors'][0]['desc'] == f'More than {ags_export_route.BOREHOLE_EXPORT_LIMIT} borehole IDs.'
 
 
 def test_get_ags_exporter_unreachable(client, monkeypatch):
@@ -682,7 +683,7 @@ def test_get_ags_exporter_unreachable(client, monkeypatch):
     bgs_loca_id = 0
     query = f'/ags_export/?bgs_loca_id={bgs_loca_id}'
     # Patch the Borehole export to be something that cannot be reached
-    monkeypatch.setattr(app_routes, "BOREHOLE_EXPORT_URL", f'http://unreachable.com/{bgs_loca_id}')
+    monkeypatch.setattr(ags_export_route, "BOREHOLE_EXPORT_URL", f'http://unreachable.com/{bgs_loca_id}')
 
     # Act
     with client as ac:
@@ -706,12 +707,12 @@ def test_get_ags_exporter_error(client, monkeypatch):
         def raise_for_status(self):
             raise requests.exceptions.HTTPError
 
-        monkeypatch.setattr(app_routes.requests, 'get', lambda: MockResponse)
+        monkeypatch.setattr(ags_export_route.requests, 'get', lambda: MockResponse)
 
     def mock_get(*args, **kwargs):
         return MockResponse()
 
-    monkeypatch.setattr(app_routes.requests, 'get', mock_get)
+    monkeypatch.setattr(ags_export_route.requests, 'get', mock_get)
 
     # Act
     with client as ac:
