@@ -1,12 +1,10 @@
 """Tests for ags_log API responses."""
-import os
-
 import pytest
 import requests
 
 from app.routes import ags_log
 
-IN_GITHUB_ACTIONS = os.getenv("GITHUB_ACTIONS") == "true"
+from test.fixtures import IN_GITHUB_ACTIONS
 
 
 @pytest.mark.parametrize('response_type, response_type_result', [

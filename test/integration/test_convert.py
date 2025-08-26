@@ -1,7 +1,5 @@
 """Tests for convert API responses."""
 from io import BytesIO
-import os
-from pathlib import Path
 import zipfile
 
 import pytest
@@ -9,10 +7,7 @@ from requests_toolbelt.multipart.encoder import MultipartEncoder
 import pandas as pd
 from python_ags4 import AGS4
 
-from test.fixtures import BAD_FILE_DATA, GOOD_FILE_DATA
-
-IN_GITHUB_ACTIONS = os.getenv("GITHUB_ACTIONS") == "true"
-TEST_FILE_DIR = Path(__file__).parent.parent / 'files'
+from test.fixtures import TEST_FILE_DIR, BAD_FILE_DATA, GOOD_FILE_DATA
 
 
 @pytest.mark.asyncio

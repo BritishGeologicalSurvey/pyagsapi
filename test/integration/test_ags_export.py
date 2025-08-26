@@ -1,6 +1,5 @@
 """Tests for API responses."""
 from io import BytesIO
-import os
 import zipfile
 
 import pytest
@@ -9,8 +8,7 @@ import requests
 from app.checkers import load_ags4_as_numeric
 from app.routes import ags_export
 
-
-IN_GITHUB_ACTIONS = os.getenv("GITHUB_ACTIONS") == "true"
+from test.fixtures import IN_GITHUB_ACTIONS
 
 
 @pytest.mark.xfail(IN_GITHUB_ACTIONS, reason="Upstream URL not available from Github Actions")
