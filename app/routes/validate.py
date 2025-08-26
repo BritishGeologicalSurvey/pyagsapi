@@ -9,10 +9,10 @@ from fastapi.responses import FileResponse
 
 from app import validation
 from app.borehole_map import extract_geojson
-from app.errors import InvalidPayloadError
 from app.model.schema import Checker, Format, Dictionary, ValidationResponse
 from app.model.queries import (format_form, geometry_form, dictionary_form, validate_form,
                                validation_file)
+from . errors import InvalidPayloadError
 from . utils import checker_functions, get_request_url, log_responses
 
 router = APIRouter()

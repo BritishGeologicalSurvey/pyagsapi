@@ -8,9 +8,9 @@ from fastapi import APIRouter, BackgroundTasks, Request, UploadFile
 from fastapi.responses import StreamingResponse
 
 from app import conversion, validation
-from app.errors import InvalidPayloadError
 from app.model.schema import SortingStrategy
 from app.model.queries import sort_tables_form, conversion_file
+from . errors import InvalidPayloadError
 from . utils import zip_responses
 
 router = APIRouter()

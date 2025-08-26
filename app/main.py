@@ -16,7 +16,7 @@ from starlette.responses import JSONResponse
 from fastapi.openapi.utils import get_openapi
 
 from app.routes import validate, convert, ags_log, ags_export, ags_export_by_polygon
-from app.errors import HTTPExceptionResponse, InvalidPayloadError
+from app.routes.errors import HTTPExceptionResponse, InvalidPayloadError
 
 
 def setup_logging(logging_level=logging.INFO):
