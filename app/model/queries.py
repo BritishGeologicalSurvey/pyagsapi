@@ -31,7 +31,7 @@ validate_form = Form(
 validation_file = File(
     ...,
     title='File to validate',
-    description='An AGS file ending in .ags',
+    description='An AGS file ending in .ags or a ZIP file containing AGS file(s)',
 )
 
 conversion_file = File(

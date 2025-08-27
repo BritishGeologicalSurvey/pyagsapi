@@ -23,8 +23,8 @@ router = APIRouter()
              tags=["validate"],
              response_model=ValidationResponse,
              responses=log_responses,
-             summary="Validate AGS4 File(s)",
-             description=("Validate an AGS4 file to the AGS File Format v4.x rules and the NGDC data"
+             summary="Validate AGS4 File(s) and ZIP files containing AGS4 File(s)",
+             description=("Validate AGS4 file(s) to the AGS File Format v4.x rules and the NGDC data"
                           " submission requirements. Uses the Offical AGS4 Python Library."))
 async def validate(background_tasks: BackgroundTasks,
                    files: List[UploadFile] = validation_file,
@@ -38,7 +38,7 @@ async def validate(background_tasks: BackgroundTasks,
     Uses the Official AGS4 Python Library.
     :param background_tasks: Background tasks for deleting temporary directories.
     :type background_tasks: BackgroundTasks
-    :param files: List of AGS4 files to be validated.
+    :param files: List of AGS4 files and ZIP files containing AGS4 File(s) to be validated.
     :type files: List[UploadFile]
     :param std_dictionary: The standard dictionary to use for validation. Options are "BGS" or "AGS".
     :type std_dictionary: Dictionary
