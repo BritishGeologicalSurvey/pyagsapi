@@ -1,13 +1,9 @@
 """Test functions for individual BGS rules"""
-from pathlib import Path
-
 import pytest
 
 from app.bgs_rules import BGS_RULES
 from app.checkers import load_ags4_as_numeric
-from test.fixtures import BGS_RULES_ERRORS
-
-TEST_FILE_DIR = Path(__file__).parent.parent / 'files'
+from test.fixtures import BGS_RULES_ERRORS, TEST_FILE_DIR
 
 
 def test_required_groups():

@@ -1,13 +1,11 @@
 """These tests confirm that the checkers can handle various exceptions"""
-from pathlib import Path
-
 import pytest
 import python_ags4
 
 from app.checkers import check_bgs, check_ags
 from app.bgs_rules import bgs_rules_version
+from test.fixtures import TEST_FILE_DIR
 
-TEST_FILE_DIR = Path(__file__).parent.parent / 'files'
 
 AGS_FILE_DATA = {
     'example_ags.ags': ('2 error(s) found in file!', False),

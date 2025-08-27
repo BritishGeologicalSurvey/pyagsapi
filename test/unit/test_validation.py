@@ -1,16 +1,13 @@
 """Tests for calls to validate function."""
 import datetime as dt
-from pathlib import Path
 
 from freezegun import freeze_time
 import pytest
 
 from app import validation
-from test.fixtures import (DICTIONARIES, FROZEN_TIME)
+from test.fixtures import TEST_FILE_DIR, DICTIONARIES, FROZEN_TIME
 from test.fixtures_json import JSON_RESPONSES
 from test.fixtures_plain_text import PLAIN_TEXT_RESPONSES
-
-TEST_FILE_DIR = Path(__file__).parent.parent / 'files'
 
 
 def mock_check_ags(filename, standard_AGS4_dictionary=None):

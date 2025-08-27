@@ -1,14 +1,11 @@
 """
 Tests for borehole_map.py
 """
-from pathlib import Path
-
 from geojson_pydantic import FeatureCollection
 import pytest
 
 from app.borehole_map import extract_geojson, concantenate_feature_collections
-
-TEST_FILE_DIR = Path(__file__).parent.parent / 'files'
+from test.fixtures import TEST_FILE_DIR
 
 
 def test_extract_geojson_example_ags():
