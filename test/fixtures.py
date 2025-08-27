@@ -31,6 +31,12 @@ ZIP_FILES = {
     'one_good_two_bad_ags.zip': ['example_fyis_ags.ags', 'example_broken_ags.ags', 'nonsense.AGS'],
 }
 
+ZIP_FILES_CONVERT = {
+    'single_ags.zip': ['example_ags.xlsx'],
+    'two_good_ags.zip': ['example_ags.xlsx', 'example_fyis_ags.xlsx'],
+    'one_good_two_bad_ags.zip': ['example_fyis_ags.xlsx'],
+}
+
 DICTIONARIES = {
     'v4_0_3': "Standard_dictionary_v4_0_3.ags",
     'v4_0_4': "Standard_dictionary_v4_0_4.ags",
