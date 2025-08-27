@@ -52,21 +52,30 @@ ags_log_query = Query(
     ...,
     title="BGS LOCA ID",
     description="BGS LOCA ID",
-    example="20190430093402523419",
+    openapi_examples={'example': {'value': "20190430093402523419"}},
 )
 
 ags_export_query = Query(
     ...,
     title="BGS LOCA ID",
     description="A single ID or multiple IDs separated by semicolons",
-    example="20190430093402523419",
+    openapi_examples={'example': {'value': "20190430093402523419"}},
 )
 
 polygon_query = Query(
     ...,
     title="POLYGON",
     description="A polygon expressed in Well Known Text",
-    example="POLYGON((-4.5 56,-4 56,-4 55.5,-4.5 55.5,-4.5 56))",
+    openapi_examples={
+        '4 boreholes': {
+            'value': 'POLYGON((-3.946 56.063,-3.640 56.063,-3.640 55.966,-3.946 55.966,-3.946 56.063))'},
+        '28 boreholes': {
+            'value': 'POLYGON((-3.946 56.065,-3.640 56.065,-3.640 55.966,-3.946 55.966,-3.946 56.065))'},
+        'No boreholes': {
+            'value': 'POLYGON((-3.946 56.061,-3.640 56.061,-3.640 55.966,-3.946 55.966,-3.946 56.061))'},
+        'More than 50 boreholes': {
+            'value': 'POLYGON((-3.109 55.895,-3.109 55.906,-3.077 55.906,-3.077 55.895,-3.109 55.895))'},
+    }
 )
 
 count_only_query = Query(
