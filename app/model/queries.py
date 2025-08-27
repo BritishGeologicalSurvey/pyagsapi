@@ -52,14 +52,31 @@ ags_log_query = Query(
     ...,
     title="BGS LOCA ID",
     description="BGS LOCA ID",
-    openapi_examples={'example': {'value': "20190430093402523419"}},
+    openapi_examples={
+        'single borehole': {
+            'value': "20190430093402523419",
+            'description': "Returns a PDF of borehole log"},
+        'invalid borehole': {
+            'value': "1234567890",
+            'description': "Returns a 404 error"},
+    },
 )
 
 ags_export_query = Query(
     ...,
     title="BGS LOCA ID",
     description="A single ID or multiple IDs separated by semicolons",
-    openapi_examples={'example': {'value': "20190430093402523419"}},
+    openapi_examples={
+        'single borehole': {
+            'value': "20190430093402523419",
+            'description': "Returns a zip file containing the GAS file single borehole log"},
+        'multiple boreholes': {
+            'value': "20190430093402523419;20190430093402523420",
+            'description': "TReturns a zip file containing two borehole logs"},
+        'invalid borehole': {
+            'value': "1234567890",
+            'description': "Returns a 404 error"},
+    },
 )
 
 polygon_query = Query(
@@ -68,13 +85,21 @@ polygon_query = Query(
     description="A polygon expressed in Well Known Text",
     openapi_examples={
         '4 boreholes': {
-            'value': 'POLYGON((-3.946 56.063,-3.640 56.063,-3.640 55.966,-3.946 55.966,-3.946 56.063))'},
+            'value': 'POLYGON((-3.946 56.063,-3.640 56.063,-3.640 55.966,-3.946 55.966,-3.946 56.063))',
+            'description': 'Returns 4 AGS files in a zip file if count is false or not set, '
+                           'returns a count of 4 if count is true'},
         '28 boreholes': {
-            'value': 'POLYGON((-3.946 56.065,-3.640 56.065,-3.640 55.966,-3.946 55.966,-3.946 56.065))'},
+            'value': 'POLYGON((-3.946 56.065,-3.640 56.065,-3.640 55.966,-3.946 55.966,-3.946 56.065))',
+            'description': 'Returns 28 AGS files in a zip file if count is false or not set, '
+                           'returns a count of 28 if count is true'},
         'No boreholes': {
-            'value': 'POLYGON((-3.946 56.061,-3.640 56.061,-3.640 55.966,-3.946 55.966,-3.946 56.061))'},
+            'value': 'POLYGON((-3.946 56.061,-3.640 56.061,-3.640 55.966,-3.946 55.966,-3.946 56.061))',
+            'description': 'Returns 422 error with a message if count is false or not set, '
+                           'returns a count of 0 if count is true'},
         'More than 50 boreholes': {
-            'value': 'POLYGON((-3.109 55.895,-3.109 55.906,-3.077 55.906,-3.077 55.895,-3.109 55.895))'},
+            'value': 'POLYGON((-3.109 55.895,-3.109 55.906,-3.077 55.906,-3.077 55.895,-3.109 55.895))',
+            'description': 'Returns 422 error with a message if count is false or not set, '
+                           'returns a count of 1952 if count is true'},
     }
 )
 
