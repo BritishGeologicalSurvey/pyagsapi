@@ -1,6 +1,7 @@
 import tempfile
 import shutil
 
+from io import BytesIO
 from pathlib import Path
 from typing import List
 from zipfile import is_zipfile, ZipFile
@@ -72,11 +73,9 @@ async def validate(background_tasks: BackgroundTasks,
     data = []
     for file in files:
         contents = await file.read()
-        local_file = tmp_dir / file.filename
-        local_file.write_bytes(contents)
         # Extract zipped files if a zip is uploaded
-        if is_zipfile(local_file):
-            zipfile = ZipFile(local_file)
+        if is_zipfile(BytesIO(contents)):
+            zipfile = ZipFile(BytesIO(contents))
             for name in zipfile.namelist():
                 zipfile.extract(name, tmp_dir)
                 local_ags_file = tmp_dir / name
@@ -84,7 +83,9 @@ async def validate(background_tasks: BackgroundTasks,
                                        return_geometry=return_geometry)
                 data.append(result)
         else:
-            result = validate_file(local_file, checkers=checkers, dictionary=dictionary,
+            local_ags_file = tmp_dir / file.filename
+            local_ags_file.write_bytes(contents)
+            result = validate_file(local_ags_file, checkers=checkers, dictionary=dictionary,
                                    return_geometry=return_geometry)
             data.append(result)
 
