@@ -7,7 +7,7 @@ from requests_toolbelt.multipart.encoder import MultipartEncoder
 import pandas as pd
 from python_ags4 import AGS4
 
-from test.fixtures import TEST_FILE_DIR, BAD_FILE_DATA, GOOD_FILE_DATA
+from test.fixtures import TEST_FILE_DIR, BAD_FILE_DATA, GOOD_FILE_DATA, ZIP_FILES_CONVERT
 
 
 @pytest.mark.asyncio
@@ -116,3 +116,35 @@ async def test_convert_bad_files(async_client, tmp_path):
             expected_message, expected_file_size = expected
             assert not (ags_path / name).is_file()
             assert expected_message in log
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize('filename, expected_files',
+                         [item for item in ZIP_FILES_CONVERT.items()])
+async def test_convert_zip_file(async_client, tmp_path, filename, expected_files):
+    # Arrange
+    fields = []
+    filename = TEST_FILE_DIR / filename
+    file = ('files', (filename.name, open(filename, 'rb'), 'text/plain'))
+    fields.append(file)
+    mp_encoder = MultipartEncoder(fields=fields)
+
+    # Act
+    async with async_client as ac:
+        response = await ac.post(
+            '/convert/',
+            headers={'Content-Type': mp_encoder.content_type},
+            data=mp_encoder.to_string())
+
+    # Assert
+    assert response.status_code == 200
+    assert response.headers['content-type'] == 'application/x-zip-compressed'
+    assert response.headers['content-disposition'] == 'attachment; filename=results.zip'
+
+    assert zipfile.is_zipfile(BytesIO(response.content))
+    with zipfile.ZipFile(BytesIO(response.content)) as ags_zip:
+        for file in expected_files:
+            assert file in ags_zip.namelist()
+            assert (zipfile.Path(ags_zip) / file).is_file()
+            with ags_zip.open(file) as xl_file:
+                assert pd.ExcelFile(xl_file)

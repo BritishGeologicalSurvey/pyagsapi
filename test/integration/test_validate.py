@@ -6,8 +6,8 @@ import pytest
 
 from requests_toolbelt.multipart.encoder import MultipartEncoder
 
-from test.fixtures import TEST_FILE_DIR, DICTIONARIES, FROZEN_TIME
-from test.fixtures_json import JSON_RESPONSES, GEOJSON_RESPONSES, ZIP_FILES
+from test.fixtures import TEST_FILE_DIR, DICTIONARIES, FROZEN_TIME, ZIP_FILES
+from test.fixtures_json import JSON_RESPONSES, GEOJSON_RESPONSES
 from test.fixtures_plain_text import PLAIN_TEXT_RESPONSES
 
 

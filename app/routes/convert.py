@@ -1,8 +1,10 @@
 import tempfile
 import shutil
 
+from io import BytesIO
 from pathlib import Path
 from typing import List
+from zipfile import is_zipfile, ZipFile
 
 from fastapi import APIRouter, BackgroundTasks, Request, UploadFile
 from fastapi.responses import StreamingResponse
@@ -56,12 +58,24 @@ async def convert(background_tasks: BackgroundTasks,
         f.write('=' * 80 + '\n')
         for file in files:
             contents = await file.read()
-            local_file = tmp_dir / file.filename
-            local_file.write_bytes(contents)
-            _, result = conversion.convert(local_file, results_dir, sorting_strategy=sort_tables)
-            log = validation.to_plain_text(result)
-            f.write(log)
-            f.write('\n' + '=' * 80 + '\n')
+            content_bytes = BytesIO(contents)
+            # Extract zipped files if a zip is uploaded
+            if is_zipfile(content_bytes) and not file.filename.lower().endswith('.xlsx'):
+                zipfile = ZipFile(content_bytes)
+                for name in zipfile.namelist():
+                    zipfile.extract(name, tmp_dir)
+                    local_file = tmp_dir / name
+                    _, result = conversion.convert(local_file, results_dir, sorting_strategy=sort_tables)
+                    log = validation.to_plain_text(result)
+                    f.write(log)
+                    f.write('\n' + '=' * 80 + '\n')
+            else:
+                local_file = tmp_dir / file.filename
+                local_file.write_bytes(contents)
+                _, result = conversion.convert(local_file, results_dir, sorting_strategy=sort_tables)
+                log = validation.to_plain_text(result)
+                f.write(log)
+                f.write('\n' + '=' * 80 + '\n')
     zipped_file = tmp_dir / RESULTS
     shutil.make_archive(zipped_file, 'zip', results_dir)
     zipped_stream = open(tmp_dir / (RESULTS + '.zip'), 'rb')

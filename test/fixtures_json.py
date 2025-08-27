@@ -1,10 +1,5 @@
 import datetime as dt
 
-ZIP_FILES = {
-    'single_ags.zip': ['example_ags.ags'],
-    'multiple_ags.zip': ['example_fyis_ags.ags', 'example_broken_ags.ags', 'nonsense.AGS']
-}
-
 JSON_RESPONSES = {
     'example_ags.ags': {
         'filename': 'example_ags.ags',
