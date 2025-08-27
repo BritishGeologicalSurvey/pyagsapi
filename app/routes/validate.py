@@ -3,6 +3,7 @@ import shutil
 
 from pathlib import Path
 from typing import List
+from zipfile import is_zipfile, ZipFile
 
 from fastapi import APIRouter, BackgroundTasks, Request, UploadFile
 from fastapi.responses import FileResponse
@@ -71,18 +72,21 @@ async def validate(background_tasks: BackgroundTasks,
     data = []
     for file in files:
         contents = await file.read()
-        local_ags_file = tmp_dir / file.filename
-        local_ags_file.write_bytes(contents)
-        result = validation.validate(
-            local_ags_file, checkers=checkers, standard_AGS4_dictionary=dictionary)
-        if return_geometry:
-            try:
-                geojson = extract_geojson(local_ags_file)
-                result['geojson'] = geojson
-            except ValueError as ve:
-                result['geojson'] = {}
-                result['geojson_error'] = str(ve)
-        data.append(result)
+        local_file = tmp_dir / file.filename
+        local_file.write_bytes(contents)
+        # Extract zipped files if a zip is uploaded
+        if is_zipfile(local_file):
+            zipfile = ZipFile(local_file)
+            for name in zipfile.namelist():
+                zipfile.extract(name, tmp_dir)
+                local_ags_file = tmp_dir / name
+                result = validate_file(local_ags_file, checkers=checkers, dictionary=dictionary,
+                                       return_geometry=return_geometry)
+                data.append(result)
+        else:
+            result = validate_file(local_file, checkers=checkers, dictionary=dictionary,
+                                   return_geometry=return_geometry)
+            data.append(result)
 
     if fmt == Format.TEXT:
         full_logfile = tmp_dir / 'results.log'
@@ -97,6 +101,19 @@ async def validate(background_tasks: BackgroundTasks,
         response = prepare_validation_response(request, data)
 
     return response
+
+
+def validate_file(local_ags_file, checkers=None, dictionary=None, return_geometry=False):
+    result = validation.validate(
+        local_ags_file, checkers=checkers, standard_AGS4_dictionary=dictionary)
+    if return_geometry:
+        try:
+            geojson = extract_geojson(local_ags_file)
+            result['geojson'] = geojson
+        except ValueError as ve:
+            result['geojson'] = {}
+            result['geojson_error'] = str(ve)
+    return result
 
 
 def prepare_validation_response(request, data):
