@@ -37,7 +37,7 @@ validation_file = File(
 conversion_file = File(
     ...,
     title='File to convert',
-    description='An AGS or XLSX file',
+    description='An AGS, XLSX file or a ZIP file containing AGS and XLSX file(s)',
 )
 
 sort_tables_form = Form(

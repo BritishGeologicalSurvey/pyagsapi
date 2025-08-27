@@ -23,8 +23,9 @@ router = APIRouter()
              response_class=StreamingResponse,
              responses=zip_responses,
              summary="Convert files between .ags and .xlsx format",
-             description=("Convert files between .ags and .xlsx format. Option to"
-                          " sort worksheets in .xlsx file in alphabetical order."))
+             description=("Convert files between .ags and .xlsx format. "
+                          "Zipped files can be uploaded containing either filetype. "
+                          "Option to sort worksheets in .xlsx file in alphabetical order."))
 async def convert(background_tasks: BackgroundTasks,
                   files: List[UploadFile] = conversion_file,
                   sort_tables: str = sort_tables_form,
@@ -33,7 +34,7 @@ async def convert(background_tasks: BackgroundTasks,
     Convert files between .ags and .xlsx format. Option to sort worksheets in .xlsx file in alphabetical order.
     :param background_tasks: A background task that manages file conversion asynchronously.
     :type background_tasks: BackgroundTasks
-    :param files: A list of files to be converted. Must be in .ags or .xlsx format.
+    :param files: A list of files to be converted. Must be in .ags, .xlsx or .zip format.
     :type files: List[UploadFile]
     :param sort_tables: A boolean indicating whether to sort worksheets in the .xlsx file in alphabetical order.
     :type sort_tables: bool
