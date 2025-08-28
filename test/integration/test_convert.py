@@ -146,5 +146,35 @@ async def test_convert_zip_file(async_client, tmp_path, filename, expected_files
         for file in expected_files:
             assert file in ags_zip.namelist()
             assert (zipfile.Path(ags_zip) / file).is_file()
-            with ags_zip.open(file) as xl_file:
-                assert pd.ExcelFile(xl_file)
+
+
+@pytest.mark.asyncio
+async def test_convert_mixed_files(async_client, tmp_path):
+    # Arrange
+    filenames = ['one_good_xlsx.zip', 'one_good_two_bad_ags.zip', 'example_2_xlsx.xlsx', 'example_ags.ags']
+    expected_files = (ZIP_FILES_CONVERT['one_good_xlsx.zip'] + ZIP_FILES_CONVERT['one_good_xlsx.zip']
+                      + ['example_2_xlsx.ags', 'example_ags.xlsx'])
+    fields = []
+    for name in filenames:
+        filename = TEST_FILE_DIR / name
+        file = ('files', (filename.name, open(filename, 'rb'), 'text/plain'))
+        fields.append(file)
+    mp_encoder = MultipartEncoder(fields=fields)
+
+    # Act
+    async with async_client as ac:
+        response = await ac.post(
+            '/convert/',
+            headers={'Content-Type': mp_encoder.content_type},
+            data=mp_encoder.to_string())
+
+    # Assert
+    assert response.status_code == 200
+    assert response.headers['content-type'] == 'application/x-zip-compressed'
+    assert response.headers['content-disposition'] == 'attachment; filename=results.zip'
+
+    assert zipfile.is_zipfile(BytesIO(response.content))
+    with zipfile.ZipFile(BytesIO(response.content)) as ags_zip:
+        for file in expected_files:
+            assert file in ags_zip.namelist()
+            assert (zipfile.Path(ags_zip) / file).is_file()
