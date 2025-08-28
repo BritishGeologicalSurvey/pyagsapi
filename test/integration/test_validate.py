@@ -6,7 +6,7 @@ import pytest
 
 from requests_toolbelt.multipart.encoder import MultipartEncoder
 
-from test.fixtures import TEST_FILE_DIR, DICTIONARIES, FROZEN_TIME, ZIP_FILES
+from test.fixtures import TEST_FILE_DIR, DICTIONARIES, FROZEN_TIME, ZIP_FILES_VALIDATE
 from test.fixtures_json import JSON_RESPONSES, GEOJSON_RESPONSES
 from test.fixtures_plain_text import PLAIN_TEXT_RESPONSES
 
@@ -324,7 +324,7 @@ async def test_validate_dictionary_choice(async_client, dictionary, filename, ex
 
 
 @pytest.mark.parametrize('filename, zipped_files',
-                         [item for item in ZIP_FILES.items()])
+                         [item for item in ZIP_FILES_VALIDATE.items()])
 @pytest.mark.asyncio
 async def test_validate_single_zip(async_client, filename, zipped_files):
     # Arrange
@@ -358,7 +358,7 @@ async def test_validate_single_zip(async_client, filename, zipped_files):
 async def test_validate_multiple_zip(async_client):
     # Arrange
     fields = []
-    for filename in ZIP_FILES.keys():
+    for filename in ZIP_FILES_VALIDATE.keys():
         filename = TEST_FILE_DIR / filename
         file = ('files', (filename.name, open(filename, 'rb'), 'text/plain'))
         fields.append(file)
@@ -380,13 +380,13 @@ async def test_validate_multiple_zip(async_client):
     assert body['msg'] is not None
     assert body['type'] == 'success'
     assert body['self'] is not None
-    all_files = [file for filelist in ZIP_FILES.values() for file in filelist]
+    all_files = [file for filelist in ZIP_FILES_VALIDATE.values() for file in filelist]
     assert len(body['data']) == len(all_files)
     assert [d['filename'] for d in body['data']] == all_files
 
 
 @pytest.mark.parametrize('filename, zipped_files',
-                         [item for item in ZIP_FILES.items()])
+                         [item for item in ZIP_FILES_VALIDATE.items()])
 @pytest.mark.asyncio
 async def test_validate_ags_and_zip(async_client, filename, zipped_files):
     # Arrange

@@ -25,16 +25,18 @@ BAD_FILE_DATA = [
     ('real/AGS3/19684.ags', ("No valid AGS4 data found in input file.", 12542))
 ]
 
-ZIP_FILES = {
-    'single_ags.zip': ['example_ags.ags'],
+ZIP_FILES_VALIDATE = {
+    'one_good_ags.zip': ['example_ags.ags'],
     'two_good_ags.zip': ['example_ags.ags', 'example_fyis_ags.ags'],
     'one_good_two_bad_ags.zip': ['example_fyis_ags.ags', 'example_broken_ags.ags', 'nonsense.AGS'],
 }
 
 ZIP_FILES_CONVERT = {
-    'single_ags.zip': ['example_ags.xlsx'],
+    'one_good_ags.zip': ['example_ags.xlsx'],
     'two_good_ags.zip': ['example_ags.xlsx', 'example_fyis_ags.xlsx'],
     'one_good_two_bad_ags.zip': ['example_fyis_ags.xlsx'],
+    'one_good_xlsx.zip': ['example_xlsx.ags'],
+    'one_good_ags_one_good_xlsx.zip': ['example_xlsx.ags', 'example_fyis_ags.xlsx'],
 }
 
 DICTIONARIES = {
