@@ -15,8 +15,12 @@ Dictionary: {{ dictionary }}
 {%- endif %}
 Time: {{ time }}
 
+## Summary
+
 {% for key, value in additional_metadata.items() -%}
+{% if value is not none -%}
 {{value}}
+{% endif -%}
 {% endfor %}
 {% if not valid -%}
 # Errors
