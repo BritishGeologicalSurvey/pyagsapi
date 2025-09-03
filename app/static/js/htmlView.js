@@ -279,6 +279,9 @@ agsHtml.displayFileResult=function(fileResult,ix){
         if(fileResult.additional_metadata.bgs_loca_rows){
             xhtml=xhtml + "<li>" + fileResult.additional_metadata.bgs_loca_rows + "</li>";
             };
+        if(fileResult.additional_metadata.bgs_projects){
+            xhtml=xhtml + "<li>" + fileResult.additional_metadata.bgs_projects + "</li>";
+            };
         xhtml=xhtml + "</ul>";
         };
 
