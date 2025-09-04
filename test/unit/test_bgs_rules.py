@@ -187,6 +187,21 @@ def test_loca_locx_is_not_duplicate_of_other_column():
     assert errors == expected
 
 
+def test_loca_locx_is_not_duplicate_of_other_column_lon_is_dms():
+    # Arrange
+    filename = TEST_FILE_DIR / 'bgs_rules' / 'locax_is_duplicate_lon_is_dms.ags'
+    expected = [
+        {'desc': 'LOCX / LOCY duplicates NATE / NATN (Duplicate NATE)',
+         'group': 'LOCA',
+         'line': '-'},
+    ]
+    tables, _, _ = load_ags4_as_numeric(filename)
+
+    errors = BGS_RULES['BGS data validation: LOCA_LOCX is not duplicate of other column'](tables)
+
+    assert errors == expected
+
+
 def test_loca_references_are_valid():
     # Arrange
     filename = TEST_FILE_DIR / 'bgs_rules' / 'loca_references_are_valid.ags'
