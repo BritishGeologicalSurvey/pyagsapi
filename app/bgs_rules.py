@@ -228,10 +228,14 @@ def check_locx_is_not_duplicate_of_other_column(tables: dict) -> List[dict]:
                      'desc': f'LOCX / LOCY duplicates NATE / NATN ({row.name})'}
         elif row['LOCA_LON'] == '' and row['LOCA_LAT'] == '':
             error = None
-        elif (float(row['LOCA_LON']) == row['LOCA_LOCX'] or
-              float(row['LOCA_LAT']) == row['LOCA_LOCY']):
-            error = {'line': '-', 'group': 'LOCA',
-                     'desc': f'LOCX / LOCY duplicates LON / LAT ({row.name})'}
+        else:
+            try:
+                # If LON/LAT are in "d:m:s" format the cast will fail, which means no duplicates
+                if (float(row['LOCA_LON']) == row['LOCA_LOCX'] or float(row['LOCA_LAT']) == row['LOCA_LOCY']):
+                    error = {'line': '-', 'group': 'LOCA',
+                             'desc': f'LOCX / LOCY duplicates LON / LAT ({row.name})'}
+            except ValueError:
+                pass
 
         return error
 
