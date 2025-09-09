@@ -111,26 +111,6 @@ def check_eastings_northings_present(tables: dict) -> List[dict]:
     return errors
 
 
-def check_eastings_northings_range(tables: dict) -> List[dict]:
-    """Eastings and Northings columns fall within reasonable range"""
-    errors = []
-    try:
-        location = tables['LOCA']
-        if any(location['LOCA_NATE'] < 1e5) or any(location['LOCA_NATE'] > 8e5):
-            errors.append(
-                {'line': '-', 'group': 'LOCA',
-                 'desc': 'LOCA_NATE values outside 100,000 to 800,000 range'})
-        if any(location['LOCA_NATN'] < 1e5) or any(location['LOCA_NATN'] > 1.4e6):
-            errors.append(
-                {'line': '-', 'group': 'LOCA',
-                 'desc': 'LOCA_NATN values outside 100,000 to 1,400,000 range'})
-    except KeyError:
-        # LOCA not present, already checked in earlier rule
-        pass
-
-    return errors
-
-
 def check_drill_depth_present(tables: dict) -> List[dict]:
     """Drill depth value is populate and not zero"""
     errors = []
@@ -432,7 +412,6 @@ BGS_RULES = {
     'BGS data validation: Required BGS Groups': check_required_bgs_groups,
     'BGS data validation: Spatial Referencing': check_spatial_referencing_system,
     'BGS data validation: Eastings/Northings Present': check_eastings_northings_present,
-    'BGS data validation: Eastings/Northings Range': check_eastings_northings_range,
     'BGS data validation: Drill Depth Present': check_drill_depth_present,
     'BGS data validation: Drill Depth GEOL Record': check_drill_depth_geol_record,
     'BGS data validation: LOCA within Great Britain': check_loca_within_great_britain,
