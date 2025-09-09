@@ -159,6 +159,16 @@ def test_loca_within_great_britain():
     assert errors == expected
 
 
+def test_loca_great_britain_extremities():
+    # Arrange
+    filename = TEST_FILE_DIR / 'bgs_rules' / 'extremities.ags'
+    tables, _, _ = load_ags4_as_numeric(filename)
+
+    errors = BGS_RULES['BGS data validation: LOCA within Great Britain'](tables)
+
+    assert not errors
+
+
 def test_loca_locx_is_not_duplicate_of_other_column():
     # Arrange
     filename = TEST_FILE_DIR / 'bgs_rules' / 'locax_is_duplicate.ags'
