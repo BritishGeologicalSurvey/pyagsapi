@@ -101,8 +101,7 @@ def check_eastings_northings_present(tables: dict) -> List[dict]:
         return errors
 
     for loca_id, row in location.iterrows():
-        if (pd.isna(row['LOCA_NATE']) or pd.isna(row['LOCA_NATN'])
-                or row['LOCA_NATE'] == 0 or row['LOCA_NATN'] == 0):
+        if not valid_row(row):
             errors.append({
                 'line': row["line_no"], 'group': 'LOCA',
                 'desc': f'LOCA_NATE / LOCA_NATN contains zeros or null values ({loca_id})'
@@ -179,16 +178,14 @@ def check_loca_within_great_britain(tables: dict) -> List[dict]:
     outside_gb_and_ni_mask = ~inside_gb_mask & ~inside_ni_mask
 
     for loca_id, row in location.loc[outside_uk_eea_and_ni_mask].iterrows():
-        if not (pd.isna(row['LOCA_NATE']) or pd.isna(row['LOCA_NATN'])
-                or row['LOCA_NATE'] == 0 or row['LOCA_NATN'] == 0):
+        if valid_row(row):
             errors.append({
                 'line': row["line_no"], 'group': 'LOCA',
                 'desc': f'NATE / NATN outside UK Offshore EEA or Onshore Northern Ireland boundary ({loca_id})'
             })
 
     for loca_id, row in location.loc[outside_gb_and_ni_mask].iterrows():
-        if not (pd.isna(row['LOCA_NATE']) or pd.isna(row['LOCA_NATN'])
-                or row['LOCA_NATE'] == 0 or row['LOCA_NATN'] == 0):
+        if valid_row(row):
             errors.append({
                 'line': row["line_no"], 'group': 'LOCA',
                 'desc': f'NATE / NATN outside Onshore Great Britain or Northern Ireland boundaries ({loca_id})'
@@ -214,6 +211,12 @@ def create_location_gpd(tables: dict[pd.DataFrame]) -> gpd.GeoDataFrame:
     location['line_no'] = range(1, len(location) + 1)
 
     return location
+
+
+def valid_row(row):
+    """ A row is valid if its easting and northing are not null or zero"""
+    return not (pd.isna(row['LOCA_NATE']) or pd.isna(row['LOCA_NATN'])
+                or row['LOCA_NATE'] == 0 or row['LOCA_NATN'] == 0)
 
 
 def check_locx_is_not_duplicate_of_other_column(tables: dict) -> List[dict]:
