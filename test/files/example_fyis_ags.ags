@@ -18,7 +18,7 @@
 "HEADING","TRAN_ISNO","TRAN_DATE","TRAN_PROD","TRAN_STAT","TRAN_DESC","TRAN_AGS","TRAN_RECV","TRAN_DLIM","TRAN_RCON","TRAN_REM","FILE_FSET"
 "UNIT","","yyyy-mm-dd","","","","","","","","",""
 "TYPE","X","DT","X","X","X","X","X","X","X","X","X"
-"DATA","1","2021-01-18","ACME Drilling Ltd","Preliminary","Draft Logs only","4.1","ACME Consulting","|","+","",""
+"DATA","1","2021-01-18","ACME Drilling Ltd","Preliminary","Draft Logs only","1.1","ACME Consulting ©","|","+","",""
 
 "GROUP","TYPE"
 "HEADING","TYPE_TYPE","TYPE_DESC","FILE_FSET"
@@ -28,13 +28,10 @@
 "DATA","X","Text",""
 "DATA","ID","Unique identifier",""
 "DATA","PA","ABBR pick list",""
-"DATA","2DP","Value; required 
-number of decimal places, 2",""
+"DATA","2DP","Value; required number of decimal places, 2",""
 "DATA","DT","Date Time (ISO 8601:2004)",""
-"DATA","0DP","Value; required 
-number of decimal places, 0",""
-"DATA","1DP","Value; required 
-number of decimal places, 1",""
+"DATA","0DP","Value; required number of decimal places, 0",""
+"DATA","1DP","Value; required number of decimal places, 1",""
 "DATA","PT","TYPE pick list",""
 "DATA","PU","UNIT pick list",""
 "DATA","DMS","Degrees:Minutes:Seconds",""

@@ -1,9 +1,10 @@
-ipython
-ipdb
-pytest==8.0.2  # 8.1.0 contains breaking changes
 flake8
-requests
-httpx
-pytest-asyncio
-requests-toolbelt
 freezegun
+httpx
+ipdb
+ipython
+pip-tools
+pytest-asyncio
+pytest==8.0.2  # 8.1.0 contains breaking changes
+requests
+requests-toolbelt

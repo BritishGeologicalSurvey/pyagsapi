@@ -4,3 +4,4 @@ venv
 .idea
 .coverage
 htmlcov
+setup_env.sh

@@ -421,8 +421,12 @@ async def test_validate_bgs_text(async_client):
     ('v4_1_1', 'example_ags.ags', 'Standard_dictionary_v4_1_1.ags'),
     ('v4_1', 'example_ags.ags', 'Standard_dictionary_v4_1.ags'),
     ('v4_0_4', 'example_ags.ags', 'Standard_dictionary_v4_0_4.ags'),
-    (None, 'example_ags.ags', 'Standard_dictionary_v4_1.ags'),  # Defaults to value set in the file
-    (None, 'nonsense.AGS', 'Standard_dictionary_v4_1_1.ags'),  # Defaults to latest dictionary
+    # Defaults to value set in the file
+    (None, 'example_ags.ags', 'Standard_dictionary_v4_1.ags'),
+    # Defaults to latest due to unknown dictionary in file (FYI)
+    (None, 'example_fyis_ags.ags', 'Standard_dictionary_v4_1_1.ags'),
+    # Defaults to latest dictionary due to no dictionary specified in file
+    (None, 'nonsense.AGS', 'Standard_dictionary_v4_1_1.ags'),
 ])
 @pytest.mark.asyncio
 async def test_validate_dictionary_choice(async_client, dictionary, filename, expected):
