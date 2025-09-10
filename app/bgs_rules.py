@@ -89,27 +89,6 @@ def check_spatial_referencing_system(tables: dict) -> List[dict]:
     return errors
 
 
-def check_eastings_northings_present(tables: dict) -> List[dict]:
-    """Eastings and Northings columns are populated"""
-    errors = []
-
-    # Read data into geodataframe
-    try:
-        location = create_location_gpd(tables)
-    except KeyError:
-        # LOCA not present, already checked in earlier rule
-        return errors
-
-    for loca_id, row in location.iterrows():
-        if not valid_row(row):
-            errors.append({
-                'line': row["line_no"], 'group': 'LOCA',
-                'desc': f'LOCA_NATE / LOCA_NATN contains zeros or null values ({loca_id})'
-            })
-
-    return errors
-
-
 def check_drill_depth_present(tables: dict) -> List[dict]:
     """Drill depth value is populate and not zero"""
     errors = []
@@ -155,12 +134,11 @@ def check_drill_depth_geol_record(tables: dict) -> List[dict]:
     return errors
 
 
-def check_loca_within_great_britain(tables: dict) -> List[dict]:
-    """Location coordinates fall on land within Great Britain."""
-    gb_outline = gpd.read_file(GB_OUTLINE).loc[0, 'geometry']
-    ni_outline = gpd.read_file(NI_OUTLINE).loc[0, 'geometry']
-    uk_eea_outline_wgs84 = gpd.read_file(UK_EEA_OUTLINE)
-    uk_eea_outline = uk_eea_outline_wgs84.to_crs('EPSG:27700').loc[0, 'geometry']
+def check_eastings_northings(tables: dict) -> List[dict]:
+    """
+    Eastings and Northings columns are populated and
+    the location coordinates fall on land within Great Britain.
+    """
     errors = []
 
     # Read data into geodataframe
@@ -169,6 +147,18 @@ def check_loca_within_great_britain(tables: dict) -> List[dict]:
     except KeyError:
         # LOCA not present, already checked in earlier rule
         return errors
+
+    for loca_id, row in location.iterrows():
+        if not valid_row(row):
+            errors.append({
+                'line': row["line_no"], 'group': 'LOCA',
+                'desc': f'LOCA_NATE / LOCA_NATN contains zeros or null values ({loca_id})'
+            })
+
+    gb_outline = gpd.read_file(GB_OUTLINE).loc[0, 'geometry']
+    ni_outline = gpd.read_file(NI_OUTLINE).loc[0, 'geometry']
+    uk_eea_outline_wgs84 = gpd.read_file(UK_EEA_OUTLINE)
+    uk_eea_outline = uk_eea_outline_wgs84.to_crs('EPSG:27700').loc[0, 'geometry']
 
     inside_uk_eea_mask = location.intersects(uk_eea_outline)
     inside_gb_mask = location.intersects(gb_outline)
@@ -418,10 +408,9 @@ BGS_RULES = {
     'BGS data validation: Required Groups': check_required_groups,
     'BGS data validation: Required BGS Groups': check_required_bgs_groups,
     'BGS data validation: Spatial Referencing': check_spatial_referencing_system,
-    'BGS data validation: Eastings/Northings Present': check_eastings_northings_present,
+    'BGS data validation: Eastings/Northings': check_eastings_northings,
     'BGS data validation: Drill Depth Present': check_drill_depth_present,
     'BGS data validation: Drill Depth GEOL Record': check_drill_depth_geol_record,
-    'BGS data validation: LOCA within Great Britain': check_loca_within_great_britain,
     'BGS data validation: LOCA_LOCX is not duplicate of other column': check_locx_is_not_duplicate_of_other_column,
     'BGS data validation: LOCA_ID references': check_loca_id_references_are_valid,
     'BGS data validation: Sample Referencing': check_sample_referencing,

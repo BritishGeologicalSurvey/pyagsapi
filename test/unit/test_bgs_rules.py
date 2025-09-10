@@ -45,48 +45,6 @@ def test_spatial_referencing():
     assert errors == [expected]
 
 
-def test_eastings_northings_present():
-    # Arrange
-    filename = TEST_FILE_DIR / 'bgs_rules' / 'eastings_northings_present.ags'
-    expected = [
-        {
-            'desc': 'LOCA_NATE / LOCA_NATN contains zeros or null values (Null)',
-            'group': 'LOCA',
-            'line': 1,
-        },
-        {
-            'desc': 'LOCA_NATE / LOCA_NATN contains zeros or null values (Zero)',
-            'group': 'LOCA',
-            'line': 2,
-        },
-        {
-            'desc': 'LOCA_NATE / LOCA_NATN contains zeros or null values (Null-e)',
-            'group': 'LOCA',
-            'line': 3,
-        },
-        {
-            'desc': 'LOCA_NATE / LOCA_NATN contains zeros or null values (Zero-e)',
-            'group': 'LOCA',
-            'line': 4,
-        },
-        {
-            'desc': 'LOCA_NATE / LOCA_NATN contains zeros or null values (Null-n)',
-            'group': 'LOCA',
-            'line': 5,
-        },
-        {
-            'desc': 'LOCA_NATE / LOCA_NATN contains zeros or null values (Zero-n)',
-            'group': 'LOCA',
-            'line': 6,
-        },
-    ]
-    tables, _, _ = load_ags4_as_numeric(filename)
-
-    errors = BGS_RULES['BGS data validation: Eastings/Northings Present'](tables)
-
-    assert errors == expected
-
-
 def test_drill_depth_present():
     # Arrange
     filename = TEST_FILE_DIR / 'bgs_rules' / 'drill_depth_present.ags'
@@ -121,52 +79,54 @@ def test_drill_depth_geol_record():
     assert errors == expected
 
 
-def test_loca_within_great_britain():
+def test_loca_eastings_and_northings():
     # Arrange
-    filename = TEST_FILE_DIR / 'bgs_rules' / 'loca_within_great_britain.ags'
-    expected = [{'desc': 'NATE / NATN outside UK Offshore EEA or Onshore Northern Ireland boundary (Bad NATE)',
-                 'group': 'LOCA',
-                 'line': 2},
-                {'desc': 'NATE / NATN outside UK Offshore EEA or Onshore Northern Ireland boundary (Bad NATN)',
-                 'group': 'LOCA',
-                 'line': 3},
-                {'desc': 'NATE / NATN outside UK Offshore EEA or Onshore Northern Ireland boundary (Paris)',
-                 'group': 'LOCA',
-                 'line': 16},
-                {'desc': 'NATE / NATN outside Onshore Great Britain or Northern Ireland boundaries (Bad NATE)',
-                 'group': 'LOCA',
-                 'line': 2},
-                {'desc': 'NATE / NATN outside Onshore Great Britain or Northern Ireland boundaries (Bad NATN)',
-                 'group': 'LOCA',
-                 'line': 3},
-                {'desc': 'NATE / NATN outside Onshore Great Britain or Northern Ireland boundaries (Derry)',
-                 'group': 'LOCA',
-                 'line': 4},
-                {'desc': 'NATE / NATN outside Onshore Great Britain or Northern Ireland boundaries (MorayFirth)',
-                 'group': 'LOCA',
-                 'line': 15},
-                {'desc': 'NATE / NATN outside Onshore Great Britain or Northern Ireland boundaries (Paris)',
-                 'group': 'LOCA',
-                 'line': 16},
-                {'desc': 'NATE / NATN in Northern Ireland but LOCA_GREF undefined (Belfast)',
-                 'group': 'LOCA',
-                 'line': 6}]
+    filename = TEST_FILE_DIR / 'bgs_rules' / 'loca_eastings_and_northings.ags'
+    expected = [
+        {'desc': 'LOCA_NATE / LOCA_NATN contains zeros or null values (Null)',
+         'group': 'LOCA',
+         'line': 14},
+        {'desc': 'LOCA_NATE / LOCA_NATN contains zeros or null values (Zero)',
+         'group': 'LOCA',
+         'line': 15},
+        {'desc': 'LOCA_NATE / LOCA_NATN contains zeros or null values (Null-e)',
+         'group': 'LOCA',
+         'line': 16},
+        {'desc': 'LOCA_NATE / LOCA_NATN contains zeros or null values (Zero-e)',
+         'group': 'LOCA',
+         'line': 17},
+        {'desc': 'LOCA_NATE / LOCA_NATN contains zeros or null values (Null-n)',
+         'group': 'LOCA',
+         'line': 18},
+        {'desc': 'LOCA_NATE / LOCA_NATN contains zeros or null values (Zero-n)',
+         'group': 'LOCA',
+         'line': 19},
+        {'desc': 'NATE / NATN outside UK Offshore EEA or Onshore Northern Ireland '
+                 'boundary (Paris)',
+         'group': 'LOCA',
+         'line': 13},
+        {'desc': 'NATE / NATN outside Onshore Great Britain or Northern Ireland '
+                 'boundaries (Derry)',
+         'group': 'LOCA',
+         'line': 1},
+        {'desc': 'NATE / NATN outside Onshore Great Britain or Northern Ireland '
+                 'boundaries (MorayFirth)',
+         'group': 'LOCA',
+         'line': 12},
+        {'desc': 'NATE / NATN outside Onshore Great Britain or Northern Ireland '
+                 'boundaries (Paris)',
+         'group': 'LOCA',
+         'line': 13},
+        {'desc': 'NATE / NATN in Northern Ireland but LOCA_GREF undefined (Belfast)',
+         'group': 'LOCA',
+         'line': 3}
+    ]
 
     tables, _, _ = load_ags4_as_numeric(filename)
 
-    errors = BGS_RULES['BGS data validation: LOCA within Great Britain'](tables)
+    errors = BGS_RULES['BGS data validation: Eastings/Northings'](tables)
 
     assert errors == expected
-
-
-def test_loca_great_britain_extremities():
-    # Arrange
-    filename = TEST_FILE_DIR / 'bgs_rules' / 'extremities.ags'
-    tables, _, _ = load_ags4_as_numeric(filename)
-
-    errors = BGS_RULES['BGS data validation: LOCA within Great Britain'](tables)
-
-    assert not errors
 
 
 def test_loca_locx_is_not_duplicate_of_other_column():
