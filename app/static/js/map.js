@@ -37,8 +37,19 @@ agsMap.setupMap=function(){
     // create Leaflet map
     agsMap.map.lMap=L.map("mapid",mapOpts);
 
+    agsMap.map.basemaps.topoZoomedIn = L.tileLayer('https://api-os-maps.bgs.ac.uk/maps/raster/v1/zxy/Road_3857/{z}/{x}/{y}.png?key=', {
+        minZoom: 11,
+        maxZoom: 18
+    }).addTo(agsMap.map.lMap);
+    
+    agsMap.map.basemaps.topoZoomedOut = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+	    minZoom: 5,
+        maxZoom: 11,
+	    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(agsMap.map.lMap);
+
     // add Esri basemap layers to map - this is using the esri-leaflet.js extension
-    agsMap.map.basemaps.topo=L.esri.basemapLayer("Topographic").addTo(agsMap.map.lMap);
+    //agsMap.map.basemaps.topo=L.esri.basemapLayer("Topographic").addTo(agsMap.map.lMap);
     agsMap.map.basemaps.imagery=L.esri.basemapLayer("Imagery");
 
     // use the L.tileLayer.betterWms extension to load the 50k wms layer
@@ -83,9 +94,11 @@ agsMap.setupMap=function(){
         });
     agsMap.map.lyrs.agsboreholes.on("ready", () => {agsMap.map.lMap.addLayer(agsMap.map.lyrs.agsboreholes);})
 
+    const topoCombined = L.layerGroup([agsMap.map.basemaps.topoZoomedIn, agsMap.map.basemaps.topoZoomedOut]);
+
     // add layer selection control
     overlays["<span>Geology</span>"]=agsMap.map.lyrs.geologyOfbtn;
-    baseLayers["<span>Topographic</span>"]=agsMap.map.basemaps.topo;
+    baseLayers["<span>Topographic</span>"]=topoCombined;
     baseLayers["<span>Imagery</span>"]=agsMap.map.basemaps.imagery;
     agsMap.map.control=L.control.layers(baseLayers,overlays,{"collapsed":false}).addTo(agsMap.map.lMap);
 
