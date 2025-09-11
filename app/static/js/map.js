@@ -38,13 +38,13 @@ agsMap.setupMap=function(){
     agsMap.map.lMap=L.map("mapid",mapOpts);
 
     agsMap.map.basemaps.topoZoomedIn = L.tileLayer('https://api-os-maps.bgs.ac.uk/maps/raster/v1/zxy/Road_3857/{z}/{x}/{y}.png?key=', {
-        minZoom: 11,
+        minZoom: 7,
         maxZoom: 18
     }).addTo(agsMap.map.lMap);
     
     agsMap.map.basemaps.topoZoomedOut = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 	    minZoom: 5,
-        maxZoom: 11,
+        maxZoom: 6,
 	    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(agsMap.map.lMap);
 
