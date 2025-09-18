@@ -1,0 +1,33 @@
+[project]
+name = "pyagsapi-uv"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "aiofiles>=24.1.0",
+    "colorlog>=6.9.0",
+    "fastapi[standard]>=0.116.1",
+    "geojson-pydantic>=2.0.0",
+    "geopandas[all]>=1.1.1",
+    "jinja2>=3.1.6",
+    "numpy>=2.3.2",
+    "python-ags4==1.1.0",
+    "requests>=2.32.4",
+    "shapely>=2.1.1",
+    "shortuuid>=1.0.13",
+]
+
+[dependency-groups]
+dev = [
+    "flake8>=7.3.0",
+    "freezegun>=1.5.3",
+    "httpx>=0.28.1",
+    "ipdb>=0.13.13",
+    "ipython>=9.4.0",
+    "pip-tools>=7.5.0",
+    "pytest==8.0.2",
+    "pytest-asyncio>=0.23.8",
+    "requests>=2.32.4",
+    "requests-toolbelt>=1.0.0",
+]
