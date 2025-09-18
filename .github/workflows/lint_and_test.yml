@@ -20,28 +20,20 @@ jobs:
     - name: Setup Python
       uses: actions/setup-python@v5
       with:
-        python-version: 3.11
+        python-version-file: ".python-version"
         architecture: x64
 
-    - name: Ensure Nexus mirror configuration is not committed
-      run: |
-        # Grep checks for Nexus mirror in the index-url parameter,
-        # the ! negates the grep exit code, which would be 0 if URL was present
-        ! grep -E '.*index-url.*nexus.*' requirements*.txt
+    - name: Install uv
+      uses: astral-sh/setup-uv@v6
+      with:
+        version: "0.8.17"
+        enable-cache: true
 
     - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-
-    - name: Install dependencies for testing
-      run: |
-        pip install -r requirements_dev.txt
+      run: uv sync --locked --all-extras --dev
 
     - name: Lint app/ and test/ with flake8
-      run: |
-        flake8 app/ test/
+      run: uv run flake8 app/ test/
 
     - name: Test with pytest
-      run: |
-        python -m pytest
+      run: uv run pytest test
