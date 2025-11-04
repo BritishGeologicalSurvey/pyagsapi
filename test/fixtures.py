@@ -1,4 +1,10 @@
 """Shared pytest data."""
+import os
+from pathlib import Path
+
+TEST_FILE_DIR = Path(__file__).parent / 'files'
+
+IN_GITHUB_ACTIONS = os.getenv("GITHUB_ACTIONS") == "true"
 
 FROZEN_TIME = "2021-08-23 14:25:43"
 

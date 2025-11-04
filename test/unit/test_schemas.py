@@ -2,7 +2,7 @@
 import pytest
 from pydantic.error_wrappers import ValidationError
 
-from app.schemas import Validation
+from app.model.schema import Validation
 from test.fixtures_json import JSON_RESPONSES, BROKEN_JSON_RESPONSES
 
 
