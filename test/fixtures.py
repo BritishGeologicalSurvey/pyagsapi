@@ -2,6 +2,8 @@
 import os
 from pathlib import Path
 
+API_VERSION = '/v1'
+
 TEST_FILE_DIR = Path(__file__).parent / 'files'
 
 IN_GITHUB_ACTIONS = os.getenv("GITHUB_ACTIONS") == "true"

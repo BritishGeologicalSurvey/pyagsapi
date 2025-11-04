@@ -7,7 +7,7 @@ import requests
 
 from app.routes import ags_export_by_polygon
 
-from test.fixtures import IN_GITHUB_ACTIONS
+from test.fixtures import API_VERSION, IN_GITHUB_ACTIONS
 
 
 @pytest.mark.xfail(IN_GITHUB_ACTIONS, reason="Upstream URL not available from Github Actions")
@@ -17,7 +17,7 @@ def test_get_ags_exporter_by_polygon(client, count_only):
     # There should be 4 boreholes within 2 projects in this area
     polygon = 'POLYGON((-3.946 56.063,-3.640 56.063,-3.640 55.966,-3.946 55.966,-3.946 56.063))'
 
-    query = f'/ags_export_by_polygon/?polygon={polygon}'
+    query = f'{API_VERSION}/ags_export_by_polygon/?polygon={polygon}'
     if count_only is not None:
         query += '&count_only=False'
     # Define the expected borehole and project IDs and zipped AGS file to use for the test
@@ -55,7 +55,7 @@ def test_get_ags_exporter_by_polygon(client, count_only):
 ])
 def test_get_ags_exporter_by_polygon_count_only(client, polygon, count):
     # Arrange
-    query = f'/ags_export_by_polygon/?polygon={polygon}&count_only=True'
+    query = f'{API_VERSION}/ags_export_by_polygon/?polygon={polygon}&count_only=True'
 
     # Act
     with client as ac:
@@ -74,7 +74,7 @@ def test_get_ags_exporter_by_polygon_too_many_boreholes(client):
     # Arrange
     # There should be more than BOREHOLE_EXPORT_LIMIT, e.g. 50, boreholes in this area
     polygon = 'POLYGON((-3.109 55.895,-3.109 55.906,-3.077 55.906,-3.077 55.895,-3.109 55.895))'
-    query = f'/ags_export_by_polygon/?polygon={polygon}'
+    query = f'{API_VERSION}/ags_export_by_polygon/?polygon={polygon}'
 
     # Act
     with client as ac:
@@ -91,7 +91,7 @@ def test_get_ags_exporter_by_polygon_too_many_boreholes(client):
 def test_get_ags_exporter_by_polygon_no_boreholes(client):
     # Arrange
     polygon = 'POLYGON((-3.946 56.061,-3.640 56.061,-3.640 55.966,-3.946 55.966,-3.946 56.061))'
-    query = f'/ags_export_by_polygon/?polygon={polygon}'
+    query = f'{API_VERSION}/ags_export_by_polygon/?polygon={polygon}'
 
     # Act
     with client as ac:
@@ -109,7 +109,7 @@ def test_get_ags_exporter_by_polygon_no_boreholes(client):
 ])
 def test_get_ags_exporter_by_polygon_not_polygon(client, polygon):
     # Arrange
-    query = f'/ags_export_by_polygon/?polygon={polygon}'
+    query = f'{API_VERSION}/ags_export_by_polygon/?polygon={polygon}'
 
     # Act
     with client as ac:
@@ -124,7 +124,7 @@ def test_get_ags_exporter_by_polygon_not_polygon(client, polygon):
 def test_get_ags_exporter_by_polygon_ogcapi_unreachable(client, monkeypatch):
     # Arrange
     polygon = 'POLYGON((0 0, 0 1, 1 1, 1 0, 0 0))'
-    query = f'/ags_export_by_polygon/?polygon={polygon}'
+    query = f'{API_VERSION}/ags_export_by_polygon/?polygon={polygon}'
     # Patch the Borehole index to be something that cannot be reached
     monkeypatch.setattr(ags_export_by_polygon, "BOREHOLE_INDEX_URL", f'http://unreachable.com/{query}')
 
@@ -141,7 +141,7 @@ def test_get_ags_exporter_by_polygon_ogcapi_unreachable(client, monkeypatch):
 def test_get_ags_exporter_by_polygon_ogcapi_error(client, monkeypatch):
     # Arrange
     polygon = 'POLYGON((0 0, 0 1, 1 1, 1 0, 0 0))'
-    query = f'/ags_export_by_polygon/?polygon={polygon}'
+    query = f'{API_VERSION}/ags_export_by_polygon/?polygon={polygon}'
 
     # Patch the requests to return a response that behaves as though the URL had returned a 500 error.
     class MockResponse:

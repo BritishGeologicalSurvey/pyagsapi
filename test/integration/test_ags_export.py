@@ -8,7 +8,7 @@ import requests
 from app.checkers import load_ags4_as_numeric
 from app.routes import ags_export
 
-from test.fixtures import IN_GITHUB_ACTIONS
+from test.fixtures import API_VERSION, IN_GITHUB_ACTIONS
 
 
 @pytest.mark.xfail(IN_GITHUB_ACTIONS, reason="Upstream URL not available from Github Actions")
@@ -23,7 +23,7 @@ def test_get_ags_export_single_id(client, tmp_path):
     ags_file_name = f'{bgs_proj_id}.ags'
     ags_metadata_file_name = 'FILE/BGSFileSet01/BGS_download_metadata.txt'
 
-    query = f'/ags_export/?bgs_loca_id={bgs_loca_id}'
+    query = f'{API_VERSION}/ags_export/?bgs_loca_id={bgs_loca_id}'
 
     # Act
     with client as ac:
@@ -68,7 +68,7 @@ def test_get_ags_export_multiple_ids(client, bgs_loca_ids):
     ags_file_names = {f'{id_}.ags' for id_ in bgs_proj_ids}
     ags_metadata_file_name = 'FILE/BGSFileSet01/BGS_download_metadata.txt'
 
-    query = f'/ags_export/?bgs_loca_id={";".join(bgs_loca_ids)}'
+    query = f'{API_VERSION}/ags_export/?bgs_loca_id={";".join(bgs_loca_ids)}'
 
     # Act
     with client as ac:
@@ -100,7 +100,7 @@ def test_get_ags_export_unknown_borehole(client):
     # Arrange
     # Define the borehole ID to use for the test
     bgs_loca_id = 0
-    query = f'/ags_export/?bgs_loca_id={bgs_loca_id}'
+    query = f'{API_VERSION}/ags_export/?bgs_loca_id={bgs_loca_id}'
 
     # Act
     with client as ac:
@@ -120,7 +120,7 @@ def test_get_ags_export_too_many_borehole_ids(client):
     # Define the borehole IDs to use for the test
     bgs_loca_ids = ['20200205093728297908'] * (ags_export.BOREHOLE_EXPORT_LIMIT + 1)
     bgs_loca_ids = ';'.join(bgs_loca_ids)
-    query = f'/ags_export/?bgs_loca_id={bgs_loca_ids}'
+    query = f'{API_VERSION}/ags_export/?bgs_loca_id={bgs_loca_ids}'
 
     # Act
     with client as ac:
@@ -135,7 +135,7 @@ def test_get_ags_export_too_many_borehole_ids(client):
 def test_get_ags_exporter_unreachable(client, monkeypatch):
     # Arrange
     bgs_loca_id = 0
-    query = f'/ags_export/?bgs_loca_id={bgs_loca_id}'
+    query = f'{API_VERSION}/ags_export/?bgs_loca_id={bgs_loca_id}'
     # Patch the Borehole export to be something that cannot be reached
     monkeypatch.setattr(ags_export, "BOREHOLE_EXPORT_URL", f'http://unreachable.com/{query}')
 
@@ -152,7 +152,7 @@ def test_get_ags_exporter_unreachable(client, monkeypatch):
 def test_get_ags_exporter_error(client, monkeypatch):
     # Arrange
     bgs_loca_id = 0
-    query = f'/ags_export/?bgs_loca_id={bgs_loca_id}'
+    query = f'{API_VERSION}/ags_export/?bgs_loca_id={bgs_loca_id}'
 
     # Patch the requests to return a response that behaves as though the URL had returned a 500 error.
     class MockResponse:

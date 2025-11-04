@@ -7,7 +7,8 @@ from requests_toolbelt.multipart.encoder import MultipartEncoder
 import pandas as pd
 from python_ags4 import AGS4
 
-from test.fixtures import TEST_FILE_DIR, BAD_FILE_DATA, GOOD_FILE_DATA, ZIP_FILES_CONVERT
+from test.fixtures import (API_VERSION, TEST_FILE_DIR, BAD_FILE_DATA,
+                           GOOD_FILE_DATA, ZIP_FILES_CONVERT)
 
 
 @pytest.mark.asyncio
@@ -23,7 +24,7 @@ async def test_convert_good_files(async_client, tmp_path):
     # Act
     async with async_client as ac:
         response = await ac.post(
-            '/convert/',
+            f'{API_VERSION}/convert/',
             headers={'Content-Type': mp_encoder.content_type},
             data=mp_encoder.to_string())
 
@@ -63,7 +64,7 @@ async def test_convert_sort_tables(async_client, tmp_path, sort_tables):
     # Act
     async with async_client as ac:
         response = await ac.post(
-            '/convert/',
+            f'{API_VERSION}/convert/',
             headers={'Content-Type': mp_encoder.content_type},
             data=mp_encoder.to_string())
 
@@ -97,7 +98,7 @@ async def test_convert_bad_files(async_client, tmp_path):
     # Act
     async with async_client as ac:
         response = await ac.post(
-            '/convert/',
+            f'{API_VERSION}/convert/',
             headers={'Content-Type': mp_encoder.content_type},
             data=mp_encoder.to_string())
 
@@ -132,7 +133,7 @@ async def test_convert_zip_file(async_client, tmp_path, filename, expected_files
     # Act
     async with async_client as ac:
         response = await ac.post(
-            '/convert/',
+            f'{API_VERSION}/convert/',
             headers={'Content-Type': mp_encoder.content_type},
             data=mp_encoder.to_string())
 
@@ -164,7 +165,7 @@ async def test_convert_mixed_files(async_client, tmp_path):
     # Act
     async with async_client as ac:
         response = await ac.post(
-            '/convert/',
+            f'{API_VERSION}/convert/',
             headers={'Content-Type': mp_encoder.content_type},
             data=mp_encoder.to_string())
 
