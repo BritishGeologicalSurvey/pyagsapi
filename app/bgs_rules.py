@@ -335,7 +335,7 @@ def check_sample_referencing(tables: dict) -> List[dict]:
         #  Remove null pairs and fill blank sample ids with composite ids
         rows_without_any_nulls = id_pairs.notna().any(axis=1)
         id_pairs = id_pairs.loc[rows_without_any_nulls].copy()
-        id_pairs['samp_id'].fillna(id_pairs['comp_id'], inplace=True)
+        id_pairs['samp_id'] = id_pairs['samp_id'].fillna(id_pairs['comp_id'])
         return id_pairs
 
     def id_pair(row, group):
