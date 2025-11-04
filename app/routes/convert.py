@@ -13,12 +13,12 @@ from app import conversion, validation
 from app.model.schema import SortingStrategy
 from app.model.queries import sort_tables_form, conversion_file
 from . errors import InvalidPayloadError
-from . utils import zip_responses
+from . utils import AGS_API_VERSION, zip_responses
 
 router = APIRouter()
 
 
-@router.post("/convert/",
+@router.post(f"{AGS_API_VERSION}/convert/",
              tags=["convert"],
              response_class=StreamingResponse,
              responses=zip_responses,

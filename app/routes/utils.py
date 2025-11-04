@@ -7,6 +7,8 @@ from . errors import error_responses
 # Get AGS_API_ENV, defaults to DEVELOP if not set or not recognised.
 AGS_API_ENV = os.getenv("AGS_API_ENV", "DEVELOP").upper()
 
+AGS_API_VERSION = '/v1'
+
 BOREHOLE_EXPORT_LIMIT = 50
 BOREHOLE_VIEWER_URL = "https://gwbv.bgs.ac.uk/GWBV/viewborehole?loca_id={bgs_loca_id}"
 BOREHOLE_EXPORT_URL = "https://gwbv.bgs.ac.uk/ags_export?loca_ids={bgs_loca_id}"

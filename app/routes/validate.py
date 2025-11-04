@@ -15,12 +15,12 @@ from app.model.schema import Checker, Format, Dictionary, ValidationResponse
 from app.model.queries import (format_form, geometry_form, dictionary_form, validate_form,
                                validation_file)
 from . errors import InvalidPayloadError
-from . utils import checker_functions, get_request_url, log_responses
+from . utils import AGS_API_VERSION, checker_functions, get_request_url, log_responses
 
 router = APIRouter()
 
 
-@router.post("/validate/",
+@router.post(f"{AGS_API_VERSION}/validate/",
              tags=["validate"],
              response_model=ValidationResponse,
              responses=log_responses,

@@ -5,7 +5,7 @@ from test.fixtures import API_VERSION
 
 def test_openapi_json(client):
     """ Check that the openapi is accessible and it display the correct endpoints """
-    response = client.get(f'{API_VERSION}/openapi.json')
+    response = client.get('/openapi.json')
     assert response.status_code == 200
     assert response.headers['content-type'] == 'application/json'
     # exposed endpoints

@@ -11,12 +11,12 @@ from app.model.schema import BoreholeCountResponse
 from app.model.queries import polygon_query, count_only_query
 from . ags_export import ags_export
 from . utils import (get_request_url, ags_export_responses, BOREHOLE_INDEX_URL,
-                     BOREHOLE_EXPORT_LIMIT, BOREHOLE_EXPORT_URL)
+                     BOREHOLE_EXPORT_LIMIT, BOREHOLE_EXPORT_URL, AGS_API_VERSION)
 
 router = APIRouter()
 
 
-@router.get("/ags_export_by_polygon/",
+@router.get(f"{AGS_API_VERSION}/ags_export_by_polygon/",
             tags=["ags_export_by_polygon"],
             summary="Export a number of boreholes in .ags format in a polygon",
             description=("Export a number of boreholes in .ags format from AGS data "
