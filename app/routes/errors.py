@@ -1,4 +1,4 @@
-from fastapi import status
+from fastapi import status, HTTPException
 from starlette.requests import Request
 
 from app.model.schema import Error, ErrorResponse
@@ -14,7 +14,7 @@ error_responses = {
 
 
 class HTTPExceptionResponse:
-    def __init__(self, request: Request, exc: Exception):
+    def __init__(self, request: Request, exc: HTTPException):
         self.request = request
         self.exc = exc
 
