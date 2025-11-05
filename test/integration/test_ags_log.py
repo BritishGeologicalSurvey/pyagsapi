@@ -4,7 +4,7 @@ import requests
 
 from app.routes import ags_log
 
-from test.fixtures import IN_GITHUB_ACTIONS
+from test.fixtures import API_VERSION, IN_GITHUB_ACTIONS
 
 
 @pytest.mark.parametrize('response_type, response_type_result', [
@@ -20,7 +20,7 @@ def test_get_ags_log(client, response_type, response_type_result):
     # Arrange
     # Define the borehole ID to use for the test
     bgs_loca_id = 20190430093402523419
-    query = f'/ags_log/?bgs_loca_id={bgs_loca_id}'
+    query = f'{API_VERSION}/ags_log/?bgs_loca_id={bgs_loca_id}'
 
     if response_type:
         query += f'&response_type={response_type}'
@@ -46,7 +46,7 @@ def test_get_ags_log_unknown_borehole(client):
     # Arrange
     # Define the borehole ID to use for the test
     bgs_loca_id = 0
-    query = f'/ags_log/?bgs_loca_id={bgs_loca_id}'
+    query = f'{API_VERSION}/ags_log/?bgs_loca_id={bgs_loca_id}'
 
     # Act
     with client as ac:
@@ -61,7 +61,7 @@ def test_get_ags_log_unknown_borehole(client):
 def test_get_ags_log_generator_unreachable(client, monkeypatch):
     # Arrange
     bgs_loca_id = 0
-    query = f'/ags_log/?bgs_loca_id={bgs_loca_id}'
+    query = f'{API_VERSION}/ags_log/?bgs_loca_id={bgs_loca_id}'
     # Patch the Borehole Viewer to be something that cannot be reached
     monkeypatch.setattr(ags_log, "BOREHOLE_VIEWER_URL", f'http://unreachable.com/{query}')
 
@@ -78,7 +78,7 @@ def test_get_ags_log_generator_unreachable(client, monkeypatch):
 def test_get_ags_log_generator_error(client, monkeypatch):
     # Arrange
     bgs_loca_id = 0
-    query = f'/ags_log/?bgs_loca_id={bgs_loca_id}'
+    query = f'{API_VERSION}/ags_log/?bgs_loca_id={bgs_loca_id}'
 
     # Patch the requests to return a response that behaves as though the URL had returned a 500 error.
     class MockResponse:

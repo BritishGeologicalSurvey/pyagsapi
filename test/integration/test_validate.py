@@ -6,7 +6,7 @@ import pytest
 
 from requests_toolbelt.multipart.encoder import MultipartEncoder
 
-from test.fixtures import TEST_FILE_DIR, DICTIONARIES, FROZEN_TIME, ZIP_FILES_VALIDATE
+from test.fixtures import API_VERSION, TEST_FILE_DIR, DICTIONARIES, FROZEN_TIME, ZIP_FILES_VALIDATE
 from test.fixtures_json import JSON_RESPONSES, GEOJSON_RESPONSES
 from test.fixtures_plain_text import PLAIN_TEXT_RESPONSES
 
@@ -29,7 +29,7 @@ async def test_validate_json(async_client, filename, expected, return_geometry):
     # Act
     async with async_client as ac:
         response = await ac.post(
-            '/validate/',
+            f'{API_VERSION}/validate/',
             headers={'Content-Type': mp_encoder.content_type},
             data=mp_encoder.to_string())
 
@@ -64,7 +64,7 @@ async def test_geojson_response(async_client, filename, expected):
     # Act
     async with async_client as ac:
         response = await ac.post(
-            '/validate/',
+            f'{API_VERSION}/validate/',
             headers={'Content-Type': mp_encoder.content_type},
             data=mp_encoder.to_string())
 
@@ -99,7 +99,7 @@ async def test_validate_many_json(async_client):
     # Act
     async with async_client as ac:
         response = await ac.post(
-            '/validate/',
+            f'{API_VERSION}/validate/',
             headers={'Content-Type': mp_encoder.content_type},
             data=mp_encoder.to_string())
 
@@ -130,7 +130,7 @@ async def test_validate_custom_dictionary(async_client, dictionary, expected):
     # Act
     async with async_client as ac:
         response = await ac.post(
-            '/validate/',
+            f'{API_VERSION}/validate/',
             headers={'Content-Type': mp_encoder.content_type},
             data=mp_encoder.to_string())
 
@@ -162,7 +162,7 @@ async def test_validate_text(async_client, filename, expected):
     # Act
     async with async_client as ac:
         response = await ac.post(
-            '/validate/',
+            f'{API_VERSION}/validate/',
             headers={'Content-Type': mp_encoder.content_type},
             data=mp_encoder.to_string())
 
@@ -189,7 +189,7 @@ async def test_validate_many_text(async_client):
     # Act
     async with async_client as ac:
         response = await ac.post(
-            '/validate/',
+            f'{API_VERSION}/validate/',
             headers={'Content-Type': mp_encoder.content_type},
             data=mp_encoder.to_string())
 
@@ -214,7 +214,7 @@ async def test_validate_bgs_json(async_client):
     # Act
     async with async_client as ac:
         response = await ac.post(
-            '/validate/',
+            f'{API_VERSION}/validate/',
             headers={'Content-Type': mp_encoder.content_type},
             data=mp_encoder.to_string())
 
@@ -246,7 +246,7 @@ async def test_validate_ags_bgs_json(async_client):
     # Act
     async with async_client as ac:
         response = await ac.post(
-            '/validate/',
+            f'{API_VERSION}/validate/',
             headers={'Content-Type': mp_encoder.content_type},
             data=mp_encoder.to_string())
 
@@ -277,7 +277,7 @@ async def test_validate_bgs_text(async_client):
     # Act
     async with async_client as ac:
         response = await ac.post(
-            '/validate/',
+            f'{API_VERSION}/validate/',
             headers={'Content-Type': mp_encoder.content_type},
             data=mp_encoder.to_string())
 
@@ -317,7 +317,7 @@ async def test_validate_dictionary_choice(async_client, dictionary, filename, ex
     # Act
     async with async_client as ac:
         response = await ac.post(
-            '/validate/',
+            f'{API_VERSION}/validate/',
             headers={'Content-Type': mp_encoder.content_type},
             data=mp_encoder.to_string())
 
@@ -342,7 +342,7 @@ async def test_validate_single_zip(async_client, filename, zipped_files):
     # Act
     async with async_client as ac:
         response = await ac.post(
-            '/validate/',
+            f'{API_VERSION}/validate/',
             headers={'Content-Type': mp_encoder.content_type},
             data=mp_encoder.to_string())
 
@@ -372,7 +372,7 @@ async def test_validate_multiple_zip(async_client):
     # Act
     async with async_client as ac:
         response = await ac.post(
-            '/validate/',
+            f'{API_VERSION}/validate/',
             headers={'Content-Type': mp_encoder.content_type},
             data=mp_encoder.to_string())
 
@@ -410,7 +410,7 @@ async def test_validate_ags_and_zip(async_client, filename, zipped_files):
     # Act
     async with async_client as ac:
         response = await ac.post(
-            '/validate/',
+            f'{API_VERSION}/validate/',
             headers={'Content-Type': mp_encoder.content_type},
             data=mp_encoder.to_string())
 

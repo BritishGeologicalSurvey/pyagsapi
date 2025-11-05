@@ -6,12 +6,12 @@ from fastapi.exceptions import HTTPException
 from requests.exceptions import Timeout, ConnectionError, HTTPError
 
 from app.model.queries import ags_export_query
-from . utils import ags_export_responses, BOREHOLE_EXPORT_LIMIT, BOREHOLE_EXPORT_URL
+from . utils import ags_export_responses, BOREHOLE_EXPORT_LIMIT, BOREHOLE_EXPORT_URL, AGS_API_VERSION
 
 router = APIRouter()
 
 
-@router.get("/ags_export/",
+@router.get(f"{AGS_API_VERSION}/ags_export/",
             tags=["ags_export"],
             summary="Export one or more boreholes in .ags format",
             description=("Export one or more borehole in .ags format from AGS data "

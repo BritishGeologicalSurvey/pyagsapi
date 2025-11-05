@@ -7,12 +7,12 @@ from requests.exceptions import Timeout, ConnectionError, HTTPError
 
 from app.model.schema import ResponseType
 from app.model.queries import ags_log_query, response_type_query
-from . utils import pdf_responses, BOREHOLE_VIEWER_URL
+from . utils import pdf_responses, BOREHOLE_VIEWER_URL, AGS_API_VERSION
 
 router = APIRouter()
 
 
-@router.get("/ags_log/",
+@router.get(f"{AGS_API_VERSION}/ags_log/",
             tags=["ags_log"],
             summary="Generate Graphical Log",
             description=("Generate a graphical log (.pdf) from AGS data "
