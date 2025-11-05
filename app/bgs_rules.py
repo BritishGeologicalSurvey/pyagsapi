@@ -1,8 +1,8 @@
 """Functions for each of the BGS data validation rules"""
 from pathlib import Path
-from typing import List
+from typing import List, cast
 
-from shapely.geometry import Point
+from shapely.geometry import Point, MultiPolygon
 import geopandas as gpd
 import pandas as pd
 
@@ -89,48 +89,6 @@ def check_spatial_referencing_system(tables: dict) -> List[dict]:
     return errors
 
 
-def check_eastings_northings_present(tables: dict) -> List[dict]:
-    """Eastings and Northings columns are populated"""
-    errors = []
-
-    # Read data into geodataframe
-    try:
-        location = create_location_gpd(tables)
-    except KeyError:
-        # LOCA not present, already checked in earlier rule
-        return errors
-
-    for loca_id, row in location.iterrows():
-        if (pd.isna(row['LOCA_NATE']) or pd.isna(row['LOCA_NATN'])
-                or row['LOCA_NATE'] == 0 or row['LOCA_NATN'] == 0):
-            errors.append({
-                'line': row["line_no"], 'group': 'LOCA',
-                'desc': f'LOCA_NATE / LOCA_NATN contains zeros or null values ({loca_id})'
-            })
-
-    return errors
-
-
-def check_eastings_northings_range(tables: dict) -> List[dict]:
-    """Eastings and Northings columns fall within reasonable range"""
-    errors = []
-    try:
-        location = tables['LOCA']
-        if any(location['LOCA_NATE'] < 1e5) or any(location['LOCA_NATE'] > 8e5):
-            errors.append(
-                {'line': '-', 'group': 'LOCA',
-                 'desc': 'LOCA_NATE values outside 100,000 to 800,000 range'})
-        if any(location['LOCA_NATN'] < 1e5) or any(location['LOCA_NATN'] > 1.4e6):
-            errors.append(
-                {'line': '-', 'group': 'LOCA',
-                 'desc': 'LOCA_NATN values outside 100,000 to 1,400,000 range'})
-    except KeyError:
-        # LOCA not present, already checked in earlier rule
-        pass
-
-    return errors
-
-
 def check_drill_depth_present(tables: dict) -> List[dict]:
     """Drill depth value is populate and not zero"""
     errors = []
@@ -176,12 +134,11 @@ def check_drill_depth_geol_record(tables: dict) -> List[dict]:
     return errors
 
 
-def check_loca_within_great_britain(tables: dict) -> List[dict]:
-    """Location coordinates fall on land within Great Britain."""
-    gb_outline = gpd.read_file(GB_OUTLINE).loc[0, 'geometry']
-    ni_outline = gpd.read_file(NI_OUTLINE).loc[0, 'geometry']
-    uk_eea_outline_wgs84 = gpd.read_file(UK_EEA_OUTLINE)
-    uk_eea_outline = uk_eea_outline_wgs84.to_crs('EPSG:27700').loc[0, 'geometry']
+def check_eastings_northings(tables: dict) -> List[dict]:
+    """
+    Eastings and Northings columns are populated and
+    the location coordinates fall on land within Great Britain.
+    """
     errors = []
 
     # Read data into geodataframe
@@ -191,6 +148,19 @@ def check_loca_within_great_britain(tables: dict) -> List[dict]:
         # LOCA not present, already checked in earlier rule
         return errors
 
+    for loca_id, row in location.iterrows():
+        if not valid_row(row):
+            errors.append({
+                'line': row["line_no"], 'group': 'LOCA',
+                'desc': f'LOCA_NATE / LOCA_NATN contains zeros or null values ({loca_id})'
+            })
+
+    # Load geometries - cast to MultiPolygon for correct type annotation
+    gb_outline = cast(MultiPolygon, gpd.read_file(GB_OUTLINE).loc[0, 'geometry'])
+    ni_outline = cast(MultiPolygon, gpd.read_file(NI_OUTLINE).loc[0, 'geometry'])
+    uk_eea_outline_wgs84 = gpd.read_file(UK_EEA_OUTLINE)
+    uk_eea_outline = cast(MultiPolygon, uk_eea_outline_wgs84.to_crs('EPSG:27700').loc[0, 'geometry'])
+
     inside_uk_eea_mask = location.intersects(uk_eea_outline)
     inside_gb_mask = location.intersects(gb_outline)
     as_irish_grid = location.to_crs("EPSG:29903")
@@ -199,16 +169,14 @@ def check_loca_within_great_britain(tables: dict) -> List[dict]:
     outside_gb_and_ni_mask = ~inside_gb_mask & ~inside_ni_mask
 
     for loca_id, row in location.loc[outside_uk_eea_and_ni_mask].iterrows():
-        if not (pd.isna(row['LOCA_NATE']) or pd.isna(row['LOCA_NATN'])
-                or row['LOCA_NATE'] == 0 or row['LOCA_NATN'] == 0):
+        if valid_row(row):
             errors.append({
                 'line': row["line_no"], 'group': 'LOCA',
                 'desc': f'NATE / NATN outside UK Offshore EEA or Onshore Northern Ireland boundary ({loca_id})'
             })
 
     for loca_id, row in location.loc[outside_gb_and_ni_mask].iterrows():
-        if not (pd.isna(row['LOCA_NATE']) or pd.isna(row['LOCA_NATN'])
-                or row['LOCA_NATE'] == 0 or row['LOCA_NATN'] == 0):
+        if valid_row(row):
             errors.append({
                 'line': row["line_no"], 'group': 'LOCA',
                 'desc': f'NATE / NATN outside Onshore Great Britain or Northern Ireland boundaries ({loca_id})'
@@ -236,6 +204,12 @@ def create_location_gpd(tables: dict[pd.DataFrame]) -> gpd.GeoDataFrame:
     return location
 
 
+def valid_row(row):
+    """ A row is valid if its easting and northing are not null or zero"""
+    return not (pd.isna(row['LOCA_NATE']) or pd.isna(row['LOCA_NATN'])
+                or row['LOCA_NATE'] == 0 or row['LOCA_NATN'] == 0)
+
+
 def check_locx_is_not_duplicate_of_other_column(tables: dict) -> List[dict]:
     """LOCA_LOCX and LOCA_LOCY are not duplicates of other columns"""
 
@@ -248,10 +222,14 @@ def check_locx_is_not_duplicate_of_other_column(tables: dict) -> List[dict]:
                      'desc': f'LOCX / LOCY duplicates NATE / NATN ({row.name})'}
         elif row['LOCA_LON'] == '' and row['LOCA_LAT'] == '':
             error = None
-        elif (float(row['LOCA_LON']) == row['LOCA_LOCX'] or
-              float(row['LOCA_LAT']) == row['LOCA_LOCY']):
-            error = {'line': '-', 'group': 'LOCA',
-                     'desc': f'LOCX / LOCY duplicates LON / LAT ({row.name})'}
+        else:
+            try:
+                # If LON/LAT are in "d:m:s" format the cast will fail, which means no duplicates
+                if (float(row['LOCA_LON']) == row['LOCA_LOCX'] or float(row['LOCA_LAT']) == row['LOCA_LOCY']):
+                    error = {'line': '-', 'group': 'LOCA',
+                             'desc': f'LOCX / LOCY duplicates LON / LAT ({row.name})'}
+            except ValueError:
+                pass
 
         return error
 
@@ -431,11 +409,9 @@ BGS_RULES = {
     'BGS data validation: Required Groups': check_required_groups,
     'BGS data validation: Required BGS Groups': check_required_bgs_groups,
     'BGS data validation: Spatial Referencing': check_spatial_referencing_system,
-    'BGS data validation: Eastings/Northings Present': check_eastings_northings_present,
-    'BGS data validation: Eastings/Northings Range': check_eastings_northings_range,
+    'BGS data validation: Eastings/Northings': check_eastings_northings,
     'BGS data validation: Drill Depth Present': check_drill_depth_present,
     'BGS data validation: Drill Depth GEOL Record': check_drill_depth_geol_record,
-    'BGS data validation: LOCA within Great Britain': check_loca_within_great_britain,
     'BGS data validation: LOCA_LOCX is not duplicate of other column': check_locx_is_not_duplicate_of_other_column,
     'BGS data validation: LOCA_ID references': check_loca_id_references_are_valid,
     'BGS data validation: Sample Referencing': check_sample_referencing,
