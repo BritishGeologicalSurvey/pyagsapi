@@ -228,6 +228,8 @@ async def test_validate_bgs_json(async_client):
     assert body['self'] is not None
     assert len(body['data']) == 1
     assert len(body['data'][0]['checkers']) == 1
+    projects = body['data'][0]['additional_metadata']['bgs_projects']
+    assert projects == '1 projects found: 121415 (ACME Gas Works Redevelopment)'
 
 
 @pytest.mark.asyncio
@@ -258,6 +260,8 @@ async def test_validate_ags_bgs_json(async_client):
     assert body['self'] is not None
     assert len(body['data']) == 1
     assert len(body['data'][0]['checkers']) == 2
+    projects = body['data'][0]['additional_metadata']['bgs_projects']
+    assert projects == '1 projects found: 121415 (ACME Gas Works Redevelopment)'
 
 
 @pytest.mark.asyncio
