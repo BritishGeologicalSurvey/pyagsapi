@@ -1,8 +1,10 @@
 import tempfile
 import shutil
 
+from io import BytesIO
 from pathlib import Path
 from typing import List
+from zipfile import is_zipfile, ZipFile
 
 from fastapi import APIRouter, BackgroundTasks, Request, UploadFile
 from fastapi.responses import StreamingResponse
@@ -21,8 +23,9 @@ router = APIRouter()
              response_class=StreamingResponse,
              responses=zip_responses,
              summary="Convert files between .ags and .xlsx format",
-             description=("Convert files between .ags and .xlsx format. Option to"
-                          " sort worksheets in .xlsx file in alphabetical order."))
+             description=("Convert files between .ags and .xlsx format. "
+                          "Zipped files can be uploaded containing either filetype. "
+                          "Option to sort worksheets in .xlsx file in alphabetical order."))
 async def convert(background_tasks: BackgroundTasks,
                   files: List[UploadFile] = conversion_file,
                   sort_tables: str = sort_tables_form,
@@ -31,7 +34,7 @@ async def convert(background_tasks: BackgroundTasks,
     Convert files between .ags and .xlsx format. Option to sort worksheets in .xlsx file in alphabetical order.
     :param background_tasks: A background task that manages file conversion asynchronously.
     :type background_tasks: BackgroundTasks
-    :param files: A list of files to be converted. Must be in .ags or .xlsx format.
+    :param files: A list of files to be converted. Must be in .ags, .xlsx or .zip format.
     :type files: List[UploadFile]
     :param sort_tables: A boolean indicating whether to sort worksheets in the .xlsx file in alphabetical order.
     :type sort_tables: bool
@@ -56,12 +59,24 @@ async def convert(background_tasks: BackgroundTasks,
         f.write('=' * 80 + '\n')
         for file in files:
             contents = await file.read()
-            local_file = tmp_dir / file.filename
-            local_file.write_bytes(contents)
-            _, result = conversion.convert(local_file, results_dir, sorting_strategy=sort_tables)
-            log = validation.to_plain_text(result)
-            f.write(log)
-            f.write('\n' + '=' * 80 + '\n')
+            content_bytes = BytesIO(contents)
+            # Extract zipped files if a zip is uploaded
+            if is_zipfile(content_bytes) and not file.filename.lower().endswith('.xlsx'):
+                zipfile = ZipFile(content_bytes)
+                for name in zipfile.namelist():
+                    zipfile.extract(name, tmp_dir)
+                    local_file = tmp_dir / name
+                    _, result = conversion.convert(local_file, results_dir, sorting_strategy=sort_tables)
+                    log = validation.to_plain_text(result)
+                    f.write(log)
+                    f.write('\n' + '=' * 80 + '\n')
+            else:
+                local_file = tmp_dir / file.filename
+                local_file.write_bytes(contents)
+                _, result = conversion.convert(local_file, results_dir, sorting_strategy=sort_tables)
+                log = validation.to_plain_text(result)
+                f.write(log)
+                f.write('\n' + '=' * 80 + '\n')
     zipped_file = tmp_dir / RESULTS
     shutil.make_archive(zipped_file, 'zip', results_dir)
     zipped_stream = open(tmp_dir / (RESULTS + '.zip'), 'rb')

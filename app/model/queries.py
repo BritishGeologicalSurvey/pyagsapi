@@ -31,13 +31,13 @@ validate_form = Form(
 validation_file = File(
     ...,
     title='File to validate',
-    description='An AGS file ending in .ags',
+    description='An AGS file ending in .ags or a ZIP file containing AGS file(s)',
 )
 
 conversion_file = File(
     ...,
     title='File to convert',
-    description='An AGS or XLSX file',
+    description='An AGS, XLSX file or a ZIP file containing AGS and XLSX file(s)',
 )
 
 sort_tables_form = Form(
