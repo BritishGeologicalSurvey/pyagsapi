@@ -1,8 +1,8 @@
 """Functions for each of the BGS data validation rules"""
 from pathlib import Path
-from typing import List
+from typing import List, cast
 
-from shapely.geometry import Point
+from shapely.geometry import Point, MultiPolygon
 import geopandas as gpd
 import pandas as pd
 
@@ -155,10 +155,11 @@ def check_eastings_northings(tables: dict) -> List[dict]:
                 'desc': f'LOCA_NATE / LOCA_NATN contains zeros or null values ({loca_id})'
             })
 
-    gb_outline = gpd.read_file(GB_OUTLINE).loc[0, 'geometry']
-    ni_outline = gpd.read_file(NI_OUTLINE).loc[0, 'geometry']
+    # Load geometries - cast to MultiPolygon for correct type annotation
+    gb_outline = cast(MultiPolygon, gpd.read_file(GB_OUTLINE).loc[0, 'geometry'])
+    ni_outline = cast(MultiPolygon, gpd.read_file(NI_OUTLINE).loc[0, 'geometry'])
     uk_eea_outline_wgs84 = gpd.read_file(UK_EEA_OUTLINE)
-    uk_eea_outline = uk_eea_outline_wgs84.to_crs('EPSG:27700').loc[0, 'geometry']
+    uk_eea_outline = cast(MultiPolygon, uk_eea_outline_wgs84.to_crs('EPSG:27700').loc[0, 'geometry'])
 
     inside_uk_eea_mask = location.intersects(uk_eea_outline)
     inside_gb_mask = location.intersects(gb_outline)
