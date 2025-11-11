@@ -61,7 +61,7 @@ L.TileLayer.BetterWMS = L.TileLayer.WMS.extend({
       // do nothing if there's an error
       if(err){console.log(err);return;}
       // do nothing if can't find "Lithostratigraphy" in content (~empty content)
-      if(content.indexOf("Lithostratigraphy") === -1){return;};
+      //if(content.indexOf("Lithostratigraphy") === -1){return;};
       // do nothing if WMS popup disabled
       if(!agsMap.drawing.showWMSpopup){return;};
       // otherwise show the content in a popup
