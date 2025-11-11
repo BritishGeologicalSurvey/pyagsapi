@@ -1,7 +1,8 @@
 from datetime import datetime
+from enum import StrEnum
 from typing import Dict, List, Union
 
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator
 
 from app.bgs_rules import BGS_RULES
 
@@ -29,12 +30,48 @@ VALID_KEYS.extend(list(BGS_RULES.keys()))
 VALID_KEYS.append('BGS data validation: Non-numeric coordinate types')
 
 
+# Enum for search logic
+class Format(StrEnum):
+    TEXT = "text"
+    JSON = "json"
+
+
+# Enum for search logic
+class Dictionary(StrEnum):
+    v4_0_3 = "v4_0_3"
+    v4_0_4 = "v4_0_4"
+    v4_1 = "v4_1"
+    v4_1_1 = "v4_1_1"
+    None_Given = ''
+
+
+# Enum for checker logic
+class Checker(StrEnum):
+    ags = "ags"
+    bgs = "bgs"
+
+
+# Enum for sorting strategy logic
+class SortingStrategy(StrEnum):
+    default = "default"
+    alphabetical = "alphabetical"
+    hierarchy = "hierarchy"
+    dictionary = "dictionary"
+
+
+# Enum for pdf response type logic
+class ResponseType(StrEnum):
+    attachment = "attachment"
+    inline = "inline"
+
+
 class LineError(BaseModel):
     line: Union[int, str] = Field(..., example="5")
     group: str = Field(..., example="TRAN")
     desc: str = Field(..., example="Blah blah")
 
-    @validator('line')
+    @field_validator('line')
+    @classmethod
     def line_if_string_must_be_hyphen(cls, line):
         if type(line) is str:
             assert line in ['-', ''], f"Unknown non-integer line number: '{line}'"
@@ -57,7 +94,8 @@ class Validation(BaseModel):
     geojson: dict = dict()
     geojson_error: str | None = None
 
-    @validator('errors')
+    @field_validator('errors')
+    @classmethod
     def errors_keys_must_be_known_rules(cls, errors):
         for key in errors.keys():
             assert key in VALID_KEYS, f"Unknown rule: '{key}'"

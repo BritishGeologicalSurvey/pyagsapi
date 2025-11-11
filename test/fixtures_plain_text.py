@@ -11,11 +11,12 @@ Checkers: ['python_ags4 v1.1.0']
 Dictionary: Standard_dictionary_v4_1_1.ags
 Time: 2021-08-23 14:25:43+00:00
 
+## Summary
+
 7 groups identified in file: PROJ ABBR TRAN TYPE UNIT LOCA SAMP
 Optional DICT group present: False
 Optional FILE group present: False
 1 data row(s) in LOCA group
-None
 ================================================================================
 """,
    'example_fyis_ags.ags': """
@@ -29,11 +30,12 @@ Checkers: ['python_ags4 v1.1.0']
 Dictionary: Standard_dictionary_v4_1_1.ags
 Time: 2021-08-23 14:25:43+00:00
 
+## Summary
+
 7 groups identified in file: PROJ ABBR TRAN TYPE UNIT LOCA SAMP
 Optional DICT group present: False
 Optional FILE group present: False
 1 data row(s) in LOCA group
-None
 ================================================================================
 """,
     'example_broken_ags.ags': """
@@ -46,6 +48,8 @@ File size: 4078 bytes
 Checkers: ['python_ags4 v1.1.0']
 Dictionary: Standard_dictionary_v4_1_1.ags
 Time: 2021-08-23 14:25:43+00:00
+
+## Summary
 
 
 # Errors
@@ -92,10 +96,11 @@ Checkers: ['python_ags4 v1.1.0']
 Dictionary: Standard_dictionary_v4_1_1.ags
 Time: 2021-08-23 14:25:43+00:00
 
+## Summary
+
 0 groups identified in file: 
 Optional DICT group present: False
 Optional FILE group present: False
-None
 
 # Errors
 
@@ -140,10 +145,11 @@ Checkers: ['python_ags4 v1.1.0']
 Dictionary: Standard_dictionary_v4_1_1.ags
 Time: 2021-08-23 14:25:43+00:00
 
+## Summary
+
 0 groups identified in file: 
 Optional DICT group present: False
 Optional FILE group present: False
-None
 
 # Errors
 
@@ -223,6 +229,8 @@ File size: 6566 bytes
 Checkers: ['python_ags4 v1.1.0']
 Dictionary: Standard_dictionary_v4_1_1.ags
 Time: 2021-08-23 14:25:43+00:00
+
+## Summary
 
 
 # Errors
