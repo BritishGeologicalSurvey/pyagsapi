@@ -56,14 +56,14 @@ agsMap.setupMap=function(){
     agsMap.map.basemaps.imagery=L.esri.basemapLayer("Imagery");
 
     // use the L.tileLayer.betterWms extension to load the 50k wms layer
-    agsMap.map.lyrs.geologyOfbtn=L.tileLayer.betterWms("https://ogc.bgs.ac.uk/cgi-bin/BGS_Bedrock_and_Superficial_Geology/wms?", {
-        "layers": 'GBR_BGS_625k_BLS,GBR_BGS_625k_SLS',
+    agsMap.map.lyrs.geologyOfbtn=L.tileLayer.betterWms("https://map.bgs.ac.uk/arcgis/services/BGS_Detailed_Geology/MapServer/WMSServer?", {
+        "layers": 'BGS.50k.Bedrock,BGS.50k.Superficial.deposits',
         "tiled": true,
         "format": 'image/png',
         "transparent": true,
         "opacity": 0.5,
         "continuousWorld": true,
-        "zIndex": 1000
+        "zIndex": 1000,
         }).addTo(agsMap.map.lMap);
 
     // Use the L.tileLayer.betterWms extension to load the AGS wms layer
