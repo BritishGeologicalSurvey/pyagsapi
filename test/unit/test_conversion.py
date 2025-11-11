@@ -7,9 +7,7 @@ import pandas as pd
 from python_ags4 import AGS4
 
 from app.conversion import convert
-from test.fixtures import (BAD_FILE_DATA, GOOD_FILE_DATA)
-
-TEST_FILE_DIR = Path(__file__).parent.parent / 'files'
+from test.fixtures import TEST_FILE_DIR, BAD_FILE_DATA, GOOD_FILE_DATA
 
 
 @pytest.mark.parametrize('filename, expected', GOOD_FILE_DATA)

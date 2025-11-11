@@ -1,4 +1,12 @@
 """Shared pytest data."""
+import os
+from pathlib import Path
+
+API_VERSION = '/v1'
+
+TEST_FILE_DIR = Path(__file__).parent / 'files'
+
+IN_GITHUB_ACTIONS = os.getenv("GITHUB_ACTIONS") == "true"
 
 FROZEN_TIME = "2021-08-23 14:25:43"
 
@@ -18,6 +26,20 @@ BAD_FILE_DATA = [
                                       "as the HEADING row in GEOL.", 12430)),
     ('real/AGS3/19684.ags', ("No valid AGS4 data found in input file.", 12542))
 ]
+
+ZIP_FILES_VALIDATE = {
+    'one_good_ags.zip': ['example_ags.ags'],
+    'two_good_ags.zip': ['example_ags.ags', 'example_fyis_ags.ags'],
+    'one_good_two_bad_ags.zip': ['example_fyis_ags.ags', 'example_broken_ags.ags', 'nonsense.AGS'],
+}
+
+ZIP_FILES_CONVERT = {
+    'one_good_ags.zip': ['example_ags.xlsx'],
+    'two_good_ags.zip': ['example_ags.xlsx', 'example_fyis_ags.xlsx'],
+    'one_good_two_bad_ags.zip': ['example_fyis_ags.xlsx'],
+    'one_good_xlsx.zip': ['example_xlsx.ags'],
+    'one_good_ags_one_good_xlsx.zip': ['example_xlsx.ags', 'example_fyis_ags.xlsx'],
+}
 
 DICTIONARIES = {
     'v4_0_3': "Standard_dictionary_v4_0_3.ags",
