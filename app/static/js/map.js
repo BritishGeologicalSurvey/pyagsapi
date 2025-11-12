@@ -22,7 +22,7 @@ agsMap.map={
     };
 
 agsMap.polyData={};
-agsMap.maxBoresForDownload=10;
+agsMap.maxBoresForDownload=50;
 
 agsMap.setupMap=function(){
     var baseLayers={};
