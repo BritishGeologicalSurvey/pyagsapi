@@ -55,8 +55,19 @@ agsMap.setupMap=function(){
     //agsMap.map.basemaps.topo=L.esri.basemapLayer("Topographic").addTo(agsMap.map.lMap);
     agsMap.map.basemaps.imagery=L.esri.basemapLayer("Imagery");
 
-    // use the L.tileLayer.betterWms extension to load the 50k wms layer
-    agsMap.map.lyrs.geologyOfbtn=L.tileLayer.betterWms("https://map.bgs.ac.uk/arcgis/services/BGS_Detailed_Geology/MapServer/WMSServer?", {
+    // Use the L.tileLayer.betterWms extension to load the 625k wms layer (used at higher zoom levels)
+    agsMap.map.lyrs.geologyOfbtn625k = L.tileLayer.betterWms("https://ogc.bgs.ac.uk/cgi-bin/BGS_Bedrock_and_Superficial_Geology/wms?", {
+        "layers": 'GBR_BGS_625k_BLS,GBR_BGS_625k_SLS',
+        "tiled": true,
+        "format": 'image/png',
+        "transparent": true,
+        "opacity": 0.5,
+        "continuousWorld": true,
+        "zIndex": 1000,
+        });
+
+    // use the L.tileLayer.betterWms extension to load the 50k wms layer (used at lower zoom levels)
+    agsMap.map.lyrs.geologyOfbtn50k = L.tileLayer.betterWms("https://map.bgs.ac.uk/arcgis/services/BGS_Detailed_Geology/MapServer/WMSServer?", {
         "layers": 'BGS.50k.Bedrock,BGS.50k.Superficial.deposits',
         "tiled": true,
         "format": 'image/png',
@@ -64,7 +75,10 @@ agsMap.setupMap=function(){
         "opacity": 0.5,
         "continuousWorld": true,
         "zIndex": 1000,
-        }).addTo(agsMap.map.lMap);
+        });
+
+    const geologyCombined = L.layerGroup([agsMap.map.lyrs.geologyOfbtn625k, agsMap.map.lyrs.geologyOfbtn625k]);
+    geologyCombined.addTo(agsMap.map.lMap);
 
     // Use the L.tileLayer.betterWms extension to load the AGS wms layer
     agsMap.map.lyrs.agsindex = L.tileLayer.wms('https://map.bgs.ac.uk/arcgis/services/AGS/AGS_Export/MapServer/WMSServer?', {
@@ -98,7 +112,7 @@ agsMap.setupMap=function(){
     agsMap.map.lyrs.agsboreholes.on("ready", () => {agsMap.map.lMap.addLayer(agsMap.map.lyrs.agsboreholes);})
 
     // add layer selection control
-    overlays["<span>Geology</span>"]=agsMap.map.lyrs.geologyOfbtn;
+    overlays["<span>Geology</span>"]=geologyCombined;
     baseLayers["<span>Topographic</span>"]=topoCombined;
     baseLayers["<span>Imagery</span>"]=agsMap.map.basemaps.imagery;
     agsMap.map.control=L.control.layers(baseLayers,overlays,{"collapsed":false}).addTo(agsMap.map.lMap);
