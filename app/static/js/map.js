@@ -141,6 +141,15 @@ agsMap.setupMap=function(){
         }
     });
 
+    agsMap.map.lMap.on("click", function(e) {
+        if(geologyActive && agsMap.map.lMap.getZoom() < Z_SWITCH) {
+            L.popup({ maxWidth: 420 })
+                .setLatLng(e.latlng)
+                .setContent("Zoom in to view detailed 50k geology and feature info.")
+                .openOn(agsMap.map.lMap);
+        }
+    });
+
     geologyActive = true;
     geologyToggle.addTo(agsMap.map.lMap);
     updateGeologyLayer();
