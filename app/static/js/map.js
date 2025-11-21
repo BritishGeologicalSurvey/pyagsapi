@@ -125,12 +125,16 @@ agsMap.setupMap=function(){
         }
     }
 
-    agsMap.map.lMap.on("zoomend", updateGeologyLayer);
+    agsMap.map.lMap.on("zoomend", function() {
+        updateGeologyLayer();
+        updateGeologyStatus();
+    });
 
     agsMap.map.lMap.on("overlayadd", function(e) {
         if(e.layer === geologyToggle) {
             geologyActive = true;
             updateGeologyLayer();
+            updateGeologyStatus();
         }
     });
 
@@ -138,6 +142,7 @@ agsMap.setupMap=function(){
         if(e.layer === geologyToggle) {
             geologyActive = false;
             removeBoth();
+            updateGeologyStatus();
         }
     });
 
@@ -145,7 +150,7 @@ agsMap.setupMap=function(){
         if(geologyActive && agsMap.map.lMap.getZoom() < Z_SWITCH) {
             L.popup({ maxWidth: 420 })
                 .setLatLng(e.latlng)
-                .setContent("Zoom in to view detailed 50k geology and feature info.")
+                .setContent("Zoom in to view detailed 1:50k geology and feature info.")
                 .openOn(agsMap.map.lMap);
         }
     });
@@ -190,6 +195,32 @@ agsMap.setupMap=function(){
     baseLayers["<span>Topographic</span>"]=topoCombined;
     baseLayers["<span>Imagery</span>"]=agsMap.map.basemaps.imagery;
     agsMap.map.control=L.control.layers(baseLayers,overlays,{"collapsed":false}).addTo(agsMap.map.lMap);
+
+    // add current geology layer info into layer control
+    const controlContainer = document.querySelector(".leaflet-control-layers-overlays label");
+    const statusRow = document.createElement("div");
+    
+    statusRow.className = "geology-status";
+    statusRow.style.padding = "2px";
+    statusRow.style.fontSize = "12px";
+    updateGeologyStatus();
+
+    controlContainer.appendChild(statusRow);
+
+    function updateGeologyStatus() {
+        if(!geologyActive) {
+            statusRow.innerHTML = "<span class='label'>Geology:</span> <span class='value'>Off</span>";
+            return;
+        }
+
+        const currentZoom = agsMap.map.lMap.getZoom();
+
+        if(currentZoom >= Z_SWITCH) {
+            statusRow.innerHTML = "<span class='label'>Geology:</span> <span class='value'>1:50k</span>";
+        } else {
+            statusRow.innerHTML = "<span class='label'>Geology:</span> <span class='value'>1:625k</span>";
+        }
+    }
 
     // add placeholder layer for drawings
     agsMap.map.lyrs["drawings"]=L.featureGroup().addTo(agsMap.map.lMap);
