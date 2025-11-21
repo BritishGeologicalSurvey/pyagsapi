@@ -56,7 +56,7 @@ agsMap.setupMap=function(){
     agsMap.map.basemaps.imagery=L.esri.basemapLayer("Imagery");
 
     // Use the L.tileLayer.betterWms extension to load the 625k wms layer (used at higher zoom levels)
-    agsMap.map.lyrs.geologyOfbtn625k = L.tileLayer.betterWms("https://ogc.bgs.ac.uk/cgi-bin/BGS_Bedrock_and_Superficial_Geology/wms?", {
+    agsMap.map.lyrs.geologyOfbtn625k = L.tileLayer.wms("https://ogc.bgs.ac.uk/cgi-bin/BGS_Bedrock_and_Superficial_Geology/wms?", {
         "layers": 'GBR_BGS_625k_BLS,GBR_BGS_625k_SLS',
         "tiled": true,
         "format": 'image/png',
@@ -77,8 +77,73 @@ agsMap.setupMap=function(){
         "zIndex": 1000,
         });
 
-    const geologyCombined = L.layerGroup([agsMap.map.lyrs.geologyOfbtn625k, agsMap.map.lyrs.geologyOfbtn625k]);
-    geologyCombined.addTo(agsMap.map.lMap);
+    const Z_SWITCH = 13;
+    const lowRes = agsMap.map.lyrs.geologyOfbtn625k;
+    const highRes = agsMap.map.lyrs.geologyOfbtn50k;
+
+    const geologyToggle = L.layerGroup();
+    let geologyActive = false;
+
+    function showLowRes() {
+        if(agsMap.map.lMap.hasLayer(highRes)) {
+            agsMap.map.lMap.removeLayer(highRes);
+        }
+
+        if(!agsMap.map.lMap.hasLayer(lowRes)) {
+            agsMap.map.lMap.addLayer(lowRes);
+        }
+    }
+
+    function showHighRes() {
+        if(agsMap.map.lMap.hasLayer(lowRes)) {
+            agsMap.map.lMap.removeLayer(lowRes);
+        }
+
+        if(!agsMap.map.lMap.hasLayer(highRes)) {
+            agsMap.map.lMap.addLayer(highRes);
+        }
+    }
+
+    function removeBoth() {
+        if(agsMap.map.lMap.hasLayer(lowRes)) {
+            agsMap.map.lMap.removeLayer(lowRes);
+        }
+
+        if(agsMap.map.lMap.hasLayer(highRes)) {
+            agsMap.map.lMap.removeLayer(highRes);
+        }
+    }
+
+    function updateGeologyLayer() {
+        if(!geologyActive) return;
+        const z = agsMap.map.lMap.getZoom();
+
+        if(z >= Z_SWITCH) {
+            showHighRes();
+        } else {
+            showLowRes();
+        }
+    }
+
+    agsMap.map.lMap.on("zoomend", updateGeologyLayer);
+
+    agsMap.map.lMap.on("overlayadd", function(e) {
+        if(e.layer === geologyToggle) {
+            geologyActive = true;
+            updateGeologyLayer();
+        }
+    });
+
+    agsMap.map.lMap.on("overlayremove", function(e) {
+        if(e.layer === geologyToggle) {
+            geologyActive = false;
+            removeBoth();
+        }
+    });
+
+    geologyActive = true;
+    geologyToggle.addTo(agsMap.map.lMap);
+    updateGeologyLayer();
 
     // Use the L.tileLayer.betterWms extension to load the AGS wms layer
     agsMap.map.lyrs.agsindex = L.tileLayer.wms('https://map.bgs.ac.uk/arcgis/services/AGS/AGS_Export/MapServer/WMSServer?', {
@@ -112,7 +177,7 @@ agsMap.setupMap=function(){
     agsMap.map.lyrs.agsboreholes.on("ready", () => {agsMap.map.lMap.addLayer(agsMap.map.lyrs.agsboreholes);})
 
     // add layer selection control
-    overlays["<span>Geology</span>"]=geologyCombined;
+    overlays["<span>Geology</span>"]=geologyToggle;
     baseLayers["<span>Topographic</span>"]=topoCombined;
     baseLayers["<span>Imagery</span>"]=agsMap.map.basemaps.imagery;
     agsMap.map.control=L.control.layers(baseLayers,overlays,{"collapsed":false}).addTo(agsMap.map.lMap);
