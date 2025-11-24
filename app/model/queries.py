@@ -25,7 +25,7 @@ dictionary_form = Form(
 validate_form = Form(
     default=[Checker.ags],
     title='Validation Options',
-    description='If set validate against AGS schema',
+    description='If set validate against AGS and/or BGS schema (add string item "bgs")',
 )
 
 validation_file = File(

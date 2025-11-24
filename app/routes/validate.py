@@ -30,7 +30,7 @@ router = APIRouter()
 async def validate(background_tasks: BackgroundTasks,
                    files: List[UploadFile] = validation_file,
                    std_dictionary: Dictionary = dictionary_form,
-                   checkers: List[Checker] = validate_form,
+                   checkers: List[str] = validate_form,
                    fmt: Format = format_form,
                    return_geometry: bool = geometry_form,
                    request: Request = None):
@@ -42,6 +42,7 @@ async def validate(background_tasks: BackgroundTasks,
     :param files: List of AGS4 files and ZIP files containing AGS4 File(s) to be validated.
     :type files: List[UploadFile]
     :param std_dictionary: The standard dictionary to use for validation. Options are "BGS" or "AGS".
+    :type std_dictionary: str
     :type std_dictionary: Dictionary
     :param checkers: List of validation rules to be used during validation.
     :type checkers: List[Checker]
@@ -57,10 +58,15 @@ async def validate(background_tasks: BackgroundTasks,
     :raises InvalidPayloadError: If the payload is missing files or checkers.
     """
 
-    if not files[0].filename or not checkers:
+    if not files[0].filename or not checkers: 
         raise InvalidPayloadError(request)
 
-    checkers = [checker_functions[c] for c in checkers]
+    # Handle both comma-separated string from Swagger and list from form
+    processed_checkers = []
+    for item in checkers:
+        processed_checkers.extend(item.split(','))
+
+    checker_functions_to_run = [checker_functions[Checker(c)] for c in processed_checkers]
 
     tmp_dir = Path(tempfile.mkdtemp())
     background_tasks.add_task(shutil.rmtree, tmp_dir)
@@ -79,13 +85,13 @@ async def validate(background_tasks: BackgroundTasks,
             for name in zipfile.namelist():
                 zipfile.extract(name, tmp_dir)
                 local_ags_file = tmp_dir / name
-                result = validate_file(local_ags_file, checkers=checkers, dictionary=dictionary,
+                result = validate_file(local_ags_file, checkers=checker_functions_to_run, dictionary=dictionary,
                                        return_geometry=return_geometry)
                 data.append(result)
         else:
             local_ags_file = tmp_dir / file.filename
             local_ags_file.write_bytes(contents)
-            result = validate_file(local_ags_file, checkers=checkers, dictionary=dictionary,
+            result = validate_file(local_ags_file, checkers=checker_functions_to_run, dictionary=dictionary,
                                    return_geometry=return_geometry)
             data.append(result)
 
