@@ -17,6 +17,7 @@ from fastapi.openapi.utils import get_openapi
 
 from app.routes import validate, convert, ags_log, ags_export, ags_export_by_polygon
 from app.routes.errors import HTTPExceptionResponse, InvalidPayloadError
+from app.version import API_VERSION
 
 
 def setup_logging(logging_level=logging.INFO):
@@ -87,7 +88,7 @@ def custom_openapi():
         return app.openapi_schema
     openapi_schema = get_openapi(
         title="pyagsapi - AGS File Utilities Tools and API",
-        version="5.0",
+        version=API_VERSION,
         description=("The API performs schema validation, data validation and conversion of your AGS files. "
                      "It also exports a graphical log from AGS data held by NGDC. "
                      "Schema validation and conversion uses https://gitlab.com/ags-data-format-wg/ags-python-library"),
