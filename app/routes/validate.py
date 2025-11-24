@@ -58,7 +58,7 @@ async def validate(background_tasks: BackgroundTasks,
     :raises InvalidPayloadError: If the payload is missing files or checkers.
     """
 
-    if not files[0].filename or not checkers: 
+    if not files[0].filename or not checkers:
         raise InvalidPayloadError(request)
 
     # Handle both comma-separated string from Swagger and list from form
