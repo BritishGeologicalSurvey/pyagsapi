@@ -94,7 +94,7 @@
       </ul>
       </div>
     <br>
-    <form action="/v1/validate/" enctype="multipart/form-data" method="post" id="validateForm">
+    <form action="{{ api_version_path }}/validate/" enctype="multipart/form-data" method="post" id="validateForm">
         <br>
       <fieldset>
           <legend>Select AGS Version - if "None", tool uses version specified in TRAN_AGS, if not specified, tool uses v4.1.1.</legend>
@@ -162,7 +162,7 @@
     </div>
     <br>
   <br>
-  <form action="/v1/convert/" enctype="multipart/form-data" method="post" id="convertForm">
+  <form action="{{ api_version_path }}/convert/" enctype="multipart/form-data" method="post" id="convertForm">
     <fieldset>
       <legend>Sort worksheets in .xlsx file using a sorting strategy <strong>(Warning: .ags to .xlsx only. The original group order will be lost)</strong></legend>
       <input type="radio" id="default" name="sort_tables" value="default" checked="checked">

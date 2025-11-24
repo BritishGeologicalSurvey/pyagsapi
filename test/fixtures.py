@@ -2,7 +2,9 @@
 import os
 from pathlib import Path
 
-API_VERSION = '/v1'
+from app.version import API_VERSION as APP_VERSION
+
+API_VERSION = f"/v{APP_VERSION.split('.')[0]}"
 
 TEST_FILE_DIR = Path(__file__).parent / 'files'
 
