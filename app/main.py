@@ -81,8 +81,10 @@ app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 @app.get("/", response_class=HTMLResponse, include_in_schema=False)
 async def landing_page(request: Request):
-    return templates.TemplateResponse('landing_page.html', {'request': request,
-                                                             'api_version_path': AGS_API_VERSION})
+    return templates.TemplateResponse(
+        'landing_page.html',
+        {'request': request, 'api_version_path': AGS_API_VERSION}
+    )
 
 
 def custom_openapi():
