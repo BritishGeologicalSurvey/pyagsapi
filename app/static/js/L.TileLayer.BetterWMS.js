@@ -94,7 +94,7 @@ L.TileLayer.BetterWMS = L.TileLayer.WMS.extend({
       if (filteredHeaders.length > 0) {
         const titleText = titles[index].textContent.replace(/^.*?(BGS\.[\w\.]+)/, '$1').replace(/'$/, '').trim();
         filteredHTML += `<h4>${titleText}</h4>`;
-        filteredHTML += `<table style="width:100%; font-size:12px; border-collapse:collapse;" border="1">
+        filteredHTML += `<table class="popup-table">
                             <thead><tr>${filteredHeaders.map((h) => `<th>${h}</th>`).join('')}</tr></thead>
                             <tbody><tr>${filteredValues.map((v) => `<td>${v}</td>`).join('')}</tr></tbody>
                           </table><br>`;
