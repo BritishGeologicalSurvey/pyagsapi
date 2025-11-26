@@ -109,7 +109,7 @@ agsHtml.checkFiles=function(fileList,extns){
 
 agsHtml.convertFileChange=function(evt){
     const currFiles=$("#convertForm input:file")[0].files;
-    var fileCheck=agsHtml.checkFiles(currFiles,"xlsx,ags");
+    var fileCheck=agsHtml.checkFiles(currFiles,"xlsx,ags,zip");
     if(fileCheck.valid){
         $("#convertForm input:submit").prop("disabled",false);
         }
@@ -123,7 +123,7 @@ agsHtml.convertFileChange=function(evt){
 agsHtml.fileChange=function(evt){
     const currFiles=$("#validateForm input:file")[0].files;
     // var fileCheck=agsHtml.checkFiles(currFiles,"ags,zip");
-    var fileCheck=agsHtml.checkFiles(currFiles,"ags");
+    var fileCheck=agsHtml.checkFiles(currFiles,"ags,zip");
     if(fileCheck.valid){
         $("#validateForm input:submit").prop("disabled",false);
         }
