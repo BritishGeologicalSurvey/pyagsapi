@@ -109,6 +109,7 @@ vMap.resetValidationMap=function(){
     // force map redraw when showing map and clear out any existing layers
     vMap.map.lyrs.GeoJSON.clearLayers();
     vMap.map.lMap.invalidateSize();
+    $("#res_MapFrame .mapKey").remove();
     $("#res_MapFrame").show();
     return true;
     };
