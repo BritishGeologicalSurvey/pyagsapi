@@ -66,7 +66,7 @@ agsHtml.tabClick=function(evt){
         $("main>div.container>div.row>div>section.tabbed").hide();
         $(a.attr("href")).show();
         if(a.attr("href") === "#validator"){
-            vMap.resetValidationMap();
+            //vMap.resetValidationMap();
             };
         };
     return true;
