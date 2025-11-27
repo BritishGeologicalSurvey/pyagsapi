@@ -25,6 +25,11 @@ agsHtml.injectResultPopup=function(){
     $("#validator").append(xhtml);
     // hide for now
     agsHtml.hideResultPopup();
+
+    // Clear file inputs
+    $("#validator input:file").val(null);
+    $("#convertForm input:file").val(null);
+
     $("#validator input:submit").prop("disabled",true);
     $("#converter input:submit").prop("disabled",true);
     $("#downloadGeoJSONBtn").prop("disabled",true);
