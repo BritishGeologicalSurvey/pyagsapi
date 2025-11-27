@@ -25,6 +25,11 @@ agsHtml.injectResultPopup=function(){
     $("#validator").append(xhtml);
     // hide for now
     agsHtml.hideResultPopup();
+
+    // Clear file inputs
+    $("#validator input:file").val(null);
+    $("#convertForm input:file").val(null);
+
     $("#validator input:submit").prop("disabled",true);
     $("#converter input:submit").prop("disabled",true);
     $("#downloadGeoJSONBtn").prop("disabled",true);
@@ -66,7 +71,7 @@ agsHtml.tabClick=function(evt){
         $("main>div.container>div.row>div>section.tabbed").hide();
         $(a.attr("href")).show();
         if(a.attr("href") === "#validator"){
-            vMap.resetValidationMap();
+            //vMap.resetValidationMap();
             };
         };
     return true;
