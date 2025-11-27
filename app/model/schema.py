@@ -8,26 +8,52 @@ from app.bgs_rules import BGS_RULES
 
 VALID_KEYS = [
     # AGS schema rules
-    'AGS Format Rule 1', 'AGS Format Rule 2', 'AGS Format Rule 2a', 'AGS Format Rule 2b',
-    'AGS Format Rule 2c', 'AGS Format Rule 3', 'AGS Format Rule 4', 'AGS Format Rule 4a', 'AGS Format Rule 4b',
-    'AGS Format Rule 5', 'AGS Format Rule 6', 'AGS Format Rule 7', 'AGS Format Rule 8',
-    'AGS Format Rule 9', 'AGS Format Rule 10a', 'AGS Format Rule 10b', 'AGS Format Rule 10c',
-    'AGS Format Rule 11a', 'AGS Format Rule 11b', 'AGS Format Rule 11c', 'AGS Format Rule 12',
-    'AGS Format Rule 13', 'AGS Format Rule 14', 'AGS Format Rule 15', 'AGS Format Rule 16',
-    'AGS Format Rule 17', 'AGS Format Rule 18', 'AGS Format Rule 19', 'AGS Format Rule 19a',
-    'AGS Format Rule 19b', 'AGS Format Rule 20', 'Validator Process Error',
+    "AGS Format Rule 1",
+    "AGS Format Rule 2",
+    "AGS Format Rule 2a",
+    "AGS Format Rule 2b",
+    "AGS Format Rule 2c",
+    "AGS Format Rule 3",
+    "AGS Format Rule 4",
+    "AGS Format Rule 4a",
+    "AGS Format Rule 4b",
+    "AGS Format Rule 5",
+    "AGS Format Rule 6",
+    "AGS Format Rule 7",
+    "AGS Format Rule 8",
+    "AGS Format Rule 9",
+    "AGS Format Rule 10a",
+    "AGS Format Rule 10b",
+    "AGS Format Rule 10c",
+    "AGS Format Rule 11a",
+    "AGS Format Rule 11b",
+    "AGS Format Rule 11c",
+    "AGS Format Rule 12",
+    "AGS Format Rule 13",
+    "AGS Format Rule 14",
+    "AGS Format Rule 15",
+    "AGS Format Rule 16",
+    "AGS Format Rule 17",
+    "AGS Format Rule 18",
+    "AGS Format Rule 19",
+    "AGS Format Rule 19a",
+    "AGS Format Rule 19b",
+    "AGS Format Rule 20",
+    "Validator Process Error",
     # Other errors
-    'File read error',
+    "File read error",
     # Warnings - None
     # FYIs
-    'FYI (Related to Rule 1)', 'FYI (Related to Rule 16)', 'FYI',
+    "FYI (Related to Rule 1)",
+    "FYI (Related to Rule 16)",
+    "FYI",
     # Neither errors, warmnings nor FYIs
-    'General',
+    "General",
 ]
 # Add BGS data rules
 VALID_KEYS.extend(list(BGS_RULES.keys()))
 # BGS rule that is handled outside of the rule functions
-VALID_KEYS.append('BGS data validation: Non-numeric coordinate types')
+VALID_KEYS.append("BGS data validation: Non-numeric coordinate types")
 
 
 # Enum for search logic
@@ -42,7 +68,7 @@ class Dictionary(StrEnum):
     v4_0_4 = "v4_0_4"
     v4_1 = "v4_1"
     v4_1_1 = "v4_1_1"
-    None_Given = ''
+    None_Given = ""
 
 
 # Enum for checker logic
@@ -70,11 +96,11 @@ class LineError(BaseModel):
     group: str = Field(..., example="TRAN")
     desc: str = Field(..., example="Blah blah")
 
-    @field_validator('line')
+    @field_validator("line")
     @classmethod
     def line_if_string_must_be_hyphen(cls, line):
         if type(line) is str:
-            assert line in ['-', ''], f"Unknown non-integer line number: '{line}'"
+            assert line in ["-", ""], f"Unknown non-integer line number: '{line}'"
         return line
 
 
@@ -86,7 +112,7 @@ class Validation(BaseModel):
     time: datetime = Field(None, example="2021-08-18 09:23:29")
     message: str = Field(None, example="7 error(s) found in file!")
     errors: Dict[str, List[LineError]] = Field(..., example="Rule 1a")
-    valid: bool = Field(..., example='false')
+    valid: bool = Field(..., example="false")
     additional_metadata: dict = Field(...)
     error_count: int = Field(None, example="50")
     warnings_count: int = Field(None, example="0")
@@ -94,7 +120,7 @@ class Validation(BaseModel):
     geojson: dict = dict()
     geojson_error: str | None = None
 
-    @field_validator('errors')
+    @field_validator("errors")
     @classmethod
     def errors_keys_must_be_known_rules(cls, errors):
         for key in errors.keys():
@@ -104,7 +130,7 @@ class Validation(BaseModel):
 
 class Error(BaseModel):
     error: str = Field(..., example="error")
-    propName:  str = Field(None, example="error")
+    propName: str = Field(None, example="error")
     desc: str = Field(..., example="Error message")
 
 
