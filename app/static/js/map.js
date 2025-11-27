@@ -381,7 +381,7 @@ agsMap.checkPoly=function(evt){
 
 // CHECK HOW MANY BOREHOLES IN EXTENT =========================================
 agsMap.checkExtent=function(wkt){
-    var apiUrl="/ags_export_by_polygon/?polygon=" + wkt + "&count_only=True";
+    var apiUrl=api_version_path + "/ags_export_by_polygon/?polygon=" + wkt + "&count_only=True";
 
     // UNCOMMENT LINE BELOW
     $.getJSON(apiUrl,agsMap.parseExtent);
