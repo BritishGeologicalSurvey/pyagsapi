@@ -14,6 +14,7 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 from fastapi.openapi.utils import get_openapi
+from fastapi.openapi.docs import get_swagger_ui_html, get_redoc_html
 
 from app.routes import validate, convert, ags_log, ags_export, ags_export_by_polygon
 from app.routes.errors import HTTPExceptionResponse, InvalidPayloadError
@@ -64,7 +65,7 @@ def setup_logging(logging_level=logging.INFO):
         f"'logging_level': {logging.getLevelName(logging_level)}")
 
 
-app = FastAPI(root_path=os.getenv('PYAGSAPI_ROOT_PATH', ''))
+app = FastAPI(root_path=os.getenv('PYAGSAPI_ROOT_PATH', ''), docs_url=None, redoc_url=None)
 
 setup_logging()
 
@@ -86,12 +87,19 @@ async def landing_page(request: Request):
         {'request': request, 'api_version_path': AGS_API_VERSION}
     )
 
+@app.get("/docs", include_in_schema=False)
+def overridden_swagger():
+	return get_swagger_ui_html(openapi_url="/openapi.json", title="AGS4 File Utilities Tool", swagger_favicon_url="//resources.bgs.ac.uk/webapps/resources/images/logos/cropped-BGS-favicon-logo-32x32.png")
 
+@app.get("/redoc", include_in_schema=False)
+def overridden_redoc():
+	return get_redoc_html(openapi_url="/openapi.json", title="AGS4 File Utilities Tool", redoc_favicon_url="//resources.bgs.ac.uk/webapps/resources/images/logos/cropped-BGS-favicon-logo-32x32.png")
 def custom_openapi():
     if app.openapi_schema:
         return app.openapi_schema
     openapi_schema = get_openapi(
-        title="pyagsapi - AGS File Utilities Tools and API",
+        title="BGS AGS4 File Utilities Tool",
+        summary="pyagsapi an API for validating, converting and exporting AGS files",
         version=API_VERSION,
         description=("The API performs schema validation, data validation and conversion of your AGS files. "
                      "It also exports a graphical log from AGS data held by NGDC. "
