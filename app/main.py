@@ -1,5 +1,6 @@
 import logging
 import os
+from importlib import metadata
 import time
 
 import colorlog
@@ -86,7 +87,13 @@ app.mount("/static", StaticFiles(directory="app/static"), name="static")
 @app.get("/", response_class=HTMLResponse, include_in_schema=False)
 async def landing_page(request: Request):
     return templates.TemplateResponse(
-        "landing_page.html", {"request": request, "api_version_path": AGS_API_VERSION}
+        "landing_page.html",
+        {
+            "request": request,
+            "api_version_path": AGS_API_VERSION,
+            "api_version": f'v{API_VERSION}',
+            "agslib_version": f'v{metadata.version("python-ags4")}',
+        },
     )
 
 

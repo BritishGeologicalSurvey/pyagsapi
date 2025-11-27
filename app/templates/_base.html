@@ -25,6 +25,13 @@
     <link rel="stylesheet" href="../static/js/leaflet/leaflet.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css" integrity="sha512-gc3xjCmIy673V6MyOAZhIW93xhM9ei1I+gLbmFjUHIjocENRsLX/QUE1htk5q1XV2D/iie/VQ8DXI6Vu8bexvQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="../static/css/style.css" />
+	
+	<script>
+    // Pass the template variable to a global JavaScript variable
+    	var api_version_path = "{{ api_version_path }}";
+		var api_version = "{{ api_version }}";
+		var agslib_version = "{{ agslib_version }}";
+	</script>
 
     <script type="text/javascript" src="../static/js/leaflet/leaflet.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js" integrity="sha512-ozq8xQKq6urvuU6jNgkfqAmT7jKN2XumbrX1JiB3TnF7tI48DPI4Gy1GXKD/V3EExgAs1V+pRO7vwtS1LHg0Gw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -364,7 +371,7 @@
           </div>
         </div>
 
-        <div>Powered by <a title="pyagsapi" href="https://github.com/BritishGeologicalSurvey/pyagsapi">pyagsapi v6.0</a>. pyagsapi was created by and is maintained by the <a href="https://www.bgs.ac.uk/">British Geological Survey</a> and  is distributed under the <a title="license" href="https://github.com/BritishGeologicalSurvey/pyagsapi/blob/main/LICENSE">LGPL v3.0 licence</a>, code is available on <a title="github" href="https://github.com/BritishGeologicalSurvey/pyagsapi">GitHub</a>. <a title="agspython" href="https://github.com/BritishGeologicalSurvey/pyagsapi">pyagsapi</a> uses the <a href="https://gitlab.com/ags-data-format-wg/ags-python-library.">Official AGS Python Library v1.1.0</a>.</div>
+        <div>Powered by <a title="pyagsapi" href="https://github.com/BritishGeologicalSurvey/pyagsapi">pyagsapi {{ api_version }}</a>. pyagsapi was created by and is maintained by the <a href="https://www.bgs.ac.uk/">British Geological Survey</a> and  is distributed under the <a title="license" href="https://github.com/BritishGeologicalSurvey/pyagsapi/blob/main/LICENSE">LGPL v3.0 licence</a>, code is available on <a title="github" href="https://github.com/BritishGeologicalSurvey/pyagsapi">GitHub</a>. <a title="agspython" href="https://github.com/BritishGeologicalSurvey/pyagsapi">pyagsapi</a> uses the <a href="https://gitlab.com/ags-data-format-wg/ags-python-library.">Official AGS Python Library {{ agslib_version }}</a>.</div>
 
 		<div id="extentModal">
             <p>&nbsp;<input type="button" id="closeModalBtn" value="&#x2716;" /></p>
