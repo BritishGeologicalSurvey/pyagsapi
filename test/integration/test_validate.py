@@ -7,7 +7,7 @@ import pytest
 from requests_toolbelt.multipart.encoder import MultipartEncoder
 
 from test.fixtures import API_VERSION, TEST_FILE_DIR, DICTIONARIES, FROZEN_TIME, ZIP_FILES_VALIDATE
-from test.fixtures_json import JSON_RESPONSES, GEOJSON_RESPONSES
+from test.fixtures_json import JSON_RESPONSES, GEOJSON_RESPONSES, UNKNOWN_RULES_RESPONSE
 from test.fixtures_plain_text import PLAIN_TEXT_RESPONSES
 
 
@@ -424,3 +424,27 @@ async def test_validate_ags_and_zip(async_client, filename, zipped_files):
     assert body['self'] is not None
     assert len(body['data']) == len(expected_files)
     assert {d['filename'] for d in body['data']} == expected_files
+
+
+@pytest.mark.asyncio
+async def test_validate_unknown_rules_json(async_client):
+    # Arrange
+    filename = TEST_FILE_DIR / 'example_ags.ags'
+    file = ('files', (filename.name, open(filename, 'rb'), 'text/plain'))
+    fields = [file]
+    fields.append(('checkers', 'ags'))
+    fields.append(('checkers', 'unknown'))
+    fields.append(('fmt', 'json'))
+    mp_encoder = MultipartEncoder(fields=fields)
+
+    # Act
+    async with async_client as ac:
+        response = await ac.post(
+            f'{API_VERSION}/validate/',
+            headers={'Content-Type': mp_encoder.content_type},
+            data=mp_encoder.to_string())
+
+    # Assert
+    assert response.status_code == 422
+    body = response.json()
+    assert body == UNKNOWN_RULES_RESPONSE

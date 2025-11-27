@@ -1622,3 +1622,15 @@ BROKEN_JSON_RESPONSES = [
         'geojson_error': None
     },
 ]
+
+UNKNOWN_RULES_RESPONSE = {
+    'detail': [
+        {
+            'ctx': {'expected': "'ags' or 'bgs'"},
+            'input': 'unknown',
+            'loc': ['body', 'checkers', 1],
+            'msg': "Input should be 'ags' or 'bgs'",
+            'type': 'enum'
+        }
+    ]
+}
