@@ -5,3 +5,5 @@ venv
 .coverage
 htmlcov
 setup_env.sh
+
+.vscode

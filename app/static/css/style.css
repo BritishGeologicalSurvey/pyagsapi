@@ -174,3 +174,29 @@
   transition: max-height 0.2s ease-out;
   background-color: #edf3f4;
 }
+
+/* POPUP TABLE */
+.popup-table {
+	width: 100%;
+	margin: 4px;
+	font-size: 12px;
+	border-collapse: collapse;
+  border: 1px solid rgb(0, 0, 0);
+  box-shadow: 0 0 1px rgba(0, 0, 0, 1);
+}
+
+.popup-table th, .popup-table td {
+	padding: 5px;
+	border: 1px solid rgb(255,255,255);
+}
+
+.popup-table th {
+	background-color: rgb(102, 130, 140);
+	color: rgb(255, 255, 255);
+}
+
+.popup-table td {
+	background-color: rgb(246, 246, 245);
+	color: rgb(0, 0, 0);
+}
+

@@ -37,20 +37,127 @@ agsMap.setupMap=function(){
     // create Leaflet map
     agsMap.map.lMap=L.map("mapid",mapOpts);
 
+    agsMap.map.basemaps.topoZoomedIn = L.tileLayer('https://api-os-maps.bgs.ac.uk/maps/raster/v1/zxy/Road_3857/{z}/{x}/{y}.png?key=', {
+        minZoom: 7,
+        maxZoom: 18
+    });
+    
+    agsMap.map.basemaps.topoZoomedOut = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+	    minZoom: 5,
+        maxZoom: 6,
+	    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    });
+
+    const topoCombined = L.layerGroup([agsMap.map.basemaps.topoZoomedIn, agsMap.map.basemaps.topoZoomedOut]);
+    topoCombined.addTo(agsMap.map.lMap);
+
     // add Esri basemap layers to map - this is using the esri-leaflet.js extension
-    agsMap.map.basemaps.topo=L.esri.basemapLayer("Topographic").addTo(agsMap.map.lMap);
+    //agsMap.map.basemaps.topo=L.esri.basemapLayer("Topographic").addTo(agsMap.map.lMap);
     agsMap.map.basemaps.imagery=L.esri.basemapLayer("Imagery");
 
-    // use the L.tileLayer.betterWms extension to load the 50k wms layer
-    agsMap.map.lyrs.geologyOfbtn=L.tileLayer.betterWms("https://ogc.bgs.ac.uk/cgi-bin/BGS_Bedrock_and_Superficial_Geology/wms?", {
+    // Use the L.tileLayer.betterWms extension to load the 625k wms layer (used at higher zoom levels)
+    agsMap.map.lyrs.geologyOfbtn625k = L.tileLayer.wms("https://ogc.bgs.ac.uk/cgi-bin/BGS_Bedrock_and_Superficial_Geology/wms?", {
         "layers": 'GBR_BGS_625k_BLS,GBR_BGS_625k_SLS',
         "tiled": true,
         "format": 'image/png',
         "transparent": true,
         "opacity": 0.5,
         "continuousWorld": true,
-        "zIndex": 1000
-        }).addTo(agsMap.map.lMap);
+        "zIndex": 1000,
+        });
+
+    // use the L.tileLayer.betterWms extension to load the 50k wms layer (used at lower zoom levels)
+    agsMap.map.lyrs.geologyOfbtn50k = L.tileLayer.betterWms("https://map.bgs.ac.uk/arcgis/services/BGS_Detailed_Geology/MapServer/WMSServer?", {
+        "layers": 'BGS.50k.Bedrock,BGS.50k.Superficial.deposits',
+        "tiled": true,
+        "format": 'image/png',
+        "transparent": true,
+        "opacity": 0.5,
+        "continuousWorld": true,
+        "zIndex": 1000,
+        });
+
+    const Z_SWITCH = 13;
+    const lowRes = agsMap.map.lyrs.geologyOfbtn625k;
+    const highRes = agsMap.map.lyrs.geologyOfbtn50k;
+
+    const geologyToggle = L.layerGroup();
+    let geologyActive = false;
+
+    function showLowRes() {
+        if(agsMap.map.lMap.hasLayer(highRes)) {
+            agsMap.map.lMap.removeLayer(highRes);
+        }
+
+        if(!agsMap.map.lMap.hasLayer(lowRes)) {
+            agsMap.map.lMap.addLayer(lowRes);
+        }
+    }
+
+    function showHighRes() {
+        if(agsMap.map.lMap.hasLayer(lowRes)) {
+            agsMap.map.lMap.removeLayer(lowRes);
+        }
+
+        if(!agsMap.map.lMap.hasLayer(highRes)) {
+            agsMap.map.lMap.addLayer(highRes);
+        }
+    }
+
+    function removeBoth() {
+        if(agsMap.map.lMap.hasLayer(lowRes)) {
+            agsMap.map.lMap.removeLayer(lowRes);
+        }
+
+        if(agsMap.map.lMap.hasLayer(highRes)) {
+            agsMap.map.lMap.removeLayer(highRes);
+        }
+    }
+
+    function updateGeologyLayer() {
+        if(!geologyActive) return;
+        const z = agsMap.map.lMap.getZoom();
+
+        if(z >= Z_SWITCH) {
+            showHighRes();
+        } else {
+            showLowRes();
+        }
+    }
+
+    agsMap.map.lMap.on("zoomend", function() {
+        updateGeologyLayer();
+        updateGeologyStatus();
+    });
+
+    agsMap.map.lMap.on("overlayadd", function(e) {
+        if(e.layer === geologyToggle) {
+            geologyActive = true;
+            updateGeologyLayer();
+            updateGeologyStatus();
+        }
+    });
+
+    agsMap.map.lMap.on("overlayremove", function(e) {
+        if(e.layer === geologyToggle) {
+            geologyActive = false;
+            removeBoth();
+            updateGeologyStatus();
+        }
+    });
+
+    agsMap.map.lMap.on("click", function(e) {
+        if(geologyActive && agsMap.map.lMap.getZoom() < Z_SWITCH) {
+            L.popup({ maxWidth: 420 })
+                .setLatLng(e.latlng)
+                .setContent("Zoom in to view detailed 1:50k geology and feature info.")
+                .openOn(agsMap.map.lMap);
+        }
+    });
+
+    geologyActive = true;
+    geologyToggle.addTo(agsMap.map.lMap);
+    updateGeologyLayer();
 
     // Use the L.tileLayer.betterWms extension to load the AGS wms layer
     agsMap.map.lyrs.agsindex = L.tileLayer.wms('https://map.bgs.ac.uk/arcgis/services/AGS/AGS_Export/MapServer/WMSServer?', {
@@ -84,10 +191,36 @@ agsMap.setupMap=function(){
     agsMap.map.lyrs.agsboreholes.on("ready", () => {agsMap.map.lMap.addLayer(agsMap.map.lyrs.agsboreholes);})
 
     // add layer selection control
-    overlays["<span>Geology</span>"]=agsMap.map.lyrs.geologyOfbtn;
-    baseLayers["<span>Topographic</span>"]=agsMap.map.basemaps.topo;
+    overlays["<span>Geology</span>"]=geologyToggle;
+    baseLayers["<span>Topographic</span>"]=topoCombined;
     baseLayers["<span>Imagery</span>"]=agsMap.map.basemaps.imagery;
     agsMap.map.control=L.control.layers(baseLayers,overlays,{"collapsed":false}).addTo(agsMap.map.lMap);
+
+    // add current geology layer info into layer control
+    const controlContainer = document.querySelector(".leaflet-control-layers-overlays label");
+    const statusRow = document.createElement("div");
+    
+    statusRow.className = "geology-status";
+    statusRow.style.padding = "2px";
+    statusRow.style.fontSize = "12px";
+    updateGeologyStatus();
+
+    controlContainer.appendChild(statusRow);
+
+    function updateGeologyStatus() {
+        if(!geologyActive) {
+            statusRow.innerHTML = "<span class='label'>Geology:</span> <span class='value'>Off</span>";
+            return;
+        }
+
+        const currentZoom = agsMap.map.lMap.getZoom();
+
+        if(currentZoom >= Z_SWITCH) {
+            statusRow.innerHTML = "<span class='label'>Geology:</span> <span class='value'>1:50k</span>";
+        } else {
+            statusRow.innerHTML = "<span class='label'>Geology:</span> <span class='value'>1:625k</span>";
+        }
+    }
 
     // add placeholder layer for drawings
     agsMap.map.lyrs["drawings"]=L.featureGroup().addTo(agsMap.map.lMap);

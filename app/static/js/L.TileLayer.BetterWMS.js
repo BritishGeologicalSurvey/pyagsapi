@@ -58,15 +58,58 @@ L.TileLayer.BetterWMS = L.TileLayer.WMS.extend({
   },
 
   showGetFeatureInfo: function (err, latlng, content) {
-      // do nothing if there's an error
-      if(err){console.log(err);return;}
-      // do nothing if can't find "Lithostratigraphy" in content (~empty content)
-      if(content.indexOf("Lithostratigraphy") === -1){return;};
-      // do nothing if WMS popup disabled
-      if(!agsMap.drawing.showWMSpopup){return;};
-      // otherwise show the content in a popup
-      L.popup({"maxWidth":500}).setLatLng(latlng).setContent(content).openOn(this._map);
+    // do nothing if there's an error
+    if (err) { console.log(err); return; }
+    // do nothing if WMS popup disabled
+    if (!agsMap.drawing.showWMSpopup) { return; }
+
+    // otherwise show the filtered content in a popup
+    const allowedFields = ['LEX_RCS', 'LEX_RCS_D', 'BGSTYPE', 'MAX_TIME_D'];
+    let filteredHTML = '';
+
+    // Parse the HTML response
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(content, 'text/html');
+
+    // Get all tables and their titles
+    const tables = doc.querySelectorAll('table');
+    const titles = doc.querySelectorAll('h5');
+
+    tables.forEach((table, index) => {
+      const headers = table.querySelectorAll('th');
+      const values = table.querySelectorAll('td');
+
+      let filteredHeaders = [];
+      let filteredValues = [];
+
+      headers.forEach((header, i) => {
+        const key = header.textContent.trim();
+        const value = values[i] ? values[i].textContent.trim() : '';
+        if (allowedFields.includes(key)) {
+          filteredHeaders.push(key);
+          filteredValues.push(value);
+        }
+      });
+
+      if (filteredHeaders.length > 0) {
+        const titleText = titles[index].textContent.replace(/^.*?(BGS\.[\w\.]+)/, '$1').replace(/'$/, '').trim();
+        filteredHTML += `<h4>${titleText}</h4>`;
+        filteredHTML += `<table class="popup-table">
+                            <thead><tr>${filteredHeaders.map((h) => `<th>${h}</th>`).join('')}</tr></thead>
+                            <tbody><tr>${filteredValues.map((v) => `<td>${v}</td>`).join('')}</tr></tbody>
+                          </table><br>`;
       }
+    });
+
+    if (!filteredHTML) {
+      filteredHTML = '<p>No detailed information available for this feature.</p>';
+    }
+
+    L.popup({ maxWidth: 500 })
+      .setLatLng(latlng)
+      .setContent(filteredHTML)
+      .openOn(this._map);
+  }
 });
 
 L.tileLayer.betterWms = function (url, options) {
