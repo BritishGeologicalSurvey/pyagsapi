@@ -12,28 +12,39 @@ from fastapi.responses import FileResponse
 from app import validation
 from app.borehole_map import extract_geojson
 from app.model.schema import Checker, Format, Dictionary, ValidationResponse
-from app.model.queries import (format_form, geometry_form, dictionary_form, validate_form,
-                               validation_file)
-from . errors import InvalidPayloadError
-from . utils import AGS_API_VERSION, checker_functions, get_request_url, log_responses
+from app.model.queries import (
+    format_form,
+    geometry_form,
+    dictionary_form,
+    validate_form,
+    validation_file,
+)
+from .errors import InvalidPayloadError
+from .utils import AGS_API_VERSION, checker_functions, get_request_url, log_responses
 
 router = APIRouter()
 
 
-@router.post(f"{AGS_API_VERSION}/validate/",
-             tags=["validate"],
-             response_model=ValidationResponse,
-             responses=log_responses,
-             summary="Validate AGS4 File(s) and ZIP files containing AGS4 File(s)",
-             description=("Validate AGS4 file(s) to the AGS File Format v4.x rules and the NGDC data"
-                          " submission requirements. Uses the Offical AGS4 Python Library."))
-async def validate(background_tasks: BackgroundTasks,
-                   files: List[UploadFile] = validation_file,
-                   std_dictionary: Dictionary = dictionary_form,
-                   checkers: List[Checker] = validate_form,
-                   fmt: Format = format_form,
-                   return_geometry: bool = geometry_form,
-                   request: Request = None):
+@router.post(
+    f"{AGS_API_VERSION}/validate/",
+    tags=["validate"],
+    response_model=ValidationResponse,
+    responses=log_responses,
+    summary="Validate AGS4 File(s) and ZIP files containing AGS4 File(s)",
+    description=(
+        "Validate AGS4 file(s) to the AGS File Format v4.x rules and the NGDC data"
+        " submission requirements. Uses the Offical AGS4 Python Library."
+    ),
+)
+async def validate(
+    background_tasks: BackgroundTasks,
+    files: List[UploadFile] = validation_file,
+    std_dictionary: Dictionary = dictionary_form,
+    checkers: List[Checker] = validate_form,
+    fmt: Format = format_form,
+    return_geometry: bool = geometry_form,
+    request: Request = None,
+):
     """
     Validate an AGS4 file to the AGS File Format v4.x rules and the NGDC data submission requirements.
     Uses the Official AGS4 Python Library.
@@ -68,7 +79,7 @@ async def validate(background_tasks: BackgroundTasks,
     if std_dictionary == Dictionary.None_Given:
         dictionary = None
     else:
-        dictionary = f'Standard_dictionary_{std_dictionary}.ags'
+        dictionary = f"Standard_dictionary_{std_dictionary}.ags"
 
     data = []
     for file in files:
@@ -79,24 +90,32 @@ async def validate(background_tasks: BackgroundTasks,
             for name in zipfile.namelist():
                 zipfile.extract(name, tmp_dir)
                 local_ags_file = tmp_dir / name
-                result = validate_file(local_ags_file, checkers=checkers, dictionary=dictionary,
-                                       return_geometry=return_geometry)
+                result = validate_file(
+                    local_ags_file,
+                    checkers=checkers,
+                    dictionary=dictionary,
+                    return_geometry=return_geometry,
+                )
                 data.append(result)
         else:
             local_ags_file = tmp_dir / file.filename
             local_ags_file.write_bytes(contents)
-            result = validate_file(local_ags_file, checkers=checkers, dictionary=dictionary,
-                                   return_geometry=return_geometry)
+            result = validate_file(
+                local_ags_file,
+                checkers=checkers,
+                dictionary=dictionary,
+                return_geometry=return_geometry,
+            )
             data.append(result)
 
     if fmt == Format.TEXT:
-        full_logfile = tmp_dir / 'results.log'
-        with full_logfile.open('wt') as f:
-            f.write('=' * 80 + '\n')
+        full_logfile = tmp_dir / "results.log"
+        with full_logfile.open("wt") as f:
+            f.write("=" * 80 + "\n")
             for result in data:
                 log = validation.to_plain_text(result)
                 f.write(log)
-                f.write('=' * 80 + '\n')
+                f.write("=" * 80 + "\n")
         response = FileResponse(full_logfile, media_type="text/plain")
     else:
         response = prepare_validation_response(request, data)
@@ -104,25 +123,28 @@ async def validate(background_tasks: BackgroundTasks,
     return response
 
 
-def validate_file(local_ags_file, checkers=None, dictionary=None, return_geometry=False):
+def validate_file(
+    local_ags_file, checkers=None, dictionary=None, return_geometry=False
+):
     result = validation.validate(
-        local_ags_file, checkers=checkers, standard_AGS4_dictionary=dictionary)
+        local_ags_file, checkers=checkers, standard_AGS4_dictionary=dictionary
+    )
     if return_geometry:
         try:
             geojson = extract_geojson(local_ags_file)
-            result['geojson'] = geojson
+            result["geojson"] = geojson
         except ValueError as ve:
-            result['geojson'] = {}
-            result['geojson_error'] = str(ve)
+            result["geojson"] = {}
+            result["geojson_error"] = str(ve)
     return result
 
 
 def prepare_validation_response(request, data):
     """Package the data into a Response schema object"""
     response_data = {
-        'msg': f'{len(data)} files validated',
-        'type': 'success',
-        'self': get_request_url(request),
-        'data': data,
+        "msg": f"{len(data)} files validated",
+        "type": "success",
+        "self": get_request_url(request),
+        "data": data,
     }
     return ValidationResponse(**response_data, media_type="application/json")

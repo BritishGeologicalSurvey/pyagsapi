@@ -1,4 +1,5 @@
 """Functions for each of the BGS data validation rules"""
+
 from pathlib import Path
 from typing import List, cast
 
@@ -23,36 +24,36 @@ with open('app/gb_outline.geojson', 'wt') as outfile:
 """
 
 
-GB_OUTLINE = Path(__file__).parent / 'gb_outline.geojson'
-NI_OUTLINE = Path(__file__).parent / 'ni_outline.geojson'
-UK_EEA_OUTLINE = Path(__file__).parent / 'uk_eea_area_ex_ni.geojson'
-bgs_rules_version = '3.0.0'
+GB_OUTLINE = Path(__file__).parent / "gb_outline.geojson"
+NI_OUTLINE = Path(__file__).parent / "ni_outline.geojson"
+UK_EEA_OUTLINE = Path(__file__).parent / "uk_eea_area_ex_ni.geojson"
+bgs_rules_version = "3.0.0"
 
 
 def check_required_groups(tables: dict) -> List[dict]:
-    """ Groups must include PROJ, LOCA or HOLE, ABBR, TYPE, UNIT """
+    """Groups must include PROJ, LOCA or HOLE, ABBR, TYPE, UNIT"""
     errors = []
-    required = ['PROJ', 'ABBR', 'TYPE', 'UNIT']
+    required = ["PROJ", "ABBR", "TYPE", "UNIT"]
     missing = []
 
     for group in required:
         if group not in tables.keys():
             missing.append(group)
 
-    if 'LOCA' not in tables.keys() and 'HOLE' not in tables.keys():
-        missing.append('(LOCA or HOLE)')
+    if "LOCA" not in tables.keys() and "HOLE" not in tables.keys():
+        missing.append("(LOCA or HOLE)")
 
     if missing:
-        desc = 'Required groups not present: ' + ', '.join(missing)
-        errors.append({'line': '-', 'group': '', 'desc': desc})
+        desc = "Required groups not present: " + ", ".join(missing)
+        errors.append({"line": "-", "group": "", "desc": desc})
 
     return errors
 
 
 def check_required_bgs_groups(tables: dict) -> List[dict]:
-    """ Groups must include GEOL for BGS """
+    """Groups must include GEOL for BGS"""
     errors = []
-    required = ['GEOL']
+    required = ["GEOL"]
     missing = []
 
     for group in required:
@@ -60,28 +61,28 @@ def check_required_bgs_groups(tables: dict) -> List[dict]:
             missing.append(group)
 
     if missing:
-        desc = 'Required BGS groups not present: ' + ', '.join(missing)
-        errors.append({'line': '-', 'group': '', 'desc': desc})
+        desc = "Required BGS groups not present: " + ", ".join(missing)
+        errors.append({"line": "-", "group": "", "desc": desc})
 
     return errors
 
 
 def check_spatial_referencing_system(tables: dict) -> List[dict]:
-    """ Spatial referencing system defined in LOCA_GREF, LOCA_LREF or LOCA_LLZ """
+    """Spatial referencing system defined in LOCA_GREF, LOCA_LREF or LOCA_LLZ"""
     ref_found = False
     errors = []
 
     try:
-        location = tables['LOCA']
-        for col in ['LOCA_GREF', 'LOCA_LREF', 'LOCA_LLZ']:
+        location = tables["LOCA"]
+        for col in ["LOCA_GREF", "LOCA_LREF", "LOCA_LLZ"]:
             try:
-                if all(location[col] != ''):
+                if all(location[col] != ""):
                     ref_found = True
             except KeyError:
                 pass
         if not ref_found:
-            desc = 'Spatial referencing system not in LOCA_GREF, LOCA_LREF or LOCA_LLZ'
-            errors.append({'line': '-', 'group': 'LOCA', 'desc': desc})
+            desc = "Spatial referencing system not in LOCA_GREF, LOCA_LREF or LOCA_LLZ"
+            errors.append({"line": "-", "group": "LOCA", "desc": desc})
     except KeyError:
         # LOCA not present, already checked in earlier rule
         pass
@@ -93,15 +94,19 @@ def check_drill_depth_present(tables: dict) -> List[dict]:
     """Drill depth value is populate and not zero"""
     errors = []
     try:
-        depth = tables['HDPH']
-        if any(depth['HDPH_TOP'].isna()):
+        depth = tables["HDPH"]
+        if any(depth["HDPH_TOP"].isna()):
             errors.append(
-                {'line': '-', 'group': 'HDPH',
-                 'desc': 'HDPH_TOP contains null values'})
-        if any(depth['HDPH_BASE'].isna()) or any(depth['HDPH_BASE'] == 0):
+                {"line": "-", "group": "HDPH", "desc": "HDPH_TOP contains null values"}
+            )
+        if any(depth["HDPH_BASE"].isna()) or any(depth["HDPH_BASE"] == 0):
             errors.append(
-                {'line': '-', 'group': 'HDPH',
-                 'desc': 'HDPH_BASE contains zero or null values'})
+                {
+                    "line": "-",
+                    "group": "HDPH",
+                    "desc": "HDPH_BASE contains zero or null values",
+                }
+            )
     except KeyError:
         # LOCA not present, already checked in earlier rule
         pass
@@ -113,19 +118,27 @@ def check_drill_depth_geol_record(tables: dict) -> List[dict]:
     """Drill depths have corresponding records in geol table"""
     errors = []
     try:
-        depth = tables['HDPH']
-        geology = tables['GEOL']
-        geology_ids = set(geology['LOCA_ID'].unique())
-        depth_ids = set(depth['LOCA_ID'].unique())
+        depth = tables["HDPH"]
+        geology = tables["GEOL"]
+        geology_ids = set(geology["LOCA_ID"].unique())
+        depth_ids = set(depth["LOCA_ID"].unique())
 
         if not_in_geology := depth_ids.difference(geology_ids):
             errors.append(
-                {'line': '-', 'group': 'HDPH',
-                 'desc': f'HDPH LOCA_IDs not in GEOL group ({not_in_geology})'})
+                {
+                    "line": "-",
+                    "group": "HDPH",
+                    "desc": f"HDPH LOCA_IDs not in GEOL group ({not_in_geology})",
+                }
+            )
         if not_in_depth := geology_ids.difference(depth_ids):
             errors.append(
-                {'line': '-', 'group': 'HDPH',
-                 'desc': f'GEOL LOCA_IDs not in HDPH group ({not_in_depth})'})
+                {
+                    "line": "-",
+                    "group": "HDPH",
+                    "desc": f"GEOL LOCA_IDs not in HDPH group ({not_in_depth})",
+                }
+            )
 
     except KeyError:
         # LOCA not present, already checked in earlier rule
@@ -150,16 +163,21 @@ def check_eastings_northings(tables: dict) -> List[dict]:
 
     for loca_id, row in location.iterrows():
         if not valid_row(row):
-            errors.append({
-                'line': row["line_no"], 'group': 'LOCA',
-                'desc': f'LOCA_NATE / LOCA_NATN contains zeros or null values ({loca_id})'
-            })
+            errors.append(
+                {
+                    "line": row["line_no"],
+                    "group": "LOCA",
+                    "desc": f"LOCA_NATE / LOCA_NATN contains zeros or null values ({loca_id})",
+                }
+            )
 
     # Load geometries - cast to MultiPolygon for correct type annotation
-    gb_outline = cast(MultiPolygon, gpd.read_file(GB_OUTLINE).loc[0, 'geometry'])
-    ni_outline = cast(MultiPolygon, gpd.read_file(NI_OUTLINE).loc[0, 'geometry'])
+    gb_outline = cast(MultiPolygon, gpd.read_file(GB_OUTLINE).loc[0, "geometry"])
+    ni_outline = cast(MultiPolygon, gpd.read_file(NI_OUTLINE).loc[0, "geometry"])
     uk_eea_outline_wgs84 = gpd.read_file(UK_EEA_OUTLINE)
-    uk_eea_outline = cast(MultiPolygon, uk_eea_outline_wgs84.to_crs('EPSG:27700').loc[0, 'geometry'])
+    uk_eea_outline = cast(
+        MultiPolygon, uk_eea_outline_wgs84.to_crs("EPSG:27700").loc[0, "geometry"]
+    )
 
     inside_uk_eea_mask = location.intersects(uk_eea_outline)
     inside_gb_mask = location.intersects(gb_outline)
@@ -170,44 +188,57 @@ def check_eastings_northings(tables: dict) -> List[dict]:
 
     for loca_id, row in location.loc[outside_uk_eea_and_ni_mask].iterrows():
         if valid_row(row):
-            errors.append({
-                'line': row["line_no"], 'group': 'LOCA',
-                'desc': f'NATE / NATN outside UK Offshore EEA or Onshore Northern Ireland boundary ({loca_id})'
-            })
+            errors.append(
+                {
+                    "line": row["line_no"],
+                    "group": "LOCA",
+                    "desc": f"NATE / NATN outside UK Offshore EEA or Onshore Northern Ireland boundary ({loca_id})",
+                }
+            )
 
     for loca_id, row in location.loc[outside_gb_and_ni_mask].iterrows():
         if valid_row(row):
-            errors.append({
-                'line': row["line_no"], 'group': 'LOCA',
-                'desc': f'NATE / NATN outside Onshore Great Britain or Northern Ireland boundaries ({loca_id})'
-            })
+            errors.append(
+                {
+                    "line": row["line_no"],
+                    "group": "LOCA",
+                    "desc": f"NATE / NATN outside Onshore Great Britain or Northern Ireland boundaries ({loca_id})",
+                }
+            )
 
     for loca_id, row in location.loc[inside_ni_mask].iterrows():
-        if row['LOCA_GREF']:
+        if row["LOCA_GREF"]:
             continue
         else:
-            errors.append({
-                'line': row["line_no"], 'group': 'LOCA',
-                'desc': f'NATE / NATN in Northern Ireland but LOCA_GREF undefined ({loca_id})'
-            })
+            errors.append(
+                {
+                    "line": row["line_no"],
+                    "group": "LOCA",
+                    "desc": f"NATE / NATN in Northern Ireland but LOCA_GREF undefined ({loca_id})",
+                }
+            )
 
     return errors
 
 
 def create_location_gpd(tables: dict[pd.DataFrame]) -> gpd.GeoDataFrame:
-    location: pd.DataFrame = tables['LOCA'].set_index('LOCA_ID')
-    location['geometry'] = list(zip(location['LOCA_NATE'], location['LOCA_NATN']))
-    location['geometry'] = location['geometry'].apply(Point)
-    location = gpd.GeoDataFrame(location, geometry='geometry', crs='EPSG:27700')
-    location['line_no'] = range(1, len(location) + 1)
+    location: pd.DataFrame = tables["LOCA"].set_index("LOCA_ID")
+    location["geometry"] = list(zip(location["LOCA_NATE"], location["LOCA_NATN"]))
+    location["geometry"] = location["geometry"].apply(Point)
+    location = gpd.GeoDataFrame(location, geometry="geometry", crs="EPSG:27700")
+    location["line_no"] = range(1, len(location) + 1)
 
     return location
 
 
 def valid_row(row):
-    """ A row is valid if its easting and northing are not null or zero"""
-    return not (pd.isna(row['LOCA_NATE']) or pd.isna(row['LOCA_NATN'])
-                or row['LOCA_NATE'] == 0 or row['LOCA_NATN'] == 0)
+    """A row is valid if its easting and northing are not null or zero"""
+    return not (
+        pd.isna(row["LOCA_NATE"])
+        or pd.isna(row["LOCA_NATN"])
+        or row["LOCA_NATE"] == 0
+        or row["LOCA_NATN"] == 0
+    )
 
 
 def check_locx_is_not_duplicate_of_other_column(tables: dict) -> List[dict]:
@@ -217,17 +248,26 @@ def check_locx_is_not_duplicate_of_other_column(tables: dict) -> List[dict]:
         """Return errors for rows that contain duplicates."""
         error = None
 
-        if row['LOCA_NATE'] == row['LOCA_LOCX'] or row['LOCA_NATN'] == row['LOCA_LOCY']:
-            error = {'line': '-', 'group': 'LOCA',
-                     'desc': f'LOCX / LOCY duplicates NATE / NATN ({row.name})'}
-        elif row['LOCA_LON'] == '' and row['LOCA_LAT'] == '':
+        if row["LOCA_NATE"] == row["LOCA_LOCX"] or row["LOCA_NATN"] == row["LOCA_LOCY"]:
+            error = {
+                "line": "-",
+                "group": "LOCA",
+                "desc": f"LOCX / LOCY duplicates NATE / NATN ({row.name})",
+            }
+        elif row["LOCA_LON"] == "" and row["LOCA_LAT"] == "":
             error = None
         else:
             try:
                 # If LON/LAT are in "d:m:s" format the cast will fail, which means no duplicates
-                if (float(row['LOCA_LON']) == row['LOCA_LOCX'] or float(row['LOCA_LAT']) == row['LOCA_LOCY']):
-                    error = {'line': '-', 'group': 'LOCA',
-                             'desc': f'LOCX / LOCY duplicates LON / LAT ({row.name})'}
+                if (
+                    float(row["LOCA_LON"]) == row["LOCA_LOCX"]
+                    or float(row["LOCA_LAT"]) == row["LOCA_LOCY"]
+                ):
+                    error = {
+                        "line": "-",
+                        "group": "LOCA",
+                        "desc": f"LOCX / LOCY duplicates LON / LAT ({row.name})",
+                    }
             except ValueError:
                 pass
 
@@ -235,7 +275,7 @@ def check_locx_is_not_duplicate_of_other_column(tables: dict) -> List[dict]:
 
     # Apply check to data
     try:
-        location = tables['LOCA'].set_index('LOCA_ID')
+        location = tables["LOCA"].set_index("LOCA_ID")
         result = location.apply(check_for_duplicates, axis=1)
         errors = result[result.notnull()].to_list()
     except KeyError:
@@ -250,27 +290,35 @@ def check_loca_id_references_are_valid(tables: dict) -> List[dict]:
     errors = []
     # Extract IDs from LOCA table
     try:
-        loca_ids = tables['LOCA']['LOCA_ID'].unique()
+        loca_ids = tables["LOCA"]["LOCA_ID"].unique()
     except KeyError:
         # LOCA not present, already checked in earlier rule
         return errors
 
-    tables_referencing_loca = [table_name for table_name in tables.keys()
-                               if 'LOCA_ID' in tables[table_name].columns
-                               and table_name != 'LOCA']
+    tables_referencing_loca = [
+        table_name
+        for table_name in tables.keys()
+        if "LOCA_ID" in tables[table_name].columns and table_name != "LOCA"
+    ]
 
     # Check each table for valid references
     for table in tables_referencing_loca:
         # define check function here because value of `table` changes.
         def check_loca_references(row):
             # table, loca_ids are taken from enclosing scope
-            if not row['LOCA_ID']:
+            if not row["LOCA_ID"]:
                 # Record number is 0-indexed in name column
-                error = {'line': '-', 'group': table,
-                         'desc': f'Record {row.name + 1} has missing LOCA_ID'}
-            elif row['LOCA_ID'] not in loca_ids:
-                error = {'line': '-', 'group': table,
-                         'desc': f'LOCA_ID ({row["LOCA_ID"]}) is not found in LOCA group'}
+                error = {
+                    "line": "-",
+                    "group": table,
+                    "desc": f"Record {row.name + 1} has missing LOCA_ID",
+                }
+            elif row["LOCA_ID"] not in loca_ids:
+                error = {
+                    "line": "-",
+                    "group": table,
+                    "desc": f"LOCA_ID ({row['LOCA_ID']}) is not found in LOCA group",
+                }
             else:
                 error = None
 
@@ -285,49 +333,51 @@ def check_loca_id_references_are_valid(tables: dict) -> List[dict]:
 
 def check_sample_referencing(tables: dict) -> List[dict]:
     """
-       If a SAMP group exists it must:
-        - have an identifier SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF)
-        - all identifiers must be unique
+    If a SAMP group exists it must:
+     - have an identifier SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF)
+     - all identifiers must be unique
 
-       For all child groups see bgs_group_id_keys:
-        - have an identifier matching 'samp_id' or 'comp_id' for that group
-        - all identifiers must be unique
-        - the identifier SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF)
-          must appear in the SAMP group
+    For all child groups see bgs_group_id_keys:
+     - have an identifier matching 'samp_id' or 'comp_id' for that group
+     - all identifiers must be unique
+     - the identifier SAMP_ID or (LOCA_ID,SAMP_TOP,SAMP_TYPE,SAMP_REF)
+       must appear in the SAMP group
     """
 
     def values_all_valid(row, id_keys):
-        """ Return true if all the values are not null and not empty """
+        """Return true if all the values are not null and not empty"""
         for id_key in id_keys:
-            if row[id_key] is None or row[id_key] == '':
+            if row[id_key] is None or row[id_key] == "":
                 return False
         return True
 
     def id_from_keys(row, id_keys):
-        """ Concatenate values to create id """
+        """Concatenate values to create id"""
         values = [str(row[id_key]) for id_key in id_keys]
-        id_ = ','.join(values)
+        id_ = ",".join(values)
         return id_
 
     def clean_ids(id_pairs: pd.DataFrame):
         #  Remove null pairs and fill blank sample ids with composite ids
         rows_without_any_nulls = id_pairs.notna().any(axis=1)
         id_pairs = id_pairs.loc[rows_without_any_nulls].copy()
-        id_pairs['samp_id'] = id_pairs['samp_id'].fillna(id_pairs['comp_id'])
+        id_pairs["samp_id"] = id_pairs["samp_id"].fillna(id_pairs["comp_id"])
         return id_pairs
 
     def id_pair(row, group):
         id_keys = get_group_id_keys(group)
 
         samp_id = None
-        if (set(id_keys['samp_id_keys']) <= set(row.keys())
-                and values_all_valid(row, id_keys['samp_id_keys'])):
-            samp_id = id_from_keys(row, id_keys['samp_id_keys'])
+        if set(id_keys["samp_id_keys"]) <= set(row.keys()) and values_all_valid(
+            row, id_keys["samp_id_keys"]
+        ):
+            samp_id = id_from_keys(row, id_keys["samp_id_keys"])
 
         comp_id = None
-        if (set(id_keys['comp_id_keys']) <= set(row.keys())
-                and values_all_valid(row, id_keys['comp_id_keys'])):
-            comp_id = id_from_keys(row, id_keys['comp_id_keys'])
+        if set(id_keys["comp_id_keys"]) <= set(row.keys()) and values_all_valid(
+            row, id_keys["comp_id_keys"]
+        ):
+            comp_id = id_from_keys(row, id_keys["comp_id_keys"])
         return pd.Series([samp_id, comp_id])
 
     def child_consistency(samp_ids, tables: dict) -> List[dict]:
@@ -335,27 +385,36 @@ def check_sample_referencing(tables: dict) -> List[dict]:
         children = []
         for group in tables.keys():
             id_keys = get_group_id_keys(group)
-            if ((set(id_keys['samp_id_keys']) <= set(tables[group].columns)
-                    or set(id_keys['comp_id_keys']) <= set(tables[group].columns))
-                    and group != 'SAMP'):
+            if (
+                set(id_keys["samp_id_keys"]) <= set(tables[group].columns)
+                or set(id_keys["comp_id_keys"]) <= set(tables[group].columns)
+            ) and group != "SAMP":
                 children.append(group)
 
         for group in children:
             child_id_pairs = tables[group].apply(id_pair, axis=1, args=(group,))
-            child_id_pairs.columns = ['samp_id', 'comp_id']
+            child_id_pairs.columns = ["samp_id", "comp_id"]
             errors, child_id_pairs = internal_consistency(group, child_id_pairs)
 
             # Parent ids refer to keys used by SAMP with extra fields
-            parent_id_pairs = tables[group].apply(id_pair, axis=1, args=('SAMP',))
-            parent_id_pairs.columns = ['samp_id', 'comp_id']
+            parent_id_pairs = tables[group].apply(id_pair, axis=1, args=("SAMP",))
+            parent_id_pairs.columns = ["samp_id", "comp_id"]
             parent_id_pairs = clean_ids(parent_id_pairs)
 
-            if no_parent_ids := sorted(list(set(parent_id_pairs['samp_id']).difference(set(samp_ids)))):
+            if no_parent_ids := sorted(
+                list(set(parent_id_pairs["samp_id"]).difference(set(samp_ids)))
+            ):
                 errors.append(
-                    {'line': '-', 'group': f'{group}',
-                     'desc': (f"No parent id: {','.join(id_keys['samp_id_keys'])} or "
-                              f"({','.join(id_keys['comp_id_keys'])}) "
-                              f"not in SAMP group ({no_parent_ids})")})
+                    {
+                        "line": "-",
+                        "group": f"{group}",
+                        "desc": (
+                            f"No parent id: {','.join(id_keys['samp_id_keys'])} or "
+                            f"({','.join(id_keys['comp_id_keys'])}) "
+                            f"not in SAMP group ({no_parent_ids})"
+                        ),
+                    }
+                )
         return errors
 
     def internal_consistency(group: str, id_pairs: pd.DataFrame):
@@ -365,38 +424,54 @@ def check_sample_referencing(tables: dict) -> List[dict]:
         # Check for missing IDs
         for row_id in id_pairs[id_pairs.isna().all(axis=1)].index.to_list():
             errors.append(
-                {'line': '-', 'group': f'{group}',
-                 'desc': f"Record {row_id + 1} is missing either "
-                         f"{','.join(id_keys['samp_id_keys'])} or "
-                         f"({','.join(id_keys['comp_id_keys'])})"})
+                {
+                    "line": "-",
+                    "group": f"{group}",
+                    "desc": f"Record {row_id + 1} is missing either "
+                    f"{','.join(id_keys['samp_id_keys'])} or "
+                    f"({','.join(id_keys['comp_id_keys'])})",
+                }
+            )
 
         id_pairs = clean_ids(id_pairs)
 
         # Check for duplicate IDs
-        for samp_id in sorted(list(set(id_pairs[id_pairs['samp_id'].duplicated()]['samp_id']))):
+        for samp_id in sorted(
+            list(set(id_pairs[id_pairs["samp_id"].duplicated()]["samp_id"]))
+        ):
             errors.append(
-                {'line': '-', 'group': f'{group}',
-                 'desc': (f"Duplicate sample id {samp_id}: {','.join(id_keys['samp_id_keys'])} "
-                          f"or ({','.join(id_keys['comp_id_keys'])}) "
-                          f"must be unique")})
+                {
+                    "line": "-",
+                    "group": f"{group}",
+                    "desc": (
+                        f"Duplicate sample id {samp_id}: {','.join(id_keys['samp_id_keys'])} "
+                        f"or ({','.join(id_keys['comp_id_keys'])}) "
+                        f"must be unique"
+                    ),
+                }
+            )
         # remove duplicate ids
-        id_pairs = id_pairs[~ id_pairs['samp_id'].duplicated()]
+        id_pairs = id_pairs[~id_pairs["samp_id"].duplicated()]
 
         # Check for inconsistent IDs
-        for samp_id in id_pairs[id_pairs['comp_id'].duplicated()]['samp_id']:
+        for samp_id in id_pairs[id_pairs["comp_id"].duplicated()]["samp_id"]:
             errors.append(
-                {'line': '-', 'group': f'{group}',
-                 'desc': f'Inconsistent id {samp_id}: references duplicate component data'})
+                {
+                    "line": "-",
+                    "group": f"{group}",
+                    "desc": f"Inconsistent id {samp_id}: references duplicate component data",
+                }
+            )
 
         return errors, id_pairs
 
     # Check data
     try:
-        sample = tables['SAMP']
-        samp_id_pairs = sample.apply(id_pair, axis=1, args=('SAMP',))
-        samp_id_pairs.columns = ['samp_id', 'comp_id']
-        errors, samp_id_pairs = internal_consistency('SAMP', samp_id_pairs)
-        child_errors = child_consistency(samp_id_pairs['samp_id'], tables)
+        sample = tables["SAMP"]
+        samp_id_pairs = sample.apply(id_pair, axis=1, args=("SAMP",))
+        samp_id_pairs.columns = ["samp_id", "comp_id"]
+        errors, samp_id_pairs = internal_consistency("SAMP", samp_id_pairs)
+        child_errors = child_consistency(samp_id_pairs["samp_id"], tables)
         errors.extend(child_errors)
     except KeyError:
         # group not in group list
@@ -406,13 +481,13 @@ def check_sample_referencing(tables: dict) -> List[dict]:
 
 
 BGS_RULES = {
-    'BGS data validation: Required Groups': check_required_groups,
-    'BGS data validation: Required BGS Groups': check_required_bgs_groups,
-    'BGS data validation: Spatial Referencing': check_spatial_referencing_system,
-    'BGS data validation: Eastings/Northings': check_eastings_northings,
-    'BGS data validation: Drill Depth Present': check_drill_depth_present,
-    'BGS data validation: Drill Depth GEOL Record': check_drill_depth_geol_record,
-    'BGS data validation: LOCA_LOCX is not duplicate of other column': check_locx_is_not_duplicate_of_other_column,
-    'BGS data validation: LOCA_ID references': check_loca_id_references_are_valid,
-    'BGS data validation: Sample Referencing': check_sample_referencing,
+    "BGS data validation: Required Groups": check_required_groups,
+    "BGS data validation: Required BGS Groups": check_required_bgs_groups,
+    "BGS data validation: Spatial Referencing": check_spatial_referencing_system,
+    "BGS data validation: Eastings/Northings": check_eastings_northings,
+    "BGS data validation: Drill Depth Present": check_drill_depth_present,
+    "BGS data validation: Drill Depth GEOL Record": check_drill_depth_geol_record,
+    "BGS data validation: LOCA_LOCX is not duplicate of other column": check_locx_is_not_duplicate_of_other_column,
+    "BGS data validation: LOCA_ID references": check_loca_id_references_are_valid,
+    "BGS data validation: Sample Referencing": check_sample_referencing,
 }

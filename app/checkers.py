@@ -2,6 +2,7 @@
 checker functions check a file against the rules.  They also catch errors
 to do with opening the files.
 """
+
 import logging
 from pathlib import Path
 import re
@@ -20,58 +21,71 @@ def check_ags(filename: Path, standard_AGS4_dictionary: Optional[str] = None) ->
     if standard_AGS4_dictionary:
         dictionary_file = Path(standard_AGS4_dictionary).name
     else:
-        dictionary_file = 'None supplied'
-    logger.info("Checking %s against AGS rules (Dictionary: %s).",
-                filename.name, dictionary_file)
+        dictionary_file = "None supplied"
+    logger.info(
+        "Checking %s against AGS rules (Dictionary: %s).",
+        filename.name,
+        dictionary_file,
+    )
 
     # Get error information from file
     try:
-        errors = AGS4.check_file(filename,
-                                 standard_AGS4_dictionary=standard_AGS4_dictionary)
+        errors = AGS4.check_file(
+            filename, standard_AGS4_dictionary=standard_AGS4_dictionary
+        )
         error_count, warnings_count, fyi_count = AGS4.count_errors(errors)
 
         try:
-            metadata = errors.pop('Metadata')  # This also removes it from returned errors
-            dictionary = [d['desc'] for d in metadata
-                          if d['line'] == 'Dictionary'][0]
+            metadata = errors.pop(
+                "Metadata"
+            )  # This also removes it from returned errors
+            dictionary = [d["desc"] for d in metadata if d["line"] == "Dictionary"][0]
         except (KeyError, IndexError):
             # 'Metadata' is not created for some files with errors
             # or 'Dictionary' is not set in Metadata'
-            dictionary = ''
+            dictionary = ""
 
     except UnicodeDecodeError as err:
-        line_no = len(err.object[:err.end].split(b'\n'))
+        line_no = len(err.object[: err.end].split(b"\n"))
         description = f"UnicodeDecodeError: {err.reason}"
-        errors = {'File read error': [{'line': line_no, 'group': '', 'desc': description}]}
+        errors = {
+            "File read error": [{"line": line_no, "group": "", "desc": description}]
+        }
         error_count = 1
         warnings_count = fyi_count = 0
-        dictionary = ''
+        dictionary = ""
 
-    summary = errors.pop('Summary of data', [])
+    summary = errors.pop("Summary of data", [])
     additional_metadata = convert_to_additional_metadata(summary)
 
-    return dict(checker=f'python_ags4 v{python_ags4.__version__}',
-                errors=errors, dictionary=dictionary,
-                error_count=error_count, warnings_count=warnings_count,
-                fyi_count=fyi_count, additional_metadata=additional_metadata)
+    return dict(
+        checker=f"python_ags4 v{python_ags4.__version__}",
+        errors=errors,
+        dictionary=dictionary,
+        error_count=error_count,
+        warnings_count=warnings_count,
+        fyi_count=fyi_count,
+        additional_metadata=additional_metadata,
+    )
 
 
 def convert_to_additional_metadata(summary: list[dict]) -> dict:
     if not summary:
         return {}
 
-    descriptions = [item['desc'].replace('group present?', 'group present:')
-                    for item in summary]
+    descriptions = [
+        item["desc"].replace("group present?", "group present:") for item in summary
+    ]
 
-    additional_metadata = {'bgs_projects': None}
+    additional_metadata = {"bgs_projects": None}
     for text in descriptions:
-        if 'groups identified in file' in text:
+        if "groups identified in file" in text:
             additional_metadata["bgs_all_groups"] = text
-        elif 'DICT' in text:
+        elif "DICT" in text:
             additional_metadata["bgs_dict"] = text
-        elif 'FILE' in text:
+        elif "FILE" in text:
             additional_metadata["bgs_file"] = text
-        elif 'LOCA' in text:
+        elif "LOCA" in text:
             additional_metadata["bgs_loca_rows"] = text
 
     return additional_metadata
@@ -90,7 +104,7 @@ def check_bgs(filename: Path, **kwargs) -> dict:
     tables, load_error, ags4_errors = load_tables_reporting_errors(filename)
 
     if load_error:
-        errors['File read error'] = [{'line': '-', 'group': '', 'desc': load_error}]
+        errors["File read error"] = [{"line": "-", "group": "", "desc": load_error}]
         error_count = 1
     else:
         errors.update(ags4_errors)
@@ -106,10 +120,14 @@ def check_bgs(filename: Path, **kwargs) -> dict:
                 errors[rule] = result
                 error_count += 1
 
-    return dict(checker=f'bgs_rules v{bgs_rules_version}',
-                errors=errors, error_count=error_count,
-                warnings_count=0, fyi_count=0,
-                additional_metadata=bgs_metadata)
+    return dict(
+        checker=f"bgs_rules v{bgs_rules_version}",
+        errors=errors,
+        error_count=error_count,
+        warnings_count=0,
+        fyi_count=0,
+        additional_metadata=bgs_metadata,
+    )
 
 
 def load_tables_reporting_errors(filename):
@@ -137,22 +155,26 @@ def load_tables_reporting_errors(filename):
 def generate_bgs_metadata(tables: Dict[str, pd.DataFrame]) -> dict:
     """Generate additional metadata from groups."""
     try:
-        projects = tables['PROJ'].apply(lambda row: f"{row['PROJ_ID']} ({row['PROJ_NAME']})", axis=1).to_list()
+        projects = (
+            tables["PROJ"]
+            .apply(lambda row: f"{row['PROJ_ID']} ({row['PROJ_NAME']})", axis=1)
+            .to_list()
+        )
     except KeyError:
         projects = []
 
     try:
-        loca_rows = len(tables['LOCA'][tables['LOCA']['HEADING'] == 'DATA'])
+        loca_rows = len(tables["LOCA"][tables["LOCA"]["HEADING"] == "DATA"])
     except KeyError:
         loca_rows = 0
 
     groups = tables.keys()
     bgs_metadata = {
-        'bgs_all_groups': f'{len(groups)} groups identified in file: {" ".join(groups)}',
-        'bgs_file': f'Optional FILE group present: {"FILE" in groups}',
-        'bgs_dict': f'Optional DICT group present: {"DICT" in groups}',
-        'bgs_loca_rows': f'{loca_rows} data row(s) in LOCA group',
-        'bgs_projects': f'{len(projects)} projects found: {"; ".join(projects)}',
+        "bgs_all_groups": f"{len(groups)} groups identified in file: {' '.join(groups)}",
+        "bgs_file": f"Optional FILE group present: {'FILE' in groups}",
+        "bgs_dict": f"Optional DICT group present: {'DICT' in groups}",
+        "bgs_loca_rows": f"{loca_rows} data row(s) in LOCA group",
+        "bgs_projects": f"{len(projects)} projects found: {'; '.join(projects)}",
     }
     return bgs_metadata
 
@@ -162,7 +184,7 @@ def load_ags4_as_numeric(filename: Path) -> Tuple[dict, dict, List[dict]]:
     tables, headings = AGS4.AGS4_to_dataframe(filename)
 
     # Check the TYPE of coordinate in LOCA
-    coord_columns = ['LOCA_NATE', 'LOCA_NATN', 'LOCA_LOCX', 'LOCA_LOCY']
+    coord_columns = ["LOCA_NATE", "LOCA_NATN", "LOCA_LOCX", "LOCA_LOCY"]
     errors = get_coord_column_type_errors(tables, coord_columns)
 
     # Convert tables to numeric data for analysis
@@ -173,7 +195,7 @@ def load_ags4_as_numeric(filename: Path) -> Tuple[dict, dict, List[dict]]:
     if tables:
         for column in coord_columns:
             try:
-                tables['LOCA'][column] = pd.to_numeric(tables['LOCA'][column])
+                tables["LOCA"][column] = pd.to_numeric(tables["LOCA"][column])
             except KeyError:
                 # Not all files have all columns
                 pass
@@ -187,7 +209,7 @@ def get_coord_column_type_errors(tables: dict, coord_columns: List[str]) -> dict
     return errors for those that don't.
     """
     try:
-        loca = tables['LOCA']
+        loca = tables["LOCA"]
     except KeyError:
         # If LOCA doesn't exist, other errors are returned elsewhere
         return {}
@@ -195,17 +217,22 @@ def get_coord_column_type_errors(tables: dict, coord_columns: List[str]) -> dict
     bad_columns = []
     for column in coord_columns:
         try:
-            type_ = loca.loc[loca['HEADING'] == 'TYPE', column].tolist()[0]
-            if not re.search(r'(DP|MC|SF|SCI)', type_):
+            type_ = loca.loc[loca["HEADING"] == "TYPE", column].tolist()[0]
+            if not re.search(r"(DP|MC|SF|SCI)", type_):
                 bad_columns.append(f"{column} ({type_})")
         except KeyError:
             # Ignore columns that don't exist
             pass
 
     if bad_columns:
-        error_message = f"Coordinate columns have non-numeric TYPE: {', '.join(bad_columns)}"
-        errors = {"BGS data validation: Non-numeric coordinate types":
-                  [{'line': '-', 'group': 'LOCA', 'desc': error_message}]}
+        error_message = (
+            f"Coordinate columns have non-numeric TYPE: {', '.join(bad_columns)}"
+        )
+        errors = {
+            "BGS data validation: Non-numeric coordinate types": [
+                {"line": "-", "group": "LOCA", "desc": error_message}
+            ]
+        }
     else:
         errors = {}
 

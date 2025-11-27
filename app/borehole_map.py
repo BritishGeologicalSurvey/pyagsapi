@@ -2,6 +2,7 @@
 Functions used to generate a map of borehole locations by extracting a GeoJSON
 representation of their metadata from the AGS files.
 """
+
 from copy import copy
 import json
 from functools import reduce
@@ -38,31 +39,32 @@ def extract_geojson(filepath: Path) -> dict:
 
     # Add project columns and drop unwanted columns
     try:
-        project: pd.DataFrame = tables['PROJ']
+        project: pd.DataFrame = tables["PROJ"]
     except KeyError:
         msg = f"ERROR: PROJ group missing from {filepath}"
         raise ValueError(msg)
 
     for column in project.columns:
-        if column.startswith('PROJ_'):
+        if column.startswith("PROJ_"):
             # We assume that each file contains just one project
             location[column] = project.loc[0, column]
 
     try:
-        location['PROJ_FILE_FSET'] = project.loc[0, 'FILE_FSET']
-        location.rename(columns={'FILE_FSET': 'LOCA_FILE_FSET'}, inplace=True)
+        location["PROJ_FILE_FSET"] = project.loc[0, "FILE_FSET"]
+        location.rename(columns={"FILE_FSET": "LOCA_FILE_FSET"}, inplace=True)
     except KeyError:
-        logger.debug("No FILE_FSET for either/both PROJ and LOCA groups for %s",
-                     filepath)
-    del location['HEADING']
+        logger.debug(
+            "No FILE_FSET for either/both PROJ and LOCA groups for %s", filepath
+        )
+    del location["HEADING"]
 
     # Create new ID from project and location IDs
     location.reset_index(inplace=True)
-    location['ID'] = location['PROJ_ID'].str.cat(location['LOCA_ID'], sep='.')
-    location.set_index('ID', inplace=True)
+    location["ID"] = location["PROJ_ID"].str.cat(location["LOCA_ID"], sep=".")
+    location.set_index("ID", inplace=True)
 
     # Reproject to WGS84
-    location = location.to_crs('EPSG:4326')
+    location = location.to_crs("EPSG:4326")
 
     # Return dict representation of geojson
     return json.loads(location.to_json())
@@ -80,10 +82,10 @@ def concantenate_feature_collections(feature_collections: list[dict]) -> dict:
         lists and dictionaries are mutable and we don't want to change the
         input values.
         """
-        new_features: list[dict] = copy(first_collection['features'])
-        new_features.extend(next_collection['features'])
+        new_features: list[dict] = copy(first_collection["features"])
+        new_features.extend(next_collection["features"])
         new_collection = first_collection.copy()
-        new_collection['features'] = new_features
+        new_collection["features"] = new_features
         return new_collection
 
     return reduce(join_two, feature_collections)

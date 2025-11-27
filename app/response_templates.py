@@ -1,7 +1,8 @@
 # Text templates used to build responses.
 from jinja2 import Template
 
-PLAIN_TEXT_TEMPLATE = Template("""
+PLAIN_TEXT_TEMPLATE = Template(
+    """
 {{ filename }}: {{ message }}
 
 # Metadata
@@ -37,4 +38,5 @@ Line: {{ item.line }} - {{ item.desc }}
 {%- endfor %}
 {% endfor %}
 {%- endif -%}
-""".strip())
+""".strip()
+)

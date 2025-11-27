@@ -10,12 +10,14 @@ from app.validation import _prepare_response_metadata
 logger = logging.getLogger(__name__)
 
 
-def convert(filename: Path, results_dir: Path, sorting_strategy: Optional[str] = None) -> Tuple[Optional[Path], dict]:
+def convert(
+    filename: Path, results_dir: Path, sorting_strategy: Optional[str] = None
+) -> Tuple[Optional[Path], dict]:
     """
     Convert filename between .ags and .xlsx.  Write output to file in
     results_dir and return path alongside job status data in dictionary."""
     # Prepare variables and directory
-    new_extension = '.ags' if filename.suffix == '.xlsx' else '.xlsx'
+    new_extension = ".ags" if filename.suffix == ".xlsx" else ".xlsx"
     converted_file = results_dir / (filename.stem + new_extension)
     logger.info("Converting %s to %s", filename.name, converted_file.name)
     if not results_dir.exists():
@@ -26,9 +28,11 @@ def convert(filename: Path, results_dir: Path, sorting_strategy: Optional[str] =
 
     # Do the conversion
     success = False
-    if filename.suffix.lower() == '.ags':
+    if filename.suffix.lower() == ".ags":
         try:
-            AGS4.AGS4_to_excel(filename, converted_file, sorting_strategy=sorting_strategy)
+            AGS4.AGS4_to_excel(
+                filename, converted_file, sorting_strategy=sorting_strategy
+            )
             success = True
         except IndexError:
             error_message = "ERROR: File does not have AGS4 format layout"
@@ -39,7 +43,7 @@ def convert(filename: Path, results_dir: Path, sorting_strategy: Optional[str] =
             error_message = "ERROR: File contains duplicate headers"
         except AGS4.AGS4Error as err:
             error_message = str(err)
-    elif filename.suffix == '.xlsx':
+    elif filename.suffix == ".xlsx":
         try:
             AGS4.excel_to_AGS4(filename, converted_file)
             if converted_file.exists():
@@ -58,11 +62,13 @@ def convert(filename: Path, results_dir: Path, sorting_strategy: Optional[str] =
 
     # Update response and clean failed files
     if success:
-        response['message'] = f"SUCCESS: {filename.name} converted to {converted_file.name}"
-        response['valid'] = True
+        response["message"] = (
+            f"SUCCESS: {filename.name} converted to {converted_file.name}"
+        )
+        response["valid"] = True
     else:
-        response['message'] = error_message
-        response['valid'] = False
+        response["message"] = error_message
+        response["valid"] = False
         converted_file.unlink(missing_ok=True)
         converted_file = None
 
