@@ -1,5 +1,6 @@
 """Tests for API responses."""
 from io import BytesIO
+import re
 import zipfile
 
 import pytest
@@ -46,6 +47,37 @@ def test_get_ags_exporter_by_polygon(client, count_only):
                 assert bgs_loca_id in metadata_text
             for bgs_proj_id in bgs_proj_ids:
                 assert f'Project : {bgs_proj_id}' in metadata_text
+
+
+@pytest.mark.xfail(IN_GITHUB_ACTIONS, reason="Upstream URL not available from Github Actions")
+def test_get_ags_exporter_by_polygon_with_more_than_10_polygons(client):
+    # Arrange
+    # There should be 28 boreholes in this area, this should pass for a limit of 50,
+    # and it should fail for a limit of 10
+    polygon = 'POLYGON((-3.946 56.065,-3.640 56.065,-3.640 55.966,-3.946 55.966,-3.946 56.065))'
+    query = f'{API_VERSION}/ags_export_by_polygon/?polygon={polygon}'
+    ags_metadata_file_name = 'FILE/BGSFileSet01/BGS_download_metadata.txt'
+
+    # Act
+    with client as ac:
+        response = ac.get(query)
+
+    # Assert
+    assert response.status_code == 200
+    assert response.headers["Content-Disposition"] == 'attachment; filename="boreholes.zip"'
+    assert response.headers["Content-Type"] == "application/x-zip-compressed"
+    assert len(response.content) > 0
+
+    assert zipfile.is_zipfile(BytesIO(response.content))
+    with zipfile.ZipFile(BytesIO(response.content)) as ags_zip:
+        # Check that metadata.txt lists 28 loca IDs
+        with ags_zip.open(ags_metadata_file_name) as metadata_file:
+            # find the pattern 20200205093727287902;20200205093727287903;2020...
+            regex = r'\d+(;\d+)+'
+            metadata_text = metadata_file.read().decode()
+            match = re.search(regex, metadata_text)
+            assert match
+            assert len(match.group(0).split(';')) == 28
 
 
 @pytest.mark.parametrize('polygon, count', [
