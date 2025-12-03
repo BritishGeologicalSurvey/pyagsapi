@@ -67,7 +67,7 @@ def ags_export_by_polygon(
     except shapely.errors.GEOSException:
         raise HTTPException(status_code=422, detail="Invalid polygon")
 
-    url = BOREHOLE_INDEX_URL.format(polygon=polygon)
+    url = BOREHOLE_INDEX_URL.format(polygon=polygon, borehole_export_limit=BOREHOLE_EXPORT_LIMIT)
 
     try:
         response = requests.get(url, timeout=10)
