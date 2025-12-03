@@ -15,7 +15,7 @@ BOREHOLE_VIEWER_URL = "https://gwbv.bgs.ac.uk/GWBV/viewborehole?loca_id={bgs_loc
 BOREHOLE_EXPORT_URL = "https://gwbv.bgs.ac.uk/ags_export?loca_ids={bgs_loca_id}"
 BOREHOLE_INDEX_URL = (
     "https://ogcapi.bgs.ac.uk/collections/agsboreholeindex/items?f=json"
-    "&properties=bgs_loca_id&filter=INTERSECTS(shape,{polygon})&limit=10"
+    "&properties=bgs_loca_id&filter=INTERSECTS(shape,{polygon})&limit=50"
 )
 
 log_responses = dict(error_responses)
