@@ -44,7 +44,6 @@ nav:
     - main.py: main.md
     - validation.py: validation.md
     - bgs_rules.py: bgs_rules.md
-    - routes.py: routes.md
     - conversion.py: conversion.md
     - checkers.py: checkers.md
-    - errors.py: errors.md
+    - routes.py: routes.md
