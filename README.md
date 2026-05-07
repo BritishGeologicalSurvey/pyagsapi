@@ -38,7 +38,7 @@ BGS Deployed Instance available at: [https://agsapi.bgs.ac.uk/](https://agsapi.b
 The simplest way to run the validation service is via Docker:
 
 ```
-docker run -p 80:80 --name pyagsapi ghcr.io/britishgeologicalsurvey/pyagsapi:latest
+docker run -p 80:8000 --name pyagsapi ghcr.io/britishgeologicalsurvey/pyagsapi:latest
 ```
 
 Navigate to [http://localhost](http://localhost) to see the landing page or [http://localhost/docs](http://localhost/docs) to see the API documentation via the Swagger interface.
@@ -50,7 +50,7 @@ The `latest` tag reflects the current state of the `main` branch of the reposito
 If you are running behind a proxy, you may need to set the `root_path` using the `PYAGSAPI_ROOT_PATH` environment variable:
 
 ```
-docker run -p 80:80 -e PYAGSAPI_ROOT_PATH="/pyagsapi" --name pyagsapi ghcr.io/britishgeologicalsurvey/pyagsapi
+docker run -p 80:8000 -e PYAGSAPI_ROOT_PATH="/pyagsapi" --name pyagsapi ghcr.io/britishgeologicalsurvey/pyagsapi
 ```
 
 This will ensure that all references to `self` in responses, and all Swagger and REDOC documentation, include the correct path.
