@@ -13,16 +13,16 @@ annotated-doc==0.0.4
     #   typer
 annotated-types==0.7.0
     # via pydantic
-anyio==4.13.0
+anyio==4.14.0
     # via
     #   httpx
     #   starlette
     #   watchfiles
-beautifulsoup4==4.14.3
+beautifulsoup4==4.15.0
     # via libpysal
 branca==0.8.2
     # via folium
-certifi==2026.5.20
+certifi==2026.6.17
     # via
     #   httpcore
     #   httpx
@@ -55,11 +55,11 @@ email-validator==2.3.0
     #   pydantic
 et-xmlfile==2.0.0
     # via openpyxl
-fastapi[standard]==0.136.3
+fastapi[standard]==0.138.0
     # via -r requirements.in
-fastapi-cli[standard]==0.0.24
+fastapi-cli[standard]==0.0.27
     # via fastapi
-fastapi-cloud-cli==0.19.0
+fastapi-cloud-cli==0.20.0
     # via fastapi-cli
 fastar==0.11.0
     # via
@@ -82,7 +82,7 @@ geopandas[all]==1.1.3
     #   pointpats
 geopy==2.4.1
     # via geopandas
-greenlet==3.5.1
+greenlet==3.5.2
     # via sqlalchemy
 h11==0.16.0
     # via
@@ -121,17 +121,17 @@ markdown-it-py==4.2.0
     # via rich
 markupsafe==3.0.3
     # via jinja2
-matplotlib==3.10.9
+matplotlib==3.11.0
     # via
     #   geopandas
     #   pointpats
 mdurl==0.1.2
     # via markdown-it-py
-narwhals==2.22.0
+narwhals==2.22.1
     # via scikit-learn
 networkx==3.6.1
     # via mapclassify
-numpy==2.4.6
+numpy==2.5.0
     # via
     #   -r requirements.in
     #   contourpy
@@ -166,7 +166,7 @@ pillow==12.2.0
     # via matplotlib
 platformdirs==4.10.0
     # via libpysal
-pointpats==2.5.5
+pointpats==2.6.0
     # via geopandas
 psycopg[binary]==3.3.4
     # via geopandas
@@ -185,7 +185,7 @@ pydantic-core==2.46.4
     # via pydantic
 pydantic-extra-types==2.11.1
     # via fastapi
-pydantic-settings==2.14.1
+pydantic-settings==2.14.2
     # via fastapi
 pygments==2.20.0
     # via rich
@@ -205,7 +205,7 @@ python-dotenv==1.2.2
     # via
     #   pydantic-settings
     #   uvicorn
-python-multipart==0.0.30
+python-multipart==0.0.32
     # via fastapi
 pytz==2026.2
     # via pandas
@@ -221,7 +221,7 @@ rich==13.9.4
     #   python-ags4
     #   rich-toolkit
     #   typer
-rich-toolkit==0.20.0
+rich-toolkit==0.20.1
     # via
     #   fastapi-cli
     #   fastapi-cloud-cli
@@ -231,14 +231,14 @@ scikit-learn==1.9.0
     # via
     #   libpysal
     #   mapclassify
-scipy==1.17.1
+scipy==1.18.0
     # via
     #   geopandas
     #   libpysal
     #   mapclassify
     #   pointpats
     #   scikit-learn
-sentry-sdk==2.61.1
+sentry-sdk==2.63.0
     # via fastapi-cloud-cli
 shapely==2.1.2
     # via
@@ -254,11 +254,11 @@ six==1.17.0
     # via python-dateutil
 soupsieve==2.8.4
     # via beautifulsoup4
-sqlalchemy==2.0.50
+sqlalchemy==2.0.51
     # via
     #   geoalchemy2
     #   geopandas
-starlette==1.2.1
+starlette==1.3.1
     # via fastapi
 threadpoolctl==3.6.0
     # via scikit-learn
