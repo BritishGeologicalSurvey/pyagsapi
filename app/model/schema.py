@@ -92,9 +92,9 @@ class ResponseType(StrEnum):
 
 
 class LineError(BaseModel):
-    line: Union[int, str] = Field(..., example="5")
-    group: str = Field(..., example="TRAN")
-    desc: str = Field(..., example="Blah blah")
+    line: Union[int, str] = Field(..., json_schema_extra={'example': "5"})
+    group: str = Field(..., json_schema_extra={'example': "TRAN"})
+    desc: str = Field(..., json_schema_extra={'example': "Blah blah"})
 
     @field_validator("line")
     @classmethod
@@ -105,18 +105,18 @@ class LineError(BaseModel):
 
 
 class Validation(BaseModel):
-    filename: str = Field(..., example="example.ags")
-    filesize: int = Field(None, example="1024")
-    checkers: List[str] = Field(None, example=["python_ags4 v1.1.0"])
-    dictionary: str = Field(None, example="Standard_dictionary_v4_1_1.ags")
-    time: datetime = Field(None, example="2021-08-18 09:23:29")
-    message: str = Field(None, example="7 error(s) found in file!")
-    errors: Dict[str, List[LineError]] = Field(..., example="Rule 1a")
-    valid: bool = Field(..., example="false")
+    filename: str = Field(..., json_schema_extra={'example': "example.ags"})
+    filesize: int = Field(None, json_schema_extra={'example': "1024"})
+    checkers: List[str] = Field(None, json_schema_extra={'example': ["python_ags4 v1.1.0"]})
+    dictionary: str = Field(None, json_schema_extra={'example': "Standard_dictionary_v4_1_1.ags"})
+    time: datetime = Field(None, json_schema_extra={'example': "2021-08-18 09:23:29"})
+    message: str = Field(None, json_schema_extra={'example': "7 error(s}) found in file!"})
+    errors: Dict[str, List[LineError]] = Field(..., json_schema_extra={'example': "Rule 1a"})
+    valid: bool = Field(..., json_schema_extra={'example': "false"})
     additional_metadata: dict = Field(...)
-    error_count: int = Field(None, example="50")
-    warnings_count: int = Field(None, example="0")
-    fyi_count: int = Field(None, example="5")
+    error_count: int = Field(None, json_schema_extra={'example': "50"})
+    warnings_count: int = Field(None, json_schema_extra={'example': "0"})
+    fyi_count: int = Field(None, json_schema_extra={'example': "5"})
     geojson: dict = dict()
     geojson_error: str | None = None
 
@@ -129,15 +129,15 @@ class Validation(BaseModel):
 
 
 class Error(BaseModel):
-    error: str = Field(..., example="error")
-    propName: str = Field(None, example="error")
-    desc: str = Field(..., example="Error message")
+    error: str = Field(..., json_schema_extra={'example': "error"})
+    propName: str = Field(None, json_schema_extra={'example': "error"})
+    desc: str = Field(..., json_schema_extra={'example': "Error message"})
 
 
 class MinimalResponse(BaseModel):
-    msg: str = Field(..., example="Example response")
-    type: str = Field(..., example="success")
-    self: str = Field(..., example="http://example.com/apis/query")
+    msg: str = Field(..., json_schema_extra={'example': "Example response"})
+    type: str = Field(..., json_schema_extra={'example': "success"})
+    self: str = Field(..., json_schema_extra={'example': "http://example.com/apis/query"})
 
 
 class ErrorResponse(MinimalResponse):
@@ -149,4 +149,4 @@ class ValidationResponse(MinimalResponse):
 
 
 class BoreholeCountResponse(MinimalResponse):
-    count: int = Field(..., example=4)
+    count: int = Field(..., json_schema_extra={'example': 4})
