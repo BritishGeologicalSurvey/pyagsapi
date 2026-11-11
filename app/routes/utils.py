@@ -18,6 +18,9 @@ BOREHOLE_INDEX_URL = (
     "&properties=bgs_loca_id&filter=INTERSECTS(shape,{polygon})&limit={borehole_export_limit}"
 )
 
+MAX_UPLOAD_SIZE = 150 * 1024 * 1024  # 50 MB mirroring the Javascript limit for the landing page
+MAX_UNZIPPED_SIZE = 100 * 1024 * 1024  # 100 MB
+
 log_responses = dict(error_responses)
 log_responses["200"] = {
     "content": {"application/json": {}, "text/plain": {}},
@@ -50,6 +53,46 @@ checker_functions = {
     Checker.ags: check_ags,
     Checker.bgs: check_bgs,
 }
+
+
+def check_file_size(upload_file, request):
+    """Reject an uploaded file whose total uncompressed size is too large.
+
+    The landing page rejects files over this size, the API mirrors that.
+    """
+    if upload_file.size > MAX_UPLOAD_SIZE:
+        limit_mb = MAX_UPLOAD_SIZE // (1024 * 1024)
+        raise HTTPException(
+            status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+            detail={
+                "msg": "Payload too large",
+                "error": "Payload too large",
+                "desc": (
+                    f"Upload file must be {limit_mb} MB or smaller"
+                ),
+            },
+        )
+
+
+def check_zip_size(zipfile, request):
+    """Reject an uploaded ZIP whose total uncompressed size is too large.
+
+    Guards against zip-bomb denial-of-service, where a small upload expands
+    to a very large amount of data on disk / in memory.
+    """
+    total_uncompressed = sum(info.file_size for info in zipfile.infolist())
+    if total_uncompressed > MAX_UNZIPPED_SIZE:
+        limit_mb = MAX_UNZIPPED_SIZE// (1024 * 1024)
+        raise HTTPException(
+            status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+            detail={
+                "msg": "Payload too large",
+                "error": "Payload too large",
+                "desc": (
+                    f"Uncompressed ZIP contents must be {limit_mb} MB or smaller"
+                ),
+            },
+        )
 
 
 def get_request_url(request):
