@@ -6,6 +6,7 @@ ipython
 pip-tools
 py_mini_racer
 pytest-asyncio
+pytest-cov
 pytest==8.0.2  # 8.1.0 contains breaking changes
 requests
 requests-toolbelt
