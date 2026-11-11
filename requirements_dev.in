@@ -4,6 +4,7 @@ httpx
 ipdb
 ipython
 pip-tools
+py_mini_racer
 pytest-asyncio
 pytest==8.0.2  # 8.1.0 contains breaking changes
 requests

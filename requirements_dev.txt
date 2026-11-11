@@ -67,6 +67,8 @@ ptyprocess==0.7.0
     # via pexpect
 pure-eval==0.2.3
     # via stack-data
+py-mini-racer==0.6.0
+    # via -r requirements_dev.in
 pycodestyle==2.14.0
     # via flake8
 pyflakes==3.4.0
