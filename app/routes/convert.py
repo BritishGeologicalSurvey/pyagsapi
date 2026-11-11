@@ -64,47 +64,54 @@ async def convert(
         raise InvalidPayloadError(request)
     check_total_size(files, request)
     RESULTS = "results"
-    tmp_dir = Path(tempfile.mkdtemp())
-    results_dir = tmp_dir / RESULTS
-    results_dir.mkdir()
-    full_logfile = results_dir / "conversion.log"
-    with full_logfile.open("wt") as f:
-        f.write("=" * 80 + "\n")
-        for file in files:
-            check_file_size(file, request)
-            contents = await file.read()
-            content_bytes = BytesIO(contents)
-            # Extract zipped files if a zip is uploaded
-            if is_zipfile(content_bytes) and not file.filename.lower().endswith(
-                ".xlsx"
-            ):
-                zipfile = ZipFile(content_bytes)
-                check_zip_size(zipfile, request)
-                for name in zipfile.namelist():
-                    zipfile.extract(name, tmp_dir)
-                    local_file = tmp_dir / name
+    try:
+        tmp_dir = Path(tempfile.mkdtemp())
+        results_dir = tmp_dir / RESULTS
+        results_dir.mkdir()
+        full_logfile = results_dir / "conversion.log"
+        with full_logfile.open("wt") as f:
+            f.write("=" * 80 + "\n")
+            for file in files:
+                check_file_size(file, request)
+                contents = await file.read()
+                content_bytes = BytesIO(contents)
+                # Extract zipped files if a zip is uploaded
+                if is_zipfile(content_bytes) and not file.filename.lower().endswith(
+                    ".xlsx"
+                ):
+                    zipfile = ZipFile(content_bytes)
+                    check_zip_size(zipfile, request)
+                    for name in zipfile.namelist():
+                        zipfile.extract(name, tmp_dir)
+                        local_file = tmp_dir / name
+                        _, result = conversion.convert(
+                            local_file, results_dir, sorting_strategy=sort_tables
+                        )
+                        log = validation.to_plain_text(result)
+                        f.write(log)
+                        f.write("\n" + "=" * 80 + "\n")
+                else:
+                    # If file.filename is set, via curl, ensure there is no path in the filename
+                    local_file = tmp_dir / Path(file.filename).name
+                    local_file.write_bytes(contents)
                     _, result = conversion.convert(
                         local_file, results_dir, sorting_strategy=sort_tables
                     )
                     log = validation.to_plain_text(result)
                     f.write(log)
                     f.write("\n" + "=" * 80 + "\n")
-            else:
-                # If file.filename is set, via curl, ensure there is no path in the filename
-                local_file = tmp_dir / Path(file.filename).name
-                local_file.write_bytes(contents)
-                _, result = conversion.convert(
-                    local_file, results_dir, sorting_strategy=sort_tables
-                )
-                log = validation.to_plain_text(result)
-                f.write(log)
-                f.write("\n" + "=" * 80 + "\n")
-    zipped_file = tmp_dir / RESULTS
-    shutil.make_archive(zipped_file, "zip", results_dir)
-    zipped_stream = open(tmp_dir / (RESULTS + ".zip"), "rb")
+        zipped_file = tmp_dir / RESULTS
+        shutil.make_archive(zipped_file, "zip", results_dir)
+        zipped_stream = open(tmp_dir / (RESULTS + ".zip"), "rb")
+    except Exception:
+        # The cleanup background tasks below are only registered on success,
+        # and only run once a response is returned; remove the temp dir now so
+        # a failure part-way through conversion does not leak it.
+        shutil.rmtree(tmp_dir, ignore_errors=True)
+        raise
 
     background_tasks.add_task(zipped_stream.close)
-    background_tasks.add_task(shutil.rmtree, tmp_dir)
+    background_tasks.add_task(shutil.rmtree, tmp_dir, ignore_errors=True)
 
     response = StreamingResponse(
         zipped_stream, media_type="application/x-zip-compressed"
