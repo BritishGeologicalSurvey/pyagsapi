@@ -13,7 +13,13 @@ from app import conversion, validation
 from app.model.schema import SortingStrategy
 from app.model.queries import sort_tables_form, conversion_file
 from .errors import InvalidPayloadError
-from .utils import AGS_API_VERSION, check_file_size, check_zip_size, zip_responses
+from .utils import (
+    AGS_API_VERSION,
+    check_file_size,
+    check_total_size,
+    check_zip_size,
+    zip_responses,
+)
 
 router = APIRouter()
 
@@ -56,6 +62,7 @@ async def convert(
         sort_tables = None
     if not files[0].filename:
         raise InvalidPayloadError(request)
+    check_total_size(files, request)
     RESULTS = "results"
     tmp_dir = Path(tempfile.mkdtemp())
     results_dir = tmp_dir / RESULTS

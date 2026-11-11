@@ -24,6 +24,7 @@ from .utils import (
     AGS_API_VERSION,
     checker_functions,
     check_file_size,
+    check_total_size,
     check_zip_size,
     get_request_url,
     log_responses
@@ -79,6 +80,8 @@ async def validate(
         raise InvalidPayloadError(request)
 
     checkers = [checker_functions[c] for c in checkers]
+
+    check_total_size(files, request)
 
     tmp_dir = Path(tempfile.mkdtemp())
     background_tasks.add_task(shutil.rmtree, tmp_dir)

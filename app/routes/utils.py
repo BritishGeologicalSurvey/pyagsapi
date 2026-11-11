@@ -1,5 +1,7 @@
 import os
 
+from fastapi import HTTPException, status
+
 from app.model.schema import Checker
 from app.checkers import check_ags, check_bgs
 from app.version import API_VERSION
@@ -18,7 +20,7 @@ BOREHOLE_INDEX_URL = (
     "&properties=bgs_loca_id&filter=INTERSECTS(shape,{polygon})&limit={borehole_export_limit}"
 )
 
-MAX_UPLOAD_SIZE = 150 * 1024 * 1024  # 50 MB mirroring the Javascript limit for the landing page
+MAX_UPLOAD_SIZE = 50 * 1024 * 1024  # 50 MB mirroring the Javascript limit for the landing page
 MAX_UNZIPPED_SIZE = 100 * 1024 * 1024  # 100 MB
 
 log_responses = dict(error_responses)
@@ -55,22 +57,41 @@ checker_functions = {
 }
 
 
+def _payload_too_large(desc):
+    """Build a 413 response matching the API's error schema."""
+    return HTTPException(
+        status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+        detail={
+            "msg": "Payload too large",
+            "error": "Payload too large",
+            "desc": desc,
+        },
+    )
+
+
 def check_file_size(upload_file, request):
-    """Reject an uploaded file whose total uncompressed size is too large.
+    """Reject an individual uploaded file that is too large.
 
     The landing page rejects files over this size, the API mirrors that.
+    ``UploadFile.size`` is populated by the multipart parser; guard against
+    ``None`` so a missing size cannot raise a TypeError.
     """
-    if upload_file.size > MAX_UPLOAD_SIZE:
+    if upload_file.size is not None and upload_file.size > MAX_UPLOAD_SIZE:
         limit_mb = MAX_UPLOAD_SIZE // (1024 * 1024)
-        raise HTTPException(
-            status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
-            detail={
-                "msg": "Payload too large",
-                "error": "Payload too large",
-                "desc": (
-                    f"Upload file must be {limit_mb} MB or smaller"
-                ),
-            },
+        raise _payload_too_large(f"Upload file must be {limit_mb} MB or smaller")
+
+
+def check_total_size(files, request):
+    """Reject a request whose uploaded files together are too large.
+
+    Mirrors the landing page, which caps the combined size of all files, so
+    that many individually-acceptable files cannot be used to exhaust memory.
+    """
+    total = sum((f.size or 0) for f in files)
+    if total > MAX_UPLOAD_SIZE:
+        limit_mb = MAX_UPLOAD_SIZE // (1024 * 1024)
+        raise _payload_too_large(
+            f"Total size of uploaded files must be {limit_mb} MB or smaller"
         )
 
 
@@ -82,16 +103,9 @@ def check_zip_size(zipfile, request):
     """
     total_uncompressed = sum(info.file_size for info in zipfile.infolist())
     if total_uncompressed > MAX_UNZIPPED_SIZE:
-        limit_mb = MAX_UNZIPPED_SIZE// (1024 * 1024)
-        raise HTTPException(
-            status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
-            detail={
-                "msg": "Payload too large",
-                "error": "Payload too large",
-                "desc": (
-                    f"Uncompressed ZIP contents must be {limit_mb} MB or smaller"
-                ),
-            },
+        limit_mb = MAX_UNZIPPED_SIZE // (1024 * 1024)
+        raise _payload_too_large(
+            f"Uncompressed ZIP contents must be {limit_mb} MB or smaller"
         )
 
 
