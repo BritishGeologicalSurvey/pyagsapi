@@ -48,7 +48,7 @@ def pinned_tmp_dir(tmp_path, monkeypatch):
     return tmp_path, handler_dir
 
 
-def _malicious_names(tmp_root, handler_dir):
+def _malicious_names(tmp_root):
     """
     Filenames that each try to escape ``handler_dir``, paired with the location
     the *vulnerable* code (``handler_dir / filename``) would write to.  All
@@ -85,7 +85,7 @@ def test_upload_filename_cannot_escape_tmp_dir(client, pinned_tmp_dir, endpoint,
     """
     tmp_root, handler_dir = pinned_tmp_dir
 
-    for malicious_name, vuln_target in _malicious_names(tmp_root, handler_dir):
+    for malicious_name, vuln_target in _malicious_names(tmp_root):
         # sanity: the target really is outside handler_dir
         assert handler_dir.resolve() not in vuln_target.resolve().parents
 
