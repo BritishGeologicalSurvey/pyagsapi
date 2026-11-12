@@ -1,4 +1,5 @@
 import os
+import re
 
 from fastapi import HTTPException, status
 
@@ -13,12 +14,29 @@ AGS_API_ENV = os.getenv("AGS_API_ENV", "DEVELOP").upper()
 AGS_API_VERSION = f"/v{API_VERSION.split('.')[0]}"
 
 BOREHOLE_EXPORT_LIMIT = 50
-BOREHOLE_VIEWER_URL = "https://gwbv.bgs.ac.uk/GWBV/viewborehole?loca_id={bgs_loca_id}"
-BOREHOLE_EXPORT_URL = "https://gwbv.bgs.ac.uk/ags_export?loca_ids={bgs_loca_id}"
-BOREHOLE_INDEX_URL = (
-    "https://ogcapi.bgs.ac.uk/collections/agsboreholeindex/items?f=json"
-    "&properties=bgs_loca_id&filter=INTERSECTS(shape,{polygon})&limit={borehole_export_limit}"
-)
+# Base URLs only.  Query parameters are passed via requests' params= so that
+# values (borehole IDs, polygon WKT) are URL-encoded and cannot be used to
+# inject extra parameters into the upstream request.
+BOREHOLE_VIEWER_URL = "https://gwbv.bgs.ac.uk/GWBV/viewborehole"
+BOREHOLE_EXPORT_URL = "https://gwbv.bgs.ac.uk/ags_export"
+BOREHOLE_INDEX_URL = "https://ogcapi.bgs.ac.uk/collections/agsboreholeindex/items"
+
+# BGS LOCA IDs are numeric strings; reject anything else so user input cannot
+# alter the upstream request.
+_LOCA_ID_RE = re.compile(r"^\d+$")
+
+
+def validate_loca_ids(bgs_loca_id):
+    """Split a semicolon-separated list of borehole IDs and validate each is
+    numeric.  Returns the list of IDs, or raises HTTP 422."""
+    ids = bgs_loca_id.split(";")
+    if not ids or not all(_LOCA_ID_RE.match(i) for i in ids):
+        raise HTTPException(
+            status_code=422,
+            detail="Invalid borehole ID: expected one or more numeric IDs separated by ';'",
+        )
+    return ids
+
 
 MAX_UPLOAD_SIZE = 50 * 1024 * 1024  # 50 MB mirroring the Javascript limit for the landing page
 MAX_UNZIPPED_SIZE = 100 * 1024 * 1024  # 100 MB

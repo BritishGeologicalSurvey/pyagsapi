@@ -15,7 +15,6 @@ from .utils import (
     ags_export_responses,
     BOREHOLE_INDEX_URL,
     BOREHOLE_EXPORT_LIMIT,
-    BOREHOLE_EXPORT_URL,
     AGS_API_VERSION,
 )
 
@@ -63,14 +62,25 @@ def ags_export_by_polygon(
     # Check explicitly that the WKT is a valid POLYGON
     # The BOREHOLE_INDEX_URL API does not return an error for some bad WKT
     try:
-        shapely.wkt.loads(polygon)
+        geometry = shapely.wkt.loads(polygon)
     except shapely.errors.GEOSException:
         raise HTTPException(status_code=422, detail="Invalid polygon")
+    if geometry.geom_type != "Polygon":
+        raise HTTPException(
+            status_code=422, detail="Invalid polygon: expected a POLYGON"
+        )
 
-    url = BOREHOLE_INDEX_URL.format(polygon=polygon, borehole_export_limit=BOREHOLE_EXPORT_LIMIT)
+    # Pass query parameters via params= so the (re-serialised) WKT is
+    # URL-encoded and cannot inject extra parameters into the upstream request.
+    index_params = {
+        "f": "json",
+        "properties": "bgs_loca_id",
+        "filter": f"INTERSECTS(shape,{geometry.wkt})",
+        "limit": BOREHOLE_EXPORT_LIMIT,
+    }
 
     try:
-        response = requests.get(url, timeout=10)
+        response = requests.get(BOREHOLE_INDEX_URL, params=index_params, timeout=10)
     except (Timeout, ConnectionError):
         raise HTTPException(
             status_code=500,
@@ -108,7 +118,6 @@ def ags_export_by_polygon(
             )
 
         bgs_loca_ids = ";".join([f["id"] for f in collection["features"]])
-        url = BOREHOLE_EXPORT_URL.format(bgs_loca_id=bgs_loca_ids)
         response = ags_export(bgs_loca_ids)
 
     return response
