@@ -2,6 +2,19 @@
 
 var agsHtml={};
 
+// Escape values before inserting them into HTML.  Validation results are
+// derived from uploaded file content (filenames, project names, error text,
+// etc.) and must not be treated as markup.
+agsHtml.escapeHtml=function(value){
+    if(value === null || value === undefined){return "";};
+    return String(value)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#39;");
+    };
+
 agsHtml.injectHtmlOpt=function(){
     var xhtml='<input type="radio" id="html" name="fmt" value="html" /><label for="html">HTML</label>';
     $("#validator>form>fieldset:eq(2)>legend").after(xhtml);
@@ -251,15 +264,15 @@ agsHtml.displayFileResult=function(fileResult,ix){
     xhtml=xhtml + "<article>";
 
     if(fileResult.valid){
-        xhtml=xhtml + "<h3 class='valid'><span style='background-color:" + pointColour + ";' class='symbol'>&nbsp;</span> <strong>" + fileResult.filename + "</strong> <em>" + fileResult.message + "</em></h3>";
+        xhtml=xhtml + "<h3 class='valid'><span style='background-color:" + pointColour + ";' class='symbol'>&nbsp;</span> <strong>" + agsHtml.escapeHtml(fileResult.filename) + "</strong> <em>" + agsHtml.escapeHtml(fileResult.message) + "</em></h3>";
         }
     else{
-        xhtml=xhtml + "<h3 class='invalid'><span style='background-color:" + pointColour + ";' class='symbol'>&nbsp;</span> <strong>" + fileResult.filename + "</strong> <em>" + fileResult.message + "</em></h3>";
+        xhtml=xhtml + "<h3 class='invalid'><span style='background-color:" + pointColour + ";' class='symbol'>&nbsp;</span> <strong>" + agsHtml.escapeHtml(fileResult.filename) + "</strong> <em>" + agsHtml.escapeHtml(fileResult.message) + "</em></h3>";
         };
-    xhtml=xhtml + "<p><label>File Size</label> <strong>" + fileResult.filesize + " bytes</strong></p>";
-    xhtml=xhtml + "<p><label>Checker(s)</label> <strong>" + fileResult.checkers.join(", ") + "</strong></p>";
-    xhtml=xhtml + "<p><label>Dictionary</label> <strong>" + fileResult.dictionary + "</strong></p>";
-    xhtml=xhtml + "<p><label>Time (UTC)</label> <strong>" + fileResult.time.substring(0,19).replace("T"," ") + "</strong></p>";
+    xhtml=xhtml + "<p><label>File Size</label> <strong>" + agsHtml.escapeHtml(fileResult.filesize) + " bytes</strong></p>";
+    xhtml=xhtml + "<p><label>Checker(s)</label> <strong>" + agsHtml.escapeHtml(fileResult.checkers.join(", ")) + "</strong></p>";
+    xhtml=xhtml + "<p><label>Dictionary</label> <strong>" + agsHtml.escapeHtml(fileResult.dictionary) + "</strong></p>";
+    xhtml=xhtml + "<p><label>Time (UTC)</label> <strong>" + agsHtml.escapeHtml(fileResult.time.substring(0,19).replace("T"," ")) + "</strong></p>";
 
     if(fileResult.additional_metadata){
 
@@ -273,19 +286,19 @@ agsHtml.displayFileResult=function(fileResult,ix){
             };
 
         if(fileResult.additional_metadata.bgs_all_groups){
-            xhtml=xhtml + "<li>" + fileResult.additional_metadata.bgs_all_groups + "</li>";
+            xhtml=xhtml + "<li>" + agsHtml.escapeHtml(fileResult.additional_metadata.bgs_all_groups) + "</li>";
             };
         if(fileResult.additional_metadata.bgs_dict){
-            xhtml=xhtml + "<li>" + fileResult.additional_metadata.bgs_dict + "</li>";
+            xhtml=xhtml + "<li>" + agsHtml.escapeHtml(fileResult.additional_metadata.bgs_dict) + "</li>";
             };
         if(fileResult.additional_metadata.bgs_file){
-            xhtml=xhtml + "<li>" + fileResult.additional_metadata.bgs_file + "</li>";
+            xhtml=xhtml + "<li>" + agsHtml.escapeHtml(fileResult.additional_metadata.bgs_file) + "</li>";
             };
         if(fileResult.additional_metadata.bgs_loca_rows){
-            xhtml=xhtml + "<li>" + fileResult.additional_metadata.bgs_loca_rows + "</li>";
+            xhtml=xhtml + "<li>" + agsHtml.escapeHtml(fileResult.additional_metadata.bgs_loca_rows) + "</li>";
             };
         if(fileResult.additional_metadata.bgs_projects){
-            xhtml=xhtml + "<li>" + fileResult.additional_metadata.bgs_projects + "</li>";
+            xhtml=xhtml + "<li>" + agsHtml.escapeHtml(fileResult.additional_metadata.bgs_projects) + "</li>";
             };
         xhtml=xhtml + "</ul>";
         };
@@ -298,13 +311,13 @@ agsHtml.displayFileResult=function(fileResult,ix){
             errGroup=errGroups[i];
             groupErrs=fileResult.errors[errGroup];
             xhtml=xhtml + "<li>";
-            xhtml=xhtml + "<strong>" + errGroup + "</strong> ";
+            xhtml=xhtml + "<strong>" + agsHtml.escapeHtml(errGroup) + "</strong> ";
             xhtml=xhtml + "<em>(&times;" + groupErrs.length + ")</em>";
             xhtml=xhtml + "<ul class='closed'>";
             for(j=0;j < groupErrs.length;j++){
                 xhtml=xhtml + "<li>";
-                if(groupErrs[j].line !== "-"){xhtml=xhtml + "<span>Line " + groupErrs[j].line + "</span> ";};
-                xhtml=xhtml + groupErrs[j].desc.replace(/</g,"&lt;").replace(">","&gt;");
+                if(groupErrs[j].line !== "-"){xhtml=xhtml + "<span>Line " + agsHtml.escapeHtml(groupErrs[j].line) + "</span> ";};
+                xhtml=xhtml + agsHtml.escapeHtml(groupErrs[j].desc);
                 xhtml=xhtml + "</li>";
                 };
             xhtml=xhtml + "</ul></li>";
