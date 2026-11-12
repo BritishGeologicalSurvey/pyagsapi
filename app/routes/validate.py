@@ -20,7 +20,15 @@ from app.model.queries import (
     validation_file,
 )
 from .errors import InvalidPayloadError
-from .utils import AGS_API_VERSION, checker_functions, get_request_url, log_responses
+from .utils import (
+    AGS_API_VERSION,
+    checker_functions,
+    check_file_size,
+    check_total_size,
+    check_zip_size,
+    get_request_url,
+    log_responses
+)
 
 router = APIRouter()
 
@@ -73,23 +81,39 @@ async def validate(
 
     checkers = [checker_functions[c] for c in checkers]
 
+    check_total_size(files, request)
+
     tmp_dir = Path(tempfile.mkdtemp())
-    background_tasks.add_task(shutil.rmtree, tmp_dir)
+    background_tasks.add_task(shutil.rmtree, tmp_dir, ignore_errors=True)
 
-    if std_dictionary == Dictionary.None_Given:
-        dictionary = None
-    else:
-        dictionary = f"Standard_dictionary_{std_dictionary}.ags"
+    try:
+        if std_dictionary == Dictionary.None_Given:
+            dictionary = None
+        else:
+            dictionary = f"Standard_dictionary_{std_dictionary}.ags"
 
-    data = []
-    for file in files:
-        contents = await file.read()
-        # Extract zipped files if a zip is uploaded
-        if is_zipfile(BytesIO(contents)):
-            zipfile = ZipFile(BytesIO(contents))
-            for name in zipfile.namelist():
-                zipfile.extract(name, tmp_dir)
-                local_ags_file = tmp_dir / name
+        data = []
+        for file in files:
+            check_file_size(file, request)
+            contents = await file.read()
+            # Extract zipped files if a zip is uploaded
+            if is_zipfile(BytesIO(contents)):
+                zipfile = ZipFile(BytesIO(contents))
+                check_zip_size(zipfile, request)
+                for name in zipfile.namelist():
+                    zipfile.extract(name, tmp_dir)
+                    local_ags_file = tmp_dir / name
+                    result = validate_file(
+                        local_ags_file,
+                        checkers=checkers,
+                        dictionary=dictionary,
+                        return_geometry=return_geometry,
+                    )
+                    data.append(result)
+            else:
+                # If file.filename is set, via curl, ensure there is no path in the filename
+                local_ags_file = tmp_dir / Path(file.filename).name
+                local_ags_file.write_bytes(contents)
                 result = validate_file(
                     local_ags_file,
                     checkers=checkers,
@@ -97,28 +121,22 @@ async def validate(
                     return_geometry=return_geometry,
                 )
                 data.append(result)
-        else:
-            local_ags_file = tmp_dir / file.filename
-            local_ags_file.write_bytes(contents)
-            result = validate_file(
-                local_ags_file,
-                checkers=checkers,
-                dictionary=dictionary,
-                return_geometry=return_geometry,
-            )
-            data.append(result)
 
-    if fmt == Format.TEXT:
-        full_logfile = tmp_dir / "results.log"
-        with full_logfile.open("wt") as f:
-            f.write("=" * 80 + "\n")
-            for result in data:
-                log = validation.to_plain_text(result)
-                f.write(log)
+        if fmt == Format.TEXT:
+            full_logfile = tmp_dir / "results.log"
+            with full_logfile.open("wt") as f:
                 f.write("=" * 80 + "\n")
-        response = FileResponse(full_logfile, media_type="text/plain")
-    else:
-        response = prepare_validation_response(request, data)
+                for result in data:
+                    log = validation.to_plain_text(result)
+                    f.write(log)
+                    f.write("=" * 80 + "\n")
+            response = FileResponse(full_logfile, media_type="text/plain")
+        else:
+            response = prepare_validation_response(request, data)
+
+    except Exception:
+        shutil.rmtree(tmp_dir, ignore_errors=True)
+        raise
 
     return response
 

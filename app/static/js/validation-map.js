@@ -1,6 +1,19 @@
 // validation-map.js
 var vMap={};
 
+// Escape values before inserting them into popup/tooltip HTML.  Feature
+// properties and filenames come from uploaded file content and must not be
+// treated as markup.
+vMap.escapeHtml=function(value){
+    if(value === null || value === undefined){return "";};
+    return String(value)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#39;");
+    };
+
 vMap.colours=["#d9351a", "#ffc730", "#1d63ec", "#e65bae", "#144d59", "#bf00ff", "#ed9310", "#2c6954", "#8c213f", "#102432", "#a64f1b", "#18382e", "#661510", "#b31515", "#4a0932"];
 
 vMap.map={
@@ -43,7 +56,7 @@ vMap.showOnValidationMap=function(geoJSON,fileName,ix){
     console.log(ix);
 
     var pointColour=vMap.colours[ix % vMap.colours.length];
-    var xhtml="<p class='mapKey'><span class='symbol' style='background-color:" + pointColour + ";'>&nbsp;</span> " + fileName + "</p>";
+    var xhtml="<p class='mapKey'><span class='symbol' style='background-color:" + pointColour + ";'>&nbsp;</span> " + vMap.escapeHtml(fileName) + "</p>";
     $("#res_MapFrame").append(xhtml);
 
     // show GeoJSON features on map - add popups and tooltips
@@ -52,7 +65,7 @@ vMap.showOnValidationMap=function(geoJSON,fileName,ix){
             return vMap.pointToLayer(feature,latlng,ix);
             },
         "onEachFeature":function(feature,layer){
-            layer.bindTooltip(feature.properties.LOCA_ID);
+            layer.bindTooltip(vMap.escapeHtml(feature.properties.LOCA_ID));
             layer.bindPopup(vMap.getPopupContent(feature,fileName));
             }
         }).addTo(vMap.map.lyrs.GeoJSON);
@@ -78,11 +91,11 @@ vMap.getPopupContent=function(feature,fileName){
     var i=0;
     popupContent=popupContent + "<span class='popupContent'>";
     popupContent=popupContent + "<h4>AGS Borehole Information</h4>";
-    popupContent=popupContent + "<label>File</label> : <strong>" + fileName + "</strong><br />";
+    popupContent=popupContent + "<label>File</label> : <strong>" + vMap.escapeHtml(fileName) + "</strong><br />";
     for(i=0;i < popupFields.length;i++){
         popupField=popupFields[i];
         popupLabel=popupLabels[i];
-        popupContent=popupContent + "<label>" + popupLabel + "</label> : <strong>" + feature.properties[popupField] + "</strong><br />";
+        popupContent=popupContent + "<label>" + popupLabel + "</label> : <strong>" + vMap.escapeHtml(feature.properties[popupField]) + "</strong><br />";
         };
     popupContent=popupContent + "</span>";
     return popupContent;
