@@ -10,7 +10,8 @@ COPY ./requirements.txt /code/requirements.txt
 
 RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 
-COPY --chown=appuser:appgroup ./app /code/app
+# Ensure /app directory is owned by root so it cannot be written to by appuser
+COPY ./app /code/app
 
 USER appuser
 

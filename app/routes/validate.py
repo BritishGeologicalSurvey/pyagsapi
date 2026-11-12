@@ -98,7 +98,8 @@ async def validate(
                 )
                 data.append(result)
         else:
-            local_ags_file = tmp_dir / file.filename
+            # If file.filename is set, via curl, ensure there is no path in the filename
+            local_ags_file = tmp_dir / Path(file.filename).name
             local_ags_file.write_bytes(contents)
             result = validate_file(
                 local_ags_file,
