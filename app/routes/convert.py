@@ -13,7 +13,13 @@ from app import conversion, validation
 from app.model.schema import SortingStrategy
 from app.model.queries import sort_tables_form, conversion_file
 from .errors import InvalidPayloadError
-from .utils import AGS_API_VERSION, zip_responses
+from .utils import (
+    AGS_API_VERSION,
+    check_file_size,
+    check_total_size,
+    check_zip_size,
+    zip_responses,
+)
 
 router = APIRouter()
 
@@ -56,6 +62,7 @@ async def convert(
         sort_tables = None
     if not files[0].filename:
         raise InvalidPayloadError(request)
+    check_total_size(files, request)
     RESULTS = "results"
     tmp_dir = Path(tempfile.mkdtemp())
     results_dir = tmp_dir / RESULTS
@@ -64,6 +71,7 @@ async def convert(
     with full_logfile.open("wt") as f:
         f.write("=" * 80 + "\n")
         for file in files:
+            check_file_size(file, request)
             contents = await file.read()
             content_bytes = BytesIO(contents)
             # Extract zipped files if a zip is uploaded
@@ -71,6 +79,7 @@ async def convert(
                 ".xlsx"
             ):
                 zipfile = ZipFile(content_bytes)
+                check_zip_size(zipfile, request)
                 for name in zipfile.namelist():
                     zipfile.extract(name, tmp_dir)
                     local_file = tmp_dir / name
@@ -81,7 +90,8 @@ async def convert(
                     f.write(log)
                     f.write("\n" + "=" * 80 + "\n")
             else:
-                local_file = tmp_dir / file.filename
+                # If file.filename is set, via curl, ensure there is no path in the filename
+                local_file = tmp_dir / Path(file.filename).name
                 local_file.write_bytes(contents)
                 _, result = conversion.convert(
                     local_file, results_dir, sorting_strategy=sort_tables
