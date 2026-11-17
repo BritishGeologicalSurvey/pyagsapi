@@ -81,7 +81,8 @@ async def convert(
                     f.write(log)
                     f.write("\n" + "=" * 80 + "\n")
             else:
-                local_file = tmp_dir / file.filename
+                # If file.filename is set, via curl, ensure there is no path in the filename
+                local_file = tmp_dir / Path(file.filename).name
                 local_file.write_bytes(contents)
                 _, result = conversion.convert(
                     local_file, results_dir, sorting_strategy=sort_tables
