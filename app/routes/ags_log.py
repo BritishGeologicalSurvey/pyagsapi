@@ -7,7 +7,7 @@ from requests.exceptions import Timeout, ConnectionError, HTTPError
 
 from app.model.schema import ResponseType
 from app.model.queries import ags_log_query, response_type_query
-from .utils import pdf_responses, BOREHOLE_VIEWER_URL, AGS_API_VERSION
+from .utils import pdf_responses, BOREHOLE_VIEWER_URL, AGS_API_VERSION, validate_loca_ids
 
 router = APIRouter()
 
@@ -40,10 +40,12 @@ def get_ags_log(
     :raises HTTPException 500: If the borehole generator could not be reached.
     """
 
-    url = BOREHOLE_VIEWER_URL.format(bgs_loca_id=bgs_loca_id)
+    validate_loca_ids(bgs_loca_id)
 
     try:
-        response = requests.get(url, timeout=10)
+        response = requests.get(
+            BOREHOLE_VIEWER_URL, params={"loca_id": bgs_loca_id}, timeout=10
+        )
     except (Timeout, ConnectionError):
         raise HTTPException(
             status_code=500,

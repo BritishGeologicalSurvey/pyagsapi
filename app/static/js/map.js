@@ -1,5 +1,24 @@
 var agsMap={};
 
+// Escape values before inserting them into popup HTML.  Borehole feature
+// properties come from the OGC API, whose data originates from third-party
+// AGS submissions, so they must not be treated as markup.
+agsMap.escapeHtml=function(value){
+    if(value === null || value === undefined){return "";};
+    return String(value)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#39;");
+    };
+
+// Allow only http(s) or site-relative URLs; neutralise javascript:, data:, etc.
+agsMap.safeUrl=function(value){
+    var url=String(value === null || value === undefined ? "" : value).trim();
+    return (/^https?:\/\//i.test(url) || /^\//.test(url)) ? url : "#";
+    };
+
 agsMap.init=function(){
     agsMap.hideModalBtn();
     $("#closeModalBtn").on("click",agsMap.hideModalBtn);
@@ -175,16 +194,21 @@ agsMap.setupMap=function(){
         "limit":200,
         "onEachFeature": function (feat, layer) {
             var properties = feat.properties;
+            var locaIdParam = encodeURIComponent(properties.bgs_loca_id);
+            var logHref = agsMap.escapeHtml(api_version_path + "/ags_log/?bgs_loca_id=" + locaIdParam);
+            var logDownloadHref = agsMap.escapeHtml(api_version_path + "/ags_log/?bgs_loca_id=" + locaIdParam + "&response_type=attachment");
+            var exportHref = agsMap.escapeHtml(api_version_path + "/ags_export/?bgs_loca_id=" + locaIdParam);
+            var submissionHref = agsMap.escapeHtml(agsMap.safeUrl(properties.dad_item_url));
             var popupContent = "<b>AGS Borehole Information</b><br><hr>" +
-                "<b>BGS LOCA ID: </b>" + properties.bgs_loca_id + "<br>" +
-                "<b>Depth (m): </b>" + properties.loca_fdep + "<br>" +
-                "<b>Project Name: </b>" + properties.proj_name + "<br>" +
-                "<b>Project Engineer: </b>" + properties.proj_eng + "<br>" +
-                "<b>Project Contractor: </b>" + properties.proj_cont + "<br>" +
-                "<b>Original LOCA ID: </b>" + properties.loca_id + "<br>" +
-                "<b>AGS Graphical Log: </b>" + "<a href=" + api_version_path +  "/ags_log/?bgs_loca_id=" + properties.bgs_loca_id + " target=" + "_blank" + ">View</a> / " +"<a href=" + api_version_path +  "/ags_log/?bgs_loca_id=" + properties.bgs_loca_id + "&response_type=attachment" + ">Download</a>" + "<br>" +
-                "<b>AGS Data (NGDC Download Service): </b>" + "<a href=" + api_version_path +  "/ags_export/?bgs_loca_id=" + properties.bgs_loca_id + " target=" + "_blank" + ">Download</a>" + "<br>" +
-                "<b>AGS Submission Record (raw data): </b>" + "<a href=" + properties.dad_item_url + " target=" + "_blank" + ">View</a>" + "<br>";
+                "<b>BGS LOCA ID: </b>" + agsMap.escapeHtml(properties.bgs_loca_id) + "<br>" +
+                "<b>Depth (m): </b>" + agsMap.escapeHtml(properties.loca_fdep) + "<br>" +
+                "<b>Project Name: </b>" + agsMap.escapeHtml(properties.proj_name) + "<br>" +
+                "<b>Project Engineer: </b>" + agsMap.escapeHtml(properties.proj_eng) + "<br>" +
+                "<b>Project Contractor: </b>" + agsMap.escapeHtml(properties.proj_cont) + "<br>" +
+                "<b>Original LOCA ID: </b>" + agsMap.escapeHtml(properties.loca_id) + "<br>" +
+                "<b>AGS Graphical Log: </b>" + "<a href=\"" + logHref + "\" target=\"_blank\" rel=\"noopener\">View</a> / " + "<a href=\"" + logDownloadHref + "\">Download</a>" + "<br>" +
+                "<b>AGS Data (NGDC Download Service): </b>" + "<a href=\"" + exportHref + "\" target=\"_blank\" rel=\"noopener\">Download</a>" + "<br>" +
+                "<b>AGS Submission Record (raw data): </b>" + "<a href=\"" + submissionHref + "\" target=\"_blank\" rel=\"noopener\">View</a>" + "<br>";
             layer.bindPopup(popupContent);
             },
         });

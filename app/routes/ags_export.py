@@ -11,6 +11,7 @@ from .utils import (
     BOREHOLE_EXPORT_LIMIT,
     BOREHOLE_EXPORT_URL,
     AGS_API_VERSION,
+    validate_loca_ids,
 )
 
 router = APIRouter()
@@ -40,15 +41,16 @@ def ags_export(bgs_loca_id: str = ags_export_query):
     :raises HTTPException 500: If the borehole exporter could not be reached.
     """
 
-    if len(bgs_loca_id.split(";")) > BOREHOLE_EXPORT_LIMIT:
+    ids = validate_loca_ids(bgs_loca_id)
+    if len(ids) > BOREHOLE_EXPORT_LIMIT:
         raise HTTPException(
             status_code=422, detail=f"More than {BOREHOLE_EXPORT_LIMIT} borehole IDs."
         )
 
-    url = BOREHOLE_EXPORT_URL.format(bgs_loca_id=bgs_loca_id)
-
     try:
-        response = requests.get(url, timeout=10)
+        response = requests.get(
+            BOREHOLE_EXPORT_URL, params={"loca_ids": bgs_loca_id}, timeout=10
+        )
     except (Timeout, ConnectionError):
         raise HTTPException(
             status_code=500,
