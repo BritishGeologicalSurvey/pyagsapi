@@ -186,6 +186,6 @@ async def http_exception(request: Request, exc: StarletteHTTPException):
 @app.exception_handler(InvalidPayloadError)
 async def invalid_payload_exception(request: Request, exc: InvalidPayloadError):
     return JSONResponse(
-        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+        status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
         content=jsonable_encoder(exc.response()),
     )
